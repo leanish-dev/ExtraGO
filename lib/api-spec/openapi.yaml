@@ -3,20 +3,38 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: extraGO — Workforce Marketplace API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication
+  - name: users
+    description: User profiles
+  - name: jobs
+    description: Job listings
+  - name: applications
+    description: Job applications
+  - name: wallet
+    description: Wallet and transactions
+  - name: referrals
+    description: Referral system
+  - name: notifications
+    description: In-app notifications
+  - name: admin
+    description: Admin panel
+  - name: stats
+    description: Statistics and analytics
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +42,756 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # AUTH
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  # USERS
+  /users/{id}:
+    get:
+      operationId: getUser
+      tags: [users]
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    patch:
+      operationId: updateUser
+      tags: [users]
+      summary: Update user profile
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdate"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /users/{id}/rating:
+    post:
+      operationId: rateUser
+      tags: [users]
+      summary: Rate a freelancer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RatingInput"
+      responses:
+        "201":
+          description: Rating submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /users/freelancers:
+    get:
+      operationId: listFreelancers
+      tags: [users]
+      summary: List freelancers
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of freelancers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+  # JOBS
+  /jobs:
+    get:
+      operationId: listJobs
+      tags: [jobs]
+      summary: List jobs
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: companyId
+          in: query
+          schema:
+            type: integer
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+    post:
+      operationId: createJob
+      tags: [jobs]
+      summary: Create a new job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobInput"
+      responses:
+        "201":
+          description: Job created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+
+  /jobs/{id}:
+    get:
+      operationId: getJob
+      tags: [jobs]
+      summary: Get job by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+    patch:
+      operationId: updateJob
+      tags: [jobs]
+      summary: Update a job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobUpdate"
+      responses:
+        "200":
+          description: Updated job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+    delete:
+      operationId: deleteJob
+      tags: [jobs]
+      summary: Delete a job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /jobs/{id}/cancel:
+    post:
+      operationId: cancelJob
+      tags: [jobs]
+      summary: Cancel a job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Job cancelled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+
+  # APPLICATIONS
+  /applications:
+    get:
+      operationId: listApplications
+      tags: [applications]
+      summary: List applications
+      parameters:
+        - name: jobId
+          in: query
+          schema:
+            type: integer
+        - name: freelancerId
+          in: query
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+    post:
+      operationId: applyToJob
+      tags: [applications]
+      summary: Apply to a job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationInput"
+      responses:
+        "201":
+          description: Application submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}:
+    get:
+      operationId: getApplication
+      tags: [applications]
+      summary: Get application by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}/approve:
+    post:
+      operationId: approveApplication
+      tags: [applications]
+      summary: Approve an application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}/reject:
+    post:
+      operationId: rejectApplication
+      tags: [applications]
+      summary: Reject an application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  # WALLET
+  /wallet/me:
+    get:
+      operationId: getMyWallet
+      tags: [wallet]
+      summary: Get current user's wallet
+      responses:
+        "200":
+          description: Wallet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Wallet"
+
+  /wallet/transactions:
+    get:
+      operationId: listTransactions
+      tags: [wallet]
+      summary: List wallet transactions
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: type
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+
+  /wallet/withdraw:
+    post:
+      operationId: requestWithdrawal
+      tags: [wallet]
+      summary: Request a Pix withdrawal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WithdrawalInput"
+      responses:
+        "201":
+          description: Withdrawal requested
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+
+  # REFERRALS
+  /referrals/me:
+    get:
+      operationId: getMyReferral
+      tags: [referrals]
+      summary: Get my referral info
+      responses:
+        "200":
+          description: Referral info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReferralInfo"
+
+  /referrals/validate:
+    post:
+      operationId: validateReferralCode
+      tags: [referrals]
+      summary: Validate a referral code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReferralCodeInput"
+      responses:
+        "200":
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /referrals/leaderboard:
+    get:
+      operationId: getReferralLeaderboard
+      tags: [referrals]
+      summary: Get referral leaderboard
+      responses:
+        "200":
+          description: Leaderboard
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LeaderboardEntry"
+
+  # NOTIFICATIONS
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: List notifications
+      parameters:
+        - name: unreadOnly
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+
+  /notifications/{id}/read:
+    post:
+      operationId: markNotificationRead
+      tags: [notifications]
+      summary: Mark notification as read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Marked as read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /notifications/read-all:
+    post:
+      operationId: markAllNotificationsRead
+      tags: [notifications]
+      summary: Mark all notifications as read
+      responses:
+        "200":
+          description: All marked as read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  # STATS / DASHBOARD
+  /stats/platform:
+    get:
+      operationId: getPlatformStats
+      tags: [stats]
+      summary: Get platform statistics
+      responses:
+        "200":
+          description: Platform stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlatformStats"
+
+  /stats/company/{id}:
+    get:
+      operationId: getCompanyStats
+      tags: [stats]
+      summary: Get stats for a company
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Company stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyStats"
+
+  /stats/freelancer/{id}:
+    get:
+      operationId: getFreelancerStats
+      tags: [stats]
+      summary: Get stats for a freelancer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Freelancer stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FreelancerStats"
+
+  # ADMIN
+  /admin/users:
+    get:
+      operationId: adminListUsers
+      tags: [admin]
+      summary: Admin list all users
+      parameters:
+        - name: role
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+  /admin/users/{id}/ban:
+    post:
+      operationId: adminBanUser
+      tags: [admin]
+      summary: Ban a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User banned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/users/{id}/verify:
+    post:
+      operationId: adminVerifyUser
+      tags: [admin]
+      summary: Verify a user's documents
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User verified
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/jobs:
+    get:
+      operationId: adminListJobs
+      tags: [admin]
+      summary: Admin list all jobs
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+
+  /admin/withdrawals:
+    get:
+      operationId: adminListWithdrawals
+      tags: [admin]
+      summary: Admin list withdrawal requests
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Withdrawals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+
+  /admin/withdrawals/{id}/approve:
+    post:
+      operationId: adminApproveWithdrawal
+      tags: [admin]
+      summary: Approve a withdrawal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Withdrawal approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [admin]
+      summary: Get admin dashboard stats
+      responses:
+        "200":
+          description: Admin stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +802,604 @@ components:
       required:
         - status
 
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+      required:
+        - user
+        - token
+
+    RegisterInput:
+      type: object
+      required: [email, password, name, role]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [company, freelancer]
+        referralCode:
+          type: ["string", "null"]
+        companyName:
+          type: ["string", "null"]
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [company, freelancer, admin]
+        avatarUrl:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        phone:
+          type: ["string", "null"]
+        companyName:
+          type: ["string", "null"]
+        pixKey:
+          type: ["string", "null"]
+        categories:
+          type: array
+          items:
+            type: string
+        level:
+          type: string
+          enum: [bronze, silver, gold, elite]
+        reputationScore:
+          type: number
+        completedJobs:
+          type: integer
+        isVerified:
+          type: boolean
+        isBanned:
+          type: boolean
+        profileCompletion:
+          type: integer
+        referralCode:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - email
+        - name
+        - role
+        - level
+        - reputationScore
+        - completedJobs
+        - isVerified
+        - isBanned
+        - profileCompletion
+        - referralCode
+        - createdAt
+        - categories
+
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        bio:
+          type: string
+        phone:
+          type: string
+        companyName:
+          type: string
+        pixKey:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        avatarUrl:
+          type: string
+
+    RatingInput:
+      type: object
+      required: [jobId, score]
+      properties:
+        jobId:
+          type: integer
+        score:
+          type: number
+        comment:
+          type: ["string", "null"]
+
+    Job:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        location:
+          type: string
+        date:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
+        workersNeeded:
+          type: integer
+        workersApproved:
+          type: integer
+        hourlyRate:
+          type: number
+        totalValue:
+          type: number
+        status:
+          type: string
+          enum: [open, in_progress, completed, cancelled]
+        companyId:
+          type: integer
+        companyName:
+          type: ["string", "null"]
+        companyAvatarUrl:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - title
+        - description
+        - category
+        - location
+        - date
+        - startTime
+        - endTime
+        - workersNeeded
+        - workersApproved
+        - hourlyRate
+        - totalValue
+        - status
+        - companyId
+        - createdAt
+
+    JobInput:
+      type: object
+      required: [title, description, category, location, date, startTime, endTime, workersNeeded, hourlyRate]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        location:
+          type: string
+        date:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
+        workersNeeded:
+          type: integer
+        hourlyRate:
+          type: number
+
+    JobUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        workersNeeded:
+          type: integer
+        hourlyRate:
+          type: number
+
+    Application:
+      type: object
+      properties:
+        id:
+          type: integer
+        jobId:
+          type: integer
+        freelancerId:
+          type: integer
+        status:
+          type: string
+          enum: [pending, approved, rejected, completed]
+        appliedAt:
+          type: string
+        job:
+          $ref: "#/components/schemas/Job"
+        freelancer:
+          $ref: "#/components/schemas/User"
+      required:
+        - id
+        - jobId
+        - freelancerId
+        - status
+        - appliedAt
+
+    ApplicationInput:
+      type: object
+      required: [jobId]
+      properties:
+        jobId:
+          type: integer
+        message:
+          type: ["string", "null"]
+
+    Wallet:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        balance:
+          type: number
+        pendingBalance:
+          type: number
+        totalEarned:
+          type: number
+        totalWithdrawn:
+          type: number
+      required:
+        - id
+        - userId
+        - balance
+        - pendingBalance
+        - totalEarned
+        - totalWithdrawn
+
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        walletId:
+          type: integer
+        type:
+          type: string
+          enum: [credit, debit, withdrawal, commission, refund]
+        amount:
+          type: number
+        description:
+          type: string
+        status:
+          type: string
+          enum: [pending, completed, failed]
+        pixKey:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - walletId
+        - type
+        - amount
+        - description
+        - status
+        - createdAt
+
+    WithdrawalInput:
+      type: object
+      required: [amount, pixKey]
+      properties:
+        amount:
+          type: number
+        pixKey:
+          type: string
+
+    ReferralInfo:
+      type: object
+      properties:
+        code:
+          type: string
+        link:
+          type: string
+        totalInvited:
+          type: integer
+        totalConverted:
+          type: integer
+        totalRewardEarned:
+          type: number
+        invitees:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReferralInvitee"
+      required:
+        - code
+        - link
+        - totalInvited
+        - totalConverted
+        - totalRewardEarned
+        - invitees
+
+    ReferralInvitee:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        joinedAt:
+          type: string
+        completedJobs:
+          type: integer
+        status:
+          type: string
+          enum: [pending, converted]
+      required:
+        - id
+        - name
+        - joinedAt
+        - completedJobs
+        - status
+
+    ReferralCodeInput:
+      type: object
+      required: [code]
+      properties:
+        code:
+          type: string
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        level:
+          type: string
+        totalConverted:
+          type: integer
+        reputationScore:
+          type: number
+      required:
+        - rank
+        - userId
+        - name
+        - level
+        - totalConverted
+        - reputationScore
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        type:
+          type: string
+        title:
+          type: string
+        message:
+          type: string
+        isRead:
+          type: boolean
+        createdAt:
+          type: string
+        link:
+          type: ["string", "null"]
+      required:
+        - id
+        - userId
+        - type
+        - title
+        - message
+        - isRead
+        - createdAt
+
+    PlatformStats:
+      type: object
+      properties:
+        totalFreelancers:
+          type: integer
+        totalCompanies:
+          type: integer
+        totalJobs:
+          type: integer
+        activeJobs:
+          type: integer
+        completedJobs:
+          type: integer
+        totalTransacted:
+          type: number
+        jobsByCategory:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategoryCount"
+        recentActivity:
+          type: array
+          items:
+            $ref: "#/components/schemas/ActivityItem"
+      required:
+        - totalFreelancers
+        - totalCompanies
+        - totalJobs
+        - activeJobs
+        - completedJobs
+        - totalTransacted
+        - jobsByCategory
+        - recentActivity
+
+    CompanyStats:
+      type: object
+      properties:
+        totalJobsPosted:
+          type: integer
+        activeJobs:
+          type: integer
+        totalSpent:
+          type: number
+        averageRating:
+          type: number
+        totalWorkers:
+          type: integer
+        jobsByMonth:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonthCount"
+      required:
+        - totalJobsPosted
+        - activeJobs
+        - totalSpent
+        - averageRating
+        - totalWorkers
+        - jobsByMonth
+
+    FreelancerStats:
+      type: object
+      properties:
+        completedJobs:
+          type: integer
+        totalEarned:
+          type: number
+        pendingEarnings:
+          type: number
+        averageRating:
+          type: number
+        level:
+          type: string
+        nextLevelProgress:
+          type: integer
+        earnsByMonth:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonthAmount"
+        badges:
+          type: array
+          items:
+            type: string
+      required:
+        - completedJobs
+        - totalEarned
+        - pendingEarnings
+        - averageRating
+        - level
+        - nextLevelProgress
+        - earnsByMonth
+        - badges
+
+    AdminStats:
+      type: object
+      properties:
+        totalUsers:
+          type: integer
+        totalJobs:
+          type: integer
+        totalRevenue:
+          type: number
+        pendingWithdrawals:
+          type: integer
+        pendingVerifications:
+          type: integer
+        usersThisMonth:
+          type: integer
+        revenueByMonth:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonthAmount"
+        topFreelancers:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+      required:
+        - totalUsers
+        - totalJobs
+        - totalRevenue
+        - pendingWithdrawals
+        - pendingVerifications
+        - usersThisMonth
+        - revenueByMonth
+        - topFreelancers
+
+    CategoryCount:
+      type: object
+      properties:
+        category:
+          type: string
+        count:
+          type: integer
+      required:
+        - category
+        - count
+
+    ActivityItem:
+      type: object
+      properties:
+        type:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+      required:
+        - type
+        - description
+        - timestamp
+
+    MonthCount:
+      type: object
+      properties:
+        month:
+          type: string
+        count:
+          type: integer
+      required:
+        - month
+        - count
+
+    MonthAmount:
+      type: object
+      properties:
+        month:
+          type: string
+        amount:
+          type: number
+      required:
+        - month
+        - amount
