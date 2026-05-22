@@ -2,45 +2,74 @@ import React, { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useListApplications, useApproveApplication, useRejectApplication } from "@workspace/api-client-react";
 import type { Application } from "@workspace/api-client-react";
-import { CheckCircle, XCircle, Clock, FileText, ChevronDown } from "lucide-react";
+import { CheckCircle, XCircle, Clock, FileText, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty";
+import { SkeletonCard } from "@/components/ui/skeleton";
+import { PageHeader } from "@/components/page-header";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { motion } from "framer-motion";
 
 const STATUS_LABELS: Record<string, { label: string; class: string; icon: React.ReactNode }> = {
-  pending: { label: "Pendente", class: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30", icon: <Clock size={13} /> },
-  approved: { label: "Aprovada", class: "bg-primary/20 text-primary border-primary/30", icon: <CheckCircle size={13} /> },
-  rejected: { label: "Recusada", class: "bg-destructive/20 text-destructive border-destructive/30", icon: <XCircle size={13} /> },
-  withdrawn: { label: "Retirada", class: "bg-white/10 text-muted-foreground border-white/20", icon: <XCircle size={13} /> },
+  pending: { label: "Pendente", class: "bg-yellow-500/15 text-yellow-400 border-yellow-500/25", icon: <Clock size={11} /> },
+  approved: { label: "Aprovada", class: "bg-primary/15 text-primary border-primary/25", icon: <CheckCircle size={11} /> },
+  rejected: { label: "Recusada", class: "bg-destructive/15 text-destructive border-destructive/25", icon: <XCircle size={11} /> },
+  withdrawn: { label: "Retirada", class: "bg-white/8 text-muted-foreground border-white/15", icon: <XCircle size={11} /> },
 };
 
-function ApplicationCard({ app, isCompany, onApprove, onReject }: {
+function ApplicationCard({ app, isCompany, onApprove, onReject, index }: {
   app: Application;
   isCompany: boolean;
   onApprove?: (id: number) => void;
   onReject?: (id: number) => void;
+  index: number;
 }) {
+  const [loading, setLoading] = useState<"approve" | "reject" | null>(null);
   const info = STATUS_LABELS[app.status ?? "pending"] ?? STATUS_LABELS.pending;
 
+  const handleApprove = async () => {
+    setLoading("approve");
+    await onApprove?.(app.id!);
+    setLoading(null);
+  };
+  const handleReject = async () => {
+    setLoading("reject");
+    await onReject?.(app.id!);
+    setLoading(null);
+  };
+
   return (
-    <div className="glass-card rounded-xl p-5 space-y-3">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, delay: index * 0.05 }}
+      className="glass-card rounded-xl p-5 space-y-3"
+    >
       <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <p className="font-semibold">{isCompany ? (app as any).freelancerName ?? "Profissional" : (app as any).jobTitle ?? "Vaga"}</p>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {app.createdAt ? format(new Date(app.createdAt), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR }) : ""}
-          </p>
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/25 to-secondary/15 border border-white/10 flex items-center justify-center text-sm font-bold flex-shrink-0">
+            {(isCompany ? (app.freelancer?.name ?? "P") : (app.job?.title ?? "V")).charAt(0).toUpperCase()}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-sm truncate">
+              {isCompany ? (app.freelancer?.name ?? "Profissional") : (app.job?.title ?? "Vaga")}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {app.appliedAt ? format(new Date(app.appliedAt), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR }) : ""}
+            </p>
+          </div>
         </div>
-        <span className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full border ${info.class}`}>
+        <span className={`flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border whitespace-nowrap ${info.class}`}>
           {info.icon} {info.label}
         </span>
       </div>
 
-      {app.coverLetter && (
-        <div className="p-3 rounded-lg bg-white/3 border border-white/8">
-          <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Carta de apresentação</p>
-          <p className="text-sm line-clamp-3">{app.coverLetter}</p>
+      {(app as any).message && (
+        <div className="p-3 rounded-xl bg-white/3 border border-white/6">
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1.5">Mensagem</p>
+          <p className="text-xs leading-relaxed line-clamp-3 text-foreground/80">{(app as any).message}</p>
         </div>
       )}
 
@@ -48,22 +77,26 @@ function ApplicationCard({ app, isCompany, onApprove, onReject }: {
         <div className="flex gap-2 pt-1">
           <Button
             size="sm"
-            className="flex-1 bg-primary text-black hover:bg-primary/90 font-semibold"
-            onClick={() => onApprove?.(app.id!)}
+            className="flex-1 bg-primary text-black hover:bg-primary/90 font-bold border-none rounded-xl h-9 text-xs neon-glow"
+            onClick={handleApprove}
+            disabled={loading !== null}
           >
-            <CheckCircle size={14} className="mr-1" /> Aprovar
+            {loading === "approve" ? <Loader2 size={13} className="animate-spin mr-1" /> : <CheckCircle size={13} className="mr-1" />}
+            Aprovar
           </Button>
           <Button
             size="sm"
             variant="destructive"
-            className="flex-1"
-            onClick={() => onReject?.(app.id!)}
+            className="flex-1 rounded-xl h-9 text-xs border-none font-bold"
+            onClick={handleReject}
+            disabled={loading !== null}
           >
-            <XCircle size={14} className="mr-1" /> Recusar
+            {loading === "reject" ? <Loader2 size={13} className="animate-spin mr-1" /> : <XCircle size={13} className="mr-1" />}
+            Recusar
           </Button>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -89,7 +122,7 @@ export default function ApplicationsPage() {
 
   const handleApprove = async (id: number) => {
     try {
-      await approveMutation.mutateAsync({ applicationId: id });
+      await approveMutation.mutateAsync({ id });
       toast.success("Candidatura aprovada!");
       refetch();
     } catch (e: any) {
@@ -99,7 +132,7 @@ export default function ApplicationsPage() {
 
   const handleReject = async (id: number) => {
     try {
-      await rejectMutation.mutateAsync({ applicationId: id });
+      await rejectMutation.mutateAsync({ id });
       toast.success("Candidatura recusada");
       refetch();
     } catch (e: any) {
@@ -108,21 +141,18 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">
-          {isCompany ? "Candidaturas Recebidas" : "Minhas Candidaturas"}
-        </h1>
-        <p className="text-muted-foreground mt-1">{apps.length} candidatura{apps.length !== 1 ? "s" : ""}</p>
-      </div>
+    <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-5">
+      <PageHeader
+        title={isCompany ? "Candidaturas Recebidas" : "Minhas Candidaturas"}
+        subtitle={`${apps.length} candidatura${apps.length !== 1 ? "s" : ""}`}
+      />
 
-      {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/8 w-fit">
+      <div className="flex gap-1 p-1 rounded-xl bg-white/4 border border-white/8 w-fit overflow-x-auto">
         {TABS.map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
+            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${
               tab === t
                 ? "bg-primary text-black shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
@@ -135,28 +165,29 @@ export default function ApplicationsPage() {
 
       {isLoading && (
         <div className="space-y-3">
-          {[1, 2, 3].map(i => <div key={i} className="glass-card rounded-xl h-28 animate-pulse" />)}
+          {[1,2,3].map(i => <div key={i} className="glass-card rounded-xl h-24 skeleton" />)}
         </div>
       )}
 
       {!isLoading && apps.length === 0 && (
-        <div className="text-center py-16">
-          <FileText size={40} className="text-muted-foreground mx-auto mb-3" />
-          <p className="text-lg font-medium">Nenhuma candidatura encontrada</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            {isCompany ? "Nenhum profissional se candidatou ainda." : "Você ainda não se candidatou a nenhuma vaga."}
-          </p>
-        </div>
+        <EmptyState
+          icon={<FileText size={28} />}
+          title="Nenhuma candidatura encontrada"
+          description={isCompany ? "Nenhum profissional se candidatou ainda." : "Você ainda não se candidatou a nenhuma vaga."}
+          actionLabel={!isCompany ? "Buscar Vagas" : undefined}
+          actionHref="/app/jobs"
+        />
       )}
 
       <div className="space-y-3">
-        {apps.map(app => (
+        {apps.map((app, i) => (
           <ApplicationCard
             key={app.id}
             app={app}
             isCompany={isCompany}
             onApprove={handleApprove}
             onReject={handleReject}
+            index={i}
           />
         ))}
       </div>

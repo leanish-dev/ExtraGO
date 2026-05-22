@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { useEffect } from "react";
 import { Toaster as SonnerToaster } from "sonner";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 import NotFound from "@/pages/not-found";
 import LandingPage from "@/pages/landing";
@@ -110,6 +111,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <ErrorBoundary>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <AuthProvider>
             <div className="dark min-h-[100dvh] bg-background text-foreground overflow-x-hidden">
@@ -117,6 +119,7 @@ function App() {
             </div>
           </AuthProvider>
         </WouterRouter>
+        </ErrorBoundary>
         <Toaster />
         <SonnerToaster
           theme="dark"

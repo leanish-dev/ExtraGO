@@ -1,6 +1,8 @@
-import { cva, type VariantProps } from "class-variance-authority"
-
-import { cn } from "@/lib/utils"
+import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 function Empty({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -12,20 +14,17 @@ function Empty({ className, ...props }: React.ComponentProps<"div">) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function EmptyHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="empty-header"
-      className={cn(
-        "flex max-w-sm flex-col items-center gap-2 text-center",
-        className
-      )}
+      className={cn("flex max-w-sm flex-col items-center gap-2 text-center", className)}
       {...props}
     />
-  )
+  );
 }
 
 const emptyMediaVariants = cva(
@@ -37,11 +36,9 @@ const emptyMediaVariants = cva(
         icon: "bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-lg [&_svg:not([class*='size-'])]:size-6",
       },
     },
-    defaultVariants: {
-      variant: "default",
-    },
+    defaultVariants: { variant: "default" },
   }
-)
+);
 
 function EmptyMedia({
   className,
@@ -55,7 +52,7 @@ function EmptyMedia({
       className={cn(emptyMediaVariants({ variant, className }))}
       {...props}
     />
-  )
+  );
 }
 
 function EmptyTitle({ className, ...props }: React.ComponentProps<"div">) {
@@ -65,7 +62,7 @@ function EmptyTitle({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("text-lg font-medium tracking-tight", className)}
       {...props}
     />
-  )
+  );
 }
 
 function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
@@ -78,20 +75,52 @@ function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function EmptyContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="empty-content"
-      className={cn(
-        "flex w-full min-w-0 max-w-sm flex-col items-center gap-4 text-balance text-sm",
-        className
-      )}
+      className={cn("flex w-full min-w-0 max-w-sm flex-col items-center gap-4 text-balance text-sm", className)}
       {...props}
     />
-  )
+  );
+}
+
+interface EmptyStateProps {
+  icon: React.ReactNode;
+  title: string;
+  description?: string;
+  actionLabel?: string;
+  actionHref?: string;
+  onAction?: () => void;
+  className?: string;
+}
+
+function EmptyState({ icon, title, description, actionLabel, actionHref, onAction, className }: EmptyStateProps) {
+  return (
+    <div className={cn("flex flex-col items-center justify-center py-14 px-4 text-center", className)}>
+      <div className="w-14 h-14 rounded-2xl bg-white/4 border border-white/8 flex items-center justify-center text-muted-foreground mb-4">
+        {icon}
+      </div>
+      <p className="text-base font-semibold mb-1.5">{title}</p>
+      {description && <p className="text-sm text-muted-foreground max-w-xs mb-6 leading-relaxed">{description}</p>}
+      {actionLabel && (
+        actionHref ? (
+          <Link href={actionHref}>
+            <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-semibold rounded-xl px-6">
+              {actionLabel}
+            </Button>
+          </Link>
+        ) : onAction ? (
+          <Button onClick={onAction} className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-semibold rounded-xl px-6">
+            {actionLabel}
+          </Button>
+        ) : null
+      )}
+    </div>
+  );
 }
 
 export {
@@ -101,4 +130,5 @@ export {
   EmptyDescription,
   EmptyContent,
   EmptyMedia,
-}
+  EmptyState,
+};

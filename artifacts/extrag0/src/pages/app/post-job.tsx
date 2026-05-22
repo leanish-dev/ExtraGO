@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
-import { Briefcase, MapPin, Clock, DollarSign, Users, ChevronLeft, Calendar } from "lucide-react";
+import { Briefcase, MapPin, Clock, DollarSign, Users, ChevronLeft, Loader2, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 const CATEGORIES = ["Garçom", "Barman", "Recepcionista", "Hostess", "Chef de Cozinha", "Cumim", "Auxiliar de Eventos", "Segurança", "Promoter", "Mestre de Cerimônias", "DJ", "Outro"];
 
@@ -26,6 +27,22 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+function SectionHeader({ icon, title, color = "primary" }: { icon: React.ReactNode; title: string; color?: string }) {
+  const colorMap: Record<string, string> = {
+    primary: "bg-primary/10 border-primary/20 text-primary",
+    secondary: "bg-secondary/10 border-secondary/20 text-secondary",
+    yellow: "bg-yellow-400/10 border-yellow-400/20 text-yellow-400",
+  };
+  return (
+    <h2 className="font-semibold flex items-center gap-2 text-sm">
+      <div className={`w-7 h-7 rounded-lg border flex items-center justify-center ${colorMap[color]}`}>
+        {icon}
+      </div>
+      {title}
+    </h2>
+  );
+}
+
 export default function PostJobPage() {
   const [, setLocation] = useLocation();
   const createJob = useCreateJob();
@@ -34,15 +51,8 @@ export default function PostJobPage() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      category: "",
-      location: "",
-      date: "",
-      startTime: "",
-      endTime: "",
-      workersNeeded: 1,
-      hourlyRate: 50,
+      title: "", description: "", category: "", location: "",
+      date: "", startTime: "", endTime: "", workersNeeded: 1, hourlyRate: 50,
     },
   });
 
@@ -79,51 +89,53 @@ export default function PostJobPage() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
-        <button onClick={() => setLocation("/app/jobs")} className="p-2 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-foreground transition-colors">
-          <ChevronLeft size={20} />
+        <button
+          onClick={() => setLocation("/app/jobs")}
+          className="w-9 h-9 rounded-xl hover:bg-white/5 text-muted-foreground hover:text-foreground transition-all flex items-center justify-center border border-white/8"
+        >
+          <ChevronLeft size={18} />
         </button>
         <div>
-          <h1 className="text-2xl font-bold">Publicar Nova Vaga</h1>
-          <p className="text-muted-foreground">Conecte-se aos melhores profissionais do Brasil</p>
+          <h1 className="text-xl sm:text-2xl font-bold leading-tight">Publicar Nova Vaga</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Conecte-se aos melhores profissionais do Brasil</p>
         </div>
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           {/* Basic info */}
-          <div className="glass-card rounded-2xl p-6 space-y-5">
-            <h2 className="font-semibold text-base flex items-center gap-2">
-              <Briefcase size={18} className="text-primary" />
-              Informações da Vaga
-            </h2>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="glass-card rounded-2xl p-5 sm:p-6 space-y-5"
+          >
+            <SectionHeader icon={<Briefcase size={14} />} title="Informações da Vaga" color="primary" />
 
             <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem>
-                <FormLabel>Título da Vaga</FormLabel>
+                <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Título</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: Garçom para Casamento Premium" {...field} className="bg-background/50 border-white/10 focus:border-primary rounded-xl" />
+                  <Input placeholder="Ex: Garçom para Casamento Premium" {...field} className="bg-white/5 border-white/10 focus:border-primary/60 rounded-xl h-11" />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs" />
               </FormItem>
             )} />
 
             <div>
-              <FormLabel className="text-sm font-medium">Categoria</FormLabel>
-              <div className="flex flex-wrap gap-2 mt-2">
+              <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2 block">Categoria</FormLabel>
+              <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map(cat => (
                   <button
                     type="button"
                     key={cat}
-                    onClick={() => {
-                      setSelectedCategory(cat);
-                      form.setValue("category", cat);
-                    }}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all border ${
+                    onClick={() => { setSelectedCategory(cat); form.setValue("category", cat); }}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
                       selectedCategory === cat
                         ? "bg-primary text-black border-primary neon-glow"
-                        : "border-white/10 text-muted-foreground hover:border-white/30 hover:text-foreground"
+                        : "border-white/10 text-muted-foreground hover:border-white/25 hover:text-foreground"
                     }`}
                   >
                     {cat}
@@ -131,133 +143,128 @@ export default function PostJobPage() {
                 ))}
               </div>
               {form.formState.errors.category && (
-                <p className="text-destructive text-xs mt-1">{form.formState.errors.category.message}</p>
+                <p className="text-destructive text-xs mt-1.5">{form.formState.errors.category.message}</p>
               )}
             </div>
 
             <FormField control={form.control} name="description" render={({ field }) => (
               <FormItem>
-                <FormLabel>Descrição</FormLabel>
+                <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Descrição</FormLabel>
                 <FormControl>
                   <textarea
                     rows={4}
                     placeholder="Descreva os requisitos, experiência necessária, dress code, etc..."
                     {...field}
-                    className="w-full px-3 py-2 rounded-xl bg-background/50 border border-white/10 focus:border-primary focus:outline-none text-sm resize-none transition-colors"
+                    className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-primary/60 focus:outline-none text-sm resize-none transition-colors leading-relaxed"
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs" />
               </FormItem>
             )} />
-          </div>
+          </motion.div>
 
           {/* Location and time */}
-          <div className="glass-card rounded-2xl p-6 space-y-5">
-            <h2 className="font-semibold text-base flex items-center gap-2">
-              <MapPin size={18} className="text-secondary" />
-              Local e Horário
-            </h2>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.07 }}
+            className="glass-card rounded-2xl p-5 sm:p-6 space-y-5"
+          >
+            <SectionHeader icon={<MapPin size={14} />} title="Local e Horário" color="secondary" />
 
             <FormField control={form.control} name="location" render={({ field }) => (
               <FormItem>
-                <FormLabel>Local</FormLabel>
+                <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Local</FormLabel>
                 <FormControl>
-                  <Input placeholder="Ex: WTC Events, Av. das Nações Unidas, São Paulo" {...field} className="bg-background/50 border-white/10 focus:border-primary rounded-xl" />
+                  <Input placeholder="Ex: WTC Events, Av. das Nações Unidas, São Paulo" {...field} className="bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11" />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-xs" />
               </FormItem>
             )} />
 
-            <div className="grid grid-cols-3 gap-4">
-              <FormField control={form.control} name="date" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Data</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} className="bg-background/50 border-white/10 focus:border-primary rounded-xl" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField control={form.control} name="startTime" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Início</FormLabel>
-                  <FormControl>
-                    <Input type="time" {...field} className="bg-background/50 border-white/10 focus:border-primary rounded-xl" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField control={form.control} name="endTime" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Fim</FormLabel>
-                  <FormControl>
-                    <Input type="time" {...field} className="bg-background/50 border-white/10 focus:border-primary rounded-xl" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                { name: "date" as const, label: "Data", type: "date" },
+                { name: "startTime" as const, label: "Início", type: "time" },
+                { name: "endTime" as const, label: "Fim", type: "time" },
+              ].map(({ name, label, type }) => (
+                <FormField key={name} control={form.control} name={name} render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</FormLabel>
+                    <FormControl>
+                      <Input type={type} {...field} className="bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11" />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )} />
+              ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Compensation */}
-          <div className="glass-card rounded-2xl p-6 space-y-5">
-            <h2 className="font-semibold text-base flex items-center gap-2">
-              <DollarSign size={18} className="text-yellow-400" />
-              Remuneração e Equipe
-            </h2>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.13 }}
+            className="glass-card rounded-2xl p-5 sm:p-6 space-y-5"
+          >
+            <SectionHeader icon={<DollarSign size={14} />} title="Remuneração e Equipe" color="yellow" />
 
             <div className="grid grid-cols-2 gap-4">
               <FormField control={form.control} name="workersNeeded" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Profissionais Necessários</FormLabel>
+                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Profissionais</FormLabel>
                   <FormControl>
-                    <Input type="number" min={1} {...field} className="bg-background/50 border-white/10 focus:border-primary rounded-xl" />
+                    <Input type="number" min={1} {...field} className="bg-white/5 border-white/10 focus:border-yellow-400/60 rounded-xl h-11" />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )} />
               <FormField control={form.control} name="hourlyRate" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Valor por Hora (R$)</FormLabel>
+                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">R$/Hora</FormLabel>
                   <FormControl>
-                    <Input type="number" min={20} step={5} {...field} className="bg-background/50 border-white/10 focus:border-primary rounded-xl" />
+                    <Input type="number" min={20} step={5} {...field} className="bg-white/5 border-white/10 focus:border-yellow-400/60 rounded-xl h-11" />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
               )} />
             </div>
 
             {watchedHours && (
-              <div className="rounded-xl p-4 bg-primary/5 border border-primary/20 space-y-2">
-                <p className="text-sm font-semibold text-primary">Resumo do Custo</p>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Duração:</span>
-                    <span className="font-medium">{watchedHours.hours.toFixed(1)}h</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Por profissional:</span>
-                    <span className="font-medium">R$ {watchedHours.totalPerWorker.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Comissão (15%):</span>
-                    <span className="font-medium text-yellow-400">R$ {(watchedHours.commission * form.watch("workersNeeded")).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground font-semibold">Total estimado:</span>
-                    <span className="font-bold text-primary">R$ {(watchedHours.total * 1.15).toFixed(2)}</span>
-                  </div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="rounded-xl p-4 bg-primary/6 border border-primary/15 space-y-3"
+              >
+                <p className="text-xs font-bold text-primary flex items-center gap-1.5 uppercase tracking-wide">
+                  <Sparkles size={12} /> Resumo do Custo
+                </p>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  {[
+                    { label: "Duração", value: `${watchedHours.hours.toFixed(1)}h` },
+                    { label: "Por profissional", value: `R$ ${watchedHours.totalPerWorker.toFixed(2)}` },
+                    { label: "Comissão (15%)", value: `R$ ${(watchedHours.commission * form.watch("workersNeeded")).toFixed(2)}`, color: "text-yellow-400" },
+                    { label: "Total estimado", value: `R$ ${(watchedHours.total * 1.15).toFixed(2)}`, color: "text-primary", bold: true },
+                  ].map((row, i) => (
+                    <div key={i} className="flex justify-between items-center">
+                      <span className="text-muted-foreground">{row.label}:</span>
+                      <span className={`font-semibold ${row.color ?? ""} ${row.bold ? "text-sm font-bold" : ""}`}>{row.value}</span>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
 
           <Button
             type="submit"
             disabled={createJob.isPending}
-            className="w-full bg-primary text-black hover:bg-primary/90 neon-glow font-bold h-12 text-base rounded-xl"
+            className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl"
           >
-            {createJob.isPending ? "Publicando..." : "Publicar Vaga"}
+            {createJob.isPending ? (
+              <><Loader2 size={15} className="mr-2 animate-spin" />Publicando...</>
+            ) : "Publicar Vaga"}
           </Button>
         </form>
       </Form>
