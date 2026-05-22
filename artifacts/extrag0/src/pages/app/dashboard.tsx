@@ -63,8 +63,8 @@ function CompanyDashboard() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={<Briefcase size={20} />} label="Vagas Abertas" value={stats?.activeJobs ?? 0} color="primary" />
-        <StatCard icon={<Users size={20} />} label="Profissionais" value={stats?.totalWorkers ?? 0} color="secondary" />
-        <StatCard icon={<CheckCircle size={20} />} label="Vagas Publicadas" value={stats?.totalJobsPosted ?? 0} color="green" />
+        <StatCard icon={<Users size={20} />} label="Candidaturas" value={stats?.totalApplications ?? 0} color="secondary" />
+        <StatCard icon={<CheckCircle size={20} />} label="Jobs Concluídos" value={stats?.completedJobs ?? 0} color="green" />
         <StatCard icon={<DollarSign size={20} />} label="Gasto Total" value={`R$ ${((stats?.totalSpent ?? 0) / 100).toFixed(2)}`} color="yellow" sub="histórico" />
       </div>
 
@@ -135,7 +135,7 @@ function FreelancerDashboard() {
         <StatCard icon={<CheckCircle size={20} />} label="Jobs Feitos" value={user?.completedJobs ?? 0} color="primary" />
         <StatCard icon={<Star size={20} />} label="Reputação" value={`${(user?.reputationScore ?? 0).toFixed(1)} ★`} color="yellow" />
         <StatCard icon={<DollarSign size={20} />} label="Ganhos Totais" value={`R$ ${((stats?.totalEarned ?? 0) / 100).toFixed(2)}`} color="green" />
-        <StatCard icon={<TrendingUp size={20} />} label="Ganhos Pendentes" value={`R$ ${((stats?.pendingEarnings ?? 0) / 100).toFixed(2)}`} color="secondary" />
+        <StatCard icon={<TrendingUp size={20} />} label="Candidaturas" value={stats?.totalApplications ?? 0} color="secondary" />
       </div>
 
       {/* Level progress */}

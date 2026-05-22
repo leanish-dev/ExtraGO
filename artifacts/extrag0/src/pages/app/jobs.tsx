@@ -137,7 +137,7 @@ export default function JobsPage() {
   );
 
   const handleApply = async (jobId: number) => {
-    await applyMutation.mutateAsync({ data: { jobId, message: "Tenho interesse nessa vaga e acredito que minhas habilidades se encaixam perfeitamente." } });
+    await applyMutation.mutateAsync({ jobId, data: { coverLetter: "Tenho interesse nessa vaga e acredito que minhas habilidades se encaixam perfeitamente." } });
   };
 
   return (

@@ -72,6 +72,7 @@ function ProtectedRoute({
       </AppLayout>
     );
   }
+
   return <Component />;
 }
 

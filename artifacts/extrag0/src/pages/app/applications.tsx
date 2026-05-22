@@ -29,7 +29,7 @@ function ApplicationCard({ app, isCompany, onApprove, onReject }: {
         <div className="flex-1 min-w-0">
           <p className="font-semibold">{isCompany ? (app as any).freelancerName ?? "Profissional" : (app as any).jobTitle ?? "Vaga"}</p>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {app.appliedAt ? format(new Date(app.appliedAt), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR }) : ""}
+            {app.createdAt ? format(new Date(app.createdAt), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR }) : ""}
           </p>
         </div>
         <span className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full border ${info.class}`}>
@@ -37,10 +37,10 @@ function ApplicationCard({ app, isCompany, onApprove, onReject }: {
         </span>
       </div>
 
-      {(app as any).message && (
+      {app.coverLetter && (
         <div className="p-3 rounded-lg bg-white/3 border border-white/8">
-          <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Mensagem de apresentação</p>
-          <p className="text-sm line-clamp-3">{(app as any).message}</p>
+          <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Carta de apresentação</p>
+          <p className="text-sm line-clamp-3">{app.coverLetter}</p>
         </div>
       )}
 
@@ -89,7 +89,7 @@ export default function ApplicationsPage() {
 
   const handleApprove = async (id: number) => {
     try {
-      await approveMutation.mutateAsync({ id });
+      await approveMutation.mutateAsync({ applicationId: id });
       toast.success("Candidatura aprovada!");
       refetch();
     } catch (e: any) {
@@ -99,7 +99,7 @@ export default function ApplicationsPage() {
 
   const handleReject = async (id: number) => {
     try {
-      await rejectMutation.mutateAsync({ id });
+      await rejectMutation.mutateAsync({ applicationId: id });
       toast.success("Candidatura recusada");
       refetch();
     } catch (e: any) {
