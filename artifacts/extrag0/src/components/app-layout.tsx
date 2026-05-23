@@ -5,11 +5,12 @@ import logoMain from "@assets/1779451173221_1779452671733.png";
 import {
   LayoutDashboard, Briefcase, FileText, Wallet, Settings,
   LogOut, Bell, Star, Trophy, Home,
-  Shield, UserCheck, CreditCard, BarChart3, ChevronLeft, Users, PanelLeftClose, PanelLeft
+  Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
+  ChevronRight, TrendingUp
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NavItem {
   href: string;
@@ -50,33 +51,41 @@ function getNavItems(role: string): NavItem[] {
 function getBottomTabItems(role: string): NavItem[] {
   if (role === "company") {
     return [
-      { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={20} /> },
-      { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={20} /> },
-      { href: "/app/applications", label: "Candidatos", icon: <UserCheck size={20} /> },
-      { href: "/app/wallet", label: "Carteira", icon: <Wallet size={20} /> },
-      { href: "/app/profile", label: "Perfil", icon: <Settings size={20} /> },
+      { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={22} /> },
+      { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={22} /> },
+      { href: "/app/applications", label: "Candidatos", icon: <UserCheck size={22} /> },
+      { href: "/app/wallet", label: "Carteira", icon: <Wallet size={22} /> },
+      { href: "/app/profile", label: "Perfil", icon: <Settings size={22} /> },
     ];
   }
   return [
-    { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={20} /> },
-    { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={20} /> },
-    { href: "/app/applications", label: "Minhas", icon: <FileText size={20} /> },
-    { href: "/app/wallet", label: "Carteira", icon: <Wallet size={20} /> },
-    { href: "/app/profile", label: "Perfil", icon: <Settings size={20} /> },
+    { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={22} /> },
+    { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={22} /> },
+    { href: "/app/applications", label: "Minhas", icon: <FileText size={22} /> },
+    { href: "/app/wallet", label: "Carteira", icon: <Wallet size={22} /> },
+    { href: "/app/profile", label: "Perfil", icon: <Settings size={22} /> },
   ];
 }
 
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 6) return "Boa madrugada";
+  if (h < 12) return "Bom dia";
+  if (h < 18) return "Boa tarde";
+  return "Boa noite";
+}
+
 function LevelBadge({ level }: { level?: string }) {
-  const map: Record<string, { label: string; color: string }> = {
-    bronze: { label: "Bronze", color: "text-orange-400 border-orange-400/30 bg-orange-400/10" },
-    silver: { label: "Prata", color: "text-slate-300 border-slate-300/30 bg-slate-300/10" },
-    gold: { label: "Ouro", color: "text-yellow-400 border-yellow-400/30 bg-yellow-400/10" },
-    elite: { label: "Elite", color: "text-primary border-primary/30 bg-primary/10" },
+  const map: Record<string, { label: string; color: string; emoji: string }> = {
+    bronze: { label: "Bronze", color: "text-orange-400 border-orange-400/30 bg-orange-400/10", emoji: "🥉" },
+    silver: { label: "Prata", color: "text-slate-300 border-slate-300/30 bg-slate-300/10", emoji: "🥈" },
+    gold: { label: "Ouro", color: "text-yellow-400 border-yellow-400/30 bg-yellow-400/10", emoji: "🥇" },
+    elite: { label: "Elite", color: "text-primary border-primary/30 bg-primary/10", emoji: "👑" },
   };
   const info = map[level ?? "bronze"] ?? map.bronze;
   return (
-    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border tracking-wide ${info.color}`}>
-      <Star size={9} className="inline mr-1" />{info.label}
+    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border tracking-wide inline-flex items-center gap-1 ${info.color}`}>
+      <span>{info.emoji}</span>{info.label}
     </span>
   );
 }
@@ -87,16 +96,29 @@ function XPRing({ progress, size = 44 }: { progress: number; size?: number }) {
   const offset = circ - (progress / 100) * circ;
   return (
     <svg width={size} height={size} className="absolute -inset-[3px]" style={{ transform: "rotate(-90deg)" }}>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="2.5" />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="2.5" />
       <circle
         cx={size / 2} cy={size / 2} r={r} fill="none"
         stroke="hsl(88, 100%, 49%)" strokeWidth="2.5"
         strokeLinecap="round"
         strokeDasharray={circ}
         strokeDashoffset={offset}
-        style={{ transition: "stroke-dashoffset 1s cubic-bezier(0.19, 1, 0.22, 1)" }}
+        style={{ transition: "stroke-dashoffset 1s cubic-bezier(0.19, 1, 0.22, 1)", filter: "drop-shadow(0 0 3px rgba(124,252,0,0.6))" }}
       />
     </svg>
+  );
+}
+
+function AvatarInitials({ name, size = "md" }: { name?: string; size?: "sm" | "md" | "lg" }) {
+  const sizeMap = {
+    sm: "w-8 h-8 text-xs",
+    md: "w-10 h-10 text-sm",
+    lg: "w-11 h-11 text-base",
+  };
+  return (
+    <div className={`rounded-full bg-gradient-to-br from-primary via-[#9aff1c] to-secondary flex items-center justify-center font-bold text-black flex-shrink-0 ${sizeMap[size]}`}>
+      {name?.charAt(0).toUpperCase()}
+    </div>
   );
 }
 
@@ -112,29 +134,31 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navItems = getNavItems(user.role);
   const bottomItems = getBottomTabItems(user.role);
   const xpProgress = Math.min(100, ((user.completedJobs ?? 0) % 15) / 15 * 100);
+  const greeting = getGreeting();
+  const firstName = user.name?.split(" ")[0] ?? "Usuário";
 
   const isActive = (href: string) =>
     location === href || (href !== "/app/dashboard" && href !== "/admin" && location.startsWith(href));
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Desktop sidebar — collapsible 240px ↔ 72px */}
+      {/* Desktop sidebar */}
       <motion.aside
-        animate={{ width: collapsed ? 72 : 240 }}
+        animate={{ width: collapsed ? 72 : 252 }}
         transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className="hidden lg:flex flex-col h-full border-r border-white/5 bg-[#060809] flex-shrink-0 overflow-hidden"
-        style={{ minWidth: collapsed ? 72 : 240 }}
+        className="hidden lg:flex flex-col h-full border-r border-white/5 bg-[#050708] flex-shrink-0 overflow-hidden"
+        style={{ minWidth: collapsed ? 72 : 252 }}
       >
-        {/* Logo / collapse button */}
-        <div className={`flex items-center border-b border-white/5 flex-shrink-0 ${collapsed ? "justify-center p-4 h-[60px]" : "justify-between px-5 h-[60px]"}`}>
+        {/* Logo / collapse */}
+        <div className={`flex items-center border-b border-white/5 flex-shrink-0 ${collapsed ? "justify-center p-4 h-[64px]" : "justify-between px-5 h-[64px]"}`}>
           {!collapsed && (
             <Link href="/">
-              <img src={logoMain} alt="extraGO" className="h-7 object-contain" />
+              <img src={logoMain} alt="extraGO" className="h-7 object-contain cursor-pointer hover:opacity-80 transition-opacity" />
             </Link>
           )}
           <button
             onClick={() => setCollapsed(c => !c)}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all flex-shrink-0"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/8 transition-all flex-shrink-0"
             title={collapsed ? "Expandir menu" : "Recolher menu"}
           >
             {collapsed ? <PanelLeft size={16} /> : <PanelLeftClose size={16} />}
@@ -142,30 +166,33 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* User section */}
-        <div className={`border-b border-white/5 flex-shrink-0 ${collapsed ? "py-4 px-2 flex justify-center" : "px-4 py-4"}`}>
+        <div className={`border-b border-white/5 flex-shrink-0 ${collapsed ? "py-4 px-2 flex justify-center" : "px-4 py-5"}`}>
           {collapsed ? (
             <div className="relative">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm font-bold text-black">
-                {user.name?.charAt(0).toUpperCase()}
-              </div>
-              {user.role === "freelancer" && <XPRing progress={xpProgress} size={41} />}
+              <AvatarInitials name={user.name} size="sm" />
+              {user.role === "freelancer" && <XPRing progress={xpProgress} size={38} />}
             </div>
           ) : (
             <div>
               <div className="flex items-center gap-3">
                 <div className="relative flex-shrink-0">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm font-bold text-black">
-                    {user.name?.charAt(0).toUpperCase()}
-                  </div>
+                  <AvatarInitials name={user.name} />
                   {user.role === "freelancer" && <XPRing progress={xpProgress} size={44} />}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold truncate leading-tight">{user.name}</p>
-                  <p className="text-[11px] text-muted-foreground truncate mt-0.5">{user.email}</p>
+                  <p className="text-[11px] text-muted-foreground/70 font-medium">{greeting}</p>
+                  <p className="text-sm font-bold truncate leading-tight mt-0.5">{user.name}</p>
+                  <p className="text-[10px] text-muted-foreground truncate mt-0.5">{user.email}</p>
                 </div>
               </div>
               <div className="mt-3 flex items-center gap-2 flex-wrap">
                 {user.role === "freelancer" && <LevelBadge level={user.level ?? "bronze"} />}
+                {user.role === "freelancer" && user.reputationScore != null && (
+                  <span className="text-[10px] text-yellow-400/80 flex items-center gap-0.5">
+                    <Star size={9} className="fill-yellow-400 text-yellow-400" />
+                    {(user.reputationScore ?? 0).toFixed(1)}
+                  </span>
+                )}
                 {user.role === "company" && (
                   <span className="text-[10px] text-muted-foreground font-medium truncate">{user.companyName}</span>
                 )}
@@ -185,17 +212,26 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             const active = isActive(item.href);
             return (
               <Link key={item.href} href={item.href}>
-                <div
+                <motion.div
+                  whileTap={{ scale: 0.97 }}
                   title={collapsed ? item.label : undefined}
-                  className={`flex items-center rounded-xl text-sm font-medium transition-all cursor-pointer group border-l-2 ${
+                  className={`flex items-center rounded-xl text-sm font-medium transition-all cursor-pointer group relative overflow-hidden ${
                     collapsed ? "justify-center px-0 py-3 mx-1" : "gap-3 px-3 py-2.5"
                   } ${
                     active
-                      ? "bg-primary/10 text-primary border-l-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-white/5 border-l-transparent"
+                      ? "bg-primary/12 text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/5"
                   }`}
                 >
-                  <span className={`flex-shrink-0 transition-colors ${active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`}>
+                  {active && !collapsed && (
+                    <motion.div
+                      layoutId="nav-active-bar"
+                      className="absolute left-0 top-2 bottom-2 w-[3px] bg-primary rounded-r-full"
+                      style={{ boxShadow: "0 0 8px rgba(124,252,0,0.6)" }}
+                      transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                    />
+                  )}
+                  <span className={`flex-shrink-0 transition-colors ${active ? "text-primary nav-icon-active" : "text-muted-foreground group-hover:text-foreground"}`}>
                     {item.icon}
                   </span>
                   {!collapsed && (
@@ -206,10 +242,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                           {item.badge}
                         </Badge>
                       )}
-                      {active && <ChevronLeft size={13} className="ml-auto flex-shrink-0 opacity-60 rotate-180" />}
+                      {active && (
+                        <ChevronRight size={12} className="ml-auto flex-shrink-0 opacity-50" />
+                      )}
                     </>
                   )}
-                </div>
+                </motion.div>
               </Link>
             );
           })}
@@ -217,7 +255,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         {/* Logout */}
         <div className={`border-t border-white/5 p-2 flex-shrink-0 ${collapsed ? "flex justify-center" : ""}`}>
-          <button
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             onClick={logout}
             title={collapsed ? "Sair" : undefined}
             className={`flex items-center rounded-xl text-sm text-muted-foreground hover:text-red-400 hover:bg-red-400/8 transition-all ${
@@ -226,60 +265,113 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           >
             <LogOut size={16} />
             {!collapsed && "Sair da conta"}
-          </button>
+          </motion.button>
         </div>
       </motion.aside>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Header — desktop only (no hamburger) */}
-        <header className="flex items-center gap-3 h-[60px] px-4 lg:px-5 border-b border-white/5 flex-shrink-0 bg-[#060809]/80 backdrop-blur-sm">
-          {/* Page breadcrumb placeholder — keeps header from being totally empty on mobile */}
+        {/* Top header */}
+        <header className="flex items-center gap-3 h-[64px] px-4 lg:px-5 border-b border-white/5 flex-shrink-0 bg-[#050708]/85 backdrop-blur-xl">
+          {/* Mobile: logo */}
           <div className="flex-1 lg:hidden">
-            <img src={logoMain} alt="extraGO" className="h-6 object-contain" />
+            <Link href="/">
+              <img src={logoMain} alt="extraGO" className="h-6 object-contain" />
+            </Link>
           </div>
-          <div className="hidden lg:block flex-1" />
+
+          {/* Desktop: greeting */}
+          <div className="hidden lg:flex flex-col flex-1">
+            <p className="text-xs text-muted-foreground font-medium">{greeting}, <span className="text-foreground font-semibold">{firstName}</span> 👋</p>
+          </div>
 
           <div className="flex items-center gap-1.5">
+            {/* Earnings chip (freelancer only, desktop) */}
+            {user.role === "freelancer" && (
+              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mr-1">
+                <TrendingUp size={12} className="text-primary" />
+                <span className="text-[11px] font-bold text-primary">{user.completedJobs ?? 0} jobs</span>
+              </div>
+            )}
+
             <Link href="/app/notifications">
-              <button className="relative w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                className="relative w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/6 transition-all"
+              >
                 <Bell size={17} />
-                {unread > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-black text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
-                    {unread > 9 ? "9+" : unread}
-                  </span>
-                )}
-              </button>
+                <AnimatePresence>
+                  {unread > 0 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-black text-[9px] font-bold rounded-full flex items-center justify-center leading-none"
+                      style={{ boxShadow: "0 0 8px rgba(124,252,0,0.5)" }}
+                    >
+                      {unread > 9 ? "9+" : unread}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
             </Link>
+
             <Link href="/">
-              <button className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/5 transition-all">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/6 transition-all"
+              >
                 <Home size={17} />
-              </button>
+              </motion.button>
             </Link>
+
+            {/* Mobile avatar */}
+            <div className="lg:hidden relative ml-1">
+              <div className="relative">
+                <AvatarInitials name={user.name} size="sm" />
+                {user.role === "freelancer" && <XPRing progress={xpProgress} size={36} />}
+              </div>
+            </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto pb-20 lg:pb-0">
+        <main className="flex-1 overflow-y-auto pb-[72px] lg:pb-0">
           {children}
         </main>
       </div>
 
-      {/* Mobile bottom tab bar — the ONLY mobile nav (no hamburger/drawer) */}
+      {/* Mobile bottom tab bar */}
       <nav className="bottom-tab-bar lg:hidden">
-        <div className="flex items-stretch h-16">
+        <div className="flex items-stretch h-[60px]">
           {bottomItems.map((item) => {
             const active = isActive(item.href);
             return (
               <Link key={item.href} href={item.href} className="flex-1">
-                <div className={`flex flex-col items-center justify-center h-full gap-1 transition-all ${
-                  active ? "text-primary" : "text-muted-foreground"
-                }`}>
-                  <div className={`transition-transform duration-150 ${active ? "scale-110" : ""}`}>
+                <motion.div
+                  whileTap={{ scale: 0.88 }}
+                  className={`flex flex-col items-center justify-center h-full gap-1 transition-all relative ${
+                    active ? "text-primary" : "text-muted-foreground/60"
+                  }`}
+                >
+                  <motion.div
+                    animate={active ? { scale: 1.1 } : { scale: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                    className={active ? "nav-icon-active" : ""}
+                  >
                     {item.icon}
-                  </div>
-                  <span className="text-[10px] font-medium leading-none">{item.label}</span>
-                  {active && <div className="w-1 h-1 rounded-full bg-primary mt-0.5" />}
-                </div>
+                  </motion.div>
+                  <span className={`text-[9px] font-semibold leading-none tracking-wide ${active ? "text-primary" : "text-muted-foreground/50"}`}>
+                    {item.label}
+                  </span>
+                  {active && (
+                    <motion.div
+                      layoutId="bottom-nav-indicator"
+                      className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full"
+                      style={{ boxShadow: "0 0 8px rgba(124,252,0,0.7)" }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </motion.div>
               </Link>
             );
           })}
