@@ -2,33 +2,21 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useGetCompanyStats, useGetFreelancerStats, useListJobs, useListApplications, useListTransactions } from "@workspace/api-client-react";
 import type { Application, Transaction } from "@workspace/api-client-react";
-import { Briefcase, DollarSign, Star, TrendingUp, Clock, CheckCircle, Users, FileText, ArrowRight, Wallet, Zap, Plus } from "lucide-react";
+import { Briefcase, DollarSign, Star, TrendingUp, Clock, CheckCircle, Users, FileText, ArrowRight, Wallet, Zap, Plus, Activity } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/ui/empty";
 import { SkeletonStatCard, SkeletonListRow } from "@/components/ui/skeleton";
+import { PageHeader } from "@/components/page-header";
+import { LiveActivityFeed } from "@/components/live-activity-feed";
+import { ProfileCompletionBanner } from "@/components/profile-completion-banner";
+import { OnboardingWizard } from "@/components/onboarding-wizard";
+import { AnimatedCounter } from "@/components/animated-counter";
+import { useLivePlatformStats } from "@/hooks/use-live-platform-stats";
 import { motion, AnimatePresence } from "framer-motion";
 import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
-
-function useCountUp(target: number, duration = 1200) {
-  const [count, setCount] = useState(0);
-  const started = useRef(false);
-  useEffect(() => {
-    if (started.current || target === 0) { setCount(target); return; }
-    started.current = true;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [target, duration]);
-  return count;
-}
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -74,11 +62,6 @@ function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading
   delay?: number;
 }) {
   const numValue = typeof value === "number" ? value : parseFloat(String(value).replace(/[^0-9.]/g, "")) || 0;
-  const counted = useCountUp(numValue);
-  const displayValue = typeof value === "string"
-    ? value.replace(/\d+(\.\d+)?/, counted.toFixed(String(value).includes(".") ? 2 : 0))
-    : counted;
-
   const c = STAT_COLOR_MAP[color];
 
   if (isLoading) return <SkeletonStatCard />;
@@ -91,19 +74,23 @@ function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading
       whileHover={{ y: -3, scale: 1.02 }}
       className={`glass-card rounded-2xl p-5 bg-gradient-to-br ${c.container} border cursor-default transition-all`}
     >
-      <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wide">{label}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-foreground leading-none">
+            {typeof value === "string" && value.startsWith("R$") ? (
+              <>R$ <AnimatedCounter value={numValue} decimals={2} /></>
+            ) : (
+              <AnimatedCounter value={numValue} decimals={typeof value === "string" && value.includes(".") ? 1 : 0} suffix={typeof value === "string" && value.endsWith("★") ? " ★" : ""} />
+            )}
+          </p>
+          {sub && <p className="text-xs text-muted-foreground mt-2">{sub}</p>}
+          {trend && <p className="text-xs text-green-400 mt-1 font-medium">{trend}</p>}
+        </div>
         <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 ${c.icon}`}>
           {icon}
         </div>
-        {trend && (
-          <span className="text-[10px] font-bold text-green-400 bg-green-400/10 border border-green-400/20 px-2 py-0.5 rounded-full flex-shrink-0">
-            {trend}
-          </span>
-        )}
       </div>
-      <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">{label}</p>
-      <p className={`text-2xl sm:text-3xl font-bold leading-none ${c.valueColor}`}>{displayValue}</p>
-      {sub && <p className="text-xs text-muted-foreground mt-1.5">{sub}</p>}
     </motion.div>
   );
 }
@@ -141,8 +128,12 @@ function ActivityFeedItem({ title, sub, time, icon, iconBg }: {
 }
 
 function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }) {
-  const { data: apps = [], isLoading: appsLoading } = useListApplications({ status: undefined });
-  const { data: txs = [], isLoading: txsLoading } = useListTransactions();
+  const { data: apps = [], isLoading: appsLoading } = useListApplications({ status: undefined }, {
+    query: { queryKey: ["apps-dashboard"], refetchInterval: 10000, refetchIntervalInBackground: false },
+  });
+  const { data: txs = [], isLoading: txsLoading } = useListTransactions(undefined, {
+    query: { queryKey: ["txs-dashboard"], refetchInterval: 10000, refetchIntervalInBackground: false },
+  });
 
   const loading = isLoading || appsLoading || txsLoading;
 
@@ -262,17 +253,59 @@ function GreetingHeader({ name, subtitle, badge, action }: {
   );
 }
 
+function PlatformStatsBanner() {
+  const { data: stats, isLoading } = useLivePlatformStats();
+
+  if (isLoading) return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {[1,2,3,4].map(i => <div key={i} className="glass-card rounded-xl p-3 h-16 skeleton" />)}
+    </div>
+  );
+
+  const items = [
+    { label: "Usuários Ativos (24h)", value: stats?.activeUsers24h ?? 0, color: "text-primary" },
+    { label: "Vagas Hoje", value: stats?.jobsToday ?? 0, color: "text-secondary" },
+    { label: "Em Andamento", value: stats?.jobsInProgress ?? 0, color: "text-green-400" },
+    { label: "Total de Extras", value: stats?.totalFreelancers ?? 0, color: "text-yellow-400" },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {items.map((item, i) => (
+        <motion.div
+          key={item.label}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: i * 0.07 }}
+          className="glass-card rounded-xl p-3 flex items-center gap-2.5"
+        >
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] text-muted-foreground truncate font-medium">{item.label}</p>
+            <p className={`text-xl font-bold leading-tight mt-0.5 ${item.color}`}>
+              <AnimatedCounter value={item.value} />
+            </p>
+          </div>
+          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
 /* ─────────────────────────────────────────────
    COMPANY DASHBOARD
 ───────────────────────────────────────────── */
 function CompanyDashboard() {
   const { user } = useAuth();
-  const { data: stats, isLoading: statsLoading } = useGetCompanyStats(user?.id ?? 0, { query: { queryKey: ["company-stats", user?.id], enabled: !!user?.id } });
+  const { data: stats, isLoading: statsLoading } = useGetCompanyStats(user?.id ?? 0, {
+    query: { queryKey: ["company-stats", user?.id], enabled: !!user?.id, refetchInterval: 30000, refetchIntervalInBackground: false },
+  });
   const { data: jobs, isLoading: jobsLoading } = useListJobs({ status: "open" });
   const recentJobs = jobs?.slice(0, 5) ?? [];
 
   return (
     <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-7 pb-20 lg:pb-6">
+      <OnboardingWizard />
       <GreetingHeader
         name={user?.name?.split(" ")[0] ?? "Empresa"}
         subtitle="Acompanhe suas vagas e contratações."
@@ -287,7 +320,11 @@ function CompanyDashboard() {
         }
       />
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <ProfileCompletionBanner />
+
+      <PlatformStatsBanner />
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 stagger-children">
         <StatCard icon={<Briefcase size={18} />} label="Vagas Abertas" value={stats?.activeJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} />
         <StatCard icon={<Users size={18} />} label="Profissionais" value={stats?.totalWorkers ?? 0} color="secondary" isLoading={statsLoading} delay={0.1} />
         <StatCard icon={<CheckCircle size={18} />} label="Jobs Publicados" value={stats?.totalJobsPosted ?? 0} color="green" isLoading={statsLoading} delay={0.15} />
@@ -391,7 +428,9 @@ function CompanyDashboard() {
 ───────────────────────────────────────────── */
 function FreelancerDashboard() {
   const { user } = useAuth();
-  const { data: stats, isLoading: statsLoading } = useGetFreelancerStats(user?.id ?? 0, { query: { queryKey: ["freelancer-stats", user?.id], enabled: !!user?.id } });
+  const { data: stats, isLoading: statsLoading } = useGetFreelancerStats(user?.id ?? 0, {
+    query: { queryKey: ["freelancer-stats", user?.id], enabled: !!user?.id, refetchInterval: 30000, refetchIntervalInBackground: false },
+  });
   const { data: myApps, isLoading: appsLoading } = useListApplications({ status: "pending" });
   const pendingApps = myApps?.slice(0, 4) ?? [];
 
@@ -413,6 +452,7 @@ function FreelancerDashboard() {
 
   return (
     <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-7 pb-20 lg:pb-6">
+      <OnboardingWizard />
       <GreetingHeader
         name={user?.name?.split(" ")[0] ?? "Profissional"}
         subtitle="Aqui está seu desempenho na plataforma."
@@ -437,12 +477,15 @@ function FreelancerDashboard() {
         }
       />
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <ProfileCompletionBanner />
+
+      <PlatformStatsBanner />
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 stagger-children">
         <StatCard icon={<CheckCircle size={18} />} label="Jobs Feitos" value={user?.completedJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} />
-        <StatCard icon={<Star size={18} />} label="Reputação" value={`${(user?.reputationScore ?? 0).toFixed(1)} ★`} color="yellow" isLoading={statsLoading} delay={0.1} />
+        <StatCard icon={<Star size={18} />} label="Reputação" value={(user?.reputationScore ?? 0)} sub="/ 5.0" color="yellow" isLoading={statsLoading} delay={0.1} />
         <StatCard icon={<DollarSign size={18} />} label="Ganhos Totais" value={`R$ ${((stats?.totalEarned ?? 0) / 100).toFixed(2)}`} color="green" isLoading={statsLoading} delay={0.15} />
-        <StatCard icon={<TrendingUp size={18} />} label="Concluídos" value={stats?.completedJobs ?? 0} color="secondary" isLoading={statsLoading} delay={0.2} />
+        <StatCard icon={<TrendingUp size={18} />} label="Jobs Concluídos" value={stats?.completedJobs ?? 0} color="secondary" isLoading={statsLoading} delay={0.2} />
       </div>
 
       {/* Level progress card */}
@@ -452,7 +495,6 @@ function FreelancerDashboard() {
         transition={{ duration: 0.5, delay: 0.25 }}
         className="glass-card rounded-2xl p-5 border border-primary/12 relative overflow-hidden"
       >
-        {/* Subtle background glow */}
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none" />
         <div className="relative flex items-center justify-between mb-4">
           <div>
@@ -583,6 +625,8 @@ function FreelancerDashboard() {
               </div>
             </div>
           </motion.div>
+
+          <LiveActivityFeed />
         </div>
       </div>
     </div>

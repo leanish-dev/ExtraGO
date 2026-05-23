@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
+import { NotificationBell } from "@/components/notifications-dropdown";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavItem {
@@ -294,27 +295,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </div>
             )}
 
-            <Link href="/app/notifications">
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                className="relative w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/6 transition-all"
-              >
-                <Bell size={17} />
-                <AnimatePresence>
-                  {unread > 0 && (
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-black text-[9px] font-bold rounded-full flex items-center justify-center leading-none"
-                      style={{ boxShadow: "0 0 8px rgba(124,252,0,0.5)" }}
-                    >
-                      {unread > 9 ? "9+" : unread}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            </Link>
+            <NotificationBell unread={unread} />
 
             <Link href="/">
               <motion.button

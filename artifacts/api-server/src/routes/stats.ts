@@ -1,12 +1,15 @@
 import { Router } from "express";
 import { db, usersTable, jobsTable, applicationsTable, transactionsTable, walletsTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, gte } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 
 const router = Router();
 
 // GET /stats/platform
 router.get("/stats/platform", async (req, res) => {
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const todayStr = new Date().toISOString().slice(0, 10);
+
   const [freelancers, companies, allJobs, allTransactions] = await Promise.all([
     db.select().from(usersTable).where(eq(usersTable.role, "freelancer")),
     db.select().from(usersTable).where(eq(usersTable.role, "company")),
@@ -16,7 +19,18 @@ router.get("/stats/platform", async (req, res) => {
 
   const activeJobs = allJobs.filter(j => j.status === "open" || j.status === "in_progress").length;
   const completedJobs = allJobs.filter(j => j.status === "completed").length;
+  const jobsInProgress = allJobs.filter(j => j.status === "in_progress").length;
+  const jobsToday = allJobs.filter(j => {
+    if (!j.createdAt) return false;
+    return j.createdAt.toISOString().slice(0, 10) === todayStr;
+  }).length;
   const totalTransacted = allTransactions.reduce((s, t) => s + t.amount, 0);
+
+  const allUsers = [...freelancers, ...companies];
+  const activeUsers24h = allUsers.filter(u => {
+    if (!u.createdAt) return false;
+    return u.createdAt.getTime() > yesterday.getTime();
+  }).length;
 
   const categoryCounts = new Map<string, number>();
   allJobs.forEach(j => categoryCounts.set(j.category, (categoryCounts.get(j.category) ?? 0) + 1));
@@ -34,9 +48,83 @@ router.get("/stats/platform", async (req, res) => {
     activeJobs,
     completedJobs,
     totalTransacted,
+    activeUsers24h,
+    jobsInProgress,
+    jobsToday,
     jobsByCategory,
     recentActivity,
   });
+});
+
+// GET /stats/activity-feed
+router.get("/stats/activity-feed", async (req, res) => {
+  const [recentJobs, recentUsers, recentApps, recentTxs] = await Promise.all([
+    db.select().from(jobsTable).orderBy(sql`${jobsTable.createdAt} DESC`).limit(8),
+    db.select().from(usersTable).where(eq(usersTable.role, "freelancer")).orderBy(sql`${usersTable.createdAt} DESC`).limit(5),
+    db.select().from(applicationsTable).orderBy(sql`${applicationsTable.appliedAt} DESC`).limit(8),
+    db.select().from(transactionsTable).where(eq(transactionsTable.type, "credit")).orderBy(sql`${transactionsTable.createdAt} DESC`).limit(5),
+  ]);
+
+  type FeedItem = { id: string; type: string; actorName: string; description: string; timestamp: string; icon: string };
+  const items: FeedItem[] = [];
+
+  recentJobs.forEach(j => {
+    items.push({
+      id: `job-${j.id}`,
+      type: "job_created",
+      actorName: "Empresa",
+      description: `Nova vaga publicada: ${j.title}`,
+      timestamp: j.createdAt?.toISOString() ?? "",
+      icon: "briefcase",
+    });
+    if (j.status === "completed") {
+      items.push({
+        id: `job-done-${j.id}`,
+        type: "job_completed",
+        actorName: "Plataforma",
+        description: `Vaga concluída: ${j.title}`,
+        timestamp: j.createdAt?.toISOString() ?? "",
+        icon: "check-circle",
+      });
+    }
+  });
+
+  recentUsers.forEach(u => {
+    items.push({
+      id: `user-${u.id}`,
+      type: "user_joined",
+      actorName: u.name,
+      description: `${u.name} entrou na plataforma`,
+      timestamp: u.createdAt?.toISOString() ?? "",
+      icon: "user",
+    });
+  });
+
+  recentApps.forEach(a => {
+    items.push({
+      id: `app-${a.id}`,
+      type: "application_submitted",
+      actorName: "Profissional",
+      description: `Nova candidatura enviada`,
+      timestamp: a.appliedAt?.toISOString() ?? "",
+      icon: "file-text",
+    });
+  });
+
+  recentTxs.forEach(t => {
+    items.push({
+      id: `tx-${t.id}`,
+      type: "payment_released",
+      actorName: "Sistema",
+      description: `Pagamento de R$ ${(t.amount / 100).toFixed(2)} processado`,
+      timestamp: t.createdAt?.toISOString() ?? "",
+      icon: "dollar-sign",
+    });
+  });
+
+  items.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+
+  res.json(items.slice(0, 20));
 });
 
 // GET /stats/company/:id

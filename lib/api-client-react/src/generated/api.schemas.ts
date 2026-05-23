@@ -300,8 +300,20 @@ export interface PlatformStats {
   activeJobs: number;
   completedJobs: number;
   totalTransacted: number;
+  activeUsers24h: number;
+  jobsInProgress: number;
+  jobsToday: number;
   jobsByCategory: CategoryCount[];
   recentActivity: ActivityItem[];
+}
+
+export interface ActivityFeedItem {
+  id: string;
+  type: string;
+  actorName: string;
+  description: string;
+  timestamp: string;
+  icon: string;
 }
 
 export interface MonthCount {

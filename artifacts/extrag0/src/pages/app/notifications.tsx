@@ -1,10 +1,13 @@
 import React from "react";
 import { useListNotifications, useMarkAllNotificationsRead, useMarkNotificationRead } from "@workspace/api-client-react";
-import { Bell, CheckCheck, BellOff } from "lucide-react";
+import { Bell, CheckCheck, BellOff, Briefcase, DollarSign, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty";
+import { SkeletonListRow } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 const TYPE_ICONS: Record<string, string> = {
   job_applied: "📋",
@@ -16,8 +19,24 @@ const TYPE_ICONS: Record<string, string> = {
   system: "📢",
 };
 
+const TYPE_GROUPS: Record<string, string> = {
+  job_applied: "Vagas",
+  application_approved: "Vagas",
+  application_rejected: "Vagas",
+  job_completed: "Vagas",
+  payment_received: "Pagamentos",
+  withdrawal_approved: "Pagamentos",
+  system: "Sistema",
+};
+
 export default function NotificationsPage() {
-  const { data: notifs = [], refetch } = useListNotifications();
+  const { data: notifs = [], isLoading, refetch } = useListNotifications(undefined, {
+    query: {
+      queryKey: ["notifications-page"],
+      refetchInterval: 30000,
+      refetchIntervalInBackground: false,
+    },
+  });
   const markAll = useMarkAllNotificationsRead();
   const markOne = useMarkNotificationRead();
 
@@ -37,11 +56,13 @@ export default function NotificationsPage() {
   const unread = notifs.filter(n => !n.isRead).length;
 
   return (
-    <div className="p-6 max-w-2xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Notificações</h1>
-          <p className="text-muted-foreground mt-1">{unread} não lida{unread !== 1 ? "s" : ""}</p>
+          <p className="text-muted-foreground mt-1 text-sm">
+            {unread > 0 ? `${unread} não lida${unread !== 1 ? "s" : ""}` : "Tudo em dia!"}
+          </p>
         </div>
         {unread > 0 && (
           <Button
@@ -56,26 +77,48 @@ export default function NotificationsPage() {
         )}
       </div>
 
-      {notifs.length === 0 && (
-        <div className="text-center py-20">
-          <BellOff size={40} className="text-muted-foreground mx-auto mb-3" />
-          <p className="text-lg font-medium">Nenhuma notificação</p>
-          <p className="text-sm text-muted-foreground mt-1">Você está em dia!</p>
+      {isLoading && (
+        <div className="space-y-2">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="glass-card rounded-xl p-4">
+              <SkeletonListRow />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!isLoading && notifs.length === 0 && (
+        <div className="glass-card rounded-2xl">
+          <EmptyState
+            icon={<BellOff size={28} />}
+            title="Nenhuma notificação"
+            description="Você está em dia! Novas notificações sobre vagas, candidaturas e pagamentos aparecerão aqui."
+            actionLabel="Buscar Vagas"
+            actionHref="/app/jobs"
+          />
         </div>
       )}
 
       <div className="space-y-2">
-        {notifs.map(notif => (
-          <button
+        {notifs.map((notif, i) => (
+          <motion.button
             key={notif.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: i * 0.04 }}
             onClick={() => !notif.isRead && handleMarkOne(notif.id!)}
             className={`w-full text-left glass-card rounded-xl p-4 flex items-start gap-3 transition-all ${
-              !notif.isRead ? "border-primary/20 bg-primary/5" : "opacity-60 hover:opacity-80"
+              !notif.isRead ? "border-primary/20 bg-primary/5 hover:bg-primary/8" : "opacity-60 hover:opacity-80"
             }`}
           >
             <span className="text-xl flex-shrink-0 mt-0.5">{TYPE_ICONS[notif.type ?? "system"] ?? "🔔"}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium">{notif.title}</p>
+              <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                <p className="text-sm font-medium">{notif.title}</p>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-white/5 border border-white/8 text-muted-foreground">
+                  {TYPE_GROUPS[notif.type ?? "system"] ?? "Sistema"}
+                </span>
+              </div>
               <p className="text-xs text-muted-foreground mt-0.5">{notif.message}</p>
               <p className="text-xs text-muted-foreground mt-1">
                 {notif.createdAt ? format(new Date(notif.createdAt), "dd 'de' MMM 'às' HH:mm", { locale: ptBR }) : ""}
@@ -84,7 +127,7 @@ export default function NotificationsPage() {
             {!notif.isRead && (
               <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-2" />
             )}
-          </button>
+          </motion.button>
         ))}
       </div>
     </div>

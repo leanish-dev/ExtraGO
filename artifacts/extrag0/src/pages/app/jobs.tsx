@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useListJobs, useApplyToJob } from "@workspace/api-client-react";
 import type { Job } from "@workspace/api-client-react";
-import { Search, MapPin, Clock, DollarSign, Users, Briefcase, Filter, X, ChevronDown, ExternalLink, Star, Zap } from "lucide-react";
+import { Search, MapPin, Clock, DollarSign, Users, Briefcase, Filter, X, ChevronDown, ExternalLink, Star, Zap, Timer, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,6 +33,105 @@ function getHours(startTime?: string | null, endTime?: string | null): number | 
   return diff / 60;
 }
 
+type LiveStatus = "happening" | "soon" | "finished" | "normal";
+
+function getLiveStatus(job: Job): LiveStatus {
+  if (!job.date || !job.startTime || !job.endTime) return "normal";
+  if (job.status === "completed" || job.status === "cancelled") return "finished";
+
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const jobDate = job.date.slice(0, 10);
+
+  if (jobDate !== todayStr) {
+    if (jobDate < todayStr) return "finished";
+    return "normal";
+  }
+
+  const [sh, sm] = job.startTime.split(":").map(Number);
+  const [eh, em] = job.endTime.split(":").map(Number);
+
+  const startMinutes = sh * 60 + sm;
+  const endMinutes = eh * 60 + em;
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  if (nowMinutes >= startMinutes && nowMinutes < endMinutes) return "happening";
+  if (nowMinutes < startMinutes && startMinutes - nowMinutes <= 120) return "soon";
+  if (nowMinutes >= endMinutes) return "finished";
+
+  return "normal";
+}
+
+function useCountdown(job: Job): string {
+  const [countdown, setCountdown] = useState("");
+
+  useEffect(() => {
+    const compute = () => {
+      if (!job.date || !job.startTime) { setCountdown(""); return; }
+      const now = new Date();
+      const jobDate = job.date.slice(0, 10);
+      const todayStr = now.toISOString().slice(0, 10);
+      if (jobDate !== todayStr) { setCountdown(""); return; }
+
+      const [sh, sm] = job.startTime.split(":").map(Number);
+      const startMs = new Date().setHours(sh, sm, 0, 0);
+      const diffMs = startMs - Date.now();
+      if (diffMs <= 0) { setCountdown(""); return; }
+
+      const totalSec = Math.floor(diffMs / 1000);
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = totalSec % 60;
+
+      if (h > 0) setCountdown(`${h}h ${m}m`);
+      else if (m > 0) setCountdown(`${m}m ${s}s`);
+      else setCountdown(`${s}s`);
+    };
+
+    compute();
+    const id = setInterval(compute, 1000);
+    return () => clearInterval(id);
+  }, [job.date, job.startTime]);
+
+  return countdown;
+}
+
+function LiveStatusBadge({ job, size = "sm" }: { job: Job; size?: "sm" | "md" }) {
+  const liveStatus = getLiveStatus(job);
+  const countdown = useCountdown(job);
+
+  if (liveStatus === "normal") return null;
+
+  if (liveStatus === "happening") {
+    return (
+      <span className={`inline-flex items-center gap-1 font-bold rounded-full border ${size === "md" ? "px-3 py-1 text-xs" : "px-2 py-0.5 text-[10px]"} bg-green-500/15 text-green-400 border-green-500/30`}>
+        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse inline-block" />
+        Acontecendo Agora
+      </span>
+    );
+  }
+
+  if (liveStatus === "soon") {
+    return (
+      <span className={`inline-flex items-center gap-1 font-bold rounded-full border ${size === "md" ? "px-3 py-1 text-xs" : "px-2 py-0.5 text-[10px]"} bg-amber-500/15 text-amber-400 border-amber-500/30`}>
+        <Timer size={size === "md" ? 12 : 10} />
+        {countdown ? `Começa em ${countdown}` : "Começando em Breve"}
+      </span>
+    );
+  }
+
+  if (liveStatus === "finished") {
+    return (
+      <span className={`inline-flex items-center gap-1 font-semibold rounded-full border ${size === "md" ? "px-3 py-1 text-xs" : "px-2 py-0.5 text-[10px]"} bg-white/5 text-muted-foreground border-white/10`}>
+        <CheckCircle2 size={size === "md" ? 12 : 10} />
+        Finalizado
+      </span>
+    );
+  }
+
+  return null;
+}
+
 function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
   job: Job | null;
   open: boolean;
@@ -46,6 +145,7 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
   const hours = getHours(job.startTime, job.endTime);
   const total = hours ? (job.hourlyRate ?? 0) * hours : null;
   const statusInfo = STATUS_MAP[job.status ?? "open"] ?? STATUS_MAP.open;
+  const liveStatus = getLiveStatus(job);
 
   const handleApply = async () => {
     if (!onApply) return;
@@ -71,9 +171,17 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
             <div className="flex items-center gap-2 mb-3 flex-wrap">
               <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border ${statusInfo.class}`}>{statusInfo.label}</span>
               <span className="text-[10px] text-muted-foreground px-2.5 py-1 rounded-full bg-white/5 border border-white/8">{job.category}</span>
+              <LiveStatusBadge job={job} size="sm" />
             </div>
             <SheetTitle className="text-xl font-bold leading-snug text-left">{job.title}</SheetTitle>
           </SheetHeader>
+
+          {liveStatus === "happening" && (
+            <div className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center gap-2">
+              <Zap size={14} className="text-green-400 flex-shrink-0" />
+              <p className="text-xs text-green-400 font-semibold">Este evento está acontecendo agora mesmo!</p>
+            </div>
+          )}
 
           <div className="flex items-end gap-4 relative">
             <div>
@@ -170,9 +278,9 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
                 <Button
                   className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl h-12 text-sm"
                   onClick={handleApply}
-                  disabled={applying || job.status !== "open"}
+                  disabled={applying || job.status !== "open" || liveStatus === "finished"}
                 >
-                  {applying ? "Enviando candidatura..." : "Candidatar-se agora"}
+                  {applying ? "Enviando candidatura..." : liveStatus === "finished" ? "Vaga encerrada" : "Candidatar-se agora"}
                 </Button>
               </motion.div>
             )}
@@ -191,6 +299,7 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
 function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (job: Job) => void; isCompany?: boolean; index?: number }) {
   const hours = getHours(job.startTime, job.endTime);
   const statusInfo = STATUS_MAP[job.status ?? "open"] ?? STATUS_MAP.open;
+  const liveStatus = getLiveStatus(job);
 
   return (
     <motion.div
@@ -200,13 +309,25 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
       whileHover={{ y: -4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onClick(job)}
-      className="glass-card rounded-2xl p-5 flex flex-col h-full group cursor-pointer border border-white/6 hover:border-primary/22 transition-all"
+      className={`glass-card card-hover rounded-2xl p-5 flex flex-col h-full group cursor-pointer border border-white/6 transition-all relative overflow-hidden ${
+        liveStatus === "happening" ? "border-green-500/25" : liveStatus === "soon" ? "border-amber-500/20" : "hover:border-primary/22"
+      }`}
       style={{ willChange: "transform" }}
     >
+      {liveStatus === "happening" && (
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent" />
+      )}
+
       {/* Header */}
       <div className="flex items-start gap-3 mb-4">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/15 to-secondary/8 border border-primary/20 flex items-center justify-center flex-shrink-0 group-hover:border-primary/35 transition-all">
-          <Briefcase size={20} className="text-primary group-hover:scale-110 transition-transform" />
+        <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center flex-shrink-0 transition-all ${
+          liveStatus === "happening" ? "bg-green-500/10 border-green-500/20" :
+          liveStatus === "soon" ? "bg-amber-500/10 border-amber-500/20" :
+          "bg-gradient-to-br from-primary/15 to-secondary/8 border-primary/20 group-hover:border-primary/35"
+        }`}>
+          {liveStatus === "happening" ? <Zap size={20} className="text-green-400 animate-pulse" /> :
+           liveStatus === "soon" ? <Timer size={20} className="text-amber-400" /> :
+           <Briefcase size={20} className="text-primary group-hover:scale-110 transition-transform" />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1.5">
@@ -221,8 +342,15 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
         </div>
       </div>
 
+      {/* Live status badge */}
+      {liveStatus !== "normal" && (
+        <div className="mb-3">
+          <LiveStatusBadge job={job} size="sm" />
+        </div>
+      )}
+
       {job.description && (
-        <p className="text-xs text-muted-foreground/80 line-clamp-2 mb-4 leading-relaxed">{job.description}</p>
+        <p className="text-xs text-muted-foreground/80 line-clamp-2 mb-4 leading-relaxed flex-shrink-0">{job.description}</p>
       )}
 
       {/* Meta info */}
@@ -278,6 +406,12 @@ export default function JobsPage() {
   const { data: jobs = [], isLoading } = useListJobs({
     status: user?.role === "company" ? undefined : "open",
     category: category !== "Todos" ? category : undefined,
+  }, {
+    query: {
+      queryKey: ["jobs-list", category, user?.role],
+      refetchInterval: 10000,
+      refetchIntervalInBackground: false,
+    },
   });
 
   const applyMutation = useApplyToJob();
@@ -386,13 +520,16 @@ export default function JobsPage() {
 
       {/* Empty state */}
       {!isLoading && filtered.length === 0 && (
-        <EmptyState
-          icon={<Briefcase size={28} />}
-          title="Nenhuma vaga encontrada"
-          description="Tente outros filtros ou termos de busca."
-          actionLabel={user?.role === "company" ? "Publicar Vaga" : undefined}
-          actionHref="/app/jobs/new"
-        />
+        <div className="glass-card rounded-2xl">
+          <EmptyState
+            icon={<Briefcase size={28} />}
+            title="Nenhuma vaga encontrada"
+            description="Tente outros filtros ou termos de busca para encontrar oportunidades."
+            actionLabel={user?.role === "company" ? "Publicar Vaga" : "Limpar filtros"}
+            actionHref={user?.role === "company" ? "/app/jobs/new" : undefined}
+            onAction={user?.role !== "company" ? () => { setSearch(""); setCategory("Todos"); } : undefined}
+          />
+        </div>
       )}
 
       {/* Job cards */}

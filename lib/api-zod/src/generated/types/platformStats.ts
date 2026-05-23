@@ -15,6 +15,9 @@ export interface PlatformStats {
   activeJobs: number;
   completedJobs: number;
   totalTransacted: number;
+  activeUsers24h: number;
+  jobsInProgress: number;
+  jobsToday: number;
   jobsByCategory: CategoryCount[];
   recentActivity: ActivityItem[];
 }

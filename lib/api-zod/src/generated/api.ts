@@ -734,6 +734,9 @@ export const GetPlatformStatsResponse = zod.object({
   "activeJobs": zod.number(),
   "completedJobs": zod.number(),
   "totalTransacted": zod.number(),
+  "activeUsers24h": zod.number(),
+  "jobsInProgress": zod.number(),
+  "jobsToday": zod.number(),
   "jobsByCategory": zod.array(zod.object({
   "category": zod.string(),
   "count": zod.number()
@@ -744,6 +747,20 @@ export const GetPlatformStatsResponse = zod.object({
   "timestamp": zod.string()
 }))
 })
+
+
+/**
+ * @summary Get live activity feed
+ */
+export const GetActivityFeedResponseItem = zod.object({
+  "id": zod.string(),
+  "type": zod.string(),
+  "actorName": zod.string(),
+  "description": zod.string(),
+  "timestamp": zod.string(),
+  "icon": zod.string()
+})
+export const GetActivityFeedResponse = zod.array(GetActivityFeedResponseItem)
 
 
 /**

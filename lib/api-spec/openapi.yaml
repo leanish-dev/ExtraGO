@@ -611,6 +611,21 @@ paths:
               schema:
                 $ref: "#/components/schemas/PlatformStats"
 
+  /stats/activity-feed:
+    get:
+      operationId: getActivityFeed
+      tags: [stats]
+      summary: Get live activity feed
+      responses:
+        "200":
+          description: Activity feed items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityFeedItem"
+
   /stats/company/{id}:
     get:
       operationId: getCompanyStats
@@ -1248,6 +1263,12 @@ components:
           type: integer
         totalTransacted:
           type: number
+        activeUsers24h:
+          type: integer
+        jobsInProgress:
+          type: integer
+        jobsToday:
+          type: integer
         jobsByCategory:
           type: array
           items:
@@ -1263,8 +1284,34 @@ components:
         - activeJobs
         - completedJobs
         - totalTransacted
+        - activeUsers24h
+        - jobsInProgress
+        - jobsToday
         - jobsByCategory
         - recentActivity
+
+    ActivityFeedItem:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        actorName:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+        icon:
+          type: string
+      required:
+        - id
+        - type
+        - actorName
+        - description
+        - timestamp
+        - icon
 
     CompanyStats:
       type: object

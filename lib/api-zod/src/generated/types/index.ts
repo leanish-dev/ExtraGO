@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './activityFeedItem';
 export * from './activityItem';
 export * from './adminListJobsParams';
 export * from './adminListUsersParams';
