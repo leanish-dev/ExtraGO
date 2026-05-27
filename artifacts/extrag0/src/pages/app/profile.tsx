@@ -303,24 +303,76 @@ export default function ProfilePage() {
         { key: "config", label: "Config." },
       ];
 
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl ?? null);
+
+  const handleAvatarClick = () => avatarInputRef.current?.click();
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 4 * 1024 * 1024) { toast.error("Imagem muito grande. Máximo 4MB."); return; }
+    setAvatarUploading(true);
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const dataUrl = ev.target?.result as string;
+      setAvatarPreview(dataUrl);
+      try {
+        await updateUser.mutateAsync({ id: user!.id!, data: { avatarUrl: dataUrl } as any });
+        toast.success("Foto atualizada!");
+      } catch {
+        toast.error("Erro ao salvar foto.");
+        setAvatarPreview(user?.avatarUrl ?? null);
+      } finally {
+        setAvatarUploading(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="pb-24">
       {/* Banner area */}
       <div className="relative w-full h-28 sm:h-36 bg-gradient-to-br from-primary/15 via-secondary/8 to-transparent overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060809] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#08111a] to-transparent" />
       </div>
 
       <div className="px-4 sm:px-6 max-w-3xl mx-auto">
         {/* Hero section */}
         <div className="relative -mt-10 mb-5">
           <div className="flex items-end gap-4">
-            <div className="relative flex-shrink-0">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-3xl font-bold text-black border-4 border-[#060809]">
-                {user?.name?.charAt(0).toUpperCase()}
+            {/* ── Clickable avatar with upload ── */}
+            <div className="relative flex-shrink-0 group cursor-pointer" onClick={handleAvatarClick}>
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                className="hidden"
+                onChange={handleAvatarChange}
+              />
+              {avatarPreview ? (
+                <img
+                  src={avatarPreview}
+                  alt={user?.name}
+                  className="w-20 h-20 rounded-2xl object-cover border-4 border-[#08111a] avatar-upload-ring"
+                />
+              ) : (
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary via-[#9aff1c] to-secondary flex items-center justify-center text-3xl font-bold text-black border-4 border-[#08111a] avatar-upload-ring">
+                  {user?.name?.charAt(0).toUpperCase()}
+                </div>
+              )}
+              {/* Upload overlay */}
+              <div className="absolute inset-0 rounded-2xl bg-black/50 opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center">
+                {avatarUploading ? (
+                  <Loader2 size={20} className="text-white animate-spin" />
+                ) : (
+                  <Camera size={20} className="text-white" />
+                )}
               </div>
               {user?.isVerified && (
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center border-2 border-[#060809]"
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center border-2 border-[#08111a]"
                   style={{ boxShadow: "0 0 10px rgba(124,252,0,0.6)" }}>
                   <CheckCircle size={11} className="text-black" />
                 </div>
