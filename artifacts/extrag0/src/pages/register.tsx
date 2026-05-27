@@ -154,7 +154,7 @@ export default function RegisterPage() {
       </div>
 
       {/* ── Right: Form Panel ── */}
-      <div className="flex-1 flex flex-col items-center justify-start sm:justify-center relative overflow-hidden overflow-y-auto">
+      <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden overflow-y-auto py-8">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/3 right-1/4 w-72 h-72 rounded-full bg-primary/5 blur-[90px]" />
           <div className="absolute bottom-1/4 left-1/4 w-56 h-56 rounded-full bg-secondary/4 blur-[80px]" />
@@ -164,7 +164,7 @@ export default function RegisterPage() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-          className="relative z-10 w-full max-w-[440px]"
+          className="relative z-10 w-full max-w-[520px]"
         >
           {/* Mobile banner */}
           <div className="lg:hidden w-full relative mb-0">
@@ -184,7 +184,7 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div className="px-5 sm:px-8 pt-7 sm:pt-0 pb-10">
+          <div className="px-5 sm:px-8 pt-7 lg:pt-0 pb-10">
             <div className="mb-6">
               <h1 className="text-[26px] sm:text-3xl font-bold mb-1.5 leading-tight">Crie sua conta</h1>
               <p className="text-muted-foreground text-sm">Junte-se à revolução extraGO — é grátis.</p>

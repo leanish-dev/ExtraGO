@@ -144,9 +144,26 @@ router.get("/admin/stats", requireAdmin, async (req, res) => {
     .slice(0, 5)
     .map(formatUser);
 
+  const freelancerCount = allUsers.filter(u => u.role === "freelancer").length;
+  const companyCount = allUsers.filter(u => u.role === "company").length;
+  const bannedCount = allUsers.filter(u => u.isBanned).length;
+  const verifiedCount = allUsers.filter(u => u.isVerified).length;
+
+  const jobsByStatus = {
+    open: allJobs.filter(j => j.status === "open").length,
+    in_progress: allJobs.filter(j => j.status === "in_progress").length,
+    completed: allJobs.filter(j => j.status === "completed").length,
+    cancelled: allJobs.filter(j => j.status === "cancelled").length,
+  };
+
   res.json({
     totalUsers: allUsers.length,
+    freelancerCount,
+    companyCount,
+    bannedCount,
+    verifiedCount,
     totalJobs: allJobs.length,
+    jobsByStatus,
     totalRevenue,
     pendingWithdrawals: pendingWithdrawals.length,
     pendingVerifications: pendingVerifications.filter(u => u.role === "freelancer").length,
@@ -154,6 +171,14 @@ router.get("/admin/stats", requireAdmin, async (req, res) => {
     revenueByMonth,
     topFreelancers,
   });
+});
+
+// DELETE /admin/jobs/:id
+router.delete("/admin/jobs/:id", requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+  await db.delete(jobsTable).where(eq(jobsTable.id, id));
+  res.json({ message: "Job deleted" });
 });
 
 export default router;

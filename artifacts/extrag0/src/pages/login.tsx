@@ -75,7 +75,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex overflow-hidden bg-[#050b10]">
 
       {/* ── Left: Panoramic Banner Panel (desktop) ── */}
-      <div className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative overflow-hidden flex-shrink-0">
+      <div className="hidden lg:flex lg:w-[56%] xl:w-[58%] relative overflow-hidden flex-shrink-0">
         {/* Full bleed panoramic image */}
         <img
           src={authBanner}
@@ -126,18 +126,18 @@ export default function LoginPage() {
       </div>
 
       {/* ── Right: Form Panel ── */}
-      <div className="flex-1 flex flex-col items-center justify-start sm:justify-center relative overflow-hidden overflow-y-auto">
+      <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden overflow-y-auto py-8">
         {/* Ambient glow */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 right-1/4 w-80 h-80 rounded-full bg-primary/5 blur-[100px]" />
-          <div className="absolute bottom-1/3 left-1/3 w-60 h-60 rounded-full bg-secondary/4 blur-[80px]" />
+          <div className="absolute top-1/4 right-1/3 w-96 h-96 rounded-full bg-primary/6 blur-[120px]" />
+          <div className="absolute bottom-1/3 left-1/4 w-72 h-72 rounded-full bg-secondary/5 blur-[100px]" />
         </div>
 
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-          className="relative z-10 w-full max-w-[420px]"
+          className="relative z-10 w-full max-w-[500px]"
         >
           {/* ── Mobile banner ── */}
           <div className="lg:hidden w-full relative mb-0">
@@ -157,7 +157,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="px-5 sm:px-8 pt-8 sm:pt-0 pb-10">
+          <div className="px-5 sm:px-8 pt-8 lg:pt-0 pb-10">
             <AnimatePresence mode="wait">
               {/* ── LOGIN VIEW ── */}
               {view === "login" && (

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAdminListUsers, useAdminBanUser, useAdminVerifyUser } from "@workspace/api-client-react";
 import type { User } from "@workspace/api-client-react";
-import { Users, Search, Shield, Ban, CheckCircle, AlertCircle, Star, Briefcase, Filter } from "lucide-react";
+import { Users, Search, Shield, Ban, CheckCircle, Star, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -22,11 +22,23 @@ function UserRow({ user, onVerify, onBan }: { user: User; onVerify: (id: number)
     admin: "Admin",
   };
 
+  const isBanned = (user as any).isBanned;
+  const joinDate = (user as any).createdAt
+    ? format(new Date((user as any).createdAt), "dd MMM yyyy", { locale: ptBR })
+    : null;
+
   return (
-    <div className="glass-card rounded-xl p-4 flex items-center gap-4">
-      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center text-sm font-bold flex-shrink-0">
-        {user.name?.charAt(0).toUpperCase()}
+    <div className={`glass-card rounded-xl p-4 flex items-center gap-4 transition-all ${isBanned ? "opacity-60 border-destructive/30" : ""}`}>
+      {/* Avatar */}
+      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center text-sm font-bold flex-shrink-0 overflow-hidden">
+        {(user as any).avatarUrl ? (
+          <img src={(user as any).avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+        ) : (
+          user.name?.charAt(0).toUpperCase()
+        )}
       </div>
+
+      {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <p className="font-semibold text-sm truncate">{user.name}</p>
@@ -34,41 +46,55 @@ function UserRow({ user, onVerify, onBan }: { user: User; onVerify: (id: number)
             {roleLabels[user.role ?? "freelancer"]}
           </span>
           {user.isVerified && (
-            <span className="text-xs text-primary flex items-center gap-0.5">
+            <span className="text-xs text-green-400 flex items-center gap-0.5">
               <CheckCircle size={11} /> Verificado
+            </span>
+          )}
+          {isBanned && (
+            <span className="text-xs text-destructive flex items-center gap-0.5 bg-destructive/10 border border-destructive/20 px-1.5 py-0.5 rounded-full">
+              <Ban size={10} /> Banido
             </span>
           )}
         </div>
         <p className="text-xs text-muted-foreground mt-0.5">{user.email}</p>
-        {user.role === "freelancer" && (
-          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1"><Briefcase size={11} /> {user.completedJobs ?? 0} jobs</span>
-            <span className="flex items-center gap-1"><Star size={11} className="text-yellow-400" /> {(user.reputationScore ?? 0).toFixed(1)}</span>
-            <span className="capitalize">{user.level ?? "bronze"}</span>
-          </div>
-        )}
-        {user.role === "company" && user.companyName && (
-          <p className="text-xs text-muted-foreground mt-0.5">{user.companyName}</p>
-        )}
+        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
+          {user.role === "freelancer" && (
+            <>
+              <span className="flex items-center gap-1"><Briefcase size={10} /> {user.completedJobs ?? 0} jobs</span>
+              <span className="flex items-center gap-1"><Star size={10} className="text-yellow-400" /> {(user.reputationScore ?? 0).toFixed(1)}</span>
+              <span className="capitalize">{user.level ?? "bronze"}</span>
+            </>
+          )}
+          {user.role === "company" && user.companyName && (
+            <span>{user.companyName}</span>
+          )}
+          {joinDate && <span>Desde {joinDate}</span>}
+        </div>
       </div>
+
+      {/* Actions */}
       <div className="flex gap-2 flex-shrink-0">
-        {!user.isVerified && user.role !== "admin" && (
+        {!user.isVerified && user.role !== "admin" && !isBanned && (
           <Button
             size="sm"
-            className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 text-xs"
+            className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 text-xs h-8"
             onClick={() => onVerify(user.id!)}
           >
-            <CheckCircle size={13} className="mr-1" /> Verificar
+            <CheckCircle size={12} className="mr-1" /> Verificar
           </Button>
         )}
         {user.role !== "admin" && (
           <Button
             size="sm"
             variant="ghost"
-            className="text-destructive hover:bg-destructive/10 text-xs"
+            className={`text-xs h-8 ${isBanned ? "text-green-400 hover:bg-green-400/10" : "text-destructive hover:bg-destructive/10"}`}
             onClick={() => onBan(user.id!)}
           >
-            <Ban size={13} className="mr-1" /> Banir
+            {isBanned ? (
+              <><CheckCircle size={12} className="mr-1" /> Desbanir</>
+            ) : (
+              <><Ban size={12} className="mr-1" /> Banir</>
+            )}
           </Button>
         )}
       </div>
@@ -94,6 +120,9 @@ export default function AdminUsersPage() {
     u.email?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const bannedCount = users.filter(u => (u as any).isBanned).length;
+  const verifiedCount = users.filter(u => u.isVerified).length;
+
   const handleVerify = async (id: number) => {
     try {
       await verifyMutation.mutateAsync({ id });
@@ -105,20 +134,40 @@ export default function AdminUsersPage() {
   };
 
   const handleBan = async (id: number) => {
+    const user = users.find(u => u.id === id);
+    const isBanned = (user as any)?.isBanned;
     try {
       await banMutation.mutateAsync({ id });
-      toast.success("Usuário banido");
+      toast.success(isBanned ? "Usuário desbanido" : "Usuário banido");
       refetch();
     } catch (e: any) {
-      toast.error(e?.data?.error ?? "Erro ao banir");
+      toast.error(e?.data?.error ?? "Erro ao banir/desbanir");
     }
   };
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Gerenciar Usuários</h1>
-        <p className="text-muted-foreground mt-1">{filtered.length} usuário{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}</p>
+      <div className="flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">Gerenciar Usuários</h1>
+          <p className="text-muted-foreground mt-1">
+            {filtered.length} usuário{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <div className="glass-card rounded-xl px-4 py-2.5 text-center">
+            <p className="text-xs text-muted-foreground">Verificados</p>
+            <p className="text-xl font-bold text-green-400">{verifiedCount}</p>
+          </div>
+          <div className="glass-card rounded-xl px-4 py-2.5 text-center">
+            <p className="text-xs text-muted-foreground">Banidos</p>
+            <p className="text-xl font-bold text-destructive">{bannedCount}</p>
+          </div>
+          <div className="glass-card rounded-xl px-4 py-2.5 text-center">
+            <p className="text-xs text-muted-foreground">Total</p>
+            <p className="text-xl font-bold text-foreground">{users.length}</p>
+          </div>
+        </div>
       </div>
 
       <div className="space-y-3">

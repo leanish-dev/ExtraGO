@@ -13,6 +13,8 @@ import { useListNotifications } from "@workspace/api-client-react";
 import { NotificationBell } from "@/components/notifications-dropdown";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlobalSearchButton } from "@/components/global-search";
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/api-fetch";
 
 interface NavItem {
   href: string;
@@ -67,7 +69,7 @@ function getBottomTabItems(role: string): NavItem[] {
     return [
       { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
       { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
-      { href: "/app/chat", label: "Chat", icon: <MessageCircle size={21} /> },
+      { href: "/app/applications", label: "Candidatos", icon: <UserCheck size={21} /> },
       { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
       { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
     ];
@@ -75,7 +77,7 @@ function getBottomTabItems(role: string): NavItem[] {
   return [
     { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
     { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
-    { href: "/app/chat", label: "Chat", icon: <MessageCircle size={21} /> },
+    { href: "/app/applications", label: "Minhas", icon: <UserCheck size={21} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
     { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
   ];
@@ -145,6 +147,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const { data: notifs } = useListNotifications(undefined, { query: { queryKey: ["notifications"], enabled: !!user } });
   const unread = notifs?.filter((n: any) => !n.isRead).length ?? 0;
+
+  const { data: unreadMsgsData } = useQuery({
+    queryKey: ["chat-unread"],
+    queryFn: () => apiFetch("/api/chat/unread"),
+    refetchInterval: 30000,
+    enabled: !!user && user.role !== "admin",
+    staleTime: 15000,
+  });
+  const unreadMessages: number = unreadMsgsData?.total ?? 0;
 
   if (!user) return null;
 
@@ -317,18 +328,25 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
             <NotificationBell unread={unread} />
 
-            {/* Chat icon (shows unread indicator) */}
-            <Link href="/app/chat">
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                className={`relative w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
-                  isChatPage ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-white/6"
-                }`}
-                title="Mensagens"
-              >
-                <MessageCircle size={17} />
-              </motion.button>
-            </Link>
+            {/* Chat icon with unread badge */}
+            {user.role !== "admin" && (
+              <Link href="/app/chat">
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  className={`relative w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
+                    isChatPage ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-white/6"
+                  }`}
+                  title="Mensagens"
+                >
+                  <MessageCircle size={17} />
+                  {unreadMessages > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] rounded-full bg-primary flex items-center justify-center text-[9px] font-bold text-black px-0.5 leading-none">
+                      {unreadMessages > 9 ? "9+" : unreadMessages}
+                    </span>
+                  )}
+                </motion.button>
+              </Link>
+            )}
 
             <Link href="/">
               <motion.button

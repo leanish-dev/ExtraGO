@@ -1,1 +1,4 @@
 - [Platform audit fixes](platform-audit-fixes.md) — comprehensive fix log for fake data, broken links, auth, onboarding, nav, N+1 queries, and shared utilities
+- [Express route prefix](express-route-prefix.md) — `app.use("/api", router)` strips `/api`; routes in the router must NOT include `/api/` prefix.
+- [SSE auth pattern](sse-auth.md) — EventSource can't set headers; accept auth token via `?token=` query param for SSE endpoints.
+- [Admin seed endpoint](admin-seed.md) — Idempotent admin bootstrap at `POST /api/setup/admin`; password `Gremory26@`.
