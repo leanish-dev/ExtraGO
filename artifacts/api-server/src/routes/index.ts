@@ -9,6 +9,8 @@ import referralsRouter from "./referrals";
 import notificationsRouter from "./notifications";
 import statsRouter from "./stats";
 import adminRouter from "./admin";
+import feedRouter from "./feed";
+import profileSectionsRouter from "./profile-sections";
 
 const router: IRouter = Router();
 
@@ -22,5 +24,7 @@ router.use(referralsRouter);
 router.use(notificationsRouter);
 router.use(statsRouter);
 router.use(adminRouter);
+router.use(feedRouter);
+router.use(profileSectionsRouter);
 
 export default router;

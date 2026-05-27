@@ -15,7 +15,8 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import jobsBanner from "@assets/file_00000000311071f98244eb8a979d0597_1779868067126.png";
 
-const CATEGORIES = ["Todos", "Garçom", "Barman", "Recepcionista", "Hostess", "Chef de Cozinha", "Cumim", "Auxiliar de Eventos", "Segurança", "Promoter"];
+import { CATEGORY_NAMES } from "@/lib/categories";
+const CATEGORIES = ["Todos", ...CATEGORY_NAMES];
 
 const STATUS_MAP: Record<string, { label: string; class: string }> = {
   open: { label: "Aberta", class: "bg-primary/20 text-primary border-primary/30" },

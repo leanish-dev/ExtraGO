@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useUpdateUser } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -6,10 +6,30 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { PageHeader } from "@/components/page-header";
 import { toast } from "sonner";
-import { User, Building2, CreditCard, Star, CheckCircle, AlertCircle, Camera, Loader2, Shield, Award } from "lucide-react";
-import { motion } from "framer-motion";
+import {
+  User, Building2, CreditCard, Star, CheckCircle, AlertCircle, Camera, Loader2,
+  Shield, Award, Plus, Trash2, Globe, MapPin, Briefcase, Zap, ChevronDown, ChevronUp,
+  Edit3, Save, X, BookOpen, Languages
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { CATEGORIES, CATEGORY_NAMES } from "@/lib/categories";
 
-const CATEGORIES = ["Garçom", "Barman", "Recepcionista", "Hostess", "Chef de Cozinha", "Cumim", "Auxiliar de Eventos", "Segurança", "Promoter"];
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+async function apiFetch(path: string, options?: RequestInit) {
+  const token = localStorage.getItem("extragO_token");
+  const res = await fetch(`${BASE}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options?.headers ?? {}),
+    },
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
 
 const LEVEL_MAP: Record<string, { label: string; color: string; bg: string; icon: string }> = {
   bronze: { label: "Bronze", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/25", icon: "🥉" },
@@ -17,6 +37,9 @@ const LEVEL_MAP: Record<string, { label: string; color: string; bg: string; icon
   gold: { label: "Ouro", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/25", icon: "🥇" },
   elite: { label: "Elite", color: "text-primary", bg: "bg-primary/10 border-primary/25", icon: "👑" },
 };
+
+const LANGUAGE_OPTIONS = ["Português", "Inglês", "Espanhol", "Francês", "Alemão", "Italiano", "Mandarim", "Japonês", "Árabe"];
+const REGION_OPTIONS = ["São Paulo - SP", "Rio de Janeiro - RJ", "Belo Horizonte - MG", "Curitiba - PR", "Porto Alegre - RS", "Salvador - BA", "Fortaleza - CE", "Recife - PE", "Brasília - DF", "Manaus - AM", "Todo o Brasil"];
 
 function ReputationRing({ score, size = 80 }: { score: number; size?: number }) {
   const r = (size - 8) / 2;
@@ -48,23 +71,203 @@ function ReputationRing({ score, size = 80 }: { score: number; size?: number }) 
   );
 }
 
+function SectionCard({ title, icon, children, defaultOpen = true }: { title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="glass-card rounded-2xl border border-white/8 overflow-hidden">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between p-5 hover:bg-white/2 transition-colors"
+      >
+        <div className="flex items-center gap-2 text-sm font-semibold">
+          {icon}
+          {title}
+        </div>
+        {open ? <ChevronUp size={15} className="text-muted-foreground" /> : <ChevronDown size={15} className="text-muted-foreground" />}
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="px-5 pb-5">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function ExperienceSection({ userId }: { userId: number }) {
+  const qc = useQueryClient();
+  const [adding, setAdding] = useState(false);
+  const [form, setForm] = useState({ company: "", role: "", startDate: "", endDate: "", description: "" });
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  const { data: experiences = [], isLoading } = useQuery<any[]>({
+    queryKey: ["profile-experience", userId],
+    queryFn: () => apiFetch("/api/profile/experience"),
+  });
+
+  const addExp = useMutation({
+    mutationFn: (data: any) => apiFetch("/api/profile/experience", { method: "POST", body: JSON.stringify(data) }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["profile-experience", userId] }); setAdding(false); setForm({ company: "", role: "", startDate: "", endDate: "", description: "" }); toast.success("Experiência adicionada!"); },
+    onError: () => toast.error("Erro ao salvar"),
+  });
+
+  const deleteExp = useMutation({
+    mutationFn: (id: number) => apiFetch(`/api/profile/experience/${id}`, { method: "DELETE" }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["profile-experience", userId] }); toast.success("Removido!"); },
+  });
+
+  return (
+    <div className="space-y-3">
+      {isLoading ? (
+        <div className="h-16 rounded-xl bg-white/4 animate-pulse" />
+      ) : experiences.length === 0 && !adding ? (
+        <p className="text-sm text-muted-foreground">Nenhuma experiência adicionada ainda.</p>
+      ) : (
+        experiences.map((exp: any) => (
+          <div key={exp.id} className="flex gap-3 p-3 rounded-xl bg-white/3 border border-white/6">
+            <div className="w-8 h-8 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
+              <Briefcase size={14} className="text-secondary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold">{exp.role}</p>
+              <p className="text-xs text-muted-foreground">{exp.company}</p>
+              <p className="text-xs text-muted-foreground/65 mt-0.5">{exp.startDate} — {exp.endDate ?? "Atual"}</p>
+              {exp.description && <p className="text-xs text-foreground/70 mt-1 leading-relaxed">{exp.description}</p>}
+            </div>
+            <button onClick={() => deleteExp.mutate(exp.id)} className="text-muted-foreground hover:text-destructive transition-colors flex-shrink-0">
+              <Trash2 size={13} />
+            </button>
+          </div>
+        ))
+      )}
+
+      {adding && (
+        <div className="p-4 rounded-xl bg-white/3 border border-white/10 space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Empresa</label>
+              <Input value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} placeholder="Nome da empresa" className="bg-white/5 border-white/10 rounded-xl h-10 text-sm" />
+            </div>
+            <div>
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Cargo</label>
+              <Input value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} placeholder="Seu cargo" className="bg-white/5 border-white/10 rounded-xl h-10 text-sm" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Início</label>
+              <Input type="month" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} className="bg-white/5 border-white/10 rounded-xl h-10 text-sm" />
+            </div>
+            <div>
+              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Fim (opcional)</label>
+              <Input type="month" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} className="bg-white/5 border-white/10 rounded-xl h-10 text-sm" />
+            </div>
+          </div>
+          <div>
+            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Descrição</label>
+            <textarea rows={2} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Descreva suas responsabilidades..." className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 focus:border-primary/50 focus:outline-none text-sm resize-none transition-colors" />
+          </div>
+          <div className="flex gap-2">
+            <Button size="sm" onClick={() => addExp.mutate(form)} disabled={!form.company || !form.role || !form.startDate || addExp.isPending} className="bg-primary text-black hover:bg-primary/90 rounded-xl h-9 text-xs">
+              {addExp.isPending ? <Loader2 size={13} className="animate-spin" /> : "Salvar"}
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setAdding(false)} className="border-white/10 rounded-xl h-9 text-xs">Cancelar</Button>
+          </div>
+        </div>
+      )}
+
+      {!adding && (
+        <button onClick={() => setAdding(true)} className="flex items-center gap-2 text-xs text-primary hover:text-primary/80 font-semibold transition-colors mt-1">
+          <Plus size={13} /> Adicionar Experiência
+        </button>
+      )}
+    </div>
+  );
+}
+
+function SkillsSection({ userId }: { userId: number }) {
+  const qc = useQueryClient();
+  const [newSkill, setNewSkill] = useState("");
+
+  const { data: skills = [] } = useQuery<any[]>({
+    queryKey: ["profile-skills", userId],
+    queryFn: () => apiFetch("/api/profile/skills"),
+  });
+
+  const addSkill = useMutation({
+    mutationFn: (skill: string) => apiFetch("/api/profile/skills", { method: "POST", body: JSON.stringify({ skill }) }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["profile-skills", userId] }); setNewSkill(""); },
+    onError: () => toast.error("Erro ao adicionar"),
+  });
+
+  const removeSkill = useMutation({
+    mutationFn: (id: number) => apiFetch(`/api/profile/skills/${id}`, { method: "DELETE" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["profile-skills", userId] }),
+  });
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        {skills.map((s: any) => (
+          <span key={s.id} className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-primary/8 border border-primary/18 text-primary font-medium group">
+            {s.skill}
+            {s.endorsements > 0 && <span className="font-bold">+{s.endorsements}</span>}
+            <button onClick={() => removeSkill.mutate(s.id)} className="opacity-0 group-hover:opacity-100 transition-opacity ml-0.5">
+              <X size={10} />
+            </button>
+          </span>
+        ))}
+        {skills.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma habilidade adicionada.</p>}
+      </div>
+      <div className="flex gap-2">
+        <Input
+          value={newSkill}
+          onChange={e => setNewSkill(e.target.value)}
+          onKeyDown={e => { if (e.key === "Enter" && newSkill.trim()) { e.preventDefault(); addSkill.mutate(newSkill.trim()); } }}
+          placeholder="Adicionar habilidade..."
+          className="bg-white/5 border-white/10 rounded-xl h-9 text-sm"
+        />
+        <Button size="sm" disabled={!newSkill.trim() || addSkill.isPending} onClick={() => addSkill.mutate(newSkill.trim())} className="bg-primary text-black hover:bg-primary/90 rounded-xl h-9 px-4 text-xs">
+          <Plus size={13} />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user } = useAuth() as any;
   const updateUser = useUpdateUser();
+  const qc = useQueryClient();
 
   const [form, setForm] = useState({
     name: user?.name ?? "",
     phone: user?.phone ?? "",
     bio: user?.bio ?? "",
+    professionalSummary: (user as any)?.professionalSummary ?? "",
     companyName: user?.companyName ?? "",
     pixKey: user?.pixKey ?? "",
   });
   const [categories, setCategories] = useState<string[]>(user?.categories ?? []);
+  const [languages, setLanguages] = useState<string[]>((user as any)?.languages ?? []);
+  const [serviceRegions, setServiceRegions] = useState<string[]>((user as any)?.serviceRegions ?? []);
+  const [activeTab, setActiveTab] = useState("perfil");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await updateUser.mutateAsync({ id: user!.id!, data: { ...form, categories } as any });
+      await updateUser.mutateAsync({
+        id: user!.id!,
+        data: { ...form, categories, languages, serviceRegions } as any,
+      });
       toast.success("Perfil atualizado!");
     } catch (e: any) {
       toast.error(e?.data?.error ?? "Erro ao atualizar perfil");
@@ -75,235 +278,310 @@ export default function ProfilePage() {
     setCategories(prev => prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]);
   };
 
+  const toggleLanguage = (lang: string) => {
+    setLanguages(prev => prev.includes(lang) ? prev.filter(l => l !== lang) : [...prev, lang]);
+  };
+
+  const toggleRegion = (reg: string) => {
+    setServiceRegions(prev => prev.includes(reg) ? prev.filter(r => r !== reg) : [...prev, reg]);
+  };
+
   const completion = user?.profileCompletion ?? 0;
   const levelInfo = LEVEL_MAP[user?.level ?? "bronze"] ?? LEVEL_MAP.bronze;
-
   const completionColor = completion >= 80 ? "text-primary" : completion >= 50 ? "text-yellow-400" : "text-destructive";
 
-  return (
-    <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-6">
-      <PageHeader title="Meu Perfil" subtitle="Mantenha seus dados atualizados para aumentar suas chances" />
+  const TABS = user?.role === "freelancer"
+    ? [
+        { key: "perfil", label: "Perfil" },
+        { key: "especialidades", label: "Especialidades" },
+        { key: "experiencia", label: "Experiência" },
+        { key: "habilidades", label: "Habilidades" },
+        { key: "config", label: "Config." },
+      ]
+    : [
+        { key: "perfil", label: "Perfil" },
+        { key: "config", label: "Config." },
+      ];
 
-      {/* Profile hero card */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-        className="glass-card rounded-2xl p-6 border border-white/8"
-      >
-        <div className="flex items-start gap-5">
-          <div className="relative flex-shrink-0">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-3xl font-bold text-black">
-              {user?.name?.charAt(0).toUpperCase()}
-            </div>
-            <button className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-primary flex items-center justify-center border-2 border-[#060809] hover:bg-primary/80 transition-colors shadow-md">
-              <Camera size={11} className="text-black" />
-            </button>
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-3 flex-wrap">
-              <div>
-                <h2 className="text-lg font-bold leading-tight">{user?.name}</h2>
-                <p className="text-sm text-muted-foreground mt-0.5">{user?.email}</p>
+  return (
+    <div className="pb-24">
+      {/* Banner area */}
+      <div className="relative w-full h-28 sm:h-36 bg-gradient-to-br from-primary/15 via-secondary/8 to-transparent overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060809] to-transparent" />
+      </div>
+
+      <div className="px-4 sm:px-6 max-w-3xl mx-auto">
+        {/* Hero section */}
+        <div className="relative -mt-10 mb-5">
+          <div className="flex items-end gap-4">
+            <div className="relative flex-shrink-0">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-3xl font-bold text-black border-4 border-[#060809]">
+                {user?.name?.charAt(0).toUpperCase()}
               </div>
-              {user?.role === "freelancer" && (
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-sm font-bold ${levelInfo.bg} ${levelInfo.color}`}>
-                  <span>{levelInfo.icon}</span>
-                  {levelInfo.label}
+              {user?.isVerified && (
+                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center border-2 border-[#060809]"
+                  style={{ boxShadow: "0 0 10px rgba(124,252,0,0.6)" }}>
+                  <CheckCircle size={11} className="text-black" />
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-2 mt-3 flex-wrap">
-              {user?.isVerified ? (
-                <span className="flex items-center gap-1 text-xs text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full font-semibold">
-                  <CheckCircle size={11} /> Verificado
-                </span>
-              ) : (
-                <span className="flex items-center gap-1 text-xs text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2.5 py-1 rounded-full font-semibold">
-                  <AlertCircle size={11} /> Pendente verificação
-                </span>
-              )}
-              {user?.role === "admin" && (
-                <span className="flex items-center gap-1 text-xs text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full font-semibold">
-                  <Shield size={11} /> Admin
-                </span>
-              )}
+            <div className="flex-1 pb-1">
+              <h1 className="text-xl font-bold leading-tight">{user?.name}</h1>
+              <p className="text-xs text-muted-foreground">{user?.email}</p>
+              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                {user?.role === "freelancer" && (
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-xl border inline-flex items-center gap-1 ${levelInfo.bg} ${levelInfo.color}`}>
+                    {levelInfo.icon} {levelInfo.label}
+                  </span>
+                )}
+                {user?.isVerified ? (
+                  <span className="text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+                    <CheckCircle size={9} /> Verificado
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+                    <AlertCircle size={9} /> Pendente verificação
+                  </span>
+                )}
+              </div>
             </div>
+            {user?.role === "freelancer" && (
+              <div className="flex-shrink-0 hidden sm:block">
+                <ReputationRing score={user?.reputationScore ?? 0} />
+              </div>
+            )}
           </div>
+
+          {/* Profile strength */}
+          <div className="mt-4 p-4 rounded-2xl bg-white/3 border border-white/8">
+            <div className="flex justify-between text-xs mb-2">
+              <span className="text-muted-foreground font-medium">Força do Perfil</span>
+              <span className={`font-bold ${completionColor}`}>{completion}%</span>
+            </div>
+            <Progress value={completion} glow={completion >= 80} />
+            {completion < 80 && (
+              <p className="text-[10px] text-muted-foreground mt-1.5">
+                {completion < 40 ? "Complete seu perfil para aumentar suas chances de contratação" :
+                 completion < 60 ? "Quase lá! Adicione mais informações ao perfil" :
+                 "Perfil quase completo! Adicione experiências e habilidades"}
+              </p>
+            )}
+          </div>
+
+          {/* Stats bar */}
           {user?.role === "freelancer" && (
-            <div className="flex-shrink-0 hidden sm:block">
-              <ReputationRing score={user?.reputationScore ?? 0} />
-            </div>
-          )}
-        </div>
-
-        {/* Completion bar */}
-        <div className="mt-5 pt-5 border-t border-white/6">
-          <div className="flex justify-between text-xs mb-2">
-            <span className="text-muted-foreground font-medium">Completude do perfil</span>
-            <span className={`font-bold ${completionColor}`}>{completion}%</span>
-          </div>
-          <Progress value={completion} glow={completion >= 80} />
-          {completion < 100 && (
-            <p className="text-[11px] text-muted-foreground mt-1.5">Complete seu perfil para aumentar suas chances de contratação</p>
-          )}
-        </div>
-
-        {/* Freelancer stats inline */}
-        {user?.role === "freelancer" && (
-          <div className="grid grid-cols-3 gap-3 mt-4">
-            {[
-              { label: "Jobs Feitos", value: user?.completedJobs ?? 0, color: "text-primary" },
-              { label: "Reputação", value: `${(user?.reputationScore ?? 0).toFixed(1)} ★`, color: "text-yellow-400" },
-              { label: "Nível", value: levelInfo.label, color: levelInfo.color },
-            ].map((item, i) => (
-              <div key={i} className="text-center p-3 rounded-xl bg-white/3 border border-white/6">
-                <p className={`text-base font-bold ${item.color}`}>{item.value}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{item.label}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </motion.div>
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="glass-card rounded-2xl p-5 sm:p-6 space-y-4"
-        >
-          <h2 className="font-semibold flex items-center gap-2 text-sm">
-            <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <User size={14} className="text-primary" />
-            </div>
-            Informações Pessoais
-          </h2>
-
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Nome Completo</label>
-              <Input
-                value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                className="bg-white/5 border-white/10 focus:border-primary/60 rounded-xl h-11"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Telefone / WhatsApp</label>
-              <Input
-                value={form.phone}
-                onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                placeholder="+55 11 99999-0000"
-                className="bg-white/5 border-white/10 focus:border-primary/60 rounded-xl h-11"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-xs font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Bio / Apresentação</label>
-            <textarea
-              rows={3}
-              value={form.bio}
-              onChange={e => setForm(f => ({ ...f, bio: e.target.value }))}
-              placeholder="Conte um pouco sobre você e sua experiência..."
-              className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-primary/60 focus:outline-none text-sm resize-none transition-colors leading-relaxed"
-            />
-          </div>
-        </motion.div>
-
-        {user?.role === "company" && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-            className="glass-card rounded-2xl p-5 sm:p-6 space-y-4"
-          >
-            <h2 className="font-semibold flex items-center gap-2 text-sm">
-              <div className="w-7 h-7 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center">
-                <Building2 size={14} className="text-secondary" />
-              </div>
-              Dados da Empresa
-            </h2>
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Nome da Empresa</label>
-              <Input
-                value={form.companyName}
-                onChange={e => setForm(f => ({ ...f, companyName: e.target.value }))}
-                className="bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11"
-              />
-            </div>
-          </motion.div>
-        )}
-
-        {user?.role === "freelancer" && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-            className="glass-card rounded-2xl p-5 sm:p-6 space-y-4"
-          >
-            <h2 className="font-semibold flex items-center gap-2 text-sm">
-              <div className="w-7 h-7 rounded-lg bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center">
-                <Award size={14} className="text-yellow-400" />
-              </div>
-              Minhas Especialidades
-            </h2>
-            <p className="text-xs text-muted-foreground">Selecione as funções que você exerce</p>
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.map(cat => (
-                <button
-                  type="button"
-                  key={cat}
-                  onClick={() => toggleCategory(cat)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
-                    categories.includes(cat)
-                      ? "bg-primary text-black border-primary neon-glow"
-                      : "border-white/10 text-muted-foreground hover:border-white/25 hover:text-foreground"
-                  }`}
-                >
-                  {cat}
-                </button>
+            <div className="grid grid-cols-3 gap-3 mt-4">
+              {[
+                { label: "Jobs Feitos", value: user?.completedJobs ?? 0, color: "text-primary" },
+                { label: "Reputação", value: `${(user?.reputationScore ?? 0).toFixed(1)} ★`, color: "text-yellow-400" },
+                { label: "Nível", value: levelInfo.label, color: levelInfo.color },
+              ].map((item, i) => (
+                <div key={i} className="text-center p-3 rounded-xl bg-white/3 border border-white/6">
+                  <p className={`text-base font-bold ${item.color}`}>{item.value}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{item.label}</p>
+                </div>
               ))}
             </div>
-          </motion.div>
-        )}
+          )}
+        </div>
 
-        {user?.role === "freelancer" && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="glass-card rounded-2xl p-5 sm:p-6 space-y-4"
-          >
-            <h2 className="font-semibold flex items-center gap-2 text-sm">
-              <div className="w-7 h-7 rounded-lg bg-green-400/10 border border-green-400/20 flex items-center justify-center">
-                <CreditCard size={14} className="text-green-400" />
+        {/* Sticky tabs */}
+        <div className="sticky top-0 z-20 bg-[#060809]/95 backdrop-blur-xl border-b border-white/6 mb-5 -mx-4 sm:-mx-6 px-4 sm:px-6">
+          <div className="flex gap-1 overflow-x-auto no-scrollbar py-2">
+            {TABS.map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  activeTab === tab.key
+                    ? "bg-primary text-black"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/6"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tab content */}
+        <AnimatePresence mode="wait">
+          {/* PERFIL TAB */}
+          {activeTab === "perfil" && (
+            <motion.form
+              key="perfil"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              onSubmit={handleSubmit}
+              className="space-y-5"
+            >
+              <SectionCard
+                title="Informações Pessoais"
+                icon={<div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center"><User size={12} className="text-primary" /></div>}
+              >
+                <div className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[10px] font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Nome Completo</label>
+                      <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="bg-white/5 border-white/10 focus:border-primary/60 rounded-xl h-11" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Telefone / WhatsApp</label>
+                      <Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+55 11 99999-0000" className="bg-white/5 border-white/10 focus:border-primary/60 rounded-xl h-11" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Bio / Apresentação</label>
+                    <textarea rows={3} value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))} placeholder="Conte um pouco sobre você..." className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-primary/60 focus:outline-none text-sm resize-none transition-colors leading-relaxed" />
+                  </div>
+                  {user?.role === "freelancer" && (
+                    <div>
+                      <label className="text-[10px] font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Resumo Profissional</label>
+                      <textarea rows={4} value={form.professionalSummary} onChange={e => setForm(f => ({ ...f, professionalSummary: e.target.value }))} placeholder="Descreva sua trajetória profissional, diferenciais e objetivos..." className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-primary/60 focus:outline-none text-sm resize-none transition-colors leading-relaxed" />
+                    </div>
+                  )}
+                </div>
+              </SectionCard>
+
+              {user?.role === "company" && (
+                <SectionCard title="Dados da Empresa" icon={<Building2 size={13} className="text-secondary" />}>
+                  <Input value={form.companyName} onChange={e => setForm(f => ({ ...f, companyName: e.target.value }))} placeholder="Nome da empresa" className="bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11" />
+                </SectionCard>
+              )}
+
+              {user?.role === "freelancer" && (
+                <>
+                  <SectionCard title="Regiões de Atendimento" icon={<MapPin size={13} className="text-secondary" />} defaultOpen={false}>
+                    <div className="flex flex-wrap gap-2">
+                      {REGION_OPTIONS.map(reg => (
+                        <button type="button" key={reg} onClick={() => toggleRegion(reg)}
+                          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${serviceRegions.includes(reg) ? "bg-secondary text-black border-secondary" : "border-white/10 text-muted-foreground hover:border-white/25 hover:text-foreground"}`}>
+                          {reg}
+                        </button>
+                      ))}
+                    </div>
+                  </SectionCard>
+
+                  <SectionCard title="Idiomas" icon={<Languages size={13} className="text-yellow-400" />} defaultOpen={false}>
+                    <div className="flex flex-wrap gap-2">
+                      {LANGUAGE_OPTIONS.map(lang => (
+                        <button type="button" key={lang} onClick={() => toggleLanguage(lang)}
+                          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${languages.includes(lang) ? "bg-yellow-400 text-black border-yellow-400" : "border-white/10 text-muted-foreground hover:border-white/25 hover:text-foreground"}`}>
+                          {lang}
+                        </button>
+                      ))}
+                    </div>
+                  </SectionCard>
+
+                  <SectionCard title="Chave PIX" icon={<CreditCard size={13} className="text-green-400" />} defaultOpen={false}>
+                    <Input value={form.pixKey} onChange={e => setForm(f => ({ ...f, pixKey: e.target.value }))} placeholder="CPF, CNPJ, e-mail ou celular" className="bg-white/5 border-white/10 focus:border-green-400/60 rounded-xl h-11" />
+                  </SectionCard>
+                </>
+              )}
+
+              <Button type="submit" disabled={updateUser.isPending} className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl">
+                {updateUser.isPending ? <><Loader2 size={15} className="mr-2 animate-spin" />Salvando...</> : "Salvar Alterações"}
+              </Button>
+            </motion.form>
+          )}
+
+          {/* ESPECIALIDADES TAB */}
+          {activeTab === "especialidades" && user?.role === "freelancer" && (
+            <motion.div key="especialidades" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
+              <div className="glass-card rounded-2xl p-5 border border-white/8">
+                <h2 className="font-semibold text-sm mb-1 flex items-center gap-2">
+                  <Award size={14} className="text-yellow-400" /> Minhas Especialidades
+                </h2>
+                <p className="text-xs text-muted-foreground mb-4">Selecione as funções que você exerce</p>
+                <div className="flex flex-wrap gap-2">
+                  {CATEGORIES.map(cat => (
+                    <button
+                      key={cat.slug}
+                      onClick={() => toggleCategory(cat.name)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
+                        categories.includes(cat.name)
+                          ? "bg-primary text-black border-primary neon-glow"
+                          : "border-white/10 text-muted-foreground hover:border-white/25 hover:text-foreground"
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+                {categories.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-white/6">
+                    <p className="text-xs text-muted-foreground font-semibold mb-2">Selecionadas:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map(cat => (
+                        <span key={cat} className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary">
+                          {cat}
+                          <button onClick={() => toggleCategory(cat)}><X size={9} /></button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              Chave PIX para Recebimento
-            </h2>
-            <div>
-              <label className="text-xs font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Chave PIX</label>
-              <Input
-                value={form.pixKey}
-                onChange={e => setForm(f => ({ ...f, pixKey: e.target.value }))}
-                placeholder="CPF, CNPJ, e-mail ou celular"
-                className="bg-white/5 border-white/10 focus:border-green-400/60 rounded-xl h-11"
-              />
-            </div>
-          </motion.div>
-        )}
+              <Button
+                onClick={() => updateUser.mutateAsync({ id: user!.id!, data: { categories } as any }).then(() => { toast.success("Especialidades salvas!"); })}
+                disabled={updateUser.isPending}
+                className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl"
+              >
+                {updateUser.isPending ? <><Loader2 size={15} className="mr-2 animate-spin" />Salvando...</> : "Salvar Especialidades"}
+              </Button>
+            </motion.div>
+          )}
 
-        <Button
-          type="submit"
-          disabled={updateUser.isPending}
-          className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl"
-        >
-          {updateUser.isPending ? (
-            <><Loader2 size={15} className="mr-2 animate-spin" />Salvando...</>
-          ) : "Salvar Alterações"}
-        </Button>
-      </form>
+          {/* EXPERIÊNCIA TAB */}
+          {activeTab === "experiencia" && user?.role === "freelancer" && (
+            <motion.div key="experiencia" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <div className="glass-card rounded-2xl p-5 border border-white/8">
+                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+                  <Briefcase size={14} className="text-secondary" /> Experiência Profissional
+                </h2>
+                <ExperienceSection userId={user.id!} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* HABILIDADES TAB */}
+          {activeTab === "habilidades" && user?.role === "freelancer" && (
+            <motion.div key="habilidades" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <div className="glass-card rounded-2xl p-5 border border-white/8">
+                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+                  <Zap size={14} className="text-primary" /> Habilidades
+                </h2>
+                <SkillsSection userId={user.id!} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* CONFIG TAB */}
+          {activeTab === "config" && (
+            <motion.div key="config" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+              <div className="glass-card rounded-2xl p-5 border border-white/8 space-y-4">
+                <h2 className="font-semibold text-sm flex items-center gap-2">
+                  <Shield size={14} className="text-muted-foreground" /> Configurações
+                </h2>
+                <div className="p-3 rounded-xl bg-white/3 border border-white/6">
+                  <p className="text-xs font-semibold">Email</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{user?.email}</p>
+                </div>
+                <div className="p-3 rounded-xl bg-white/3 border border-white/6">
+                  <p className="text-xs font-semibold">Função</p>
+                  <p className="text-sm text-muted-foreground mt-0.5 capitalize">{user?.role}</p>
+                </div>
+                <div className="p-3 rounded-xl bg-white/3 border border-white/6">
+                  <p className="text-xs font-semibold">Código de Referência</p>
+                  <p className="text-sm font-mono text-primary mt-0.5">{user?.referralCode}</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

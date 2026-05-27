@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useGetCompanyStats, useGetFreelancerStats, useListJobs, useListApplications, useListTransactions } from "@workspace/api-client-react";
 import type { Application, Transaction } from "@workspace/api-client-react";
-import { Briefcase, DollarSign, Star, TrendingUp, Clock, CheckCircle, Users, FileText, ArrowRight, Wallet, Zap, Plus, Activity } from "lucide-react";
+import { Briefcase, DollarSign, Star, TrendingUp, Clock, CheckCircle, Users, FileText, ArrowRight, Wallet, Zap, Plus, Activity, Rss, Heart, MessageCircle } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -558,6 +558,46 @@ function FreelancerDashboard() {
             </Link>
           ))}
         </div>
+
+        {/* Feed preview widget */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.32 }}
+          className="glass-card rounded-2xl p-5 border border-white/8 bg-gradient-to-br from-secondary/5 to-transparent"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
+                <Rss size={14} className="text-secondary" />
+              </div>
+              <div>
+                <p className="text-sm font-bold">Feed da Comunidade</p>
+                <p className="text-[10px] text-muted-foreground">Conecte-se com outros profissionais</p>
+              </div>
+            </div>
+            <Link href="/app/feed">
+              <motion.button whileHover={{ x: 2 }} className="text-xs text-secondary font-semibold flex items-center gap-1">
+                Ver tudo <ArrowRight size={12} />
+              </motion.button>
+            </Link>
+          </div>
+          <div className="flex gap-3 p-3 rounded-xl bg-white/3 border border-white/6">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-black font-bold text-xs flex-shrink-0">
+              Eu
+            </div>
+            <Link href="/app/feed" className="flex-1">
+              <div className="px-3 py-2 rounded-lg bg-white/4 border border-white/8 text-xs text-muted-foreground cursor-pointer hover:border-white/18 transition-colors">
+                Compartilhe algo com a comunidade...
+              </div>
+            </Link>
+          </div>
+          <div className="flex gap-4 mt-3 text-[10px] text-muted-foreground font-medium">
+            <div className="flex items-center gap-1.5"><Heart size={11} className="text-red-400" /> Curtir</div>
+            <div className="flex items-center gap-1.5"><MessageCircle size={11} className="text-secondary" /> Comentar</div>
+            <div className="flex items-center gap-1.5"><Rss size={11} className="text-primary" /> Repostar</div>
+          </div>
+        </motion.div>
 
         {/* Pending applications + activity */}
         <div className="grid lg:grid-cols-2 gap-5">

@@ -7,7 +7,8 @@ import { Progress } from "@/components/ui/progress";
 import { ChevronRight, ChevronLeft, X, Briefcase, User, CreditCard, Building2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const CATEGORIES = ["Garçom", "Barman", "Recepcionista", "Hostess", "Chef de Cozinha", "Cumim", "Auxiliar de Eventos", "Segurança", "Promoter"];
+import { CATEGORY_NAMES } from "@/lib/categories";
+const CATEGORIES = CATEGORY_NAMES;
 
 interface StepProps {
   onNext: () => void;

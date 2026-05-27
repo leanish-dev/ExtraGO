@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Briefcase, FileText, Wallet, Settings,
   LogOut, Star, Trophy, Home,
   Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
-  ChevronRight, TrendingUp, Bell
+  ChevronRight, TrendingUp, Bell, Rss
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
@@ -41,6 +41,7 @@ function getNavItems(role: string): NavItem[] {
   }
   return [
     { href: "/app/dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
+    { href: "/app/feed", label: "Feed", icon: <Rss size={18} /> },
     { href: "/app/jobs", label: "Buscar Vagas", icon: <Briefcase size={18} /> },
     { href: "/app/applications", label: "Candidaturas", icon: <FileText size={18} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
@@ -62,7 +63,7 @@ function getBottomTabItems(role: string): NavItem[] {
   return [
     { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
     { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
-    { href: "/app/applications", label: "Minhas", icon: <FileText size={21} /> },
+    { href: "/app/feed", label: "Feed", icon: <Rss size={21} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
     { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
   ];

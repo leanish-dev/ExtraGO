@@ -11,7 +11,8 @@ import { useLocation } from "wouter";
 import { Briefcase, MapPin, Clock, DollarSign, Users, ChevronLeft, Loader2, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
-const CATEGORIES = ["Garçom", "Barman", "Recepcionista", "Hostess", "Chef de Cozinha", "Cumim", "Auxiliar de Eventos", "Segurança", "Promoter", "Mestre de Cerimônias", "DJ", "Outro"];
+import { CATEGORIES as ALL_CATEGORIES } from "@/lib/categories";
+const CATEGORIES = ALL_CATEGORIES.map(c => c.name);
 
 const formSchema = z.object({
   title: z.string().min(5, "Mínimo 5 caracteres"),
