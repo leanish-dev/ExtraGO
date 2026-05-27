@@ -24,6 +24,8 @@ import ProfilePage from "@/pages/app/profile";
 import NotificationsPage from "@/pages/app/notifications";
 import FeedPage from "@/pages/app/feed";
 import FreelancerProfilePage from "@/pages/app/freelancer-profile";
+import CompanyProfilePage from "@/pages/app/company-profile";
+import NetworkPage from "@/pages/app/network";
 
 import AdminDashboard from "@/pages/admin/index";
 import AdminUsersPage from "@/pages/admin/users";
@@ -99,6 +101,8 @@ function Router() {
       <Route path="/app/notifications" component={() => <ProtectedRoute component={NotificationsPage} allowedRoles={["company", "freelancer"]} />} />
       <Route path="/app/feed" component={() => <ProtectedRoute component={FeedPage} allowedRoles={["company", "freelancer"]} />} />
       <Route path="/app/freelancers/:id" component={() => <ProtectedRoute component={FreelancerProfilePage} allowedRoles={["company", "freelancer"]} />} />
+      <Route path="/app/companies/:id" component={() => <ProtectedRoute component={CompanyProfilePage} allowedRoles={["company", "freelancer"]} />} />
+      <Route path="/app/network" component={() => <ProtectedRoute component={NetworkPage} allowedRoles={["company", "freelancer"]} />} />
 
       {/* Admin routes */}
       <Route path="/admin" component={() => <ProtectedRoute component={AdminDashboard} allowedRoles={["admin"]} layout="admin" />} />

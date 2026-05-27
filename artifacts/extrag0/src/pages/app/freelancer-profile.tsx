@@ -1,20 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRoute, useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, Star, Briefcase, MapPin, Award, Globe, Shield, ChevronLeft, Zap, Calendar, Building2, Plus, MessageCircle } from "lucide-react";
+import {
+  CheckCircle, Star, Briefcase, MapPin, Award, Globe, ChevronLeft,
+  Zap, Building2, MessageCircle, UserPlus, UserMinus, Users, Loader2
+} from "lucide-react";
 import { Link } from "wouter";
 import { SkeletonCard } from "@/components/ui/skeleton";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { useAuth } from "@/hooks/use-auth";
+import { toast } from "sonner";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
 
-async function apiFetch(path: string) {
+async function apiFetch(path: string, options?: RequestInit) {
   const token = localStorage.getItem("extragO_token");
   const res = await fetch(`${BASE}${path}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options?.headers ?? {}),
+    },
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -27,7 +35,24 @@ const LEVEL_MAP: Record<string, { label: string; color: string; bg: string; emoj
   elite: { label: "Elite", color: "text-primary", bg: "bg-primary/10 border-primary/25", emoji: "👑" },
 };
 
-function StatBadge({ value, label, color = "text-primary" }: { value: string | number; label: string; color?: string }) {
+function AnimatedCounter({ target, decimals = 0 }: { target: number; decimals?: number }) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (target === 0) { setCount(0); return; }
+    const steps = 40;
+    const increment = target / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) { clearInterval(timer); setCount(target); return; }
+      setCount(current);
+    }, 20);
+    return () => clearInterval(timer);
+  }, [target]);
+  return <>{decimals > 0 ? count.toFixed(decimals) : Math.round(count)}</>;
+}
+
+function StatBadge({ value, label, color = "text-primary" }: { value: React.ReactNode; label: string; color?: string }) {
   return (
     <div className="text-center px-4 py-3 rounded-xl bg-white/3 border border-white/6">
       <p className={`text-xl font-bold ${color}`}>{value}</p>
@@ -36,9 +61,18 @@ function StatBadge({ value, label, color = "text-primary" }: { value: string | n
   );
 }
 
+const BADGE_DEFS = [
+  { key: "first_job", label: "Primeiro Job", emoji: "🎯", threshold: 1, field: "completedJobs" },
+  { key: "ten_jobs", label: "10 Jobs", emoji: "🔟", threshold: 10, field: "completedJobs" },
+  { key: "top_rated", label: "Top Avaliado", emoji: "⭐", threshold: 4, field: "reputationScore" },
+  { key: "verified", label: "Verificado", emoji: "✅", threshold: true, field: "isVerified" },
+];
+
 export default function FreelancerProfilePage() {
   const [, params] = useRoute("/app/freelancers/:id");
   const [, setLocation] = useLocation();
+  const { user: me } = useAuth();
+  const qc = useQueryClient();
   const userId = params?.id ? parseInt(params.id) : 0;
   const [activeTab, setActiveTab] = useState("sobre");
 
@@ -58,6 +92,32 @@ export default function FreelancerProfilePage() {
     queryKey: ["public-skills", userId],
     queryFn: () => apiFetch(`/api/users/${userId}/skills`),
     enabled: !!userId,
+  });
+
+  const [following, setFollowing] = useState<boolean>(false);
+  useEffect(() => {
+    if (user?.isFollowedByMe !== undefined) {
+      setFollowing(user.isFollowedByMe);
+    }
+  }, [user?.isFollowedByMe]);
+
+  const followMutation = useMutation({
+    mutationFn: async () => {
+      if (following) {
+        await apiFetch(`/api/users/${userId}/follow`, { method: "DELETE" });
+      } else {
+        await apiFetch(`/api/users/${userId}/follow`, { method: "POST" });
+      }
+    },
+    onMutate: () => setFollowing(f => !f),
+    onError: () => {
+      setFollowing(f => !f);
+      toast.error("Erro ao seguir");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["freelancer-profile", userId] });
+      toast.success(following ? "Deixou de seguir" : "Seguindo!");
+    },
   });
 
   if (isLoading) {
@@ -80,6 +140,18 @@ export default function FreelancerProfilePage() {
   }
 
   const levelInfo = LEVEL_MAP[user.level ?? "bronze"] ?? LEVEL_MAP.bronze;
+  const isMe = me?.id === userId;
+
+  const followersCount = user.followersCount ?? 0;
+  const displayFollowers = following !== null
+    ? (following ? followersCount + (user.isFollowedByMe ? 0 : 1) : followersCount - (user.isFollowedByMe ? 1 : 0))
+    : followersCount;
+
+  const earnedBadges = BADGE_DEFS.filter(b => {
+    if (b.field === "isVerified") return user.isVerified;
+    const val = user[b.field] ?? 0;
+    return typeof b.threshold === "boolean" ? !!val : val >= b.threshold;
+  });
 
   return (
     <div className="pb-24">
@@ -145,21 +217,74 @@ export default function FreelancerProfilePage() {
           </div>
         </div>
 
+        {/* Badges strip */}
+        {earnedBadges.length > 0 && (
+          <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
+            {earnedBadges.map(b => (
+              <span key={b.key} className="flex-shrink-0 flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-xl bg-white/5 border border-white/10">
+                {b.emoji} {b.label}
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* Stats bar */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          <StatBadge value={user.completedJobs ?? 0} label="Jobs Feitos" color="text-primary" />
-          <StatBadge value={`${(user.reputationScore ?? 0).toFixed(1)} ★`} label="Reputação" color="text-yellow-400" />
-          <StatBadge value={`${user.responseRate ?? 0}%`} label="Resposta" color="text-secondary" />
+        <div className="grid grid-cols-4 gap-2 mb-5">
+          <StatBadge
+            value={<AnimatedCounter target={user.completedJobs ?? 0} />}
+            label="Jobs"
+            color="text-primary"
+          />
+          <StatBadge
+            value={<><AnimatedCounter target={user.reputationScore ?? 0} decimals={1} /> ★</>}
+            label="Rep."
+            color="text-yellow-400"
+          />
+          <StatBadge
+            value={<AnimatedCounter target={displayFollowers} />}
+            label="Seguidores"
+            color="text-secondary"
+          />
+          <StatBadge
+            value={`${user.responseRate ?? 0}%`}
+            label="Resposta"
+            color="text-muted-foreground"
+          />
         </div>
 
-        {/* CTA */}
-        <Link href={`/app/jobs/new?freelancer=${userId}`}>
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-            <Button className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl mb-6">
-              <Zap size={15} className="mr-2" /> Contratar Agora
-            </Button>
-          </motion.div>
-        </Link>
+        {/* CTAs */}
+        <div className={`grid gap-3 mb-6 ${isMe ? "grid-cols-1" : "grid-cols-2"}`}>
+          {!isMe && (
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+              <Button
+                onClick={() => followMutation.mutate()}
+                disabled={followMutation.isPending}
+                className={`w-full h-12 font-bold text-sm rounded-xl border-none ${
+                  following
+                    ? "bg-white/8 border border-white/15 text-foreground hover:bg-destructive/15 hover:text-red-400"
+                    : "bg-secondary text-black hover:bg-secondary/90"
+                }`}
+                style={!following ? { boxShadow: "0 0 18px rgba(0,200,200,0.2)" } : {}}
+              >
+                {followMutation.isPending ? (
+                  <Loader2 size={14} className="animate-spin mr-2" />
+                ) : following ? (
+                  <UserMinus size={14} className="mr-2" />
+                ) : (
+                  <UserPlus size={14} className="mr-2" />
+                )}
+                {following ? "Seguindo" : "Seguir"}
+              </Button>
+            </motion.div>
+          )}
+          <Link href={`/app/jobs/new?freelancer=${userId}`}>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+              <Button className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl">
+                <Zap size={15} className="mr-2" /> Contratar
+              </Button>
+            </motion.div>
+          </Link>
+        </div>
 
         {/* Sticky tabs */}
         <div className="sticky top-0 z-20 bg-[#060809]/95 backdrop-blur-xl border-b border-white/6 mb-6 -mx-4 sm:-mx-6 px-4 sm:px-6">
@@ -241,6 +366,18 @@ export default function FreelancerProfilePage() {
                   </div>
                 </div>
               )}
+
+              {/* Follower/Following counts */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="glass-card rounded-2xl p-4 border border-white/6 text-center">
+                  <p className="text-2xl font-bold text-primary"><AnimatedCounter target={user.followersCount ?? 0} /></p>
+                  <p className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><Users size={10} /> Seguidores</p>
+                </div>
+                <div className="glass-card rounded-2xl p-4 border border-white/6 text-center">
+                  <p className="text-2xl font-bold text-secondary"><AnimatedCounter target={user.followingCount ?? 0} /></p>
+                  <p className="text-xs text-muted-foreground mt-1">Seguindo</p>
+                </div>
+              </div>
             </motion.div>
           )}
 

@@ -205,8 +205,157 @@ export const ListFreelancersResponseItem = zod.object({
   "profileCompletion": zod.number(),
   "referralCode": zod.string(),
   "createdAt": zod.string()
-})
+}).and(zod.object({
+  "followersCount": zod.number(),
+  "followingCount": zod.number(),
+  "isFollowedByMe": zod.boolean()
+}))
 export const ListFreelancersResponse = zod.array(ListFreelancersResponseItem)
+
+
+/**
+ * @summary List companies
+ */
+export const ListCompaniesQueryParams = zod.object({
+  "search": zod.coerce.string().optional(),
+  "page": zod.coerce.number().optional()
+})
+
+export const ListCompaniesResponseItem = zod.object({
+  "id": zod.number(),
+  "email": zod.string(),
+  "name": zod.string(),
+  "role": zod.enum(['company', 'freelancer', 'admin']),
+  "avatarUrl": zod.string().nullish(),
+  "bio": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "pixKey": zod.string().nullish(),
+  "categories": zod.array(zod.string()),
+  "level": zod.enum(['bronze', 'silver', 'gold', 'elite']),
+  "reputationScore": zod.number(),
+  "completedJobs": zod.number(),
+  "isVerified": zod.boolean(),
+  "isBanned": zod.boolean(),
+  "profileCompletion": zod.number(),
+  "referralCode": zod.string(),
+  "createdAt": zod.string()
+}).and(zod.object({
+  "followersCount": zod.number(),
+  "followingCount": zod.number(),
+  "isFollowedByMe": zod.boolean()
+}))
+export const ListCompaniesResponse = zod.array(ListCompaniesResponseItem)
+
+
+/**
+ * @summary Follow a user
+ */
+export const FollowUserParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const FollowUserResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary Unfollow a user
+ */
+export const UnfollowUserParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const UnfollowUserResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary Get user followers
+ */
+export const GetUserFollowersParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetUserFollowersResponseItem = zod.object({
+  "id": zod.number(),
+  "email": zod.string(),
+  "name": zod.string(),
+  "role": zod.enum(['company', 'freelancer', 'admin']),
+  "avatarUrl": zod.string().nullish(),
+  "bio": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "pixKey": zod.string().nullish(),
+  "categories": zod.array(zod.string()),
+  "level": zod.enum(['bronze', 'silver', 'gold', 'elite']),
+  "reputationScore": zod.number(),
+  "completedJobs": zod.number(),
+  "isVerified": zod.boolean(),
+  "isBanned": zod.boolean(),
+  "profileCompletion": zod.number(),
+  "referralCode": zod.string(),
+  "createdAt": zod.string()
+})
+export const GetUserFollowersResponse = zod.array(GetUserFollowersResponseItem)
+
+
+/**
+ * @summary Get users this user is following
+ */
+export const GetUserFollowingParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetUserFollowingResponseItem = zod.object({
+  "id": zod.number(),
+  "email": zod.string(),
+  "name": zod.string(),
+  "role": zod.enum(['company', 'freelancer', 'admin']),
+  "avatarUrl": zod.string().nullish(),
+  "bio": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "pixKey": zod.string().nullish(),
+  "categories": zod.array(zod.string()),
+  "level": zod.enum(['bronze', 'silver', 'gold', 'elite']),
+  "reputationScore": zod.number(),
+  "completedJobs": zod.number(),
+  "isVerified": zod.boolean(),
+  "isBanned": zod.boolean(),
+  "profileCompletion": zod.number(),
+  "referralCode": zod.string(),
+  "createdAt": zod.string()
+})
+export const GetUserFollowingResponse = zod.array(GetUserFollowingResponseItem)
+
+
+/**
+ * @summary Upload profile avatar as base64
+ */
+export const UploadAvatarBody = zod.object({
+  "dataUrl": zod.string()
+})
+
+export const UploadAvatarResponse = zod.object({
+  "avatarUrl": zod.string().nullish(),
+  "bannerUrl": zod.string().nullish()
+})
+
+
+/**
+ * @summary Upload profile banner as base64
+ */
+export const UploadBannerBody = zod.object({
+  "dataUrl": zod.string()
+})
+
+export const UploadBannerResponse = zod.object({
+  "avatarUrl": zod.string().nullish(),
+  "bannerUrl": zod.string().nullish()
+})
 
 
 /**

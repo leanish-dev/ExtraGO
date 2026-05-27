@@ -202,7 +202,147 @@ paths:
               schema:
                 type: array
                 items:
+                  $ref: "#/components/schemas/UserWithFollow"
+
+  /users/companies:
+    get:
+      operationId: listCompanies
+      tags: [users]
+      summary: List companies
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of companies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserWithFollow"
+
+  /users/{id}/follow:
+    post:
+      operationId: followUser
+      tags: [users]
+      summary: Follow a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Followed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+    delete:
+      operationId: unfollowUser
+      tags: [users]
+      summary: Unfollow a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Unfollowed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /users/{id}/followers:
+    get:
+      operationId: getUserFollowers
+      tags: [users]
+      summary: Get user followers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Followers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
                   $ref: "#/components/schemas/User"
+
+  /users/{id}/following:
+    get:
+      operationId: getUserFollowing
+      tags: [users]
+      summary: Get users this user is following
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Following
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+  /profile/avatar:
+    post:
+      operationId: uploadAvatar
+      tags: [users]
+      summary: Upload profile avatar as base64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MediaUploadInput"
+      responses:
+        "200":
+          description: Avatar URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaUploadResponse"
+
+  /profile/banner:
+    post:
+      operationId: uploadBanner
+      tags: [users]
+      summary: Upload profile banner as base64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MediaUploadInput"
+      responses:
+        "200":
+          description: Banner URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaUploadResponse"
 
   # JOBS
   /jobs:
@@ -920,6 +1060,37 @@ components:
         - referralCode
         - createdAt
         - categories
+
+    UserWithFollow:
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          properties:
+            followersCount:
+              type: integer
+            followingCount:
+              type: integer
+            isFollowedByMe:
+              type: boolean
+          required:
+            - followersCount
+            - followingCount
+            - isFollowedByMe
+
+    MediaUploadInput:
+      type: object
+      required: [dataUrl]
+      properties:
+        dataUrl:
+          type: string
+
+    MediaUploadResponse:
+      type: object
+      properties:
+        avatarUrl:
+          type: ["string", "null"]
+        bannerUrl:
+          type: ["string", "null"]
 
     UserUpdate:
       type: object

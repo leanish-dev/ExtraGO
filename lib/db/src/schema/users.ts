@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, boolean, real, timestamp, pgEnum, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, boolean, real, timestamp, pgEnum, jsonb, uniqueIndex } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -124,3 +124,16 @@ export type Post = typeof postsTable.$inferSelect;
 export const insertPostCommentSchema = createInsertSchema(postCommentsTable).omit({ id: true, createdAt: true });
 export type InsertPostComment = z.infer<typeof insertPostCommentSchema>;
 export type PostComment = typeof postCommentsTable.$inferSelect;
+
+export const userFollowsTable = pgTable("user_follows", {
+  id: serial("id").primaryKey(),
+  followerId: integer("follower_id").notNull(),
+  followingId: integer("following_id").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (t) => [
+  uniqueIndex("user_follows_unique").on(t.followerId, t.followingId),
+]);
+
+export const insertUserFollowSchema = createInsertSchema(userFollowsTable).omit({ id: true, createdAt: true });
+export type InsertUserFollow = z.infer<typeof insertUserFollowSchema>;
+export type UserFollow = typeof userFollowsTable.$inferSelect;

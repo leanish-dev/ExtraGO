@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { db, usersTable, ratingsTable } from "@workspace/db";
-import { eq, like, and, or, sql } from "drizzle-orm";
+import { db, usersTable, ratingsTable, userFollowsTable } from "@workspace/db";
+import { eq, like, and, or, sql, count } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { UpdateUserBody, RateUserBody, ListFreelancersQueryParams } from "@workspace/api-zod";
 
@@ -28,7 +28,50 @@ router.get("/users/freelancers", requireAuth, async (req, res) => {
   }
 
   const users = await query.limit(50);
-  res.json(users.map(formatUser));
+  const currentUserId = (req as any).user?.id;
+  const result = await Promise.all(users.map(async (u) => {
+    const [followerRow] = await db.select({ c: count() }).from(userFollowsTable).where(eq(userFollowsTable.followingId, u.id));
+    const [followingRow] = await db.select({ c: count() }).from(userFollowsTable).where(eq(userFollowsTable.followerId, u.id));
+    let isFollowedByMe = false;
+    if (currentUserId) {
+      const [rel] = await db.select().from(userFollowsTable).where(and(eq(userFollowsTable.followerId, currentUserId), eq(userFollowsTable.followingId, u.id)));
+      isFollowedByMe = !!rel;
+    }
+    return { ...formatUser(u), followersCount: Number(followerRow.c), followingCount: Number(followingRow.c), isFollowedByMe };
+  }));
+  res.json(result);
+});
+
+// GET /users/companies
+router.get("/users/companies", requireAuth, async (req, res) => {
+  const search = req.query.search as string | undefined;
+
+  let query = db.select().from(usersTable)
+    .where(eq(usersTable.role, "company"))
+    .$dynamic();
+
+  if (search) {
+    query = query.where(
+      or(
+        like(usersTable.name, `%${search}%`),
+        like(usersTable.companyName, `%${search}%`)
+      )
+    );
+  }
+
+  const users = await query.limit(50);
+  const currentUserId = (req as any).user?.id;
+  const result = await Promise.all(users.map(async (u) => {
+    const [followerRow] = await db.select({ c: count() }).from(userFollowsTable).where(eq(userFollowsTable.followingId, u.id));
+    const [followingRow] = await db.select({ c: count() }).from(userFollowsTable).where(eq(userFollowsTable.followerId, u.id));
+    let isFollowedByMe = false;
+    if (currentUserId) {
+      const [rel] = await db.select().from(userFollowsTable).where(and(eq(userFollowsTable.followerId, currentUserId), eq(userFollowsTable.followingId, u.id)));
+      isFollowedByMe = !!rel;
+    }
+    return { ...formatUser(u), followersCount: Number(followerRow.c), followingCount: Number(followingRow.c), isFollowedByMe };
+  }));
+  res.json(result);
 });
 
 // GET /users/:id
@@ -39,7 +82,21 @@ router.get("/users/:id", requireAuth, async (req, res) => {
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, id));
   if (!user) { res.status(404).json({ error: "User not found" }); return; }
 
-  res.json(formatUser(user));
+  const currentUserId = (req as any).user?.id;
+  const [followerRow] = await db.select({ c: count() }).from(userFollowsTable).where(eq(userFollowsTable.followingId, id));
+  const [followingRow] = await db.select({ c: count() }).from(userFollowsTable).where(eq(userFollowsTable.followerId, id));
+  let isFollowedByMe = false;
+  if (currentUserId && currentUserId !== id) {
+    const [rel] = await db.select().from(userFollowsTable).where(and(eq(userFollowsTable.followerId, currentUserId), eq(userFollowsTable.followingId, id)));
+    isFollowedByMe = !!rel;
+  }
+
+  res.json({
+    ...formatUser(user),
+    followersCount: Number(followerRow.c),
+    followingCount: Number(followingRow.c),
+    isFollowedByMe,
+  });
 });
 
 // PATCH /users/:id
@@ -113,6 +170,68 @@ router.post("/users/:id/rating", requireAuth, async (req, res) => {
   await db.update(usersTable).set({ reputationScore: avg }).where(eq(usersTable.id, ratedId));
 
   res.status(201).json({ message: "Rating submitted" });
+});
+
+// POST /users/:id/follow
+router.post("/users/:id/follow", requireAuth, async (req, res) => {
+  const followingId = parseInt(req.params.id);
+  const followerId = (req as any).user.id;
+  if (isNaN(followingId)) { res.status(400).json({ error: "Invalid ID" }); return; }
+  if (followerId === followingId) { res.status(400).json({ error: "Cannot follow yourself" }); return; }
+
+  const [target] = await db.select().from(usersTable).where(eq(usersTable.id, followingId));
+  if (!target) { res.status(404).json({ error: "User not found" }); return; }
+
+  try {
+    await db.insert(userFollowsTable).values({ followerId, followingId });
+  } catch {
+    // Already following — ignore unique constraint error
+  }
+
+  res.json({ message: "Followed" });
+});
+
+// DELETE /users/:id/follow
+router.delete("/users/:id/follow", requireAuth, async (req, res) => {
+  const followingId = parseInt(req.params.id);
+  const followerId = (req as any).user.id;
+  if (isNaN(followingId)) { res.status(400).json({ error: "Invalid ID" }); return; }
+
+  await db.delete(userFollowsTable).where(
+    and(eq(userFollowsTable.followerId, followerId), eq(userFollowsTable.followingId, followingId))
+  );
+
+  res.json({ message: "Unfollowed" });
+});
+
+// GET /users/:id/followers
+router.get("/users/:id/followers", requireAuth, async (req, res) => {
+  const userId = parseInt(req.params.id);
+  if (isNaN(userId)) { res.status(400).json({ error: "Invalid ID" }); return; }
+
+  const follows = await db.select().from(userFollowsTable).where(eq(userFollowsTable.followingId, userId));
+  const users = await Promise.all(
+    follows.map(async (f) => {
+      const [u] = await db.select().from(usersTable).where(eq(usersTable.id, f.followerId));
+      return u ? formatUser(u) : null;
+    })
+  );
+  res.json(users.filter(Boolean));
+});
+
+// GET /users/:id/following
+router.get("/users/:id/following", requireAuth, async (req, res) => {
+  const userId = parseInt(req.params.id);
+  if (isNaN(userId)) { res.status(400).json({ error: "Invalid ID" }); return; }
+
+  const follows = await db.select().from(userFollowsTable).where(eq(userFollowsTable.followerId, userId));
+  const users = await Promise.all(
+    follows.map(async (f) => {
+      const [u] = await db.select().from(usersTable).where(eq(usersTable.id, f.followingId));
+      return u ? formatUser(u) : null;
+    })
+  );
+  res.json(users.filter(Boolean));
 });
 
 export default router;

@@ -36,11 +36,14 @@ import type {
   JobUpdate,
   LeaderboardEntry,
   ListApplicationsParams,
+  ListCompaniesParams,
   ListFreelancersParams,
   ListJobsParams,
   ListNotificationsParams,
   ListTransactionsParams,
   LoginInput,
+  MediaUploadInput,
+  MediaUploadResponse,
   MessageResponse,
   Notification,
   PlatformStats,
@@ -51,6 +54,7 @@ import type {
   Transaction,
   User,
   UserUpdate,
+  UserWithFollow,
   Wallet,
   WithdrawalInput
 } from './api.schemas';
@@ -672,9 +676,9 @@ export const getListFreelancersUrl = (params?: ListFreelancersParams,) => {
 /**
  * @summary List freelancers
  */
-export const listFreelancers = async (params?: ListFreelancersParams, options?: RequestInit): Promise<User[]> => {
+export const listFreelancers = async (params?: ListFreelancersParams, options?: RequestInit): Promise<UserWithFollow[]> => {
 
-  return customFetch<User[]>(getListFreelancersUrl(params),
+  return customFetch<UserWithFollow[]>(getListFreelancersUrl(params),
   {
     ...options,
     method: 'GET'
@@ -737,6 +741,526 @@ export function useListFreelancers<TData = Awaited<ReturnType<typeof listFreelan
 
 
 
+
+export const getListCompaniesUrl = (params?: ListCompaniesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/users/companies?${stringifiedParams}` : `/api/users/companies`
+}
+
+/**
+ * @summary List companies
+ */
+export const listCompanies = async (params?: ListCompaniesParams, options?: RequestInit): Promise<UserWithFollow[]> => {
+
+  return customFetch<UserWithFollow[]>(getListCompaniesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListCompaniesQueryKey = (params?: ListCompaniesParams,) => {
+    return [
+    `/api/users/companies`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListCompaniesQueryOptions = <TData = Awaited<ReturnType<typeof listCompanies>>, TError = ErrorType<unknown>>(params?: ListCompaniesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCompanies>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListCompaniesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCompanies>>> = ({ signal }) => listCompanies(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCompanies>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListCompaniesQueryResult = NonNullable<Awaited<ReturnType<typeof listCompanies>>>
+export type ListCompaniesQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List companies
+ */
+
+export function useListCompanies<TData = Awaited<ReturnType<typeof listCompanies>>, TError = ErrorType<unknown>>(
+ params?: ListCompaniesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCompanies>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListCompaniesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getFollowUserUrl = (id: number,) => {
+
+
+
+
+  return `/api/users/${id}/follow`
+}
+
+/**
+ * @summary Follow a user
+ */
+export const followUser = async (id: number, options?: RequestInit): Promise<MessageResponse> => {
+
+  return customFetch<MessageResponse>(getFollowUserUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getFollowUserMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof followUser>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof followUser>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['followUser'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof followUser>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  followUser(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FollowUserMutationResult = NonNullable<Awaited<ReturnType<typeof followUser>>>
+
+    export type FollowUserMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Follow a user
+ */
+export const useFollowUser = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof followUser>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof followUser>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getFollowUserMutationOptions(options));
+    }
+
+export const getUnfollowUserUrl = (id: number,) => {
+
+
+
+
+  return `/api/users/${id}/follow`
+}
+
+/**
+ * @summary Unfollow a user
+ */
+export const unfollowUser = async (id: number, options?: RequestInit): Promise<MessageResponse> => {
+
+  return customFetch<MessageResponse>(getUnfollowUserUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getUnfollowUserMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unfollowUser>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof unfollowUser>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['unfollowUser'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unfollowUser>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  unfollowUser(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UnfollowUserMutationResult = NonNullable<Awaited<ReturnType<typeof unfollowUser>>>
+
+    export type UnfollowUserMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Unfollow a user
+ */
+export const useUnfollowUser = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unfollowUser>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof unfollowUser>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getUnfollowUserMutationOptions(options));
+    }
+
+export const getGetUserFollowersUrl = (id: number,) => {
+
+
+
+
+  return `/api/users/${id}/followers`
+}
+
+/**
+ * @summary Get user followers
+ */
+export const getUserFollowers = async (id: number, options?: RequestInit): Promise<User[]> => {
+
+  return customFetch<User[]>(getGetUserFollowersUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetUserFollowersQueryKey = (id: number,) => {
+    return [
+    `/api/users/${id}/followers`
+    ] as const;
+    }
+
+
+export const getGetUserFollowersQueryOptions = <TData = Awaited<ReturnType<typeof getUserFollowers>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserFollowers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserFollowersQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserFollowers>>> = ({ signal }) => getUserFollowers(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserFollowers>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetUserFollowersQueryResult = NonNullable<Awaited<ReturnType<typeof getUserFollowers>>>
+export type GetUserFollowersQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get user followers
+ */
+
+export function useGetUserFollowers<TData = Awaited<ReturnType<typeof getUserFollowers>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserFollowers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetUserFollowersQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetUserFollowingUrl = (id: number,) => {
+
+
+
+
+  return `/api/users/${id}/following`
+}
+
+/**
+ * @summary Get users this user is following
+ */
+export const getUserFollowing = async (id: number, options?: RequestInit): Promise<User[]> => {
+
+  return customFetch<User[]>(getGetUserFollowingUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetUserFollowingQueryKey = (id: number,) => {
+    return [
+    `/api/users/${id}/following`
+    ] as const;
+    }
+
+
+export const getGetUserFollowingQueryOptions = <TData = Awaited<ReturnType<typeof getUserFollowing>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserFollowing>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetUserFollowingQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserFollowing>>> = ({ signal }) => getUserFollowing(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getUserFollowing>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetUserFollowingQueryResult = NonNullable<Awaited<ReturnType<typeof getUserFollowing>>>
+export type GetUserFollowingQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get users this user is following
+ */
+
+export function useGetUserFollowing<TData = Awaited<ReturnType<typeof getUserFollowing>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getUserFollowing>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetUserFollowingQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getUploadAvatarUrl = () => {
+
+
+
+
+  return `/api/profile/avatar`
+}
+
+/**
+ * @summary Upload profile avatar as base64
+ */
+export const uploadAvatar = async (mediaUploadInput: MediaUploadInput, options?: RequestInit): Promise<MediaUploadResponse> => {
+
+  return customFetch<MediaUploadResponse>(getUploadAvatarUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      mediaUploadInput,)
+  }
+);}
+
+
+
+
+export const getUploadAvatarMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadAvatar>>, TError,{data: BodyType<MediaUploadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof uploadAvatar>>, TError,{data: BodyType<MediaUploadInput>}, TContext> => {
+
+const mutationKey = ['uploadAvatar'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof uploadAvatar>>, {data: BodyType<MediaUploadInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  uploadAvatar(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UploadAvatarMutationResult = NonNullable<Awaited<ReturnType<typeof uploadAvatar>>>
+    export type UploadAvatarMutationBody = BodyType<MediaUploadInput>
+    export type UploadAvatarMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Upload profile avatar as base64
+ */
+export const useUploadAvatar = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadAvatar>>, TError,{data: BodyType<MediaUploadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof uploadAvatar>>,
+        TError,
+        {data: BodyType<MediaUploadInput>},
+        TContext
+      > => {
+      return useMutation(getUploadAvatarMutationOptions(options));
+    }
+
+export const getUploadBannerUrl = () => {
+
+
+
+
+  return `/api/profile/banner`
+}
+
+/**
+ * @summary Upload profile banner as base64
+ */
+export const uploadBanner = async (mediaUploadInput: MediaUploadInput, options?: RequestInit): Promise<MediaUploadResponse> => {
+
+  return customFetch<MediaUploadResponse>(getUploadBannerUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      mediaUploadInput,)
+  }
+);}
+
+
+
+
+export const getUploadBannerMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadBanner>>, TError,{data: BodyType<MediaUploadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof uploadBanner>>, TError,{data: BodyType<MediaUploadInput>}, TContext> => {
+
+const mutationKey = ['uploadBanner'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof uploadBanner>>, {data: BodyType<MediaUploadInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  uploadBanner(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UploadBannerMutationResult = NonNullable<Awaited<ReturnType<typeof uploadBanner>>>
+    export type UploadBannerMutationBody = BodyType<MediaUploadInput>
+    export type UploadBannerMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Upload profile banner as base64
+ */
+export const useUploadBanner = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof uploadBanner>>, TError,{data: BodyType<MediaUploadInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof uploadBanner>>,
+        TError,
+        {data: BodyType<MediaUploadInput>},
+        TContext
+      > => {
+      return useMutation(getUploadBannerMutationOptions(options));
+    }
 
 export const getListJobsUrl = (params?: ListJobsParams,) => {
   const normalizedParams = new URLSearchParams();

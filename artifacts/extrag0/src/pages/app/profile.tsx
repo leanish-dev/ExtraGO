@@ -261,6 +261,62 @@ export default function ProfilePage() {
   const [serviceRegions, setServiceRegions] = useState<string[]>((user as any)?.serviceRegions ?? []);
   const [activeTab, setActiveTab] = useState("perfil");
 
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl ?? null);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
+
+  const handleAvatarClick = () => avatarInputRef.current?.click();
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 4 * 1024 * 1024) { toast.error("Imagem muito grande. Máximo 4MB."); return; }
+    setAvatarUploading(true);
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const dataUrl = ev.target?.result as string;
+      setAvatarPreview(dataUrl);
+      try {
+        await updateUser.mutateAsync({ id: user!.id!, data: { avatarUrl: dataUrl } as any });
+        toast.success("Foto atualizada!");
+      } catch {
+        toast.error("Erro ao salvar foto.");
+        setAvatarPreview(user?.avatarUrl ?? null);
+      } finally {
+        setAvatarUploading(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleBannerChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const dataUrl = ev.target?.result as string;
+      setBannerPreview(dataUrl);
+      setUploadingBanner(true);
+      try {
+        await apiFetch("/api/profile/banner", {
+          method: "POST",
+          body: JSON.stringify({ dataUrl }),
+        });
+        toast.success("Banner atualizado!");
+        qc.invalidateQueries({ queryKey: ["me"] });
+      } catch {
+        toast.error("Erro ao fazer upload do banner");
+        setBannerPreview(null);
+      } finally {
+        setUploadingBanner(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -303,40 +359,24 @@ export default function ProfilePage() {
         { key: "config", label: "Config." },
       ];
 
-  const avatarInputRef = useRef<HTMLInputElement>(null);
-  const [avatarUploading, setAvatarUploading] = useState(false);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(user?.avatarUrl ?? null);
-
-  const handleAvatarClick = () => avatarInputRef.current?.click();
-
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 4 * 1024 * 1024) { toast.error("Imagem muito grande. Máximo 4MB."); return; }
-    setAvatarUploading(true);
-    const reader = new FileReader();
-    reader.onload = async (ev) => {
-      const dataUrl = ev.target?.result as string;
-      setAvatarPreview(dataUrl);
-      try {
-        await updateUser.mutateAsync({ id: user!.id!, data: { avatarUrl: dataUrl } as any });
-        toast.success("Foto atualizada!");
-      } catch {
-        toast.error("Erro ao salvar foto.");
-        setAvatarPreview(user?.avatarUrl ?? null);
-      } finally {
-        setAvatarUploading(false);
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
   return (
     <div className="pb-24">
-      {/* Banner area */}
-      <div className="relative w-full h-28 sm:h-36 bg-gradient-to-br from-primary/15 via-secondary/8 to-transparent overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06]" />
+      {/* Banner area — clickable upload */}
+      <div className="relative w-full h-28 sm:h-36 overflow-hidden group cursor-pointer" onClick={() => bannerInputRef.current?.click()}>
+        {bannerPreview || (user as any)?.bannerUrl ? (
+          <img src={bannerPreview || (user as any)?.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-primary/15 via-secondary/8 to-transparent">
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06]" />
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#08111a] to-transparent" />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
+          <div className="flex items-center gap-2 bg-black/60 px-3 py-2 rounded-xl text-xs font-semibold text-white">
+            <Camera size={13} /> Alterar banner
+          </div>
+        </div>
+        <input ref={bannerInputRef} type="file" accept="image/*" className="hidden" onChange={handleBannerChange} />
       </div>
 
       <div className="px-4 sm:px-6 max-w-3xl mx-auto">

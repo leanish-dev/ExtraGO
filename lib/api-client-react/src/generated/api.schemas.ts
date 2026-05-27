@@ -87,6 +87,23 @@ export interface LoginInput {
   password: string;
 }
 
+export type UserWithFollow = User & {
+  followersCount: number;
+  followingCount: number;
+  isFollowedByMe: boolean;
+};
+
+export interface MediaUploadInput {
+  dataUrl: string;
+}
+
+export interface MediaUploadResponse {
+  /** @nullable */
+  avatarUrl?: string | null;
+  /** @nullable */
+  bannerUrl?: string | null;
+}
+
 export interface UserUpdate {
   name?: string;
   bio?: string;
@@ -359,6 +376,11 @@ export interface AdminStats {
 
 export type ListFreelancersParams = {
 category?: string;
+search?: string;
+page?: number;
+};
+
+export type ListCompaniesParams = {
 search?: string;
 page?: number;
 };

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, userCategoriesTable, workExperiencesTable, userSkillsTable } from "@workspace/db";
+import { db, userCategoriesTable, workExperiencesTable, userSkillsTable, usersTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 import { requireAuth } from "../lib/auth";
 import { z } from "zod";
@@ -165,6 +165,36 @@ router.delete("/profile/skills/:id", requireAuth, async (req, res) => {
     and(eq(userSkillsTable.id, id), eq(userSkillsTable.userId, userId))
   );
   res.json({ message: "Deleted" });
+});
+
+// POST /profile/avatar
+router.post("/profile/avatar", requireAuth, async (req, res) => {
+  const userId = (req as any).user.id;
+  const { dataUrl } = req.body;
+  if (!dataUrl || typeof dataUrl !== "string") {
+    res.status(400).json({ error: "dataUrl is required" });
+    return;
+  }
+  const [updated] = await db.update(usersTable)
+    .set({ avatarUrl: dataUrl })
+    .where(eq(usersTable.id, userId))
+    .returning();
+  res.json({ avatarUrl: updated.avatarUrl });
+});
+
+// POST /profile/banner
+router.post("/profile/banner", requireAuth, async (req, res) => {
+  const userId = (req as any).user.id;
+  const { dataUrl } = req.body;
+  if (!dataUrl || typeof dataUrl !== "string") {
+    res.status(400).json({ error: "dataUrl is required" });
+    return;
+  }
+  const [updated] = await db.update(usersTable)
+    .set({ bannerUrl: dataUrl })
+    .where(eq(usersTable.id, userId))
+    .returning();
+  res.json({ bannerUrl: updated.bannerUrl });
 });
 
 // ---- Public read-only endpoints (by freelancer user ID) ----

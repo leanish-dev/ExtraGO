@@ -7,7 +7,7 @@ import { SkeletonCard } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Heart, MessageCircle, Bookmark, Repeat2, Plus, Image, X, ChevronDown, Send, Briefcase, Wifi, MoreHorizontal, Trash2, CheckCircle } from "lucide-react";
+import { Heart, MessageCircle, Bookmark, Repeat2, Plus, Image, X, ChevronDown, Send, Briefcase, Wifi, MoreHorizontal, Trash2, CheckCircle, UserPlus, UserMinus } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -191,6 +191,30 @@ function PostCard({ post, onDelete }: { post: FeedPost; onDelete: (id: number) =
   const [savesCount, setSavesCount] = useState(post.saves);
   const [repostsCount, setRepostsCount] = useState(post.reposts);
   const [showMenu, setShowMenu] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followPending, setFollowPending] = useState(false);
+
+  const isOwnPost = user?.id === post.userId;
+
+  const handleFollow = async () => {
+    if (isOwnPost) return;
+    setFollowPending(true);
+    try {
+      if (isFollowing) {
+        await apiFetch(`/api/users/${post.userId}/follow`, { method: "DELETE" });
+        setIsFollowing(false);
+        toast.success("Deixou de seguir");
+      } else {
+        await apiFetch(`/api/users/${post.userId}/follow`, { method: "POST" });
+        setIsFollowing(true);
+        toast.success("Seguindo!");
+      }
+    } catch {
+      toast.error("Erro");
+    } finally {
+      setFollowPending(false);
+    }
+  };
 
   const typeInfo = POST_TYPE_MAP[post.postType] ?? POST_TYPE_MAP.general;
   const timeAgo = formatDistanceToNow(new Date(post.createdAt), { addSuffix: true, locale: ptBR });
@@ -263,6 +287,21 @@ function PostCard({ post, onDelete }: { post: FeedPost; onDelete: (id: number) =
               )}
               <p className="text-[10px] text-muted-foreground/65 mt-0.5">{timeAgo}</p>
             </div>
+            {!isOwnPost && (
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={handleFollow}
+                disabled={followPending}
+                className={`flex-shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-bold border transition-all ${
+                  isFollowing
+                    ? "border-white/12 text-muted-foreground bg-white/4"
+                    : "border-primary/30 text-primary bg-primary/8 hover:bg-primary/15"
+                }`}
+              >
+                {followPending ? <span className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" /> : isFollowing ? <UserMinus size={10} /> : <UserPlus size={10} />}
+                {isFollowing ? "Seguindo" : "Seguir"}
+              </motion.button>
+            )}
             {user?.id === post.userId && (
               <div className="relative flex-shrink-0">
                 <button

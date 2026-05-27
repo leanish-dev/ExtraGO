@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Briefcase, FileText, Wallet, Settings,
   LogOut, Star, Trophy, Home,
   Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
-  ChevronRight, TrendingUp, Bell, Rss
+  ChevronRight, TrendingUp, Bell, Rss, Globe
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
@@ -42,6 +42,7 @@ function getNavItems(role: string): NavItem[] {
   return [
     { href: "/app/dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
     { href: "/app/feed", label: "Feed", icon: <Rss size={18} /> },
+    { href: "/app/network", label: "Rede", icon: <Globe size={18} /> },
     { href: "/app/jobs", label: "Buscar Vagas", icon: <Briefcase size={18} /> },
     { href: "/app/applications", label: "Candidaturas", icon: <FileText size={18} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
