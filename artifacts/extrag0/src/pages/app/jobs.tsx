@@ -9,11 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/components/ui/sheet";
 import { EmptyState } from "@/components/ui/empty";
 import { SkeletonCard } from "@/components/ui/skeleton";
-import { PageHeader } from "@/components/page-header";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import jobsBanner from "@assets/file_00000000311071f98244eb8a979d0597_1779868067126.png";
 
 const CATEGORIES = ["Todos", "Garçom", "Barman", "Recepcionista", "Hostess", "Chef de Cozinha", "Cumim", "Auxiliar de Eventos", "Segurança", "Promoter"];
 
@@ -38,33 +38,26 @@ type LiveStatus = "happening" | "soon" | "finished" | "normal";
 function getLiveStatus(job: Job): LiveStatus {
   if (!job.date || !job.startTime || !job.endTime) return "normal";
   if (job.status === "completed" || job.status === "cancelled") return "finished";
-
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
   const jobDate = job.date.slice(0, 10);
-
   if (jobDate !== todayStr) {
     if (jobDate < todayStr) return "finished";
     return "normal";
   }
-
   const [sh, sm] = job.startTime.split(":").map(Number);
   const [eh, em] = job.endTime.split(":").map(Number);
-
   const startMinutes = sh * 60 + sm;
   const endMinutes = eh * 60 + em;
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
-
   if (nowMinutes >= startMinutes && nowMinutes < endMinutes) return "happening";
   if (nowMinutes < startMinutes && startMinutes - nowMinutes <= 120) return "soon";
   if (nowMinutes >= endMinutes) return "finished";
-
   return "normal";
 }
 
 function useCountdown(job: Job): string {
   const [countdown, setCountdown] = useState("");
-
   useEffect(() => {
     const compute = () => {
       if (!job.date || !job.startTime) { setCountdown(""); return; }
@@ -72,36 +65,29 @@ function useCountdown(job: Job): string {
       const jobDate = job.date.slice(0, 10);
       const todayStr = now.toISOString().slice(0, 10);
       if (jobDate !== todayStr) { setCountdown(""); return; }
-
       const [sh, sm] = job.startTime.split(":").map(Number);
       const startMs = new Date().setHours(sh, sm, 0, 0);
       const diffMs = startMs - Date.now();
       if (diffMs <= 0) { setCountdown(""); return; }
-
       const totalSec = Math.floor(diffMs / 1000);
       const h = Math.floor(totalSec / 3600);
       const m = Math.floor((totalSec % 3600) / 60);
       const s = totalSec % 60;
-
       if (h > 0) setCountdown(`${h}h ${m}m`);
       else if (m > 0) setCountdown(`${m}m ${s}s`);
       else setCountdown(`${s}s`);
     };
-
     compute();
     const id = setInterval(compute, 1000);
     return () => clearInterval(id);
   }, [job.date, job.startTime]);
-
   return countdown;
 }
 
 function LiveStatusBadge({ job, size = "sm" }: { job: Job; size?: "sm" | "md" }) {
   const liveStatus = getLiveStatus(job);
   const countdown = useCountdown(job);
-
   if (liveStatus === "normal") return null;
-
   if (liveStatus === "happening") {
     return (
       <span className={`inline-flex items-center gap-1 font-bold rounded-full border ${size === "md" ? "px-3 py-1 text-xs" : "px-2 py-0.5 text-[10px]"} bg-green-500/15 text-green-400 border-green-500/30`}>
@@ -110,7 +96,6 @@ function LiveStatusBadge({ job, size = "sm" }: { job: Job; size?: "sm" | "md" })
       </span>
     );
   }
-
   if (liveStatus === "soon") {
     return (
       <span className={`inline-flex items-center gap-1 font-bold rounded-full border ${size === "md" ? "px-3 py-1 text-xs" : "px-2 py-0.5 text-[10px]"} bg-amber-500/15 text-amber-400 border-amber-500/30`}>
@@ -119,7 +104,6 @@ function LiveStatusBadge({ job, size = "sm" }: { job: Job; size?: "sm" | "md" })
       </span>
     );
   }
-
   if (liveStatus === "finished") {
     return (
       <span className={`inline-flex items-center gap-1 font-semibold rounded-full border ${size === "md" ? "px-3 py-1 text-xs" : "px-2 py-0.5 text-[10px]"} bg-white/5 text-muted-foreground border-white/10`}>
@@ -128,7 +112,6 @@ function LiveStatusBadge({ job, size = "sm" }: { job: Job; size?: "sm" | "md" })
       </span>
     );
   }
-
   return null;
 }
 
@@ -141,7 +124,6 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
 }) {
   const [applying, setApplying] = useState(false);
   if (!job) return null;
-
   const hours = getHours(job.startTime, job.endTime);
   const total = hours ? (job.hourlyRate ?? 0) * hours : null;
   const statusInfo = STATUS_MAP[job.status ?? "open"] ?? STATUS_MAP.open;
@@ -160,11 +142,7 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
 
   return (
     <Sheet open={open} onOpenChange={v => !v && onClose()}>
-      <SheetContent
-        side="right"
-        className="w-full sm:max-w-md bg-[#080A0D] border-white/8 p-0 overflow-y-auto"
-      >
-        {/* Hero */}
+      <SheetContent side="right" className="w-full sm:max-w-md bg-[#080A0D] border-white/8 p-0 overflow-y-auto">
         <div className="relative bg-gradient-to-br from-primary/10 via-secondary/5 to-transparent border-b border-white/6 p-6 pt-12 overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.08]" />
           <SheetHeader className="text-left mb-5 relative">
@@ -175,14 +153,12 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
             </div>
             <SheetTitle className="text-xl font-bold leading-snug text-left">{job.title}</SheetTitle>
           </SheetHeader>
-
           {liveStatus === "happening" && (
             <div className="mb-4 p-3 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center gap-2">
               <Zap size={14} className="text-green-400 flex-shrink-0" />
               <p className="text-xs text-green-400 font-semibold">Este evento está acontecendo agora mesmo!</p>
             </div>
           )}
-
           <div className="flex items-end gap-4 relative">
             <div>
               <p className="text-5xl font-bold text-primary leading-none">R$ {(job.hourlyRate ?? 0).toFixed(0)}</p>
@@ -199,9 +175,7 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
             )}
           </div>
         </div>
-
         <div className="p-6 space-y-6">
-          {/* Details grid */}
           <div className="grid grid-cols-2 gap-3">
             {[
               { icon: <MapPin size={13} className="text-primary" />, label: "Local", value: job.location },
@@ -221,24 +195,18 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
               </motion.div>
             ))}
           </div>
-
-          {/* Description */}
           {job.description && (
             <div>
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">Descrição</p>
               <p className="text-sm leading-relaxed text-foreground/80">{job.description}</p>
             </div>
           )}
-
-          {/* Requirements */}
           {(job as any).requirements && (
             <div>
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">Requisitos</p>
               <p className="text-sm leading-relaxed text-foreground/80">{(job as any).requirements}</p>
             </div>
           )}
-
-          {/* Earnings breakdown */}
           {total && (
             <div className="p-4 rounded-2xl bg-primary/6 border border-primary/12 space-y-3">
               <div className="flex items-center gap-2 mb-1">
@@ -262,8 +230,6 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
               </div>
             </div>
           )}
-
-          {/* Actions */}
           <div className="flex flex-col gap-3 pt-1">
             {isCompany ? (
               <Link href={`/app/jobs/${job.id}`} onClick={onClose}>
@@ -309,8 +275,10 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
       whileHover={{ y: -4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onClick(job)}
-      className={`glass-card card-hover rounded-2xl p-5 flex flex-col h-full group cursor-pointer border border-white/6 transition-all relative overflow-hidden ${
-        liveStatus === "happening" ? "border-green-500/25" : liveStatus === "soon" ? "border-amber-500/20" : "hover:border-primary/22"
+      className={`glass-card card-hover rounded-2xl p-5 flex flex-col h-full group cursor-pointer border transition-all relative overflow-hidden ${
+        liveStatus === "happening" ? "border-green-500/25" :
+        liveStatus === "soon" ? "border-amber-500/20" :
+        "border-white/6 hover:border-primary/20"
       }`}
       style={{ willChange: "transform" }}
     >
@@ -318,12 +286,11 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent" />
       )}
 
-      {/* Header */}
       <div className="flex items-start gap-3 mb-4">
         <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center flex-shrink-0 transition-all ${
           liveStatus === "happening" ? "bg-green-500/10 border-green-500/20" :
           liveStatus === "soon" ? "bg-amber-500/10 border-amber-500/20" :
-          "bg-gradient-to-br from-primary/15 to-secondary/8 border-primary/20 group-hover:border-primary/35"
+          "bg-gradient-to-br from-primary/12 to-secondary/6 border-primary/18 group-hover:border-primary/32"
         }`}>
           {liveStatus === "happening" ? <Zap size={20} className="text-green-400 animate-pulse" /> :
            liveStatus === "soon" ? <Timer size={20} className="text-amber-400" /> :
@@ -332,7 +299,7 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1.5">
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusInfo.class}`}>{statusInfo.label}</span>
-            <span className="text-[10px] text-muted-foreground/70 px-2 py-0.5 rounded-full bg-white/4 border border-white/6">{job.category}</span>
+            <span className="text-[10px] text-muted-foreground/65 px-2 py-0.5 rounded-full bg-white/4 border border-white/5">{job.category}</span>
           </div>
           <h3 className="font-bold text-sm sm:text-base group-hover:text-primary transition-colors line-clamp-2 leading-snug">{job.title}</h3>
         </div>
@@ -342,7 +309,6 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
         </div>
       </div>
 
-      {/* Live status badge */}
       {liveStatus !== "normal" && (
         <div className="mb-3">
           <LiveStatusBadge job={job} size="sm" />
@@ -350,10 +316,9 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
       )}
 
       {job.description && (
-        <p className="text-xs text-muted-foreground/80 line-clamp-2 mb-4 leading-relaxed flex-shrink-0">{job.description}</p>
+        <p className="text-xs text-muted-foreground/75 line-clamp-2 mb-4 leading-relaxed flex-shrink-0">{job.description}</p>
       )}
 
-      {/* Meta info */}
       <div className="grid grid-cols-2 gap-x-3 gap-y-2 mb-4 text-xs text-muted-foreground">
         <div className="flex items-center gap-1.5">
           <MapPin size={11} className="text-primary flex-shrink-0" />
@@ -364,11 +329,11 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
           <span className="truncate">{job.startTime}–{job.endTime}{hours ? ` (${hours.toFixed(0)}h)` : ""}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <Briefcase size={11} className="flex-shrink-0 opacity-60" />
+          <Briefcase size={11} className="flex-shrink-0 opacity-55" />
           <span className="truncate">{job.date ? format(new Date(job.date), "dd MMM", { locale: ptBR }) : ""}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <Users size={11} className="flex-shrink-0 opacity-60" />
+          <Users size={11} className="flex-shrink-0 opacity-55" />
           <span>{job.workersApproved}/{job.workersNeeded} vagas</span>
         </div>
       </div>
@@ -377,7 +342,7 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-center gap-2 mb-4 px-3 py-2.5 rounded-xl bg-primary/6 border border-primary/12 group-hover:border-primary/20 transition-all"
+          className="flex items-center gap-2 mb-4 px-3 py-2.5 rounded-xl bg-primary/5 border border-primary/10 group-hover:border-primary/18 transition-all"
         >
           <DollarSign size={13} className="text-primary flex-shrink-0" />
           <span className="text-xs font-bold text-primary">Total estimado: R$ {((job.hourlyRate ?? 0) * hours).toFixed(2)}</span>
@@ -387,7 +352,7 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
       <div className="mt-auto">
         <Button
           size="sm"
-          className="w-full bg-primary/8 border border-primary/20 text-primary hover:bg-primary hover:text-black font-bold rounded-xl h-10 text-xs transition-all group-hover:bg-primary group-hover:text-black"
+          className="w-full bg-primary/8 border border-primary/18 text-primary hover:bg-primary hover:text-black font-bold rounded-xl h-10 text-xs transition-all group-hover:bg-primary group-hover:text-black"
         >
           {isCompany ? "Ver detalhes" : "Candidatar-se"} →
         </Button>
@@ -416,7 +381,7 @@ export default function JobsPage() {
 
   const applyMutation = useApplyToJob();
 
-  const filtered = jobs.filter(j =>
+  const filtered = jobs.filter((j: Job) =>
     !search || j.title?.toLowerCase().includes(search.toLowerCase()) || j.location?.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -426,12 +391,44 @@ export default function JobsPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-5">
-      <PageHeader
-        title={user?.role === "company" ? "Minhas Vagas" : "Buscar Vagas"}
-        subtitle={`${filtered.length} vaga${filtered.length !== 1 ? "s" : ""} encontrada${filtered.length !== 1 ? "s" : ""}`}
-        action={
-          user?.role === "company" ? (
+    <div className="page-enter pb-20 lg:pb-6">
+      {/* Banner */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
+        className="relative w-full overflow-hidden"
+        style={{ borderRadius: "0 0 20px 20px" }}
+      >
+        <img
+          src={jobsBanner}
+          alt="Buscar Vagas extraGO"
+          className="w-full object-cover"
+          style={{ maxHeight: 170, objectPosition: "center center" }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.2) 60%, rgba(7,10,13,0.88) 100%)" }}
+        />
+      </motion.div>
+
+      <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-5">
+        {/* Page title + action */}
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+          className="flex items-center justify-between gap-4"
+        >
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+              {user?.role === "company" ? "Minhas Vagas" : "Buscar Vagas"}
+            </h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              <span className="text-primary font-semibold">{filtered.length}</span> vaga{filtered.length !== 1 ? "s" : ""} encontrada{filtered.length !== 1 ? "s" : ""}
+            </p>
+          </div>
+          {user?.role === "company" && (
             <Link href="/app/jobs/new">
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl text-sm px-4 h-10 gap-1.5">
@@ -439,110 +436,106 @@ export default function JobsPage() {
                 </Button>
               </motion.div>
             </Link>
-          ) : undefined
-        }
-      />
-
-      {/* Search + filter bar */}
-      <div className="space-y-3">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
-            <Input
-              placeholder="Buscar por título ou local..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="pl-9 pr-10 bg-white/4 border-white/10 focus:border-primary/50 h-11 rounded-xl text-sm transition-all"
-            />
-            <AnimatePresence>
-              {search && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  onClick={() => setSearch("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <X size={14} />
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-          <motion.div whileTap={{ scale: 0.96 }}>
-            <Button
-              variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-              className={`h-11 px-4 rounded-xl border-white/10 text-sm gap-2 flex-shrink-0 transition-all ${showFilters ? "border-primary/40 text-primary bg-primary/8" : "hover:border-white/25"}`}
-            >
-              <Filter size={14} />
-              <span className="hidden sm:inline">Filtros</span>
-              <ChevronDown size={13} className={`transition-transform duration-200 ${showFilters ? "rotate-180" : ""}`} />
-            </Button>
-          </motion.div>
-        </div>
-
-        <AnimatePresence>
-          {showFilters && (
-            <motion.div
-              initial={{ opacity: 0, height: 0, y: -8 }}
-              animate={{ opacity: 1, height: "auto", y: 0 }}
-              exit={{ opacity: 0, height: 0, y: -8 }}
-              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-              className="overflow-hidden"
-            >
-              <div className="flex flex-wrap gap-2 p-4 glass-card rounded-xl border border-white/6">
-                {CATEGORIES.map(cat => (
-                  <motion.button
-                    key={cat}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setCategory(cat)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
-                      category === cat
-                        ? "bg-primary text-black border-primary neon-glow"
-                        : "border-white/10 text-muted-foreground hover:border-white/25 hover:text-foreground"
-                    }`}
-                  >
-                    {cat}
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
           )}
-        </AnimatePresence>
-      </div>
+        </motion.div>
 
-      {/* Loading skeleton */}
-      {isLoading && (
-        <div className="grid sm:grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map(i => <SkeletonCard key={i} />)}
+        {/* Search + filter bar */}
+        <div className="space-y-3">
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <Input
+                placeholder="Buscar por título ou local..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="pl-9 pr-10 bg-white/4 border-white/8 focus:border-primary/50 h-11 rounded-xl text-sm transition-all"
+              />
+              <AnimatePresence>
+                {search && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    onClick={() => setSearch("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X size={14} />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </div>
+            <motion.div whileTap={{ scale: 0.96 }}>
+              <Button
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+                className={`h-11 px-4 rounded-xl border-white/8 text-sm gap-2 flex-shrink-0 transition-all ${showFilters ? "border-primary/40 text-primary bg-primary/8" : "hover:border-white/22"}`}
+              >
+                <Filter size={14} />
+                <span className="hidden sm:inline">Filtros</span>
+                <ChevronDown size={13} className={`transition-transform duration-200 ${showFilters ? "rotate-180" : ""}`} />
+              </Button>
+            </motion.div>
+          </div>
+
+          <AnimatePresence>
+            {showFilters && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, y: -8 }}
+                animate={{ opacity: 1, height: "auto", y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -8 }}
+                transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                className="overflow-hidden"
+              >
+                <div className="flex flex-wrap gap-2 p-4 glass-card rounded-xl border border-white/6">
+                  {CATEGORIES.map(cat => (
+                    <motion.button
+                      key={cat}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setCategory(cat)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
+                        category === cat
+                          ? "bg-primary text-black border-primary neon-glow"
+                          : "border-white/8 text-muted-foreground hover:border-white/22 hover:text-foreground"
+                      }`}
+                    >
+                      {cat}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      )}
 
-      {/* Empty state */}
-      {!isLoading && filtered.length === 0 && (
-        <div className="glass-card rounded-2xl">
-          <EmptyState
-            icon={<Briefcase size={28} />}
-            title="Nenhuma vaga encontrada"
-            description="Tente outros filtros ou termos de busca para encontrar oportunidades."
-            actionLabel={user?.role === "company" ? "Publicar Vaga" : "Limpar filtros"}
-            actionHref={user?.role === "company" ? "/app/jobs/new" : undefined}
-            onAction={user?.role !== "company" ? () => { setSearch(""); setCategory("Todos"); } : undefined}
-          />
-        </div>
-      )}
+        {isLoading && (
+          <div className="grid sm:grid-cols-2 gap-4">
+            {[1, 2, 3, 4].map(i => <SkeletonCard key={i} />)}
+          </div>
+        )}
 
-      {/* Job cards */}
-      <div className="grid sm:grid-cols-2 gap-4">
-        {filtered.map((job, i) => (
-          <JobCard
-            key={job.id}
-            job={job}
-            onClick={setSelectedJob}
-            isCompany={user?.role === "company"}
-            index={i}
-          />
-        ))}
+        {!isLoading && filtered.length === 0 && (
+          <div className="glass-card rounded-2xl">
+            <EmptyState
+              icon={<Briefcase size={28} />}
+              title="Nenhuma vaga encontrada"
+              description="Tente outros filtros ou termos de busca para encontrar oportunidades."
+            />
+          </div>
+        )}
+
+        {!isLoading && filtered.length > 0 && (
+          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            {filtered.map((job: Job, i: number) => (
+              <JobCard
+                key={job.id}
+                job={job}
+                onClick={setSelectedJob}
+                isCompany={user?.role === "company"}
+                index={i}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <JobDetailSheet

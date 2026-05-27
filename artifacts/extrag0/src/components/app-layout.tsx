@@ -4,9 +4,9 @@ import { useAuth } from "@/hooks/use-auth";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import {
   LayoutDashboard, Briefcase, FileText, Wallet, Settings,
-  LogOut, Bell, Star, Trophy, Home,
+  LogOut, Star, Trophy, Home,
   Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
-  ChevronRight, TrendingUp
+  ChevronRight, TrendingUp, Bell
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
@@ -52,19 +52,19 @@ function getNavItems(role: string): NavItem[] {
 function getBottomTabItems(role: string): NavItem[] {
   if (role === "company") {
     return [
-      { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={22} /> },
-      { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={22} /> },
-      { href: "/app/applications", label: "Candidatos", icon: <UserCheck size={22} /> },
-      { href: "/app/wallet", label: "Carteira", icon: <Wallet size={22} /> },
-      { href: "/app/profile", label: "Perfil", icon: <Settings size={22} /> },
+      { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
+      { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
+      { href: "/app/applications", label: "Candidatos", icon: <UserCheck size={21} /> },
+      { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
+      { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
     ];
   }
   return [
-    { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={22} /> },
-    { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={22} /> },
-    { href: "/app/applications", label: "Minhas", icon: <FileText size={22} /> },
-    { href: "/app/wallet", label: "Carteira", icon: <Wallet size={22} /> },
-    { href: "/app/profile", label: "Perfil", icon: <Settings size={22} /> },
+    { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
+    { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
+    { href: "/app/applications", label: "Minhas", icon: <FileText size={21} /> },
+    { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
+    { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
   ];
 }
 
@@ -78,10 +78,10 @@ function getGreeting() {
 
 function LevelBadge({ level }: { level?: string }) {
   const map: Record<string, { label: string; color: string; emoji: string }> = {
-    bronze: { label: "Bronze", color: "text-orange-400 border-orange-400/30 bg-orange-400/10", emoji: "🥉" },
-    silver: { label: "Prata", color: "text-slate-300 border-slate-300/30 bg-slate-300/10", emoji: "🥈" },
-    gold: { label: "Ouro", color: "text-yellow-400 border-yellow-400/30 bg-yellow-400/10", emoji: "🥇" },
-    elite: { label: "Elite", color: "text-primary border-primary/30 bg-primary/10", emoji: "👑" },
+    bronze: { label: "Bronze", color: "text-orange-400 border-orange-400/28 bg-orange-400/8", emoji: "🥉" },
+    silver: { label: "Prata", color: "text-slate-300 border-slate-300/28 bg-slate-300/8", emoji: "🥈" },
+    gold: { label: "Ouro", color: "text-yellow-400 border-yellow-400/28 bg-yellow-400/8", emoji: "🥇" },
+    elite: { label: "Elite", color: "text-primary border-primary/28 bg-primary/8", emoji: "👑" },
   };
   const info = map[level ?? "bronze"] ?? map.bronze;
   return (
@@ -97,14 +97,17 @@ function XPRing({ progress, size = 44 }: { progress: number; size?: number }) {
   const offset = circ - (progress / 100) * circ;
   return (
     <svg width={size} height={size} className="absolute -inset-[3px]" style={{ transform: "rotate(-90deg)" }}>
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="2.5" />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="2.5" />
       <circle
         cx={size / 2} cy={size / 2} r={r} fill="none"
         stroke="hsl(88, 100%, 49%)" strokeWidth="2.5"
         strokeLinecap="round"
         strokeDasharray={circ}
         strokeDashoffset={offset}
-        style={{ transition: "stroke-dashoffset 1s cubic-bezier(0.19, 1, 0.22, 1)", filter: "drop-shadow(0 0 3px rgba(124,252,0,0.6))" }}
+        style={{
+          transition: "stroke-dashoffset 1s cubic-bezier(0.19, 1, 0.22, 1)",
+          filter: "drop-shadow(0 0 3px rgba(124,252,0,0.65))"
+        }}
       />
     </svg>
   );
@@ -128,7 +131,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const { data: notifs } = useListNotifications(undefined, { query: { queryKey: ["notifications"], enabled: !!user } });
-  const unread = notifs?.filter(n => !n.isRead).length ?? 0;
+  const unread = notifs?.filter((n: any) => !n.isRead).length ?? 0;
 
   if (!user) return null;
 
@@ -143,15 +146,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Desktop sidebar */}
+      {/* ── Desktop sidebar ── */}
       <motion.aside
-        animate={{ width: collapsed ? 72 : 252 }}
-        transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-        className="hidden lg:flex flex-col h-full border-r border-white/5 bg-[#050708] flex-shrink-0 overflow-hidden"
-        style={{ minWidth: collapsed ? 72 : 252 }}
+        animate={{ width: collapsed ? 68 : 248 }}
+        transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+        className="hidden lg:flex flex-col h-full border-r border-white/5 bg-[#040608] flex-shrink-0 overflow-hidden"
+        style={{ minWidth: collapsed ? 68 : 248 }}
       >
         {/* Logo / collapse */}
-        <div className={`flex items-center border-b border-white/5 flex-shrink-0 ${collapsed ? "justify-center p-4 h-[64px]" : "justify-between px-5 h-[64px]"}`}>
+        <div className={`flex items-center border-b border-white/5 flex-shrink-0 ${collapsed ? "justify-center p-3 h-[60px]" : "justify-between px-4 h-[60px]"}`}>
           {!collapsed && (
             <Link href="/">
               <img src={logoMain} alt="extraGO" className="h-7 object-contain cursor-pointer hover:opacity-80 transition-opacity" />
@@ -159,7 +162,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           )}
           <button
             onClick={() => setCollapsed(c => !c)}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/8 transition-all flex-shrink-0"
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/7 transition-all flex-shrink-0"
             title={collapsed ? "Expandir menu" : "Recolher menu"}
           >
             {collapsed ? <PanelLeft size={16} /> : <PanelLeftClose size={16} />}
@@ -167,7 +170,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* User section */}
-        <div className={`border-b border-white/5 flex-shrink-0 ${collapsed ? "py-4 px-2 flex justify-center" : "px-4 py-5"}`}>
+        <div className={`border-b border-white/5 flex-shrink-0 ${collapsed ? "py-4 px-2 flex justify-center" : "px-4 py-4"}`}>
           {collapsed ? (
             <div className="relative">
               <AvatarInitials name={user.name} size="sm" />
@@ -181,15 +184,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   {user.role === "freelancer" && <XPRing progress={xpProgress} size={44} />}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[11px] text-muted-foreground/70 font-medium">{greeting}</p>
+                  <p className="text-[10px] text-muted-foreground/65 font-medium">{greeting}</p>
                   <p className="text-sm font-bold truncate leading-tight mt-0.5">{user.name}</p>
                   <p className="text-[10px] text-muted-foreground truncate mt-0.5">{user.email}</p>
                 </div>
               </div>
-              <div className="mt-3 flex items-center gap-2 flex-wrap">
+              <div className="mt-2.5 flex items-center gap-2 flex-wrap">
                 {user.role === "freelancer" && <LevelBadge level={user.level ?? "bronze"} />}
                 {user.role === "freelancer" && user.reputationScore != null && (
-                  <span className="text-[10px] text-yellow-400/80 flex items-center gap-0.5">
+                  <span className="text-[10px] text-yellow-400/75 flex items-center gap-0.5">
                     <Star size={9} className="fill-yellow-400 text-yellow-400" />
                     {(user.reputationScore ?? 0).toFixed(1)}
                   </span>
@@ -199,7 +202,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 )}
                 {user.role === "admin" && (
                   <span className="flex items-center gap-1 text-[10px] text-primary font-bold">
-                    <Shield size={10} /> Administrador
+                    <Shield size={10} /> Admin
                   </span>
                 )}
               </div>
@@ -220,7 +223,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     collapsed ? "justify-center px-0 py-3 mx-1" : "gap-3 px-3 py-2.5"
                   } ${
                     active
-                      ? "bg-primary/12 text-primary"
+                      ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-white/5"
                   }`}
                 >
@@ -228,8 +231,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     <motion.div
                       layoutId="nav-active-bar"
                       className="absolute left-0 top-2 bottom-2 w-[3px] bg-primary rounded-r-full"
-                      style={{ boxShadow: "0 0 8px rgba(124,252,0,0.6)" }}
-                      transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                      style={{ boxShadow: "0 0 8px rgba(124,252,0,0.65)" }}
+                      transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
                     />
                   )}
                   <span className={`flex-shrink-0 transition-colors ${active ? "text-primary nav-icon-active" : "text-muted-foreground group-hover:text-foreground"}`}>
@@ -239,12 +242,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     <>
                       <span className="flex-1 truncate">{item.label}</span>
                       {item.badge && (
-                        <Badge variant="secondary" className="ml-auto text-[10px] bg-primary/20 text-primary border-0 px-1.5">
+                        <Badge variant="secondary" className="ml-auto text-[10px] bg-primary/18 text-primary border-0 px-1.5">
                           {item.badge}
                         </Badge>
                       )}
                       {active && (
-                        <ChevronRight size={12} className="ml-auto flex-shrink-0 opacity-50" />
+                        <ChevronRight size={12} className="ml-auto flex-shrink-0 opacity-45" />
                       )}
                     </>
                   )}
@@ -260,7 +263,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             whileTap={{ scale: 0.97 }}
             onClick={logout}
             title={collapsed ? "Sair" : undefined}
-            className={`flex items-center rounded-xl text-sm text-muted-foreground hover:text-red-400 hover:bg-red-400/8 transition-all ${
+            className={`flex items-center rounded-xl text-sm text-muted-foreground hover:text-red-400 hover:bg-red-400/7 transition-all ${
               collapsed ? "justify-center w-10 h-10" : "gap-3 w-full px-3 py-2.5"
             }`}
           >
@@ -270,10 +273,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </motion.aside>
 
-      {/* Main content */}
+      {/* ── Main content ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top header */}
-        <header className="flex items-center gap-3 h-[64px] px-4 lg:px-5 border-b border-white/5 flex-shrink-0 bg-[#050708]/85 backdrop-blur-xl">
+        <header className="flex items-center gap-3 h-[56px] px-4 lg:px-5 border-b border-white/5 flex-shrink-0 bg-[#040608]/90 backdrop-blur-2xl">
           {/* Mobile: logo */}
           <div className="flex-1 lg:hidden">
             <Link href="/">
@@ -287,10 +290,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-1.5">
-            {/* Earnings chip (freelancer only, desktop) */}
             {user.role === "freelancer" && (
-              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mr-1">
-                <TrendingUp size={12} className="text-primary" />
+              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/8 border border-primary/18 mr-1">
+                <TrendingUp size={11} className="text-primary" />
                 <span className="text-[11px] font-bold text-primary">{user.completedJobs ?? 0} jobs</span>
               </div>
             )}
@@ -300,9 +302,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Link href="/">
               <motion.button
                 whileTap={{ scale: 0.9 }}
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/6 transition-all"
+                className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/6 transition-all"
               >
-                <Home size={17} />
+                <Home size={16} />
               </motion.button>
             </Link>
 
@@ -316,42 +318,63 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto pb-[72px] lg:pb-0">
+        <main className="flex-1 overflow-y-auto pb-[68px] lg:pb-0">
           {children}
         </main>
       </div>
 
-      {/* Mobile bottom tab bar */}
+      {/* ── Mobile bottom tab bar ── */}
       <nav className="bottom-tab-bar lg:hidden">
-        <div className="flex items-stretch h-[60px]">
+        <div className="flex items-stretch h-[58px]">
           {bottomItems.map((item) => {
             const active = isActive(item.href);
             return (
               <Link key={item.href} href={item.href} className="flex-1">
                 <motion.div
-                  whileTap={{ scale: 0.88 }}
-                  className={`flex flex-col items-center justify-center h-full gap-1 transition-all relative ${
-                    active ? "text-primary" : "text-muted-foreground/60"
+                  whileTap={{ scale: 0.86 }}
+                  className={`flex flex-col items-center justify-center h-full gap-[3px] transition-all relative ${
+                    active ? "text-primary" : "text-muted-foreground/55"
                   }`}
                 >
-                  <motion.div
-                    animate={active ? { scale: 1.1 } : { scale: 1 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                    className={active ? "nav-icon-active" : ""}
-                  >
-                    {item.icon}
-                  </motion.div>
-                  <span className={`text-[9px] font-semibold leading-none tracking-wide ${active ? "text-primary" : "text-muted-foreground/50"}`}>
-                    {item.label}
-                  </span>
+                  {/* Active background glow */}
+                  {active && (
+                    <motion.div
+                      layoutId="bottom-nav-bg"
+                      className="absolute inset-x-2 inset-y-1.5 rounded-xl"
+                      style={{
+                        background: "rgba(124, 252, 0, 0.07)",
+                        boxShadow: "0 0 16px rgba(124,252,0,0.06)"
+                      }}
+                      transition={{ type: "spring", stiffness: 450, damping: 28 }}
+                    />
+                  )}
+
+                  {/* Top line indicator */}
                   {active && (
                     <motion.div
                       layoutId="bottom-nav-indicator"
-                      className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary rounded-full"
-                      style={{ boxShadow: "0 0 8px rgba(124,252,0,0.7)" }}
+                      className="absolute top-0 left-1/2 -translate-x-1/2"
+                      style={{
+                        width: 28,
+                        height: 2,
+                        borderRadius: 2,
+                        background: "hsl(88, 100%, 49%)",
+                        boxShadow: "0 0 8px rgba(124,252,0,0.75)"
+                      }}
                       transition={{ type: "spring", stiffness: 500, damping: 30 }}
                     />
                   )}
+
+                  <motion.div
+                    animate={active ? { scale: 1.1 } : { scale: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                    className={`relative ${active ? "nav-icon-active" : ""}`}
+                  >
+                    {item.icon}
+                  </motion.div>
+                  <span className={`text-[9px] font-bold leading-none tracking-wide ${active ? "text-primary" : "text-muted-foreground/45"}`}>
+                    {item.label}
+                  </span>
                 </motion.div>
               </Link>
             );
