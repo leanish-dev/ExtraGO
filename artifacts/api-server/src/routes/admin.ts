@@ -181,4 +181,51 @@ router.delete("/admin/jobs/:id", requireAdmin, async (req, res) => {
   res.json({ message: "Job deleted" });
 });
 
+// POST /admin/users/:id/set-role — set or remove admin sub-role
+router.post("/admin/users/:id/set-role", requireAdmin, async (req, res) => {
+  const requestingUser = (req as any).user;
+  if (requestingUser.adminRole !== "super_admin") {
+    res.status(403).json({ error: "Only super admins can change roles" });
+    return;
+  }
+
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+
+  const { role, adminRole } = req.body;
+  const validRoles = ["company", "freelancer", "admin"];
+  const validAdminRoles = ["super_admin", "admin", "finance_admin", "operations_admin", "support_admin", "regional_manager", "state_representative", null];
+
+  if (role && !validRoles.includes(role)) {
+    res.status(400).json({ error: "Invalid role" });
+    return;
+  }
+  if (adminRole !== undefined && !validAdminRoles.includes(adminRole)) {
+    res.status(400).json({ error: "Invalid admin role" });
+    return;
+  }
+
+  const updates: Record<string, any> = {};
+  if (role) updates.role = role;
+  if (adminRole !== undefined) updates.adminRole = adminRole;
+
+  if (Object.keys(updates).length === 0) {
+    res.status(400).json({ error: "No updates provided" });
+    return;
+  }
+
+  const [updated] = await db.update(usersTable).set(updates).where(eq(usersTable.id, id)).returning();
+  if (!updated) { res.status(404).json({ error: "User not found" }); return; }
+
+  res.json({ message: "Role updated", user: formatUser(updated) });
+});
+
+// POST /admin/withdrawals/:id/reject
+router.post("/admin/withdrawals/:id/reject", requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+  await db.update(transactionsTable).set({ status: "rejected" }).where(eq(transactionsTable.id, id));
+  res.json({ message: "Withdrawal rejected" });
+});
+
 export default router;

@@ -37,6 +37,11 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
+  /**
+     * Sub-role for admin users (super_admin, finance_admin, etc.)
+     * @nullable
+     */
+  adminRole?: string | null;
   /** @nullable */
   avatarUrl?: string | null;
   /** @nullable */

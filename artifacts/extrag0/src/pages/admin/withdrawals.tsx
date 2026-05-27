@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useAdminListWithdrawals, useAdminApproveWithdrawal } from "@workspace/api-client-react";
 import type { Transaction } from "@workspace/api-client-react";
-import { CreditCard, CheckCircle, Clock, DollarSign, Search } from "lucide-react";
+import { CreditCard, CheckCircle, Clock, DollarSign, Search, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { apiFetch } from "@/lib/api-fetch";
 
 export default function AdminWithdrawalsPage() {
   const [search, setSearch] = useState("");
@@ -17,6 +18,7 @@ export default function AdminWithdrawalsPage() {
   });
 
   const approveMutation = useAdminApproveWithdrawal();
+  const [rejectingId, setRejectingId] = useState<number | null>(null);
 
   const handleApprove = async (id: number) => {
     try {
@@ -25,6 +27,21 @@ export default function AdminWithdrawalsPage() {
       refetch();
     } catch (e: any) {
       toast.error(e?.data?.error ?? "Erro ao aprovar saque");
+    }
+  };
+
+  const handleReject = async (id: number) => {
+    setRejectingId(id);
+    try {
+      await apiFetch(`/api/admin/withdrawals/${id}/reject`, { method: "POST" });
+      toast.success("Saque recusado.");
+      refetch();
+    } catch (e: any) {
+      let msg = "Erro ao recusar saque";
+      try { msg = JSON.parse(e.message)?.error ?? msg; } catch {}
+      toast.error(msg);
+    } finally {
+      setRejectingId(null);
     }
   };
 
@@ -47,15 +64,19 @@ export default function AdminWithdrawalsPage() {
 
       {/* Filter tabs */}
       <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/8 w-fit">
-        {["pending", "completed"].map(f => (
+        {[
+          { value: "pending", label: "Pendentes" },
+          { value: "completed", label: "Processados" },
+          { value: "rejected", label: "Recusados" },
+        ].map(f => (
           <button
-            key={f}
-            onClick={() => setFilter(f)}
+            key={f.value}
+            onClick={() => setFilter(f.value)}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all ${
-              filter === f ? "bg-primary text-black" : "text-muted-foreground hover:text-foreground"
+              filter === f.value ? "bg-primary text-black" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {f === "pending" ? "Pendentes" : "Processados"}
+            {f.label}
           </button>
         ))}
       </div>
@@ -124,17 +145,33 @@ export default function AdminWithdrawalsPage() {
                     )}
                   </div>
                 </div>
-                <div className="text-right flex-shrink-0">
+                <div className="text-right flex-shrink-0 space-y-2">
                   <p className="text-xl font-bold text-destructive">-R$ {((w.amount ?? 0) / 100).toFixed(2)}</p>
                   {w.status === "pending" && (
-                    <Button
-                      size="sm"
-                      className="mt-2 bg-primary text-black hover:bg-primary/90 font-semibold text-xs"
-                      onClick={() => handleApprove(w.id!)}
-                      disabled={approveMutation.isPending}
-                    >
-                      <CheckCircle size={12} className="mr-1" /> Aprovar PIX
-                    </Button>
+                    <div className="flex gap-1.5 justify-end">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-xs h-8 text-destructive hover:bg-destructive/10 border border-destructive/20"
+                        onClick={() => handleReject(w.id!)}
+                        disabled={rejectingId === w.id}
+                      >
+                        <XCircle size={12} className="mr-1" /> Recusar
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="bg-primary text-black hover:bg-primary/90 font-semibold text-xs h-8"
+                        onClick={() => handleApprove(w.id!)}
+                        disabled={approveMutation.isPending}
+                      >
+                        <CheckCircle size={12} className="mr-1" /> Aprovar PIX
+                      </Button>
+                    </div>
+                  )}
+                  {w.status === "rejected" && (
+                    <span className="text-xs text-destructive/70 flex items-center gap-1 justify-end">
+                      <XCircle size={11} /> Recusado
+                    </span>
                   )}
                 </div>
               </div>

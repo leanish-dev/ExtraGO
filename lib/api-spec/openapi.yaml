@@ -1015,6 +1015,9 @@ components:
         role:
           type: string
           enum: [company, freelancer, admin]
+        adminRole:
+          type: ["string", "null"]
+          description: Sub-role for admin users (super_admin, finance_admin, etc.)
         avatarUrl:
           type: ["string", "null"]
         bio:

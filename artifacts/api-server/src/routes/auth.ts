@@ -54,7 +54,7 @@ router.post("/auth/register", async (req, res) => {
   await db.insert(walletsTable).values({ userId: user.id }).catch(() => {});
 
   const token = generateToken(user.id);
-  storeToken(token, user.id);
+  await storeToken(token, user.id);
 
   res.status(201).json({ user: formatUser(user), token });
 });
@@ -83,7 +83,7 @@ router.post("/auth/login", async (req, res) => {
   }
 
   const token = generateToken(user.id);
-  storeToken(token, user.id);
+  await storeToken(token, user.id);
 
   res.json({ user: formatUser(user), token });
 });
@@ -97,7 +97,7 @@ router.get("/auth/me", requireAuth, async (req, res) => {
 router.post("/auth/logout", requireAuth, async (req, res) => {
   const authHeader = req.headers["authorization"];
   if (authHeader?.startsWith("Bearer ")) {
-    removeToken(authHeader.slice(7));
+    await removeToken(authHeader.slice(7));
   }
   res.json({ message: "Logged out" });
 });

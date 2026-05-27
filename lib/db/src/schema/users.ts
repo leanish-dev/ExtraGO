@@ -6,12 +6,24 @@ export const roleEnum = pgEnum("role", ["company", "freelancer", "admin"]);
 export const levelEnum = pgEnum("level", ["bronze", "silver", "gold", "elite"]);
 export const postTypeEnum = pgEnum("post_type", ["general", "job_completion", "availability"]);
 
+export const ADMIN_ROLES = [
+  "super_admin",
+  "admin",
+  "finance_admin",
+  "operations_admin",
+  "support_admin",
+  "regional_manager",
+  "state_representative",
+] as const;
+export type AdminRole = (typeof ADMIN_ROLES)[number];
+
 export const usersTable = pgTable("users", {
   id: serial("id").primaryKey(),
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   name: text("name").notNull(),
   role: roleEnum("role").notNull().default("freelancer"),
+  adminRole: text("admin_role"),
   avatarUrl: text("avatar_url"),
   bannerUrl: text("banner_url"),
   bio: text("bio"),

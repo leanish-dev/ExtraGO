@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import logoMain from "@assets/1779451173221_1779452671733.png";
@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Briefcase, FileText, Wallet, Settings,
   LogOut, Star, Trophy, Home,
   Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
-  ChevronRight, TrendingUp, Bell, Rss, Globe, MessageCircle
+  ChevronRight, TrendingUp, Bell, Rss, Globe, MessageCircle, Layers
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
@@ -26,7 +26,7 @@ interface NavItem {
 function getNavItems(role: string): NavItem[] {
   if (role === "admin") {
     return [
-      { href: "/admin", label: "Painel", icon: <BarChart3 size={18} /> },
+      { href: "/admin", label: "Painel Admin", icon: <BarChart3 size={18} /> },
       { href: "/admin/users", label: "Usuários", icon: <Users size={18} /> },
       { href: "/admin/jobs", label: "Vagas", icon: <Briefcase size={18} /> },
       { href: "/admin/withdrawals", label: "Saques", icon: <CreditCard size={18} /> },
@@ -38,7 +38,6 @@ function getNavItems(role: string): NavItem[] {
       { href: "/app/jobs", label: "Minhas Vagas", icon: <Briefcase size={18} /> },
       { href: "/app/jobs/new", label: "Publicar Vaga", icon: <FileText size={18} /> },
       { href: "/app/applications", label: "Candidaturas", icon: <UserCheck size={18} /> },
-      { href: "/app/chat", label: "Mensagens", icon: <MessageCircle size={18} /> },
       { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
       { href: "/app/profile", label: "Perfil", icon: <Settings size={18} /> },
     ];
@@ -49,10 +48,17 @@ function getNavItems(role: string): NavItem[] {
     { href: "/app/network", label: "Rede", icon: <Globe size={18} /> },
     { href: "/app/jobs", label: "Buscar Vagas", icon: <Briefcase size={18} /> },
     { href: "/app/applications", label: "Candidaturas", icon: <FileText size={18} /> },
-    { href: "/app/chat", label: "Mensagens", icon: <MessageCircle size={18} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
     { href: "/app/referrals", label: "Indicações", icon: <Trophy size={18} /> },
     { href: "/app/profile", label: "Perfil", icon: <Settings size={18} /> },
+  ];
+}
+
+function getAdminPlatformItems(): NavItem[] {
+  return [
+    { href: "/app/dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
+    { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={18} /> },
+    { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
   ];
 }
 
@@ -141,10 +147,52 @@ function AvatarInitials({ name, size = "md" }: { name?: string; size?: "sm" | "m
   );
 }
 
+/* Lightweight ambient orbs for the authenticated layout — same visual language as landing */
+function AppAmbientBackground() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      {/* Primary green orb — top left */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: 600, height: 600, left: "-8%", top: "-15%",
+          background: "radial-gradient(circle, rgba(124,252,0,0.07) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+        animate={{ x: ["0%", "4%", "-3%", "0%"], y: ["0%", "5%", "-3%", "0%"] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {/* Cyan orb — bottom right */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: 500, height: 500, right: "-6%", bottom: "-10%",
+          background: "radial-gradient(circle, rgba(0,229,255,0.055) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+        animate={{ x: ["0%", "-5%", "3%", "0%"], y: ["0%", "-6%", "4%", "0%"] }}
+        transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
+      />
+      {/* Mid green accent */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: 320, height: 320, left: "45%", top: "35%",
+          background: "radial-gradient(circle, rgba(124,252,0,0.03) 0%, transparent 70%)",
+          filter: "blur(60px)",
+        }}
+        animate={{ x: ["0%", "6%", "-4%", "0%"], y: ["0%", "-5%", "7%", "0%"] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
+  );
+}
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const [location] = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [adminExpanded, setAdminExpanded] = useState(false);
   const { data: notifs } = useListNotifications(undefined, { query: { queryKey: ["notifications"], enabled: !!user } });
   const unread = notifs?.filter((n: any) => !n.isRead).length ?? 0;
 
@@ -161,9 +209,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const navItems = getNavItems(user.role);
   const bottomItems = getBottomTabItems(user.role);
+  const adminPlatformItems = getAdminPlatformItems();
   const xpProgress = Math.min(100, ((user.completedJobs ?? 0) % 15) / 15 * 100);
   const greeting = getGreeting();
   const firstName = user.name?.split(" ")[0] ?? "Usuário";
+  const isAdmin = user.role === "admin";
+  const adminRoleLabel = (user as any).adminRole === "super_admin" ? "Super Admin" : (user as any).adminRole ?? "Admin";
 
   const isActive = (href: string) =>
     location === href || (href !== "/app/dashboard" && href !== "/admin" && location.startsWith(href));
@@ -171,13 +222,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isChatPage = location === "/app/chat" || location.startsWith("/app/chat");
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden relative">
+      <AppAmbientBackground />
+
       {/* ── Desktop sidebar ── */}
       <motion.aside
-        animate={{ width: collapsed ? 68 : 248 }}
+        animate={{ width: collapsed ? 68 : 260 }}
         transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
-        className="hidden lg:flex flex-col h-full border-r border-white/5 bg-[#040608] flex-shrink-0 overflow-hidden"
-        style={{ minWidth: collapsed ? 68 : 248 }}
+        className="hidden lg:flex flex-col h-full border-r border-white/5 bg-[#040608]/92 backdrop-blur-2xl flex-shrink-0 overflow-hidden z-10"
+        style={{ minWidth: collapsed ? 68 : 260 }}
       >
         {/* Logo / collapse */}
         <div className={`flex items-center border-b border-white/5 flex-shrink-0 ${collapsed ? "justify-center p-3 h-[60px]" : "justify-between px-4 h-[60px]"}`}>
@@ -226,9 +279,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 {user.role === "company" && (
                   <span className="text-[10px] text-muted-foreground font-medium truncate">{user.companyName}</span>
                 )}
-                {user.role === "admin" && (
-                  <span className="flex items-center gap-1 text-[10px] text-primary font-bold">
-                    <Shield size={10} /> Admin
+                {isAdmin && (
+                  <span className="flex items-center gap-1 text-[10px] text-primary font-bold px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">
+                    <Shield size={9} /> {adminRoleLabel}
                   </span>
                 )}
               </div>
@@ -281,6 +334,55 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </Link>
             );
           })}
+
+          {/* Admin also gets quick access to platform routes */}
+          {isAdmin && !collapsed && (
+            <div className="pt-2">
+              <button
+                onClick={() => setAdminExpanded(v => !v)}
+                className="w-full flex items-center gap-2 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 hover:text-muted-foreground transition-colors rounded-lg hover:bg-white/3"
+              >
+                <Layers size={11} />
+                <span className="flex-1 text-left">Plataforma</span>
+                <motion.span
+                  animate={{ rotate: adminExpanded ? 90 : 0 }}
+                  transition={{ duration: 0.18 }}
+                >
+                  <ChevronRight size={11} />
+                </motion.span>
+              </button>
+              <AnimatePresence initial={false}>
+                {adminExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.22 }}
+                    className="overflow-hidden"
+                  >
+                    {adminPlatformItems.map((item) => {
+                      const active = isActive(item.href);
+                      return (
+                        <Link key={item.href} href={item.href}>
+                          <motion.div
+                            whileTap={{ scale: 0.97 }}
+                            className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all cursor-pointer group relative overflow-hidden ${
+                              active ? "bg-secondary/10 text-secondary" : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                            }`}
+                          >
+                            <span className={`flex-shrink-0 ${active ? "text-secondary" : "text-muted-foreground group-hover:text-foreground"}`}>
+                              {item.icon}
+                            </span>
+                            <span className="flex-1 truncate">{item.label}</span>
+                          </motion.div>
+                        </Link>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
         </nav>
 
         {/* Logout */}
@@ -300,9 +402,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </motion.aside>
 
       {/* ── Main content ── */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden z-10">
         {/* Top header */}
-        <header className="flex items-center gap-3 h-[56px] px-4 lg:px-5 border-b border-white/5 flex-shrink-0 bg-[#040608]/90 backdrop-blur-2xl">
+        <header className="flex items-center gap-3 h-[56px] px-4 lg:px-5 border-b border-white/5 flex-shrink-0 bg-[#040608]/80 backdrop-blur-2xl">
           {/* Mobile: logo */}
           <div className="flex-1 lg:hidden">
             <Link href="/">
@@ -328,7 +430,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
             <NotificationBell unread={unread} />
 
-            {/* Chat icon with unread badge */}
+            {/* Chat icon with unread badge — only for non-admin */}
             {user.role !== "admin" && (
               <Link href="/app/chat">
                 <motion.button
@@ -348,14 +450,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </Link>
             )}
 
-            <Link href="/">
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/6 transition-all"
-              >
-                <Home size={16} />
-              </motion.button>
-            </Link>
+            {/* Logout button in header for quick access */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={logout}
+              className="hidden lg:flex w-9 h-9 rounded-xl items-center justify-center text-muted-foreground hover:text-red-400 hover:bg-red-400/8 transition-all"
+              title="Sair da conta"
+            >
+              <LogOut size={16} />
+            </motion.button>
 
             {/* Mobile avatar */}
             <div className="lg:hidden relative ml-1">
@@ -368,13 +471,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Main scroll area — chat page gets full height without extra padding */}
-        <main className={`flex-1 overflow-hidden ${isChatPage ? "flex flex-col" : "overflow-y-auto pb-[68px] lg:pb-0"}`}>
+        <main className={`flex-1 overflow-hidden relative ${isChatPage ? "flex flex-col" : "overflow-y-auto pb-[68px] lg:pb-0"}`}>
           {children}
         </main>
       </div>
 
       {/* ── Mobile bottom tab bar ── */}
-      <nav className="bottom-tab-bar lg:hidden">
+      <nav className="bottom-tab-bar lg:hidden z-20">
         <div className="flex items-stretch h-[58px]">
           {bottomItems.map((item) => {
             const active = isActive(item.href);

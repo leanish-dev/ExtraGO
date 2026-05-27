@@ -5,3 +5,4 @@ export * from "./wallet";
 export * from "./notifications";
 export * from "./ratings";
 export * from "./messages";
+export * from "./sessions";

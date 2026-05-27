@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import authBanner from "@assets/file_00000000c3cc720e818941f8ad5cf15f_1779883604660.png";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Eye, EyeOff, ArrowLeft, Mail, ArrowRight, CheckCircle, Shield, Zap, Users } from "lucide-react";
+import { Loader2, Eye, EyeOff, ArrowLeft, Mail, ArrowRight, CheckCircle, Shield, Zap, Users, LogIn } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -25,10 +25,10 @@ const forgotSchema = z.object({
 type View = "login" | "forgot" | "forgot-success";
 
 const TRUST_BADGES = [
-  { icon: <Zap size={14} />, text: "Match instantâneo" },
-  { icon: <Shield size={14} />, text: "100% seguro" },
-  { icon: <Users size={14} />, text: "+12.000 ativos" },
-  { icon: <CheckCircle size={14} />, text: "Verificado" },
+  { icon: <Zap size={13} />, text: "Match instantâneo" },
+  { icon: <Shield size={13} />, text: "100% seguro" },
+  { icon: <Users size={13} />, text: "+12.000 ativos" },
+  { icon: <CheckCircle size={13} />, text: "Verificado" },
 ];
 
 export default function LoginPage() {
@@ -58,7 +58,6 @@ export default function LoginPage() {
     } catch (error: any) {
       const msg = error?.response?.data?.error || error?.message || "";
       toast.error(msg.includes("Invalid") || msg.includes("invalid") ? "E-mail ou senha incorretos." : "Erro ao entrar. Tente novamente.");
-      form.setError("password", { message: "" });
     } finally {
       setIsLoading(false);
     }
@@ -75,80 +74,94 @@ export default function LoginPage() {
     <div className="min-h-screen flex overflow-hidden bg-[#050b10]">
 
       {/* ── Left: Panoramic Banner Panel (desktop) ── */}
-      <div className="hidden lg:flex lg:w-[56%] xl:w-[58%] relative overflow-hidden flex-shrink-0">
-        {/* Full bleed panoramic image */}
+      <div className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative overflow-hidden flex-shrink-0">
         <img
           src={authBanner}
-          alt="extraGO — Seu próximo passo começa aqui"
+          alt="extraGO"
           className="absolute inset-0 w-full h-full object-cover object-center"
-          style={{ minHeight: "100%" }}
         />
 
-        {/* Gradient overlay — left edge dark for readability */}
+        {/* Overlays */}
         <div className="absolute inset-0" style={{
-          background: "linear-gradient(105deg, rgba(5,11,16,0.72) 0%, rgba(5,11,16,0.35) 48%, rgba(5,11,16,0.15) 100%)"
+          background: "linear-gradient(110deg, rgba(5,11,16,0.78) 0%, rgba(5,11,16,0.32) 50%, rgba(5,11,16,0.12) 100%)"
         }} />
-        {/* Bottom fade to match body bg */}
-        <div className="absolute inset-x-0 bottom-0 h-32" style={{
-          background: "linear-gradient(to bottom, transparent, rgba(5,11,16,0.85))"
+        <div className="absolute inset-x-0 bottom-0 h-40" style={{
+          background: "linear-gradient(to bottom, transparent, rgba(5,11,16,0.9))"
         }} />
-        {/* Right edge fade for seamless merge */}
-        <div className="absolute inset-y-0 right-0 w-24" style={{
-          background: "linear-gradient(to right, transparent, rgba(5,11,16,0.92))"
+        <div className="absolute inset-y-0 right-0 w-32" style={{
+          background: "linear-gradient(to right, transparent, rgba(5,11,16,0.95))"
         }} />
 
-        {/* Content on top of banner */}
+        {/* Ambient green glow */}
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(124,252,0,0.08) 0%, transparent 70%)", filter: "blur(60px)" }} />
+
+        {/* Content */}
         <div className="relative z-10 flex flex-col justify-between p-10 xl:p-14 w-full">
-          {/* Logo */}
           <Link href="/">
             <img src={logoMain} alt="extraGO" className="h-8 object-contain cursor-pointer hover:opacity-90 transition-opacity drop-shadow-lg" />
           </Link>
 
-          {/* Trust badges */}
           <div className="mt-auto">
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-2xl xl:text-3xl font-bold text-white mb-2 leading-tight"
+            >
+              Seu próximo passo<br />começa aqui.
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.35 }}
+              className="text-white/55 text-sm mb-7 max-w-xs"
+            >
+              A plataforma premium que conecta os melhores profissionais da hospitalidade.
+            </motion.p>
             <div className="grid grid-cols-2 gap-2 max-w-xs">
               {TRUST_BADGES.map((b, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/30 backdrop-blur-sm border border-white/10 text-xs font-semibold text-white/90"
+                  transition={{ delay: 0.4 + i * 0.08 }}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/35 backdrop-blur-sm border border-white/10 text-xs font-semibold text-white/85"
                 >
-                  <span className="text-primary">{b.icon}</span>
+                  <span className="text-primary flex-shrink-0">{b.icon}</span>
                   {b.text}
                 </motion.div>
               ))}
             </div>
-            <p className="text-xs text-white/35 mt-5">© 2026 extraGO · Plataforma Premium de Hospitalidade</p>
+            <p className="text-xs text-white/28 mt-6">© 2026 extraGO · Plataforma Premium de Hospitalidade</p>
           </div>
         </div>
       </div>
 
       {/* ── Right: Form Panel ── */}
-      <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden overflow-y-auto py-8">
-        {/* Ambient glow */}
+      <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden overflow-y-auto py-10 px-4">
+        {/* Ambient glows */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 right-1/3 w-96 h-96 rounded-full bg-primary/6 blur-[120px]" />
-          <div className="absolute bottom-1/3 left-1/4 w-72 h-72 rounded-full bg-secondary/5 blur-[100px]" />
+          <div className="absolute top-1/4 right-1/3 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[130px]" />
+          <div className="absolute bottom-1/3 left-1/4 w-[400px] h-[400px] rounded-full bg-secondary/4 blur-[110px]" />
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-          className="relative z-10 w-full max-w-[500px]"
+          transition={{ duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
+          className="relative z-10 w-full max-w-[440px]"
         >
-          {/* ── Mobile banner ── */}
+          {/* Mobile banner */}
           <div className="lg:hidden w-full relative mb-0">
             <img
               src={authBanner}
               alt="extraGO"
-              className="w-full object-cover object-center"
-              style={{ height: 200, objectPosition: "40% center" }}
+              className="w-full object-cover object-center rounded-2xl"
+              style={{ height: 190, objectPosition: "40% center" }}
             />
-            <div className="absolute inset-0" style={{
-              background: "linear-gradient(to bottom, rgba(5,11,16,0.2) 0%, rgba(5,11,16,0.5) 65%, rgba(5,11,16,1) 100%)"
+            <div className="absolute inset-0 rounded-2xl" style={{
+              background: "linear-gradient(to bottom, rgba(5,11,16,0.15) 0%, rgba(5,11,16,0.55) 65%, rgba(5,11,16,1) 100%)"
             }} />
             <div className="absolute bottom-4 left-5">
               <Link href="/">
@@ -157,7 +170,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="px-5 sm:px-8 pt-8 lg:pt-0 pb-10">
+          <div className="px-1 pt-8 lg:pt-0 pb-6">
             <AnimatePresence mode="wait">
               {/* ── LOGIN VIEW ── */}
               {view === "login" && (
@@ -166,15 +179,19 @@ export default function LoginPage() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.28, ease: [0.19, 1, 0.22, 1] }}
+                  transition={{ duration: 0.25, ease: [0.19, 1, 0.22, 1] }}
                 >
-                  <div className="mb-8">
-                    <h1 className="text-[26px] sm:text-3xl font-bold mb-2 leading-tight">
-                      Acesse sua conta
-                    </h1>
-                    <p className="text-muted-foreground text-sm">
-                      Bem-vindo de volta ao cockpit da hospitalidade.
-                    </p>
+                  {/* Header */}
+                  <div className="mb-7">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-primary/12 border border-primary/22 flex items-center justify-center text-primary flex-shrink-0">
+                        <LogIn size={18} />
+                      </div>
+                      <div>
+                        <h1 className="text-2xl font-bold leading-tight">Bem-vindo de volta</h1>
+                        <p className="text-muted-foreground text-xs mt-0.5">Acesse sua conta extraGO</p>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="glass-card p-6 sm:p-7 rounded-2xl border border-white/8 shadow-xl">
@@ -269,7 +286,7 @@ export default function LoginPage() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.28 }}
+                  transition={{ duration: 0.25 }}
                 >
                   <button
                     onClick={() => setView("login")}
