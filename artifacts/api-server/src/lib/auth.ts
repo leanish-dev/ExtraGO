@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { db, usersTable } from "@workspace/db";
+import { db, usersTable, auditLogsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 
@@ -15,15 +15,21 @@ export function generateReferralCode(): string {
   return crypto.randomBytes(4).toString("hex").toUpperCase();
 }
 
-// Simple token store (in-memory for demo; production would use Redis/DB)
-const tokenStore = new Map<string, number>();
+const tokenStore = new Map<string, { userId: number; createdAt: number }>();
+const TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export function storeToken(token: string, userId: number): void {
-  tokenStore.set(token, userId);
+  tokenStore.set(token, { userId, createdAt: Date.now() });
 }
 
 export function getUserIdFromToken(token: string): number | null {
-  return tokenStore.get(token) ?? null;
+  const entry = tokenStore.get(token);
+  if (!entry) return null;
+  if (Date.now() - entry.createdAt > TOKEN_TTL_MS) {
+    tokenStore.delete(token);
+    return null;
+  }
+  return entry.userId;
 }
 
 export function removeToken(token: string): void {
@@ -39,7 +45,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
   const token = authHeader.slice(7);
   const userId = getUserIdFromToken(token);
   if (!userId) {
-    res.status(401).json({ error: "Invalid token" });
+    res.status(401).json({ error: "Invalid or expired token" });
     return;
   }
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
@@ -62,12 +68,56 @@ export async function requireAdmin(req: Request, res: Response, next: NextFuncti
   });
 }
 
+export function requireAdminRole(allowedRoles: string[]) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    await requireAdmin(req, res, async () => {
+      const user = (req as any).user;
+      const adminRole = user.adminRole ?? "super_admin";
+      if (adminRole === "super_admin") {
+        next();
+        return;
+      }
+      if (!allowedRoles.includes(adminRole)) {
+        res.status(403).json({ error: "Insufficient permissions for this action" });
+        return;
+      }
+      next();
+    });
+  };
+}
+
+export async function logAuditAction(params: {
+  adminId: number;
+  adminName: string;
+  adminRole?: string;
+  action: string;
+  targetType?: string;
+  targetId?: number;
+  details?: object;
+}) {
+  try {
+    await db.insert(auditLogsTable).values({
+      adminId: params.adminId,
+      adminName: params.adminName,
+      adminRole: params.adminRole ?? "super_admin",
+      action: params.action,
+      targetType: params.targetType ?? null,
+      targetId: params.targetId ?? null,
+      details: params.details ?? null,
+    });
+  } catch (e) {
+    // Audit log failures should not crash the main operation
+  }
+}
+
 export function formatUser(user: any) {
   return {
     id: user.id,
     email: user.email,
     name: user.name,
     role: user.role,
+    adminRole: user.adminRole ?? null,
+    stateCode: user.stateCode ?? null,
     avatarUrl: user.avatarUrl ?? null,
     bio: user.bio ?? null,
     phone: user.phone ?? null,

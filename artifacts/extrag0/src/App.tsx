@@ -13,6 +13,7 @@ import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import DashboardRedirect from "@/pages/dashboard-redirect";
 import AppLayout from "@/components/app-layout";
+import AdminLayout from "@/components/admin-layout";
 
 import DashboardPage from "@/pages/app/dashboard";
 import JobsPage from "@/pages/app/jobs";
@@ -32,6 +33,11 @@ import AdminDashboard from "@/pages/admin/index";
 import AdminUsersPage from "@/pages/admin/users";
 import AdminJobsPage from "@/pages/admin/jobs";
 import AdminWithdrawalsPage from "@/pages/admin/withdrawals";
+import AdminFinancialPage from "@/pages/admin/financial";
+import AdminMapPage from "@/pages/admin/map";
+import AdminSettingsPage from "@/pages/admin/settings";
+import AdminAuditPage from "@/pages/admin/audit";
+import AdminRepresentativesPage from "@/pages/admin/representatives";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,7 +77,15 @@ function ProtectedRoute({
   if (!user) return null;
   if (allowedRoles && !allowedRoles.includes(user.role)) return null;
 
-  if (layout === "app" || layout === "admin") {
+  if (layout === "admin") {
+    return (
+      <AdminLayout>
+        <Component />
+      </AdminLayout>
+    );
+  }
+
+  if (layout === "app") {
     return (
       <AppLayout>
         <Component />
@@ -91,7 +105,7 @@ function Router() {
       <Route path="/register" component={RegisterPage} />
       <Route path="/dashboard" component={() => <ProtectedRoute component={DashboardRedirect} layout="none" />} />
 
-      {/* App routes (company + freelancer) */}
+      {/* App routes */}
       <Route path="/app/dashboard" component={() => <ProtectedRoute component={DashboardPage} allowedRoles={["company", "freelancer"]} />} />
       <Route path="/app/jobs/new" component={() => <ProtectedRoute component={PostJobPage} allowedRoles={["company"]} />} />
       <Route path="/app/jobs" component={() => <ProtectedRoute component={JobsPage} allowedRoles={["company", "freelancer"]} />} />
@@ -106,11 +120,16 @@ function Router() {
       <Route path="/app/network" component={() => <ProtectedRoute component={NetworkPage} allowedRoles={["company", "freelancer"]} />} />
       <Route path="/app/chat" component={() => <ProtectedRoute component={ChatPage} allowedRoles={["company", "freelancer"]} />} />
 
-      {/* Admin routes */}
+      {/* Admin routes — all use AdminLayout */}
       <Route path="/admin" component={() => <ProtectedRoute component={AdminDashboard} allowedRoles={["admin"]} layout="admin" />} />
       <Route path="/admin/users" component={() => <ProtectedRoute component={AdminUsersPage} allowedRoles={["admin"]} layout="admin" />} />
       <Route path="/admin/jobs" component={() => <ProtectedRoute component={AdminJobsPage} allowedRoles={["admin"]} layout="admin" />} />
       <Route path="/admin/withdrawals" component={() => <ProtectedRoute component={AdminWithdrawalsPage} allowedRoles={["admin"]} layout="admin" />} />
+      <Route path="/admin/financial" component={() => <ProtectedRoute component={AdminFinancialPage} allowedRoles={["admin"]} layout="admin" />} />
+      <Route path="/admin/map" component={() => <ProtectedRoute component={AdminMapPage} allowedRoles={["admin"]} layout="admin" />} />
+      <Route path="/admin/settings" component={() => <ProtectedRoute component={AdminSettingsPage} allowedRoles={["admin"]} layout="admin" />} />
+      <Route path="/admin/audit" component={() => <ProtectedRoute component={AdminAuditPage} allowedRoles={["admin"]} layout="admin" />} />
+      <Route path="/admin/representatives" component={() => <ProtectedRoute component={AdminRepresentativesPage} allowedRoles={["admin"]} layout="admin" />} />
 
       <Route component={NotFound} />
     </Switch>
