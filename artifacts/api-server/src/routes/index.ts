@@ -11,6 +11,7 @@ import statsRouter from "./stats";
 import adminRouter from "./admin";
 import feedRouter from "./feed";
 import profileSectionsRouter from "./profile-sections";
+import chatRouter from "./chat";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use(statsRouter);
 router.use(adminRouter);
 router.use(feedRouter);
 router.use(profileSectionsRouter);
+router.use(chatRouter);
 
 export default router;

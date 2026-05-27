@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useListJobs, useApplyToJob } from "@workspace/api-client-react";
 import type { Job } from "@workspace/api-client-react";
-import { Search, MapPin, Clock, DollarSign, Users, Briefcase, Filter, X, ChevronDown, ExternalLink, Star, Zap, Timer, CheckCircle2 } from "lucide-react";
+import { Search, MapPin, Clock, DollarSign, Users, Briefcase, Filter, X, ChevronDown, ExternalLink, Star, Zap, Timer, CheckCircle2, LocateFixed, Loader2, Radio } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -362,12 +362,31 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
   );
 }
 
+const POPULAR_CITIES = [
+  "São Paulo", "Rio de Janeiro", "Belo Horizonte", "Curitiba",
+  "Porto Alegre", "Salvador", "Brasília", "Fortaleza", "Recife", "Campinas",
+];
+
+const RADIUS_OPTIONS = [
+  { label: "5 km", value: 5 },
+  { label: "10 km", value: 10 },
+  { label: "25 km", value: 25 },
+  { label: "50 km", value: 50 },
+  { label: "100 km", value: 100 },
+  { label: "Qualquer", value: 9999 },
+];
+
 export default function JobsPage() {
   const { user } = useAuth();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Todos");
   const [showFilters, setShowFilters] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [cityFilter, setCityFilter] = useState("");
+  const [cityInput, setCityInput] = useState("");
+  const [radius, setRadius] = useState(9999);
+  const [gpsLoading, setGpsLoading] = useState(false);
+  const [showCitySuggestions, setShowCitySuggestions] = useState(false);
 
   const { data: jobs = [], isLoading } = useListJobs({
     status: user?.role === "company" ? undefined : "open",
@@ -382,9 +401,69 @@ export default function JobsPage() {
 
   const applyMutation = useApplyToJob();
 
-  const filtered = jobs.filter((j: Job) =>
-    !search || j.title?.toLowerCase().includes(search.toLowerCase()) || j.location?.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleGPS = useCallback(async () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocalização não suportada neste dispositivo.");
+      return;
+    }
+    setGpsLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=pt`
+          );
+          const data = await res.json();
+          const city =
+            data?.address?.city ||
+            data?.address?.town ||
+            data?.address?.municipality ||
+            data?.address?.county ||
+            "";
+          if (city) {
+            setCityFilter(city);
+            setCityInput(city);
+            toast.success(`Localização detectada: ${city}`);
+          } else {
+            toast.error("Não foi possível identificar sua cidade.");
+          }
+        } catch {
+          toast.error("Erro ao buscar localização.");
+        } finally {
+          setGpsLoading(false);
+        }
+      },
+      () => {
+        toast.error("Permissão de localização negada.");
+        setGpsLoading(false);
+      },
+      { timeout: 8000 }
+    );
+  }, []);
+
+  const handleClearCity = useCallback(() => {
+    setCityFilter("");
+    setCityInput("");
+    setRadius(9999);
+    setShowCitySuggestions(false);
+  }, []);
+
+  const filtered = jobs.filter((j: Job) => {
+    const q = search.toLowerCase();
+    const matchesSearch = !search || j.title?.toLowerCase().includes(q) || j.location?.toLowerCase().includes(q);
+    const cityQ = cityFilter.toLowerCase();
+    const matchesCity = !cityFilter || (
+      j.city?.toLowerCase().includes(cityQ) ||
+      j.location?.toLowerCase().includes(cityQ) ||
+      j.title?.toLowerCase().includes(cityQ)
+    );
+    return matchesSearch && matchesCity;
+  });
+
+  const citySuggestions = cityInput.trim().length > 0
+    ? POPULAR_CITIES.filter(c => c.toLowerCase().includes(cityInput.toLowerCase()) && c.toLowerCase() !== cityFilter.toLowerCase())
+    : POPULAR_CITIES.filter(c => c.toLowerCase() !== cityFilter.toLowerCase()).slice(0, 6);
 
   const handleApply = async (jobId: number) => {
     await applyMutation.mutateAsync({ data: { jobId, message: "Tenho interesse nessa vaga e acredito que minhas habilidades se encaixam perfeitamente." } });
@@ -442,11 +521,12 @@ export default function JobsPage() {
 
         {/* Search + filter bar */}
         <div className="space-y-3">
+          {/* Row 1: search + filter toggle */}
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
               <Input
-                placeholder="Buscar por título ou local..."
+                placeholder="Buscar por título ou cargo..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="pl-9 pr-10 bg-white/4 border-white/8 focus:border-primary/50 h-11 rounded-xl text-sm transition-all"
@@ -473,10 +553,137 @@ export default function JobsPage() {
               >
                 <Filter size={14} />
                 <span className="hidden sm:inline">Filtros</span>
+                {(category !== "Todos" || cityFilter) && (
+                  <span className="w-4 h-4 rounded-full bg-primary text-black text-[9px] font-bold flex items-center justify-center">
+                    {(category !== "Todos" ? 1 : 0) + (cityFilter ? 1 : 0)}
+                  </span>
+                )}
                 <ChevronDown size={13} className={`transition-transform duration-200 ${showFilters ? "rotate-180" : ""}`} />
               </Button>
             </motion.div>
           </div>
+
+          {/* Row 2: Location filter bar */}
+          <div className="relative flex gap-2">
+            <div className="relative flex-1">
+              <MapPin size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary/60 pointer-events-none flex-shrink-0" />
+              <Input
+                placeholder="Filtrar por cidade (ex: São Paulo)"
+                value={cityInput}
+                onChange={e => {
+                  setCityInput(e.target.value);
+                  setShowCitySuggestions(true);
+                  if (!e.target.value.trim()) { setCityFilter(""); }
+                }}
+                onFocus={() => setShowCitySuggestions(true)}
+                onBlur={() => setTimeout(() => setShowCitySuggestions(false), 150)}
+                onKeyDown={e => {
+                  if (e.key === "Enter") {
+                    setCityFilter(cityInput.trim());
+                    setShowCitySuggestions(false);
+                  }
+                  if (e.key === "Escape") {
+                    setShowCitySuggestions(false);
+                  }
+                }}
+                className={`pl-9 pr-8 bg-white/4 h-10 rounded-xl text-sm transition-all ${
+                  cityFilter ? "border-secondary/40 bg-secondary/5 text-foreground" : "border-white/8 focus:border-secondary/40"
+                }`}
+              />
+              {cityFilter && (
+                <button
+                  onClick={handleClearCity}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X size={13} />
+                </button>
+              )}
+
+              {/* City suggestions dropdown */}
+              <AnimatePresence>
+                {showCitySuggestions && citySuggestions.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-[calc(100%+6px)] left-0 right-0 z-50 rounded-xl border border-white/10 overflow-hidden shadow-2xl"
+                    style={{ background: "rgba(8,14,22,0.97)", backdropFilter: "blur(24px)" }}
+                  >
+                    {citySuggestions.slice(0, 6).map((city) => (
+                      <button
+                        key={city}
+                        onMouseDown={() => {
+                          setCityFilter(city);
+                          setCityInput(city);
+                          setShowCitySuggestions(false);
+                        }}
+                        className="flex items-center gap-2.5 w-full px-3.5 py-2.5 hover:bg-white/6 transition-all text-left text-sm"
+                      >
+                        <MapPin size={12} className="text-secondary/60 flex-shrink-0" />
+                        <span className="font-medium">{city}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* GPS button */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={handleGPS}
+              disabled={gpsLoading}
+              title="Detectar localização"
+              className={`h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0 border transition-all ${
+                cityFilter
+                  ? "border-secondary/40 bg-secondary/10 text-secondary"
+                  : "border-white/8 text-muted-foreground hover:text-secondary hover:border-secondary/30 hover:bg-secondary/6"
+              }`}
+            >
+              {gpsLoading ? <Loader2 size={15} className="animate-spin" /> : <LocateFixed size={15} />}
+            </motion.button>
+          </div>
+
+          {/* Active city + radius chips */}
+          <AnimatePresence>
+            {cityFilter && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/25 text-xs font-bold text-secondary">
+                    <MapPin size={11} />
+                    {cityFilter}
+                    <button onClick={handleClearCity} className="ml-1 hover:text-white transition-colors">
+                      <X size={10} />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground mr-1">
+                    <Radio size={10} /> Raio:
+                  </div>
+                  {RADIUS_OPTIONS.map(opt => (
+                    <motion.button
+                      key={opt.value}
+                      whileTap={{ scale: 0.93 }}
+                      onClick={() => setRadius(opt.value)}
+                      className={`px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all ${
+                        radius === opt.value
+                          ? "bg-primary/15 border-primary/30 text-primary"
+                          : "border-white/8 text-muted-foreground hover:border-white/20 hover:text-foreground"
+                      }`}
+                    >
+                      {opt.label}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <AnimatePresence>
             {showFilters && (
@@ -488,6 +695,7 @@ export default function JobsPage() {
                 className="overflow-hidden"
               >
                 <div className="flex flex-wrap gap-2 p-4 glass-card rounded-xl border border-white/6">
+                  <p className="w-full text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Categoria</p>
                   {CATEGORIES.map(cat => (
                     <motion.button
                       key={cat}

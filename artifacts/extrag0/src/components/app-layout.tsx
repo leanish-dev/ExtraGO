@@ -6,12 +6,13 @@ import {
   LayoutDashboard, Briefcase, FileText, Wallet, Settings,
   LogOut, Star, Trophy, Home,
   Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
-  ChevronRight, TrendingUp, Bell, Rss, Globe
+  ChevronRight, TrendingUp, Bell, Rss, Globe, MessageCircle
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
 import { NotificationBell } from "@/components/notifications-dropdown";
 import { motion, AnimatePresence } from "framer-motion";
+import { GlobalSearchButton } from "@/components/global-search";
 
 interface NavItem {
   href: string;
@@ -35,6 +36,7 @@ function getNavItems(role: string): NavItem[] {
       { href: "/app/jobs", label: "Minhas Vagas", icon: <Briefcase size={18} /> },
       { href: "/app/jobs/new", label: "Publicar Vaga", icon: <FileText size={18} /> },
       { href: "/app/applications", label: "Candidaturas", icon: <UserCheck size={18} /> },
+      { href: "/app/chat", label: "Mensagens", icon: <MessageCircle size={18} /> },
       { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
       { href: "/app/profile", label: "Perfil", icon: <Settings size={18} /> },
     ];
@@ -45,6 +47,7 @@ function getNavItems(role: string): NavItem[] {
     { href: "/app/network", label: "Rede", icon: <Globe size={18} /> },
     { href: "/app/jobs", label: "Buscar Vagas", icon: <Briefcase size={18} /> },
     { href: "/app/applications", label: "Candidaturas", icon: <FileText size={18} /> },
+    { href: "/app/chat", label: "Mensagens", icon: <MessageCircle size={18} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
     { href: "/app/referrals", label: "Indicações", icon: <Trophy size={18} /> },
     { href: "/app/profile", label: "Perfil", icon: <Settings size={18} /> },
@@ -56,7 +59,7 @@ function getBottomTabItems(role: string): NavItem[] {
     return [
       { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
       { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
-      { href: "/app/applications", label: "Candidatos", icon: <UserCheck size={21} /> },
+      { href: "/app/chat", label: "Chat", icon: <MessageCircle size={21} /> },
       { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
       { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
     ];
@@ -64,7 +67,7 @@ function getBottomTabItems(role: string): NavItem[] {
   return [
     { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
     { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
-    { href: "/app/feed", label: "Feed", icon: <Rss size={21} /> },
+    { href: "/app/chat", label: "Chat", icon: <MessageCircle size={21} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
     { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
   ];
@@ -145,6 +148,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const isActive = (href: string) =>
     location === href || (href !== "/app/dashboard" && href !== "/admin" && location.startsWith(href));
+
+  const isChatPage = location === "/app/chat" || location.startsWith("/app/chat");
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -299,7 +304,23 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </div>
             )}
 
+            {/* Global Search */}
+            <GlobalSearchButton />
+
             <NotificationBell unread={unread} />
+
+            {/* Chat icon (shows unread indicator) */}
+            <Link href="/app/chat">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                className={`relative w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
+                  isChatPage ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-white/6"
+                }`}
+                title="Mensagens"
+              >
+                <MessageCircle size={17} />
+              </motion.button>
+            </Link>
 
             <Link href="/">
               <motion.button
@@ -320,7 +341,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto pb-[68px] lg:pb-0">
+        {/* Main scroll area — chat page gets full height without extra padding */}
+        <main className={`flex-1 overflow-hidden ${isChatPage ? "flex flex-col" : "overflow-y-auto pb-[68px] lg:pb-0"}`}>
           {children}
         </main>
       </div>
@@ -338,7 +360,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     active ? "text-primary" : "text-muted-foreground/55"
                   }`}
                 >
-                  {/* Active background glow */}
                   {active && (
                     <motion.div
                       layoutId="bottom-nav-bg"
@@ -351,15 +372,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     />
                   )}
 
-                  {/* Top line indicator */}
                   {active && (
                     <motion.div
                       layoutId="bottom-nav-indicator"
                       className="absolute top-0 left-1/2 -translate-x-1/2"
                       style={{
-                        width: 28,
-                        height: 2,
-                        borderRadius: 2,
+                        width: 28, height: 2, borderRadius: 2,
                         background: "hsl(88, 100%, 49%)",
                         boxShadow: "0 0 8px rgba(124,252,0,0.75)"
                       }}

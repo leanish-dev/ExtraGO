@@ -1,7 +1,7 @@
 import React from "react";
 import { useGetMyReferral, useGetReferralLeaderboard } from "@workspace/api-client-react";
 import { useAuth } from "@/hooks/use-auth";
-import { Trophy, Users, Copy, Share2, Star, Crown, TrendingUp, Gift, Zap, Lock, CheckCircle } from "lucide-react";
+import { Trophy, Users, Copy, Share2, Star, Crown, TrendingUp, Gift, Zap, Lock, CheckCircle, Percent, ArrowDown, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
@@ -13,24 +13,32 @@ const LEVEL_CONFIG = [
     level: "bronze", label: "Bronze", min: 0, max: 4,
     color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/20",
     glow: "", icon: "🥉",
+    feePercent: 20,
+    iconClass: "bg-orange-400/15 border border-orange-400/30 text-orange-400",
     perks: ["Acesso a vagas básicas", "Suporte padrão"],
   },
   {
     level: "silver", label: "Prata", min: 5, max: 14,
     color: "text-slate-300", bg: "bg-slate-300/10 border-slate-300/20",
     glow: "", icon: "🥈",
+    feePercent: 17,
+    iconClass: "bg-slate-300/15 border border-slate-300/30 text-slate-300",
     perks: ["Vagas premium desbloqueadas", "Destaque no perfil"],
   },
   {
     level: "gold", label: "Ouro", min: 15, max: 29,
     color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20",
     glow: "", icon: "🥇",
+    feePercent: 14,
+    iconClass: "bg-yellow-400/15 border border-yellow-400/30 text-yellow-400",
     perks: ["Vagas exclusivas", "Bônus automático por job"],
   },
   {
     level: "elite", label: "Elite", min: 30, max: Infinity,
     color: "text-primary", bg: "bg-primary/10 border-primary/20",
     glow: "shadow-[0_0_24px_rgba(124,252,0,0.12)]", icon: "👑",
+    feePercent: 10,
+    iconClass: "bg-primary/15 border border-primary/30 text-primary",
     perks: ["Todos os benefícios", "Acesso VIP + suporte prioritário"],
   },
 ];
@@ -235,6 +243,106 @@ export default function ReferralsPage() {
                 <p className="text-[10px] text-muted-foreground mt-1.5 font-bold uppercase tracking-wide">{stat.label}</p>
               </motion.div>
             ))}
+          </div>
+        </motion.div>
+
+        {/* Commission / Fee table */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.12 }}
+          className="glass-card rounded-2xl p-5 border border-white/6 relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/3 to-secondary/3 pointer-events-none" />
+          <div className="relative">
+            <div className="flex items-center justify-between mb-1">
+              <h2 className="font-bold flex items-center gap-2 text-sm">
+                <Percent size={15} className="text-primary" />
+                Comissão da Plataforma
+              </h2>
+              <span className="text-[10px] text-muted-foreground bg-white/4 border border-white/8 px-2 py-0.5 rounded-full font-semibold">
+                Atualizada em 2026
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+              Suba de nível para reduzir a taxa e aumentar seus ganhos líquidos por job.
+            </p>
+
+            {/* Current effective rate highlight */}
+            <div className={`flex items-center gap-3 p-3.5 rounded-xl border mb-4 ${currentLevel.bg} ${currentLevel.glow}`}>
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm flex-shrink-0 ${currentLevel.iconClass ?? "bg-primary/15 border border-primary/25 text-primary"}`}>
+                {currentLevel.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-muted-foreground font-medium">Sua taxa atual — {currentLevel.label}</p>
+                <p className={`text-xl font-bold leading-tight ${currentLevel.color}`}>
+                  {currentLevel.feePercent}% de comissão
+                </p>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <p className="text-[10px] text-muted-foreground mb-0.5">Você recebe</p>
+                <p className={`text-2xl font-bold leading-none ${currentLevel.color}`}>
+                  {100 - currentLevel.feePercent}%
+                </p>
+              </div>
+            </div>
+
+            {/* Fee progression table */}
+            <div className="rounded-xl border border-white/8 overflow-hidden">
+              {/* Header */}
+              <div className="grid grid-cols-4 gap-0 bg-white/4 border-b border-white/6">
+                <div className="px-3 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide">Nível</div>
+                <div className="px-3 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide text-center">Jobs</div>
+                <div className="px-3 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide text-center">Taxa</div>
+                <div className="px-3 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide text-right">Você Recebe</div>
+              </div>
+              {LEVEL_CONFIG.map((lvl, i) => {
+                const isCurrent = lvl.level === (user?.level ?? "bronze");
+                return (
+                  <motion.div
+                    key={lvl.level}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15 + i * 0.06 }}
+                    className={`grid grid-cols-4 gap-0 border-b last:border-b-0 border-white/5 transition-all ${
+                      isCurrent ? `${lvl.bg}` : "hover:bg-white/2"
+                    }`}
+                  >
+                    <div className="px-3 py-3 flex items-center gap-1.5">
+                      <span className="text-sm">{lvl.icon}</span>
+                      <span className={`text-xs font-bold ${isCurrent ? lvl.color : "text-muted-foreground/70"}`}>{lvl.label}</span>
+                      {isCurrent && (
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${lvl.color} ${lvl.bg} border border-current/20 ml-0.5`}>
+                          Atual
+                        </span>
+                      )}
+                    </div>
+                    <div className={`px-3 py-3 text-xs text-center flex items-center justify-center ${isCurrent ? lvl.color : "text-muted-foreground/50"}`}>
+                      {lvl.max === Infinity ? `${lvl.min}+` : `${lvl.min}–${lvl.max}`}
+                    </div>
+                    <div className="px-3 py-3 text-center flex items-center justify-center">
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                        isCurrent
+                          ? `${lvl.bg} ${lvl.color} border border-current/25`
+                          : "text-muted-foreground/50 bg-white/3 border border-white/6"
+                      }`}>
+                        {lvl.feePercent}%
+                      </span>
+                    </div>
+                    <div className={`px-3 py-3 text-right flex items-center justify-end ${isCurrent ? lvl.color : "text-muted-foreground/50"}`}>
+                      <span className={`text-sm font-bold ${isCurrent ? "" : "opacity-50"}`}>
+                        {100 - lvl.feePercent}%
+                      </span>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <p className="text-[10px] text-muted-foreground/50 mt-3 flex items-start gap-1.5 leading-relaxed">
+              <Info size={10} className="flex-shrink-0 mt-0.5" />
+              A comissão é descontada automaticamente do pagamento por job. Quanto mais jobs você completa, menor sua taxa.
+            </p>
           </div>
         </motion.div>
 
