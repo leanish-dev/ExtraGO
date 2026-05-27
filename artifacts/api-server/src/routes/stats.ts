@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db, usersTable, jobsTable, applicationsTable, transactionsTable, walletsTable } from "@workspace/db";
-import { eq, sql, gte } from "drizzle-orm";
+import { eq, sql, gte, and } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 
 const router = Router();
@@ -132,6 +132,7 @@ router.get("/stats/company/:id", requireAuth, async (req, res) => {
   const id = parseInt(req.params.id);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
+  const [companyUser] = await db.select().from(usersTable).where(eq(usersTable.id, id));
   const jobs = await db.select().from(jobsTable).where(eq(jobsTable.companyId, id));
   const activeJobs = jobs.filter(j => j.status === "open" || j.status === "in_progress").length;
   const totalSpent = jobs.reduce((s, j) => s + j.totalValue, 0);
@@ -148,7 +149,7 @@ router.get("/stats/company/:id", requireAuth, async (req, res) => {
     totalJobsPosted: jobs.length,
     activeJobs,
     totalSpent,
-    averageRating: 4.5,
+    averageRating: companyUser?.reputationScore ?? 0,
     totalWorkers,
     jobsByMonth,
   });
@@ -181,10 +182,20 @@ router.get("/stats/freelancer/:id", requireAuth, async (req, res) => {
   if (user.reputationScore >= 4.5) badges.push("Top Avaliado");
   if (user.isVerified) badges.push("Verificado");
 
+  // Query actual credit transactions for this wallet
+  const creditTxs = wallet.id > 0
+    ? await db.select().from(transactionsTable)
+        .where(and(eq(transactionsTable.walletId, wallet.id), eq(transactionsTable.type, "credit")))
+    : [];
+
   const earnsByMonth = Array.from({ length: 6 }, (_, i) => {
     const d = new Date();
     d.setMonth(d.getMonth() - (5 - i));
-    return { month: d.toISOString().slice(0, 7), amount: Math.random() * 500 };
+    const monthStr = d.toISOString().slice(0, 7);
+    const amount = creditTxs
+      .filter(t => t.createdAt?.toISOString().slice(0, 7) === monthStr)
+      .reduce((s, t) => s + t.amount, 0);
+    return { month: monthStr, amount };
   });
 
   res.json({

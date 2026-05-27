@@ -67,8 +67,16 @@ router.post("/jobs", requireAuth, async (req, res) => {
   }
 
   const d = parsed.data;
-  // Calculate total value (estimate based on 8-hour shift)
-  const totalValue = d.hourlyRate * d.workersNeeded * 8;
+  // Calculate total value from actual hours (startTime/endTime) or default to 8h
+  let shiftHours = 8;
+  if (d.startTime && d.endTime) {
+    const [sh, sm] = (d.startTime as string).split(":").map(Number);
+    const [eh, em] = (d.endTime as string).split(":").map(Number);
+    let diffMin = (eh * 60 + em) - (sh * 60 + sm);
+    if (diffMin <= 0) diffMin += 24 * 60;
+    shiftHours = diffMin / 60;
+  }
+  const totalValue = Math.round(d.hourlyRate * d.workersNeeded * shiftHours);
 
   const [job] = await db.insert(jobsTable).values({
     ...d,

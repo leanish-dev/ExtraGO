@@ -36,13 +36,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setTokenState(newToken);
   };
 
-  const { data: user, isLoading, refetch } = useGetMe({
+  const { data: user, isLoading, error, refetch } = useGetMe({
     query: {
       queryKey: ["me", token],
       enabled: !!token,
       retry: false,
     }
   });
+
+  // Clear stale token when server rejects it (e.g. after restart)
+  useEffect(() => {
+    if (!isLoading && error && token) {
+      const httpStatus = (error as any)?.response?.status;
+      if (httpStatus === 401 || httpStatus === 403) {
+        setToken(null);
+      }
+    }
+  }, [error, isLoading, token]);
 
   const loginMutation = useLogin();
   const registerMutation = useRegister();

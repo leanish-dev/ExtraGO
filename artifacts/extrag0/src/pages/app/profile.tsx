@@ -15,21 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CATEGORIES, CATEGORY_NAMES } from "@/lib/categories";
 
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-
-async function apiFetch(path: string, options?: RequestInit) {
-  const token = localStorage.getItem("extragO_token");
-  const res = await fetch(`${BASE}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options?.headers ?? {}),
-    },
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
+import { apiFetch } from "@/lib/api-fetch";
 
 const LEVEL_MAP: Record<string, { label: string; color: string; bg: string; icon: string }> = {
   bronze: { label: "Bronze", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/25", icon: "🥉" },

@@ -55,6 +55,14 @@ function getNavItems(role: string): NavItem[] {
 }
 
 function getBottomTabItems(role: string): NavItem[] {
+  if (role === "admin") {
+    return [
+      { href: "/admin", label: "Painel", icon: <BarChart3 size={21} /> },
+      { href: "/admin/users", label: "Usuários", icon: <Users size={21} /> },
+      { href: "/admin/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
+      { href: "/admin/withdrawals", label: "Saques", icon: <CreditCard size={21} /> },
+    ];
+  }
   if (role === "company") {
     return [
       { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
@@ -126,7 +134,7 @@ function AvatarInitials({ name, size = "md" }: { name?: string; size?: "sm" | "m
   };
   return (
     <div className={`rounded-full bg-gradient-to-br from-primary via-[#9aff1c] to-secondary flex items-center justify-center font-bold text-black flex-shrink-0 ${sizeMap[size]}`}>
-      {name?.charAt(0).toUpperCase()}
+      {name?.charAt(0)?.toUpperCase() ?? "?"}
     </div>
   );
 }

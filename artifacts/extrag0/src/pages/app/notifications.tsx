@@ -56,7 +56,7 @@ export default function NotificationsPage() {
   const unread = notifs.filter(n => !n.isRead).length;
 
   return (
-    <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-6 pb-24 lg:pb-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Notificações</h1>

@@ -11,21 +11,7 @@ import { Heart, MessageCircle, Bookmark, Repeat2, Plus, Image, X, ChevronDown, S
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
-
-async function apiFetch(path: string, options?: RequestInit) {
-  const token = localStorage.getItem("extragO_token");
-  const res = await fetch(`${BASE}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options?.headers ?? {}),
-    },
-  });
-  if (!res.ok) throw new Error(await res.text());
-  return res.json();
-}
+import { apiFetch } from "@/lib/api-fetch";
 
 interface PostAuthor {
   id: number;

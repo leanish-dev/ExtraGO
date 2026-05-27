@@ -113,15 +113,17 @@ router.post("/admin/withdrawals/:id/approve", requireAdmin, async (req, res) => 
 
 // GET /admin/stats
 router.get("/admin/stats", requireAdmin, async (req, res) => {
-  const [allUsers, allJobs, allTransactions, pendingWithdrawals, pendingVerifications] = await Promise.all([
+  const [allUsers, allJobs, creditTransactions, pendingWithdrawals, pendingVerifications] = await Promise.all([
     db.select().from(usersTable),
     db.select().from(jobsTable),
-    db.select().from(transactionsTable).where(eq(transactionsTable.type, "commission")),
-    db.select().from(transactionsTable).where(eq(transactionsTable.status, "pending")),
+    db.select().from(transactionsTable).where(eq(transactionsTable.type, "credit")),
+    db.select().from(transactionsTable).where(
+      sql`${transactionsTable.type} = 'withdrawal' AND ${transactionsTable.status} = 'pending'`
+    ),
     db.select().from(usersTable).where(eq(usersTable.isVerified, false)),
   ]);
 
-  const totalRevenue = allTransactions.reduce((s, t) => s + t.amount, 0);
+  const totalRevenue = creditTransactions.reduce((s, t) => s + t.amount, 0);
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
   const usersThisMonth = allUsers.filter(u => u.createdAt && u.createdAt > oneMonthAgo).length;
@@ -129,7 +131,11 @@ router.get("/admin/stats", requireAdmin, async (req, res) => {
   const revenueByMonth = Array.from({ length: 6 }, (_, i) => {
     const d = new Date();
     d.setMonth(d.getMonth() - (5 - i));
-    return { month: d.toISOString().slice(0, 7), amount: Math.random() * 2000 + 500 };
+    const monthStr = d.toISOString().slice(0, 7);
+    const amount = creditTransactions
+      .filter(t => t.createdAt?.toISOString().slice(0, 7) === monthStr)
+      .reduce((s, t) => s + t.amount, 0);
+    return { month: monthStr, amount };
   });
 
   const topFreelancers = allUsers
@@ -142,7 +148,7 @@ router.get("/admin/stats", requireAdmin, async (req, res) => {
     totalUsers: allUsers.length,
     totalJobs: allJobs.length,
     totalRevenue,
-    pendingWithdrawals: pendingWithdrawals.filter(t => t.type === "withdrawal").length,
+    pendingWithdrawals: pendingWithdrawals.length,
     pendingVerifications: pendingVerifications.filter(u => u.role === "freelancer").length,
     usersThisMonth,
     revenueByMonth,

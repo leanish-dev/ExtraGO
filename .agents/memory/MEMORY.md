@@ -1,0 +1,1 @@
+- [Platform audit fixes](platform-audit-fixes.md) — comprehensive fix log for fake data, broken links, auth, onboarding, nav, N+1 queries, and shared utilities

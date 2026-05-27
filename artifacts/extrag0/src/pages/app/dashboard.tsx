@@ -388,7 +388,7 @@ function CompanyDashboard() {
                       transition={{ duration: 0.35, delay: i * 0.06 }}
                       whileHover={{ x: 2 }}
                     >
-                      <Link href={`/app/jobs/${job.id}`}>
+                      <Link href={`/app/jobs`}>
                         <div className="glass-card rounded-xl p-4 cursor-pointer flex items-center gap-4 border border-white/5 hover:border-primary/18 transition-all group">
                           <div className="w-9 h-9 rounded-xl bg-primary/8 border border-primary/18 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/14 transition-colors">
                             <Briefcase size={15} className="text-primary" />
