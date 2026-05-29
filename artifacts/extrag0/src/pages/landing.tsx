@@ -639,26 +639,114 @@ export default function LandingPage() {
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
-                  { icon: "🍽️", label: "Gastronomia" },
-                  { icon: "🏨", label: "Hotelaria" },
-                  { icon: "🎉", label: "Eventos" },
-                  { icon: "🍸", label: "Bares & Baladas" },
-                  { icon: "✈️", label: "Turismo" },
-                  { icon: "🎭", label: "Entretenimento" },
-                  { icon: "🏋️", label: "Esportes" },
-                  { icon: "🤝", label: "Serviços" },
+                  {
+                    icon: "🍽️",
+                    label: "Gastronomia",
+                    sub: "Chefs & Cozinha",
+                    img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80",
+                    glow: "from-orange-500/25 to-amber-500/15",
+                    border: "hover:border-orange-500/40",
+                    dot: "bg-orange-400",
+                  },
+                  {
+                    icon: "🏨",
+                    label: "Hotelaria",
+                    sub: "Recepção & Concierge",
+                    img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
+                    glow: "from-cyan-500/25 to-blue-500/15",
+                    border: "hover:border-cyan-500/40",
+                    dot: "bg-cyan-400",
+                  },
+                  {
+                    icon: "🎉",
+                    label: "Eventos",
+                    sub: "Produção & Staff",
+                    img: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80",
+                    glow: "from-purple-500/25 to-pink-500/15",
+                    border: "hover:border-purple-500/40",
+                    dot: "bg-purple-400",
+                  },
+                  {
+                    icon: "🍸",
+                    label: "Bares & Baladas",
+                    sub: "Bartenders & Equipe",
+                    img: "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=600&q=80",
+                    glow: "from-pink-500/25 to-red-500/15",
+                    border: "hover:border-pink-500/40",
+                    dot: "bg-pink-400",
+                  },
+                  {
+                    icon: "✈️",
+                    label: "Turismo",
+                    sub: "Guias & Receptivo",
+                    img: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&q=80",
+                    glow: "from-sky-500/25 to-cyan-500/15",
+                    border: "hover:border-sky-500/40",
+                    dot: "bg-sky-400",
+                  },
+                  {
+                    icon: "🎭",
+                    label: "Entretenimento",
+                    sub: "Shows & Produção",
+                    img: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&q=80",
+                    glow: "from-yellow-500/25 to-orange-500/15",
+                    border: "hover:border-yellow-500/40",
+                    dot: "bg-yellow-400",
+                  },
+                  {
+                    icon: "🏋️",
+                    label: "Esportes",
+                    sub: "Fitness & Arenas",
+                    img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80",
+                    glow: "from-green-500/25 to-emerald-500/15",
+                    border: "hover:border-green-500/40",
+                    dot: "bg-green-400",
+                  },
+                  {
+                    icon: "🤝",
+                    label: "Serviços",
+                    sub: "Suporte & Equipe",
+                    img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80",
+                    glow: "from-primary/25 to-secondary/15",
+                    border: "hover:border-primary/40",
+                    dot: "bg-primary",
+                  },
                 ].map((sector, i) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.05 }}
-                    whileHover={{ y: -3, borderColor: "rgba(124,252,0,0.3)" }}
-                    className="glass-card rounded-2xl p-4 border border-white/6 flex flex-col items-center gap-2 text-center cursor-default transition-all"
+                    transition={{ delay: i * 0.06, duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
+                    whileHover={{ y: -4, transition: { duration: 0.25 } }}
+                    className={`relative overflow-hidden rounded-2xl group cursor-default border border-white/8 ${sector.border} transition-colors duration-500`}
+                    style={{ minHeight: 148 }}
                   >
-                    <span className="text-2xl">{sector.icon}</span>
-                    <span className="text-xs font-semibold text-muted-foreground">{sector.label}</span>
+                    {/* Background image — zoom on hover */}
+                    <div
+                      className="absolute inset-0 bg-cover bg-center scale-100 group-hover:scale-110 transition-transform duration-700 ease-out"
+                      style={{ backgroundImage: `url(${sector.img})` }}
+                    />
+                    {/* Base dark overlay */}
+                    <div className="absolute inset-0 bg-black/72 group-hover:bg-black/55 transition-all duration-500" />
+                    {/* Neon glow — appears on hover */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${sector.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                    {/* Bottom gradient for text legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    {/* Top-left live dot */}
+                    <div className={`absolute top-3 left-3 w-1.5 h-1.5 rounded-full ${sector.dot} opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_6px_currentColor]`} />
+                    {/* Content */}
+                    <div className="relative z-10 p-4 flex flex-col items-center justify-end h-full gap-1.5 text-center" style={{ minHeight: 148 }}>
+                      <motion.span
+                        animate={{ scale: [1, 1.08, 1] }}
+                        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
+                        className="text-2xl drop-shadow-lg mb-0.5"
+                      >
+                        {sector.icon}
+                      </motion.span>
+                      <span className="text-sm font-bold text-white leading-tight drop-shadow-md">{sector.label}</span>
+                      <span className="text-[10px] text-white/50 font-medium group-hover:text-white/75 transition-colors duration-300">{sector.sub}</span>
+                    </div>
                   </motion.div>
                 ))}
               </div>
