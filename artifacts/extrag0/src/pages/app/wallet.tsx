@@ -192,6 +192,13 @@ export default function WalletPage() {
             transition={{ duration: 0.55, ease: [0.19, 1, 0.22, 1] }}
             className="fintech-hero-card p-6 sm:p-8"
           >
+            {/* bg-wallet.webp — fintech art layer */}
+            <div
+              className="absolute inset-0 opacity-[0.09] bg-cover bg-center mix-blend-screen pointer-events-none blur-[1px]"
+              style={{ backgroundImage: "url(/images/backgrounds/bg-wallet.webp)" }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-green-500/6 pointer-events-none" />
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-cyan-500/8 blur-3xl rounded-full pointer-events-none" />
             <div className="relative z-10">
               {/* Top row */}
               <div className="flex items-center justify-between mb-6">
@@ -325,7 +332,14 @@ export default function WalletPage() {
               transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
               className="overflow-hidden"
             >
-              <div className="glass-card rounded-2xl p-5 sm:p-6 space-y-5 border border-primary/14 bg-gradient-to-br from-primary/4 to-transparent">
+              <div className="glass-card rounded-2xl p-5 sm:p-6 space-y-5 border border-primary/14 bg-gradient-to-br from-primary/4 to-transparent relative overflow-hidden">
+                {/* bg-wallet.webp — PIX section art layer */}
+                <div
+                  className="absolute inset-0 opacity-[0.07] bg-cover bg-right mix-blend-screen pointer-events-none blur-[1px]"
+                  style={{ backgroundImage: "url(/images/backgrounds/bg-wallet.webp)" }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-green-500/4 pointer-events-none" />
+                <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-primary/6 blur-3xl rounded-full pointer-events-none" />
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-primary/12 border border-primary/22 flex items-center justify-center flex-shrink-0">
                     <Send size={15} className="text-primary" />

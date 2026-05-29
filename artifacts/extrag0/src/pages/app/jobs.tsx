@@ -486,6 +486,11 @@ export default function JobsPage() {
           className="w-full object-cover"
           style={{ maxHeight: 170, objectPosition: "center center" }}
         />
+        {/* bg-jobs.webp — city map / discovery art layer */}
+        <div
+          className="absolute inset-0 opacity-[0.30] bg-cover bg-right mix-blend-screen pointer-events-none"
+          style={{ backgroundImage: "url(/images/backgrounds/bg-jobs.webp)" }}
+        />
         <div
           className="absolute inset-0"
           style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.2) 60%, rgba(7,10,13,0.88) 100%)" }}

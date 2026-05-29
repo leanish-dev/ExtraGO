@@ -352,7 +352,13 @@ export default function ProfilePage() {
         {bannerPreview || (user as any)?.bannerUrl ? (
           <img src={bannerPreview || (user as any)?.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-primary/15 via-secondary/8 to-transparent">
+          <div className="w-full h-full bg-gradient-to-br from-primary/15 via-secondary/8 to-transparent relative">
+            {/* bg-profile.webp — identity/reputation art layer */}
+            <div
+              className="absolute inset-0 opacity-[0.22] bg-cover bg-center mix-blend-screen pointer-events-none"
+              style={{ backgroundImage: "url(/images/backgrounds/bg-profile.webp)" }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/8 via-transparent to-cyan-500/6 pointer-events-none" />
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06]" />
           </div>
         )}

@@ -234,6 +234,11 @@ function SectionBanner() {
         className="w-full object-cover"
         style={{ maxHeight: 170, objectPosition: "center center" }}
       />
+      {/* bg-dashboard.webp — cinematic city/metrics art layer */}
+      <div
+        className="absolute inset-0 opacity-[0.32] bg-cover bg-center mix-blend-screen pointer-events-none"
+        style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)" }}
+      />
       <div
         className="absolute inset-0"
         style={{

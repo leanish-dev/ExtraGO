@@ -82,6 +82,11 @@ export default function ReferralsPage() {
           className="w-full object-cover"
           style={{ maxHeight: 170, objectPosition: "center center" }}
         />
+        {/* bg-network.webp — social network art layer */}
+        <div
+          className="absolute inset-0 opacity-[0.28] bg-cover bg-right mix-blend-screen pointer-events-none"
+          style={{ backgroundImage: "url(/images/backgrounds/bg-network.webp)" }}
+        />
         <div
           className="absolute inset-0"
           style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.2) 60%, rgba(7,10,13,0.88) 100%)" }}
@@ -107,6 +112,13 @@ export default function ReferralsPage() {
           transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
           className={`glass-card rounded-2xl p-6 border relative overflow-hidden ${currentLevel.bg} ${currentLevel.glow}`}
         >
+          {/* bg-network.webp — social graph art layer inside level card */}
+          <div
+            className="absolute inset-0 opacity-[0.08] bg-cover bg-right mix-blend-screen pointer-events-none blur-[1px]"
+            style={{ backgroundImage: "url(/images/backgrounds/bg-network.webp)" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/4 via-transparent to-cyan-500/4 pointer-events-none" />
+          <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary/6 blur-3xl rounded-full pointer-events-none" />
           <div className="absolute -right-4 -top-4 text-8xl opacity-8 select-none pointer-events-none">{currentLevel.icon}</div>
 
           <div className="flex items-start gap-4 relative">
@@ -165,6 +177,13 @@ export default function ReferralsPage() {
           transition={{ duration: 0.4, delay: 0.08 }}
           className="glass-card rounded-2xl p-5 sm:p-6 space-y-5 border border-white/6 relative overflow-hidden"
         >
+          {/* bg-network.webp — network art for referral code card */}
+          <div
+            className="absolute inset-0 opacity-[0.06] bg-cover bg-left mix-blend-screen pointer-events-none blur-[1px]"
+            style={{ backgroundImage: "url(/images/backgrounds/bg-network.webp)" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-primary/5 blur-3xl rounded-full pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-br from-secondary/4 to-transparent pointer-events-none" />
 
           <div className="flex items-center justify-between relative">
