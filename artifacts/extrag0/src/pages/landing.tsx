@@ -313,7 +313,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, scale: 1.04 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.1, ease: [0.19, 1, 0.22, 1] }}
-              src={heroBanner}
+              src="/images/backgrounds/bg-main.png"
               alt="extraGO Platform"
               className="w-full object-cover hero-banner-glow"
               style={{ maxHeight: "340px", objectPosition: "center" }}
