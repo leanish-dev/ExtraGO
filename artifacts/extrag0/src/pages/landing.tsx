@@ -327,7 +327,56 @@ export default function LandingPage() {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#08111a]/25 to-[#08111a]" />
           </motion.div>
 
-          <div className="w-full max-w-5xl mx-auto px-5 text-center mt-10 sm:-mt-28 relative z-10 pb-16 sm:pb-24">
+          {/* ── Mobile-only premium hero banner ── */}
+          <div className="block sm:hidden w-full relative overflow-hidden" style={{ height: "168px" }}>
+            {/* Base image */}
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: "url('/images/backgrounds/bg-mobile-hero.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center 35%",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+            {/* Dark veil — readability */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0.60) 0%, rgba(7,10,13,0.45) 55%, rgba(7,10,13,0.10) 100%)" }}
+            />
+            {/* Cyan / green cinematic atmosphere */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "radial-gradient(ellipse at 50% 60%, rgba(0,229,255,0.09) 0%, rgba(124,252,0,0.07) 45%, transparent 72%)" }}
+            />
+            {/* Left neon arc */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "radial-gradient(ellipse at 10% 80%, rgba(0,229,255,0.10) 0%, transparent 55%)" }}
+            />
+            {/* Right green arc */}
+            <div
+              className="absolute inset-0"
+              style={{ background: "radial-gradient(ellipse at 90% 80%, rgba(124,252,0,0.09) 0%, transparent 55%)" }}
+            />
+            {/* Bottom blur-fade into dark bg */}
+            <div
+              className="absolute inset-x-0 bottom-0"
+              style={{ height: "72px", background: "linear-gradient(to bottom, transparent 0%, #08111a 100%)" }}
+            />
+            {/* Top fade from navbar */}
+            <div
+              className="absolute inset-x-0 top-0"
+              style={{ height: "32px", background: "linear-gradient(to bottom, #08111a 0%, transparent 100%)" }}
+            />
+            {/* Subtle neon bottom glow line */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-px"
+              style={{ background: "linear-gradient(to right, transparent, rgba(124,252,0,0.18), rgba(0,229,255,0.18), transparent)" }}
+            />
+          </div>
+
+          <div className="w-full max-w-5xl mx-auto px-5 text-center -mt-6 sm:-mt-28 relative z-10 pb-16 sm:pb-24">
             {/* Live badge */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
