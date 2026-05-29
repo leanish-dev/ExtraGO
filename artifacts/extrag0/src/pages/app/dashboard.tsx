@@ -324,7 +324,21 @@ function CompanyDashboard() {
   const recentJobs = jobs?.slice(0, 5) ?? [];
 
   return (
-    <div className="page-enter pb-20 lg:pb-6">
+    <div className="page-enter pb-20 lg:pb-6 relative">
+      {/* ── Full-page background art ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.09,
+          mixBlendMode: "screen",
+          filter: "blur(2px)",
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
       <SectionBanner />
 
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
@@ -472,7 +486,21 @@ function FreelancerDashboard() {
   ];
 
   return (
-    <div className="page-enter pb-20 lg:pb-6">
+    <div className="page-enter pb-20 lg:pb-6 relative">
+      {/* ── Full-page background art ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.09,
+          mixBlendMode: "screen",
+          filter: "blur(2px)",
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
       <SectionBanner />
 
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">

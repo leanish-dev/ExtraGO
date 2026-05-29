@@ -346,7 +346,21 @@ export default function ProfilePage() {
       ];
 
   return (
-    <div className="pb-24">
+    <div className="pb-24 relative">
+      {/* ── Full-page background art ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url(/images/backgrounds/bg-profile.webp)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.09,
+          mixBlendMode: "screen",
+          filter: "blur(2px)",
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
       {/* Banner area — clickable upload */}
       <div className="relative w-full h-28 sm:h-36 overflow-hidden group cursor-pointer" onClick={() => bannerInputRef.current?.click()}>
         {bannerPreview || (user as any)?.bannerUrl ? (
