@@ -305,6 +305,18 @@ export default function LandingPage() {
             HERO — Banner + Premium Headline
         ══════════════════════════════════════════ */}
         <section ref={heroRef} className="relative flex flex-col items-center justify-center overflow-hidden">
+          {/* bg-main.png — full-section art layer behind hero banner */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: "url(/images/backgrounds/bg-main.png)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              opacity: 0.18,
+              mixBlendMode: "screen",
+            }}
+          />
           <motion.div
             style={{ y: bannerY, opacity: bannerOpacity }}
             className="w-full relative"
@@ -313,7 +325,7 @@ export default function LandingPage() {
               initial={{ opacity: 0, scale: 1.04 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.1, ease: [0.19, 1, 0.22, 1] }}
-              src="/images/backgrounds/bg-main.png"
+              src={heroBanner}
               alt="extraGO Platform"
               className="w-full object-cover hero-banner-glow"
               style={{ maxHeight: "340px", objectPosition: "center" }}
