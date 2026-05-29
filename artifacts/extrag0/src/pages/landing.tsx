@@ -305,18 +305,6 @@ export default function LandingPage() {
             HERO — Banner + Premium Headline
         ══════════════════════════════════════════ */}
         <section ref={heroRef} className="relative flex flex-col items-center justify-center overflow-hidden">
-          {/* bg-main.png — full-section art layer behind hero banner */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage: "url(/images/backgrounds/bg-main.png)",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              opacity: 0.18,
-              mixBlendMode: "screen",
-            }}
-          />
           <motion.div
             style={{ y: bannerY, opacity: bannerOpacity }}
             className="w-full relative"
@@ -412,6 +400,20 @@ export default function LandingPage() {
             </motion.div>
           </div>
         </section>
+
+        {/* ── Content bg art — from below hero to footer ── */}
+        <div className="relative">
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: "url(/images/backgrounds/bg-main.png)",
+              backgroundSize: "cover",
+              backgroundPosition: "center top",
+              backgroundRepeat: "no-repeat",
+              opacity: 0.38,
+              mixBlendMode: "screen",
+            }}
+          />
 
         {/* ══════════════════════════════════════════
             LIVE STATS — Real database data
@@ -744,6 +746,7 @@ export default function LandingPage() {
             </ScrollSection>
           </div>
         </section>
+        </div>{/* /bg wrapper */}
       </main>
 
       {/* ── Footer ── */}
