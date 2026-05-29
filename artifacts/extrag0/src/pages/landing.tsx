@@ -308,56 +308,6 @@ export default function LandingPage() {
       <main className="flex-1 relative z-10">
 
         {/* ══════════════════════════════════════════
-            MOBILE TOP BANNER — uploaded image (mobile only)
-        ══════════════════════════════════════════ */}
-        <div className="block sm:hidden w-full relative overflow-hidden" style={{ height: "168px" }}>
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: "url('/images/backgrounds/bg-mobile-hero.png')",
-              backgroundSize: "cover",
-              backgroundPosition: "center 35%",
-              backgroundRepeat: "no-repeat",
-            }}
-          />
-          {/* Dark veil */}
-          <div
-            className="absolute inset-0"
-            style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0.55) 0%, rgba(7,10,13,0.40) 50%, rgba(7,10,13,0.08) 100%)" }}
-          />
-          {/* Cyan/green atmosphere */}
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse at 50% 60%, rgba(0,229,255,0.09) 0%, rgba(124,252,0,0.07) 45%, transparent 72%)" }}
-          />
-          {/* Left neon arc */}
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse at 8% 85%, rgba(0,229,255,0.11) 0%, transparent 52%)" }}
-          />
-          {/* Right green arc */}
-          <div
-            className="absolute inset-0"
-            style={{ background: "radial-gradient(ellipse at 92% 85%, rgba(124,252,0,0.10) 0%, transparent 52%)" }}
-          />
-          {/* Top fade from navbar */}
-          <div
-            className="absolute inset-x-0 top-0"
-            style={{ height: "28px", background: "linear-gradient(to bottom, #08111a 0%, transparent 100%)" }}
-          />
-          {/* Bottom fade into hero */}
-          <div
-            className="absolute inset-x-0 bottom-0"
-            style={{ height: "80px", background: "linear-gradient(to bottom, transparent 0%, #08111a 100%)" }}
-          />
-          {/* Neon accent line */}
-          <div
-            className="absolute inset-x-0 bottom-0 h-px"
-            style={{ background: "linear-gradient(to right, transparent, rgba(124,252,0,0.20), rgba(0,229,255,0.20), transparent)" }}
-          />
-        </div>
-
-        {/* ══════════════════════════════════════════
             HERO — Banner + Premium Headline
         ══════════════════════════════════════════ */}
         <section ref={heroRef} className="relative flex flex-col items-center justify-center overflow-hidden">
@@ -894,9 +844,26 @@ export default function LandingPage() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-white/6 px-5 py-8 relative z-10">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <img src={logoMain} alt="extraGO" className="h-6 object-contain opacity-70" />
+      <footer className="relative z-10 overflow-hidden border-t border-white/6">
+        {/* Background image */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/images/backgrounds/bg-mobile-hero.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center 40%",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        {/* Dark overlay */}
+        <div className="absolute inset-0" style={{ background: "rgba(7,10,13,0.82)" }} />
+        {/* Top fade */}
+        <div className="absolute inset-x-0 top-0" style={{ height: "48px", background: "linear-gradient(to bottom, #08111a 0%, transparent 100%)" }} />
+        {/* Cyan/green atmosphere */}
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 50% 110%, rgba(124,252,0,0.07) 0%, rgba(0,229,255,0.05) 40%, transparent 70%)" }} />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <img src={logoMain} alt="extraGO" className="h-6 object-contain opacity-80" />
           <div className="flex items-center gap-6 text-xs text-muted-foreground">
             <a href="#como-funciona" className="hover:text-foreground transition-colors">Como funciona</a>
             <a href="#para-quem" className="hover:text-foreground transition-colors">Para quem</a>
