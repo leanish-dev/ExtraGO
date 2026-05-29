@@ -232,20 +232,20 @@ export default function LandingPage() {
       {/* ── Sticky top navbar ── */}
       <motion.header
         initial={false}
-        animate={scrolled ? { backdropFilter: "blur(28px)" } : { backdropFilter: "blur(10px)" }}
+        animate={scrolled ? { backdropFilter: "blur(28px)" } : { backdropFilter: "blur(18px)" }}
         className={`sticky top-0 z-30 w-full transition-all duration-300 ${
           scrolled
-            ? "bg-[#08111a]/90 border-b border-white/8 shadow-[0_4px_32px_rgba(0,0,0,0.5)]"
-            : "bg-transparent"
+            ? "bg-[#08111a]/92 border-b border-white/8 shadow-[0_4px_32px_rgba(0,0,0,0.5)]"
+            : "bg-[#070a0d]/80 border-b border-white/[0.055] shadow-[0_1px_0_rgba(255,255,255,0.03)] sm:bg-transparent sm:border-transparent sm:shadow-none"
         }`}
       >
-        <div className="flex items-center justify-between px-5 sm:px-8 py-3.5 max-w-7xl mx-auto">
+        <div className="flex items-center justify-between px-5 sm:px-8 py-4 sm:py-3.5 max-w-7xl mx-auto">
           <Link href="/">
             <motion.img
               whileHover={{ scale: 1.03 }}
               src={logoMain}
               alt="extraGO"
-              className="h-7 object-contain cursor-pointer"
+              className="h-8 sm:h-7 object-contain cursor-pointer"
             />
           </Link>
 
@@ -288,7 +288,13 @@ export default function LandingPage() {
                 </Link>
                 <Link href="/register">
                   <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                    <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none rounded-full px-5 h-9 text-sm font-bold">
+                    <Button
+                      className="border-none rounded-full px-5 h-9 text-sm font-bold text-black"
+                      style={{
+                        background: "linear-gradient(135deg, #7CFC00 0%, #9aff1c 50%, #00E5FF 100%)",
+                        boxShadow: "0 0 20px rgba(124,252,0,0.35), 0 0 40px rgba(124,252,0,0.1)",
+                      }}
+                    >
                       Criar Conta
                     </Button>
                   </motion.div>
@@ -307,7 +313,7 @@ export default function LandingPage() {
         <section ref={heroRef} className="relative flex flex-col items-center justify-center overflow-hidden">
           <motion.div
             style={{ y: bannerY, opacity: bannerOpacity }}
-            className="w-full relative"
+            className="w-full relative hidden sm:block"
           >
             <motion.img
               initial={{ opacity: 0, scale: 1.04 }}
@@ -321,7 +327,7 @@ export default function LandingPage() {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#08111a]/25 to-[#08111a]" />
           </motion.div>
 
-          <div className="w-full max-w-5xl mx-auto px-5 text-center -mt-16 sm:-mt-28 relative z-10 pb-16 sm:pb-24">
+          <div className="w-full max-w-5xl mx-auto px-5 text-center mt-10 sm:-mt-28 relative z-10 pb-16 sm:pb-24">
             {/* Live badge */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
