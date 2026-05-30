@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import heroBanner from "@assets/1779463788546_1779532320944.png";
 import logoMain from "@assets/1779451173221_1779452671733.png";
+import navbarBg from "@assets/file_00000000bc5071f5b878b717c4a2492e~2_1780137044826.png";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -247,21 +248,14 @@ export default function LandingPage() {
       <motion.header
         initial={false}
         animate={scrolled ? { backdropFilter: "blur(28px)" } : { backdropFilter: "blur(18px)" }}
+        style={{ backgroundImage: `url(${navbarBg})`, backgroundSize: "cover", backgroundPosition: "center" }}
         className={`sticky top-0 z-30 w-full transition-all duration-300 ${
           scrolled
-            ? "bg-[#08111a]/92 border-b border-white/8 shadow-[0_4px_32px_rgba(0,0,0,0.5)]"
-            : "bg-[#070a0d]/80 border-b border-white/[0.055] shadow-[0_1px_0_rgba(255,255,255,0.03)] sm:bg-transparent sm:border-transparent sm:shadow-none"
+            ? "border-b border-white/8 shadow-[0_4px_32px_rgba(0,0,0,0.5)]"
+            : "border-b border-white/[0.055] shadow-[0_1px_0_rgba(255,255,255,0.03)]"
         }`}
       >
         <div className="flex items-center justify-between px-5 sm:px-8 py-4 sm:py-3.5 max-w-7xl mx-auto">
-          <Link href="/">
-            <motion.img
-              whileHover={{ scale: 1.03 }}
-              src={logoMain}
-              alt="extraGO"
-              className="h-8 sm:h-7 object-contain cursor-pointer"
-            />
-          </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             {/* Explorar mega dropdown */}
