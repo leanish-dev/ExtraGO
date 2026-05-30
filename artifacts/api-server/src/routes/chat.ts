@@ -25,7 +25,7 @@ router.get("/chat/sse", async (req: any, res: Response) => {
   const token = queryToken || (authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : undefined);
 
   if (!token) { res.status(401).end(); return; }
-  const rawUserId = getUserIdFromToken(token);
+  const rawUserId = await getUserIdFromToken(token);
   if (!rawUserId) { res.status(401).end(); return; }
 
   const [userRow] = await db.select({ id: usersTable.id, isBanned: usersTable.isBanned })

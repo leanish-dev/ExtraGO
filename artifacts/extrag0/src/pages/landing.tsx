@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight, Zap, Shield, Star, Users, CheckCircle, Briefcase, Award,
   TrendingUp, Lock, Sparkles, Globe, Clock, ChevronRight, Gift, Trophy,
-  ChevronDown, Home, Building2, UserCheck, Layers, BookOpen, ExternalLink, Share2, Percent
+  ChevronDown, Home, Building2, UserCheck, Share2
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLivePlatformStats } from "@/hooks/use-live-platform-stats";
@@ -125,19 +125,15 @@ const HOW_IT_WORKS = [
 ];
 
 const FEATURES_COMPANY = [
-  "Acesso a centenas de profissionais verificados",
-  "Publicação de vagas em minutos",
-  "Aprovação de candidatos com perfil completo",
+  "Profissionais verificados em menos de 24h",
   "Pagamento seguro pela plataforma",
   "Histórico e relatórios de contratações",
 ];
 
 const FEATURES_FREELANCER = [
-  "Vagas exclusivas em restaurantes e eventos",
+  "Vagas exclusivas em gastronomia e eventos",
   "Pagamento garantido via PIX",
-  "Sistema de reputação e gamificação",
-  "Suba de nível e ganhe mais oportunidades",
-  "Programa de indicações com bônus",
+  "Sistema de níveis e indicações com bônus",
 ];
 
 const TESTIMONIALS = [
@@ -375,7 +371,7 @@ export default function LandingPage() {
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#08111a]/25 to-[#08111a]" />
           </motion.div>
 
-          <div className="w-full max-w-5xl mx-auto px-5 text-center -mt-16 sm:-mt-28 relative z-10 pb-16 sm:pb-24">
+          <div className="w-full max-w-5xl mx-auto px-5 text-center -mt-10 sm:-mt-20 relative z-10 pb-8 sm:pb-14">
             {/* Live badge */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -573,14 +569,14 @@ export default function LandingPage() {
                 <motion.div
                   whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(0,229,255,0.08), 0 0 0 1px rgba(0,229,255,0.2)" }}
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  className="glass-card rounded-2xl p-7 border border-secondary/12 h-full cursor-default"
+                  className="glass-card rounded-2xl p-5 border border-secondary/12 h-full cursor-default"
                 >
-                  <div className="w-13 h-13 rounded-2xl bg-secondary/12 border border-secondary/25 flex items-center justify-center mb-6">
-                    <Briefcase size={22} className="text-secondary" />
+                  <div className="w-11 h-11 rounded-2xl bg-secondary/12 border border-secondary/25 flex items-center justify-center mb-4">
+                    <Briefcase size={20} className="text-secondary" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Para Empresas</h3>
-                  <p className="text-muted-foreground text-sm mb-6 leading-relaxed">Restaurantes, bares, hotéis e organizadores de eventos.</p>
-                  <ul className="space-y-3 mb-7">
+                  <h3 className="text-lg font-bold mb-1.5">Para Empresas</h3>
+                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">Restaurantes, bares, hotéis e organizadores de eventos.</p>
+                  <ul className="space-y-2.5 mb-5">
                     {FEATURES_COMPANY.map((f, i) => (
                       <motion.li
                         key={i}
@@ -609,14 +605,14 @@ export default function LandingPage() {
                 <motion.div
                   whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(124,252,0,0.08), 0 0 0 1px rgba(124,252,0,0.2)" }}
                   transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  className="glass-card rounded-2xl p-7 border border-primary/12 h-full cursor-default"
+                  className="glass-card rounded-2xl p-5 border border-primary/12 h-full cursor-default"
                 >
-                  <div className="w-13 h-13 rounded-2xl bg-primary/12 border border-primary/25 flex items-center justify-center mb-6">
-                    <Users size={22} className="text-primary" />
+                  <div className="w-11 h-11 rounded-2xl bg-primary/12 border border-primary/25 flex items-center justify-center mb-4">
+                    <Users size={20} className="text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Para Freelancers</h3>
-                  <p className="text-muted-foreground text-sm mb-6 leading-relaxed">Garçons, barmans, hostess, cozinheiros e muito mais.</p>
-                  <ul className="space-y-3 mb-7">
+                  <h3 className="text-lg font-bold mb-1.5">Para Freelancers</h3>
+                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">Garçons, barmans, hostess, cozinheiros e muito mais.</p>
+                  <ul className="space-y-2.5 mb-5">
                     {FEATURES_FREELANCER.map((f, i) => (
                       <motion.li
                         key={i}
@@ -810,134 +806,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════
-            REFERRAL PROMO
-        ══════════════════════════════════════════ */}
-        <section className="px-5 py-16 sm:py-20">
-          <div className="max-w-5xl mx-auto space-y-5">
-            <ScrollSection>
-              <div className="text-center mb-10">
-                <span className="chip-primary mb-4 inline-flex">
-                  <Gift size={10} /> Programa de Indicações
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4 mt-2">
-                  Construa uma renda <span className="neon-text-gradient">passiva</span>
-                </h2>
-                <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">
-                  Indique profissionais e receba comissões recorrentes enquanto eles estiverem ativos — para sempre.
-                </p>
-              </div>
-            </ScrollSection>
-
-            {/* How referrals work — 3 step cards */}
-            <ScrollSection>
-              <div className="grid sm:grid-cols-3 gap-4 mb-6">
-                {[
-                  { step: "01", icon: <Share2 size={22} />, title: "Compartilhe seu link", desc: "Envie seu código pelo WhatsApp, Telegram, Instagram ou qualquer rede social.", color: "text-primary", bg: "bg-primary/10 border-primary/20" },
-                  { step: "02", icon: <Users size={22} />, title: "Seu indicado se cadastra", desc: "Quando o profissional se registra com seu código, ele é vinculado à sua rede permanentemente.", color: "text-secondary", bg: "bg-secondary/10 border-secondary/20" },
-                  { step: "03", icon: <TrendingUp size={22} />, title: "Ganhe para sempre", desc: "A cada job concluído por ele, você recebe 3% da taxa de intermediação — sem prazo de validade.", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20" },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1, duration: 0.5 }}
-                    whileHover={{ y: -4 }}
-                    className={`glass-card rounded-2xl p-6 border ${item.bg} relative cursor-default`}
-                  >
-                    <div className="absolute top-4 right-4 text-[10px] font-bold text-white/10 font-mono">{item.step}</div>
-                    <div className={`w-11 h-11 rounded-2xl ${item.bg} border flex items-center justify-center mb-4 ${item.color}`}>
-                      {item.icon}
-                    </div>
-                    <h3 className="font-bold text-sm mb-2">{item.title}</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </ScrollSection>
-
-            {/* Main promo banner */}
-            <ScrollSection>
-              <Link href="/register">
-                <motion.div
-                  whileHover={{ y: -4, scale: 1.008 }}
-                  whileTap={{ scale: 0.998 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 22 }}
-                  className="relative rounded-3xl overflow-hidden cursor-pointer group"
-                  style={{ minHeight: "220px" }}
-                >
-                  <div
-                    className="absolute inset-0 group-hover:scale-105 transition-transform duration-700 ease-out"
-                    style={{
-                      backgroundImage: "url('/images/backgrounds/bg-new-bg.png')",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center top",
-                      backgroundRepeat: "no-repeat",
-                    }}
-                  />
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, rgba(7,10,13,0.92) 0%, rgba(7,10,13,0.75) 50%, rgba(7,10,13,0.40) 100%)" }} />
-                  <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 20% 60%, rgba(124,252,0,0.10) 0%, transparent 55%)" }} />
-                  <div className="absolute inset-0 rounded-3xl border border-white/8 group-hover:border-primary/35 transition-all duration-500" />
-                  <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{ boxShadow: "inset 0 0 80px rgba(124,252,0,0.07)" }} />
-
-                  <div className="relative z-10 p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-8">
-                    <div className="flex-1">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/12 border border-primary/25 text-xs font-bold text-primary mb-4 tracking-wide">
-                        <Trophy size={10} /> Sistema de Indicações · 3% por job
-                      </div>
-                      <h2 className="text-2xl sm:text-3xl md:text-[38px] font-bold mb-3 leading-tight">
-                        Indique profissionais e ganhe<br />
-                        <span className="text-primary">comissões vitalícias</span>
-                      </h2>
-                      <p className="text-sm sm:text-base text-muted-foreground mb-6 max-w-md leading-relaxed">
-                        Cada profissional da sua rede gera{" "}
-                        <strong className="text-foreground">3% de comissão</strong> para você a cada serviço concluído.
-                        Sem prazo de expiração, sem limite de ganhos.
-                      </p>
-                      <div className="flex flex-wrap gap-2.5">
-                        {[
-                          { icon: <Percent size={12} />, label: "3% por job concluído", color: "text-primary bg-primary/10 border-primary/20" },
-                          { icon: <TrendingUp size={12} />, label: "Renda passiva recorrente", color: "text-secondary bg-secondary/10 border-secondary/20" },
-                          { icon: <Users size={12} />, label: "Rede ilimitada", color: "text-yellow-400 bg-yellow-400/10 border-yellow-400/20" },
-                          { icon: <Gift size={12} />, label: "Sem prazo de expiração", color: "text-purple-400 bg-purple-400/10 border-purple-400/20" },
-                        ].map((badge, i) => (
-                          <motion.span
-                            key={i}
-                            initial={{ opacity: 0, y: 8 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.08 }}
-                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-bold ${badge.color}`}
-                          >
-                            {badge.icon} {badge.label}
-                          </motion.span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex-shrink-0 flex flex-col items-center gap-3">
-                      <motion.div
-                        whileHover={{ scale: 1.07 }}
-                        whileTap={{ scale: 0.96 }}
-                        className="flex items-center gap-2 px-7 py-4 rounded-2xl font-bold text-black text-sm whitespace-nowrap"
-                        style={{
-                          background: "linear-gradient(135deg, #7CFC00 0%, #9aff1c 50%, #00E5FF 100%)",
-                          boxShadow: "0 0 32px rgba(124,252,0,0.45), 0 0 70px rgba(124,252,0,0.12)",
-                        }}
-                      >
-                        Começar a Indicar <ChevronRight size={16} />
-                      </motion.div>
-                      <p className="text-[10px] text-muted-foreground text-center">
-                        Comissões vitalícias · Sem limite de ganhos
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              </Link>
-            </ScrollSection>
-          </div>
-        </section>
 
         {/* ══════════════════════════════════════════
             CTA FINAL
