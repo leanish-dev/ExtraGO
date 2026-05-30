@@ -6,7 +6,8 @@ import {
   LayoutDashboard, Briefcase, FileText, Wallet, Settings,
   LogOut, Star, Trophy, Home,
   Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
-  ChevronRight, TrendingUp, Bell, Rss, Globe, MessageCircle, Layers
+  ChevronRight, TrendingUp, Bell, Rss, Globe, MessageCircle, Layers,
+  Activity, MapPin, LineChart
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
@@ -30,6 +31,9 @@ function getNavItems(role: string): NavItem[] {
       { href: "/admin/users", label: "Usuários", icon: <Users size={18} /> },
       { href: "/admin/jobs", label: "Vagas", icon: <Briefcase size={18} /> },
       { href: "/admin/withdrawals", label: "Saques", icon: <CreditCard size={18} /> },
+      { href: "/admin/analytics", label: "Analytics", icon: <LineChart size={18} /> },
+      { href: "/admin/ops", label: "Operações", icon: <Activity size={18} /> },
+      { href: "/admin/map", label: "Mapa Brasil", icon: <MapPin size={18} /> },
     ];
   }
   if (role === "company") {
@@ -67,8 +71,9 @@ function getBottomTabItems(role: string): NavItem[] {
     return [
       { href: "/admin", label: "Painel", icon: <BarChart3 size={21} /> },
       { href: "/admin/users", label: "Usuários", icon: <Users size={21} /> },
-      { href: "/admin/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
-      { href: "/admin/withdrawals", label: "Saques", icon: <CreditCard size={21} /> },
+      { href: "/admin/analytics", label: "Analytics", icon: <LineChart size={21} /> },
+      { href: "/admin/ops", label: "Ops", icon: <Activity size={21} /> },
+      { href: "/admin/map", label: "Mapa", icon: <MapPin size={21} /> },
     ];
   }
   if (role === "company") {

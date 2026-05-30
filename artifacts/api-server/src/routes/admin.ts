@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, usersTable, jobsTable, transactionsTable, walletsTable, notificationsTable } from "@workspace/db";
+import { db, usersTable, jobsTable, transactionsTable, walletsTable, notificationsTable, applicationsTable } from "@workspace/db";
 import { eq, sql, like, or } from "drizzle-orm";
 import { requireAdmin, formatUser } from "../lib/auth";
 import { AdminListUsersQueryParams, AdminListJobsQueryParams, AdminListWithdrawalsQueryParams } from "@workspace/api-zod";
@@ -226,6 +226,126 @@ router.post("/admin/withdrawals/:id/reject", requireAdmin, async (req, res) => {
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
   await db.update(transactionsTable).set({ status: "rejected" }).where(eq(transactionsTable.id, id));
   res.json({ message: "Withdrawal rejected" });
+});
+
+// GET /admin/analytics — extended analytics for the analytics dashboard
+router.get("/admin/analytics", requireAdmin, async (req, res) => {
+  const [allUsers, allJobs, allTransactions, allApps, allWallets] = await Promise.all([
+    db.select().from(usersTable),
+    db.select().from(jobsTable),
+    db.select().from(transactionsTable),
+    db.select().from(applicationsTable),
+    db.select().from(walletsTable),
+  ]);
+
+  // Monthly growth (last 12 months)
+  const growthByMonth = Array.from({ length: 12 }, (_, i) => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - (11 - i));
+    const monthStr = d.toISOString().slice(0, 7);
+    const months = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+    const label = months[d.getMonth()];
+    const newFreelancers = allUsers.filter(u => u.role === "freelancer" && u.createdAt?.toISOString().slice(0, 7) === monthStr).length;
+    const newCompanies = allUsers.filter(u => u.role === "company" && u.createdAt?.toISOString().slice(0, 7) === monthStr).length;
+    const revenue = allTransactions.filter(t => t.type === "credit" && t.createdAt?.toISOString().slice(0, 7) === monthStr).reduce((s, t) => s + t.amount, 0);
+    const jobs = allJobs.filter(j => j.createdAt?.toISOString().slice(0, 7) === monthStr).length;
+    return { month: monthStr, label, newFreelancers, newCompanies, revenue, jobs };
+  });
+
+  // Level distribution
+  const freelancers = allUsers.filter(u => u.role === "freelancer");
+  const levelDistribution = {
+    bronze: freelancers.filter(u => u.level === "bronze").length,
+    silver: freelancers.filter(u => u.level === "silver").length,
+    gold: freelancers.filter(u => u.level === "gold").length,
+    elite: freelancers.filter(u => u.level === "elite").length,
+  };
+
+  // Top earners (by wallet totalEarned)
+  const walletMap = new Map(allWallets.map(w => [w.userId, w]));
+  const topEarners = allUsers
+    .filter(u => u.role === "freelancer")
+    .map(u => ({ ...formatUser(u), totalEarned: walletMap.get(u.id)?.totalEarned ?? 0 }))
+    .sort((a, b) => b.totalEarned - a.totalEarned)
+    .slice(0, 10);
+
+  // Top companies (by jobs posted)
+  const companyJobCount = new Map<number, number>();
+  allJobs.forEach(j => companyJobCount.set(j.companyId, (companyJobCount.get(j.companyId) ?? 0) + 1));
+  const topCompanies = allUsers
+    .filter(u => u.role === "company")
+    .map(u => ({ ...formatUser(u), jobsPosted: companyJobCount.get(u.id) ?? 0 }))
+    .sort((a, b) => b.jobsPosted - a.jobsPosted)
+    .slice(0, 5);
+
+  // Conversion & completion rates
+  const totalApps = allApps.length;
+  const approvedApps = allApps.filter(a => a.status === "approved" || a.status === "completed").length;
+  const completedApps = allApps.filter(a => a.status === "completed").length;
+  const conversionRate = totalApps > 0 ? Math.round((approvedApps / totalApps) * 100) : 0;
+  const completionRate = approvedApps > 0 ? Math.round((completedApps / approvedApps) * 100) : 0;
+
+  // Revenue breakdown
+  const totalGross = allTransactions.filter(t => t.type === "credit").reduce((s, t) => s + t.amount, 0);
+  const totalCommissions = allTransactions.filter(t => t.type === "commission").reduce((s, t) => s + t.amount, 0);
+
+  // State/region distribution
+  const regionCounts: Record<string, number> = {};
+  allUsers.forEach(u => {
+    (u.serviceRegions ?? []).forEach((r: string) => {
+      regionCounts[r] = (regionCounts[r] ?? 0) + 1;
+    });
+  });
+
+  res.json({
+    growthByMonth,
+    levelDistribution,
+    topEarners,
+    topCompanies,
+    conversionRate,
+    completionRate,
+    totalApplications: totalApps,
+    completedJobs: completedApps,
+    totalGross,
+    totalCommissions,
+    regionCounts,
+    totalFreelancers: freelancers.length,
+    totalCompanies: allUsers.filter(u => u.role === "company").length,
+  });
+});
+
+// GET /admin/ops — live operational metrics, intended to be polled
+router.get("/admin/ops", requireAdmin, async (req, res) => {
+  const now = new Date();
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const [allUsers, openJobs, inProgressJobs, todayTx, pendingWith, allApps] = await Promise.all([
+    db.select({ id: usersTable.id, createdAt: usersTable.createdAt, role: usersTable.role }).from(usersTable),
+    db.select({ id: jobsTable.id }).from(jobsTable).where(eq(jobsTable.status, "open")),
+    db.select({ id: jobsTable.id }).from(jobsTable).where(eq(jobsTable.status, "in_progress")),
+    db.select().from(transactionsTable).where(sql`${transactionsTable.createdAt} >= ${startOfDay}`),
+    db.select().from(transactionsTable).where(sql`${transactionsTable.type} = 'withdrawal' AND ${transactionsTable.status} = 'pending'`),
+    db.select({ id: applicationsTable.id, status: applicationsTable.status, appliedAt: applicationsTable.appliedAt }).from(applicationsTable).where(sql`${applicationsTable.appliedAt} >= ${startOfDay}`),
+  ]);
+
+  const todayPayments = todayTx.filter(t => t.type === "credit").reduce((s, t) => s + t.amount, 0);
+  const todayWithdrawals = todayTx.filter(t => t.type === "withdrawal").reduce((s, t) => s + t.amount, 0);
+  const newUsersToday = allUsers.filter(u => u.createdAt && u.createdAt >= startOfDay).length;
+  const pendingWithdrawalsAmount = pendingWith.reduce((s, t) => s + t.amount, 0);
+
+  res.json({
+    timestamp: now.toISOString(),
+    totalUsers: allUsers.length,
+    openJobs: openJobs.length,
+    jobsInProgress: inProgressJobs.length,
+    pendingWithdrawals: pendingWith.length,
+    pendingWithdrawalsAmount,
+    todayPayments,
+    todayWithdrawals,
+    newUsersToday,
+    appsToday: allApps.length,
+    approvedToday: allApps.filter(a => a.status === "approved").length,
+  });
 });
 
 export default router;

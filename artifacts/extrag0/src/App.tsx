@@ -32,6 +32,9 @@ import AdminDashboard from "@/pages/admin/index";
 import AdminUsersPage from "@/pages/admin/users";
 import AdminJobsPage from "@/pages/admin/jobs";
 import AdminWithdrawalsPage from "@/pages/admin/withdrawals";
+import AdminAnalyticsPage from "@/pages/admin/analytics";
+import AdminOpsPage from "@/pages/admin/ops";
+import AdminMapPage from "@/pages/admin/map";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -119,6 +122,9 @@ function Router() {
       <Route path="/admin/users" component={() => <ProtectedRoute component={AdminUsersPage} allowedRoles={ADMIN_ROLES} layout="admin" />} />
       <Route path="/admin/jobs" component={() => <ProtectedRoute component={AdminJobsPage} allowedRoles={ADMIN_ROLES} layout="admin" />} />
       <Route path="/admin/withdrawals" component={() => <ProtectedRoute component={AdminWithdrawalsPage} allowedRoles={ADMIN_ROLES} layout="admin" />} />
+      <Route path="/admin/analytics" component={() => <ProtectedRoute component={AdminAnalyticsPage} allowedRoles={ADMIN_ROLES} layout="admin" />} />
+      <Route path="/admin/ops" component={() => <ProtectedRoute component={AdminOpsPage} allowedRoles={ADMIN_ROLES} layout="admin" />} />
+      <Route path="/admin/map" component={() => <ProtectedRoute component={AdminMapPage} allowedRoles={ADMIN_ROLES} layout="admin" />} />
 
       <Route component={NotFound} />
     </Switch>

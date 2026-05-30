@@ -2,3 +2,5 @@
 - [Express route prefix](express-route-prefix.md) — `app.use("/api", router)` strips `/api`; routes in the router must NOT include `/api/` prefix.
 - [SSE auth pattern](sse-auth.md) — EventSource can't set headers; accept auth token via `?token=` query param for SSE endpoints.
 - [Admin seed endpoint](admin-seed.md) — Idempotent admin bootstrap at `POST /api/setup/admin`; password `Gremory26@`.
+- [Progression engine](progression-engine.md) — Level thresholds: 20j/4.5→silver, 100j/4.7→gold, 300j/4.8→elite. Level fee: bronze 18%, silver 16%, gold 14%, elite 10%. Referral commission: 3% of earnings.
+- [Admin pages](admin-pages.md) — Admin now has 7 pages: dashboard, users, jobs, withdrawals, analytics (GET /admin/analytics), ops (GET /admin/ops), map (Brazil state distribution). Chart library: CSS-only bars (no recharts).
