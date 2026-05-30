@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import authBanner from "@assets/file_00000000c3cc720e818941f8ad5cf15f_1779883604660.png";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import { motion, AnimatePresence } from "framer-motion";
-import { Briefcase, Users, CheckCircle, Loader2, Eye, EyeOff, Sparkles, ArrowRight } from "lucide-react";
+import { Briefcase, Users, CheckCircle, Loader2, Eye, EyeOff, Sparkles, ArrowRight, Gift } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2, "Nome é obrigatório"),
@@ -19,6 +19,7 @@ const formSchema = z.object({
   password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
   role: z.enum(["company", "freelancer"]),
   companyName: z.string().optional(),
+  referralCode: z.string().optional(),
 });
 
 const ROLE_OPTIONS = [
@@ -57,6 +58,7 @@ export default function RegisterPage() {
   const searchParams = new URLSearchParams(window.location.search);
   const roleParam = searchParams.get("role");
 
+  const refParam = searchParams.get("ref") ?? "";
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState<"company" | "freelancer">(
@@ -71,6 +73,7 @@ export default function RegisterPage() {
       password: "",
       role: selectedRole,
       companyName: "",
+      referralCode: refParam,
     },
   });
 
@@ -81,7 +84,9 @@ export default function RegisterPage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      await registerUser({ data: values });
+      const payload: any = { ...values };
+      if (payload.referralCode === "") delete payload.referralCode;
+      await registerUser({ data: payload });
       toast.success("Conta criada! Bem-vindo à extraGO.");
       setLocation("/dashboard");
     } catch (error: any) {
@@ -329,6 +334,39 @@ export default function RegisterPage() {
                       </FormItem>
                     )}
                   />
+
+                  {/* Referral code field - shown if ref in URL or filled in */}
+                  <AnimatePresence>
+                    {(refParam || form.watch("referralCode")) && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.22 }}
+                        className="overflow-hidden"
+                      >
+                        <FormField
+                          control={form.control}
+                          name="referralCode"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-semibold text-foreground/90 flex items-center gap-1.5">
+                                <Gift size={13} className="text-primary" /> Código de Indicação
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Ex: 7F3D2A"
+                                  {...field}
+                                  className="bg-primary/5 border-primary/20 focus:border-primary/50 h-11 rounded-xl font-mono tracking-widest uppercase"
+                                />
+                              </FormControl>
+                              <FormMessage className="text-xs" />
+                            </FormItem>
+                          )}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   <Button
                     type="submit"

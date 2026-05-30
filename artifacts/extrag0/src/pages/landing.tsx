@@ -403,10 +403,10 @@ export default function LandingPage() {
               transition={{ duration: 0.8, delay: 0.35 }}
               className="text-4xl sm:text-5xl md:text-[64px] lg:text-7xl font-bold tracking-tight mb-5 leading-[1.04] max-w-4xl mx-auto"
             >
-              Talentos que{" "}
-              <span className="neon-text-gradient">transformam</span>
+              A infraestrutura de{" "}
+              <span className="neon-text-gradient">mão de obra</span>
               <br className="hidden sm:block" />
-              {" "}experiências
+              {" "}do Brasil
             </motion.h1>
 
             {/* Subtitle */}
@@ -416,8 +416,8 @@ export default function LandingPage() {
               transition={{ duration: 0.6, delay: 0.5 }}
               className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
             >
-              O marketplace que conecta restaurantes, hotéis, eventos e serviços premium{" "}
-              aos melhores profissionais freelancers do Brasil — em tempo real, com pagamento garantido.
+              A plataforma que conecta gastronomia, hotelaria, eventos e serviços premium{" "}
+              aos melhores profissionais do país — em tempo real, com pagamento garantido e reputação verificada.
             </motion.p>
 
             {/* CTAs */}
@@ -455,6 +455,7 @@ export default function LandingPage() {
                 { icon: <Shield size={13} className="text-secondary" />, text: "Pagamento garantido" },
                 { icon: <Star size={13} className="text-yellow-400" />, text: "Profissionais verificados" },
                 { icon: <Globe size={13} className="text-primary" />, text: "Todo o Brasil" },
+                { icon: <Award size={13} className="text-purple-400" />, text: "Gamificação e níveis" },
               ].map((item, i) => (
                 <span key={i} className="flex items-center gap-1.5">
                   {item.icon} {item.text}
@@ -662,9 +663,9 @@ export default function LandingPage() {
                 <div className="absolute inset-0 border border-white/8 rounded-3xl" />
                 <div className="relative grid sm:grid-cols-3 gap-10 text-center">
                   {[
-                    { icon: <Zap size={30} />, title: "Instantâneo", desc: "Match entre empresa e profissional em minutos, não dias.", color: "text-primary", glow: "rgba(124,252,0,0.3)" },
-                    { icon: <Shield size={30} />, title: "Seguro", desc: "Perfis verificados, pagamento garantido e avaliações reais.", color: "text-secondary", glow: "rgba(0,229,255,0.3)" },
-                    { icon: <Award size={30} />, title: "Premium", desc: "Gamificação, níveis e benefícios exclusivos para os melhores.", color: "text-yellow-400", glow: "rgba(250,204,21,0.3)" },
+                    { icon: <Zap size={30} />, title: "Instantâneo", desc: "Match entre empresa e profissional em minutos. Sem burocracia, sem intermediários desnecessários.", color: "text-primary", glow: "rgba(124,252,0,0.3)" },
+                    { icon: <Shield size={30} />, title: "Confiável", desc: "Perfis verificados, pagamento garantido, avaliações reais e reputação transparente.", color: "text-secondary", glow: "rgba(0,229,255,0.3)" },
+                    { icon: <Award size={30} />, title: "Escalável", desc: "Infraestrutura SaaS para crescer com sua operação — de um bar a uma rede nacional.", color: "text-yellow-400", glow: "rgba(250,204,21,0.3)" },
                   ].map((item, i) => (
                     <ScrollSection key={i} delay={i * 0.1}>
                       <motion.div
@@ -859,7 +860,50 @@ export default function LandingPage() {
             REFERRAL PROMO
         ══════════════════════════════════════════ */}
         <section className="px-5 py-16 sm:py-20">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-5xl mx-auto space-y-5">
+            <ScrollSection>
+              <div className="text-center mb-10">
+                <span className="chip-primary mb-4 inline-flex">
+                  <Gift size={10} /> Programa de Indicações
+                </span>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-4 mt-2">
+                  Construa uma renda <span className="neon-text-gradient">passiva</span>
+                </h2>
+                <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">
+                  Indique profissionais e receba comissões recorrentes enquanto eles estiverem ativos — para sempre.
+                </p>
+              </div>
+            </ScrollSection>
+
+            {/* How referrals work — 3 step cards */}
+            <ScrollSection>
+              <div className="grid sm:grid-cols-3 gap-4 mb-6">
+                {[
+                  { step: "01", icon: <Share2 size={22} />, title: "Compartilhe seu link", desc: "Envie seu código pelo WhatsApp, Telegram, Instagram ou qualquer rede social.", color: "text-primary", bg: "bg-primary/10 border-primary/20" },
+                  { step: "02", icon: <Users size={22} />, title: "Seu indicado se cadastra", desc: "Quando o profissional se registra com seu código, ele é vinculado à sua rede permanentemente.", color: "text-secondary", bg: "bg-secondary/10 border-secondary/20" },
+                  { step: "03", icon: <TrendingUp size={22} />, title: "Ganhe para sempre", desc: "A cada job concluído por ele, você recebe 3% da taxa de intermediação — sem prazo de validade.", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20" },
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1, duration: 0.5 }}
+                    whileHover={{ y: -4 }}
+                    className={`glass-card rounded-2xl p-6 border ${item.bg} relative cursor-default`}
+                  >
+                    <div className="absolute top-4 right-4 text-[10px] font-bold text-white/10 font-mono">{item.step}</div>
+                    <div className={`w-11 h-11 rounded-2xl ${item.bg} border flex items-center justify-center mb-4 ${item.color}`}>
+                      {item.icon}
+                    </div>
+                    <h3 className="font-bold text-sm mb-2">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </ScrollSection>
+
+            {/* Main promo banner */}
             <ScrollSection>
               <Link href="/register">
                 <motion.div
@@ -869,46 +913,41 @@ export default function LandingPage() {
                   className="relative rounded-3xl overflow-hidden cursor-pointer group"
                   style={{ minHeight: "220px" }}
                 >
-                  {/* Background image */}
                   <div
-                    className="absolute inset-0"
+                    className="absolute inset-0 group-hover:scale-105 transition-transform duration-700 ease-out"
                     style={{
-                      backgroundImage: "url('/images/backgrounds/bg-referral-promo.png')",
+                      backgroundImage: "url('/images/backgrounds/bg-new-bg.png')",
                       backgroundSize: "cover",
-                      backgroundPosition: "center 30%",
+                      backgroundPosition: "center top",
                       backgroundRepeat: "no-repeat",
-                      transition: "transform 0.6s cubic-bezier(0.19,1,0.22,1)",
                     }}
                   />
-                  {/* Overlay layers */}
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, rgba(7,10,13,0.88) 0%, rgba(7,10,13,0.70) 45%, rgba(7,10,13,0.30) 100%)" }} />
-                  <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 20% 50%, rgba(124,252,0,0.08) 0%, transparent 60%)" }} />
-                  {/* Border glow on hover */}
-                  <div className="absolute inset-0 rounded-3xl border border-white/8 group-hover:border-primary/30 transition-all duration-500" />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, rgba(7,10,13,0.92) 0%, rgba(7,10,13,0.75) 50%, rgba(7,10,13,0.40) 100%)" }} />
+                  <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 20% 60%, rgba(124,252,0,0.10) 0%, transparent 55%)" }} />
+                  <div className="absolute inset-0 rounded-3xl border border-white/8 group-hover:border-primary/35 transition-all duration-500" />
                   <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{ boxShadow: "inset 0 0 60px rgba(124,252,0,0.06)" }} />
+                    style={{ boxShadow: "inset 0 0 80px rgba(124,252,0,0.07)" }} />
 
-                  {/* Content */}
                   <div className="relative z-10 p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-8">
                     <div className="flex-1">
                       <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/12 border border-primary/25 text-xs font-bold text-primary mb-4 tracking-wide">
-                        <Trophy size={10} /> Sistema de Indicações
+                        <Trophy size={10} /> Sistema de Indicações · 3% por job
                       </div>
-                      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 leading-tight">
-                        Indique profissionais<br />
-                        e ganhe <span className="text-primary">comissões</span> para sempre
+                      <h2 className="text-2xl sm:text-3xl md:text-[38px] font-bold mb-3 leading-tight">
+                        Indique profissionais e ganhe<br />
+                        <span className="text-primary">comissões vitalícias</span>
                       </h2>
                       <p className="text-sm sm:text-base text-muted-foreground mb-6 max-w-md leading-relaxed">
-                        Convide novos profissionais para a extraGO e receba{" "}
-                        <strong className="text-foreground">3% de comissão</strong> sobre a taxa de
-                        intermediação de cada serviço concluído por eles na plataforma.
+                        Cada profissional da sua rede gera{" "}
+                        <strong className="text-foreground">3% de comissão</strong> para você a cada serviço concluído.
+                        Sem prazo de expiração, sem limite de ganhos.
                       </p>
-                      <div className="flex flex-wrap gap-3">
+                      <div className="flex flex-wrap gap-2.5">
                         {[
-                          { icon: <Percent size={13} />, label: "3% de comissão", color: "text-primary bg-primary/10 border-primary/20" },
-                          { icon: <TrendingUp size={13} />, label: "Ganhos recorrentes", color: "text-secondary bg-secondary/10 border-secondary/20" },
-                          { icon: <Users size={13} />, label: "Rede que cresce", color: "text-yellow-400 bg-yellow-400/10 border-yellow-400/20" },
-                          { icon: <Gift size={13} />, label: "Benefícios exclusivos", color: "text-purple-400 bg-purple-400/10 border-purple-400/20" },
+                          { icon: <Percent size={12} />, label: "3% por job concluído", color: "text-primary bg-primary/10 border-primary/20" },
+                          { icon: <TrendingUp size={12} />, label: "Renda passiva recorrente", color: "text-secondary bg-secondary/10 border-secondary/20" },
+                          { icon: <Users size={12} />, label: "Rede ilimitada", color: "text-yellow-400 bg-yellow-400/10 border-yellow-400/20" },
+                          { icon: <Gift size={12} />, label: "Sem prazo de expiração", color: "text-purple-400 bg-purple-400/10 border-purple-400/20" },
                         ].map((badge, i) => (
                           <motion.span
                             key={i}
@@ -923,15 +962,14 @@ export default function LandingPage() {
                         ))}
                       </div>
                     </div>
-                    {/* CTA */}
                     <div className="flex-shrink-0 flex flex-col items-center gap-3">
                       <motion.div
-                        whileHover={{ scale: 1.06 }}
+                        whileHover={{ scale: 1.07 }}
                         whileTap={{ scale: 0.96 }}
-                        className="flex items-center gap-2 px-6 py-3.5 rounded-2xl font-bold text-black text-sm"
+                        className="flex items-center gap-2 px-7 py-4 rounded-2xl font-bold text-black text-sm whitespace-nowrap"
                         style={{
                           background: "linear-gradient(135deg, #7CFC00 0%, #9aff1c 50%, #00E5FF 100%)",
-                          boxShadow: "0 0 28px rgba(124,252,0,0.40), 0 0 60px rgba(124,252,0,0.12)",
+                          boxShadow: "0 0 32px rgba(124,252,0,0.45), 0 0 70px rgba(124,252,0,0.12)",
                         }}
                       >
                         Começar a Indicar <ChevronRight size={16} />

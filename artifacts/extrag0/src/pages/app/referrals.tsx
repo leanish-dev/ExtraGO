@@ -4,13 +4,25 @@ import { useAuth } from "@/hooks/use-auth";
 import {
   Trophy, Users, Copy, Share2, Star, Crown, TrendingUp, Gift,
   Zap, Lock, CheckCircle, Percent, Info, Smartphone, Link2,
-  BarChart3, Target, Shield, ChevronRight,
+  BarChart3, Target, Shield, ChevronRight, Send,
+  Calendar, DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import referralsBanner from "@assets/file_00000000b14c720e9386ccbf24ee87f8_1779868067153.png";
+
+const FacebookIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  </svg>
+);
+const InstagramIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+  </svg>
+);
 
 const LEVEL_CONFIG = [
   {
@@ -98,12 +110,19 @@ export default function ReferralsPage() {
 
   const copyCode = () => { navigator.clipboard.writeText(code); toast.success("Código copiado!"); };
   const copyLink = () => { navigator.clipboard.writeText(referralLink); toast.success("Link copiado!"); };
-  const shareWhatsApp = () => {
-    const text = encodeURIComponent(
-      `🚀 Venha trabalhar na extraGO! Use meu código *${code}* e ganhe vantagens exclusivas.\n👉 ${referralLink}`
-    );
-    window.open(`https://wa.me/?text=${text}`, "_blank");
+  const shareText = encodeURIComponent(`🚀 Venha trabalhar na extraGO! Use meu código *${code}* e ganhe vantagens exclusivas.\n👉 ${referralLink}`);
+  const shareWhatsApp = () => window.open(`https://wa.me/?text=${shareText}`, "_blank");
+  const shareTelegram = () => window.open(`https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(`🚀 Venha trabalhar na extraGO! Use meu código ${code} e ganhe vantagens exclusivas.`)}`, "_blank");
+  const shareFacebook = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`, "_blank");
+  const shareInstagram = () => {
+    navigator.clipboard.writeText(referralLink);
+    toast.success("Link copiado! Abra o Instagram e cole nos Stories ou Bio.");
   };
+
+  const monthlyEarnings = (referral?.totalRewardEarned ?? 0) / Math.max(1, 3);
+  const projectedAnnual = (referral?.totalRewardEarned ?? 0) * 4;
+  const activeReferrals = referral?.activeReferrals ?? 0;
+  const inactiveReferrals = Math.max(0, (referral?.totalInvited ?? 0) - activeReferrals);
 
   const currentLevel = LEVEL_CONFIG.find(l => l.level === (user?.level ?? "bronze")) ?? LEVEL_CONFIG[0];
   const currentIdx = LEVEL_CONFIG.findIndex(l => l.level === (user?.level ?? "bronze"));
@@ -118,9 +137,13 @@ export default function ReferralsPage() {
 
   const STATS = [
     { icon: <Users size={15} />, value: referral?.totalInvited ?? 0, label: "Indicações", color: "text-primary", bg: "bg-primary/8 border-primary/15" },
-    { icon: <Zap size={15} />, value: referral?.totalConverted ?? 0, label: "Convertidos", color: "text-secondary", bg: "bg-secondary/8 border-secondary/15" },
+    { icon: <Zap size={15} />, value: activeReferrals, label: "Ativos", color: "text-secondary", bg: "bg-secondary/8 border-secondary/15" },
     { icon: <BarChart3 size={15} />, value: `${conversionRate}%`, label: "Conversão", color: "text-yellow-400", bg: "bg-yellow-400/8 border-yellow-400/15" },
-    { icon: <Gift size={15} />, value: `R$${(referral?.totalRewardEarned ?? 0).toFixed(0)}`, label: "Ganhos", color: "text-green-400", bg: "bg-green-400/8 border-green-400/15" },
+    { icon: <Gift size={15} />, value: `R$${(referral?.totalRewardEarned ?? 0).toFixed(0)}`, label: "Ganhos Totais", color: "text-green-400", bg: "bg-green-400/8 border-green-400/15" },
+    { icon: <Calendar size={15} />, value: `R$${monthlyEarnings.toFixed(0)}`, label: "Ganhos/Mês", color: "text-cyan-400", bg: "bg-cyan-400/8 border-cyan-400/15" },
+    { icon: <TrendingUp size={15} />, value: `R$${projectedAnnual.toFixed(0)}`, label: "Proj. Anual", color: "text-purple-400", bg: "bg-purple-400/8 border-purple-400/15" },
+    { icon: <Zap size={15} />, value: referral?.totalConverted ?? 0, label: "Convertidos", color: "text-orange-400", bg: "bg-orange-400/8 border-orange-400/15" },
+    { icon: <Users size={15} />, value: inactiveReferrals, label: "Inativos", color: "text-muted-foreground", bg: "bg-white/5 border-white/8" },
   ];
 
   return (
@@ -179,7 +202,7 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.04 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-2.5"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3"
         >
           {STATS.map((stat, i) => (
             <motion.div
@@ -335,37 +358,60 @@ export default function ReferralsPage() {
           </div>
 
           {/* Share buttons */}
-          <div className="grid grid-cols-3 gap-2 relative">
-            <motion.button
-              whileHover={{ scale: 1.03, y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={shareWhatsApp}
-              className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-green-500/12 border border-green-500/22 text-green-400 text-xs font-bold hover:bg-green-500/20 transition-all"
-            >
-              <Smartphone size={13} /> WhatsApp
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.03, y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={copyLink}
-              className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-primary/10 border border-primary/20 text-primary text-xs font-bold hover:bg-primary/18 transition-all"
-            >
-              <Link2 size={13} /> Link
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.03, y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => {
-                if (navigator.share) {
-                  navigator.share({ title: "extraGO — Convite", text: `Use meu código ${code}`, url: referralLink });
-                } else {
-                  copyLink();
-                }
-              }}
-              className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-muted-foreground text-xs font-bold hover:bg-white/8 transition-all"
-            >
-              <Share2 size={13} /> Mais
-            </motion.button>
+          <div className="space-y-2 relative">
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Compartilhar via</p>
+            <div className="grid grid-cols-5 gap-2">
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={shareWhatsApp}
+                title="WhatsApp"
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-green-500/12 border border-green-500/22 text-green-400 text-[10px] font-bold hover:bg-green-500/22 transition-all"
+              >
+                <Smartphone size={16} />
+                <span className="hidden sm:block">WhatsApp</span>
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={shareTelegram}
+                title="Telegram"
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-sky-500/12 border border-sky-500/22 text-sky-400 text-[10px] font-bold hover:bg-sky-500/22 transition-all"
+              >
+                <Send size={16} />
+                <span className="hidden sm:block">Telegram</span>
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={shareFacebook}
+                title="Facebook"
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-blue-600/12 border border-blue-600/22 text-blue-400 text-[10px] font-bold hover:bg-blue-600/22 transition-all"
+              >
+                <FacebookIcon />
+                <span className="hidden sm:block">Facebook</span>
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={shareInstagram}
+                title="Instagram"
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-pink-500/12 border border-pink-500/22 text-pink-400 text-[10px] font-bold hover:bg-pink-500/22 transition-all"
+              >
+                <InstagramIcon />
+                <span className="hidden sm:block">Instagram</span>
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={copyLink}
+                title="Copiar link"
+                className="flex flex-col items-center justify-center gap-1 py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary text-[10px] font-bold hover:bg-primary/18 transition-all"
+              >
+                <Link2 size={16} />
+                <span className="hidden sm:block">Copiar</span>
+              </motion.button>
+            </div>
           </div>
         </motion.div>
 

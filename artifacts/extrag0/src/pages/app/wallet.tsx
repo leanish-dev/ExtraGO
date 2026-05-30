@@ -16,7 +16,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
-import walletBanner from "@assets/file_000000002e6c720e878a4dbb71de7456_1779877754814.png";
+import walletBanner from "@assets/file_000000000748720eadde963f9ae031bb_1780133369438.png";
 
 const PAGE_SIZE = 20;
 
