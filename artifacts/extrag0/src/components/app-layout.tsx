@@ -7,13 +7,14 @@ import {
   LogOut, Star, Trophy, Home,
   Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
   ChevronRight, TrendingUp, Bell, Rss, Globe, MessageCircle, Layers,
-  Activity, MapPin, LineChart
+  Activity, MapPin, LineChart, MoreHorizontal, HelpCircle, X, Search,
+  User as UserIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
 import { NotificationBell } from "@/components/notifications-dropdown";
 import { motion, AnimatePresence } from "framer-motion";
-import { GlobalSearchButton } from "@/components/global-search";
+import { GlobalSearch } from "@/components/global-search";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api-fetch";
 
@@ -22,6 +23,7 @@ interface NavItem {
   label: string;
   icon: React.ReactNode;
   badge?: string;
+  isMais?: boolean;
 }
 
 function getNavItems(role: string): NavItem[] {
@@ -73,7 +75,7 @@ function getBottomTabItems(role: string): NavItem[] {
       { href: "/admin/users", label: "Usuários", icon: <Users size={21} /> },
       { href: "/admin/analytics", label: "Analytics", icon: <LineChart size={21} /> },
       { href: "/admin/ops", label: "Ops", icon: <Activity size={21} /> },
-      { href: "/admin/map", label: "Mapa", icon: <MapPin size={21} /> },
+      { href: "#mais", label: "Mais", icon: <MoreHorizontal size={21} />, isMais: true },
     ];
   }
   if (role === "company") {
@@ -82,15 +84,15 @@ function getBottomTabItems(role: string): NavItem[] {
       { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
       { href: "/app/applications", label: "Candidatos", icon: <UserCheck size={21} /> },
       { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
-      { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
+      { href: "#mais", label: "Mais", icon: <MoreHorizontal size={21} />, isMais: true },
     ];
   }
   return [
     { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
     { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
-    { href: "/app/referrals", label: "Indicações", icon: <Trophy size={21} /> },
+    { href: "/app/chat", label: "Chat", icon: <MessageCircle size={21} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
-    { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
+    { href: "#mais", label: "Mais", icon: <MoreHorizontal size={21} />, isMais: true },
   ];
 }
 
@@ -152,11 +154,10 @@ function AvatarInitials({ name, size = "md" }: { name?: string; size?: "sm" | "m
   );
 }
 
-/* Lightweight ambient orbs for the authenticated layout — same visual language as landing */
+/* Lightweight ambient orbs for the authenticated layout */
 function AppAmbientBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {/* Primary green orb — top left */}
       <motion.div
         className="absolute rounded-full"
         style={{
@@ -167,7 +168,6 @@ function AppAmbientBackground() {
         animate={{ x: ["0%", "4%", "-3%", "0%"], y: ["0%", "5%", "-3%", "0%"] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />
-      {/* Cyan orb — bottom right */}
       <motion.div
         className="absolute rounded-full"
         style={{
@@ -178,7 +178,6 @@ function AppAmbientBackground() {
         animate={{ x: ["0%", "-5%", "3%", "0%"], y: ["0%", "-6%", "4%", "0%"] }}
         transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
       />
-      {/* Mid green accent */}
       <motion.div
         className="absolute rounded-full"
         style={{
@@ -193,11 +192,154 @@ function AppAmbientBackground() {
   );
 }
 
+/* ── Mais Navigation Hub ── */
+type MaisItem = { icon: React.ReactNode; label: string; href?: string; action?: string; color: string; bg: string };
+
+const BASE_MAIS_ITEMS: MaisItem[] = [
+  { icon: <Rss size={19} />, label: "Feed", href: "/app/feed", color: "text-primary", bg: "bg-primary/10 border-primary/20" },
+  { icon: <Globe size={19} />, label: "Rede", href: "/app/network", color: "text-secondary", bg: "bg-secondary/10 border-secondary/20" },
+  { icon: <Briefcase size={19} />, label: "Buscar Vagas", href: "/app/jobs", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20" },
+  { icon: <FileText size={19} />, label: "Candidaturas", href: "/app/applications", color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20" },
+  { icon: <Wallet size={19} />, label: "Carteira", href: "/app/wallet", color: "text-green-400", bg: "bg-green-400/10 border-green-400/20" },
+  { icon: <Trophy size={19} />, label: "Indicações", href: "/app/referrals", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/20" },
+  { icon: <UserIcon size={19} />, label: "Perfil", href: "/app/profile", color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/20" },
+  { icon: <Bell size={19} />, label: "Notificações", href: "/app/notifications", color: "text-red-400", bg: "bg-red-400/10 border-red-400/20" },
+  { icon: <MessageCircle size={19} />, label: "Chat", href: "/app/chat", color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20" },
+  { icon: <Search size={19} />, label: "Pesquisa", action: "search", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <Settings size={19} />, label: "Configurações", href: "/app/profile", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <HelpCircle size={19} />, label: "Suporte", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+];
+
+const ADMIN_MAIS_ITEMS: MaisItem[] = [
+  { icon: <BarChart3 size={19} />, label: "Painel Admin", href: "/admin", color: "text-primary", bg: "bg-primary/10 border-primary/20" },
+  { icon: <Users size={19} />, label: "Usuários", href: "/admin/users", color: "text-secondary", bg: "bg-secondary/10 border-secondary/20" },
+  { icon: <Briefcase size={19} />, label: "Vagas", href: "/admin/jobs", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20" },
+  { icon: <CreditCard size={19} />, label: "Saques", href: "/admin/withdrawals", color: "text-green-400", bg: "bg-green-400/10 border-green-400/20" },
+  { icon: <LineChart size={19} />, label: "Analytics", href: "/admin/analytics", color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20" },
+  { icon: <Activity size={19} />, label: "Operações", href: "/admin/ops", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/20" },
+  { icon: <MapPin size={19} />, label: "Mapa Brasil", href: "/admin/map", color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20" },
+  { icon: <Bell size={19} />, label: "Notificações", href: "/app/notifications", color: "text-red-400", bg: "bg-red-400/10 border-red-400/20" },
+  { icon: <Search size={19} />, label: "Pesquisa", action: "search", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <Settings size={19} />, label: "Configurações", href: "/app/profile", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <HelpCircle size={19} />, label: "Suporte", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+];
+
+function MaisNavSheet({ open, onClose, user, logout, onSearchOpen }: {
+  open: boolean;
+  onClose: () => void;
+  user: any;
+  logout: () => void;
+  onSearchOpen: () => void;
+}) {
+  const [, setLocation] = useLocation();
+  const go = (href: string) => { setLocation(href); onClose(); };
+
+  const items = user?.role === "admin" ? ADMIN_MAIS_ITEMS : BASE_MAIS_ITEMS;
+
+  const handleItem = (item: MaisItem) => {
+    if (item.action === "search") { onSearchOpen(); onClose(); }
+    else if (item.action === "support") { window.open("mailto:suporte@extrag0.com.br", "_blank"); onClose(); }
+    else if (item.href) go(item.href);
+  };
+
+  const xpProgress = Math.min(100, ((user?.completedJobs ?? 0) % 15) / 15 * 100);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/65 backdrop-blur-sm z-[35]"
+            onClick={onClose}
+          />
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", stiffness: 380, damping: 36 }}
+            className="fixed bottom-0 left-0 right-0 z-[36] rounded-t-[24px] overflow-hidden"
+            style={{
+              background: "rgba(5, 8, 12, 0.97)",
+              backdropFilter: "blur(40px) saturate(180%)",
+              borderTop: "1px solid rgba(255,255,255,0.09)",
+              maxHeight: "88vh",
+            }}
+          >
+            {/* Drag handle */}
+            <div className="flex justify-center pt-3.5 pb-1">
+              <div className="w-9 h-[3px] rounded-full bg-white/18" />
+            </div>
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-3 border-b border-white/7">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <AvatarInitials name={user?.name} size="sm" />
+                  {user?.role === "freelancer" && <XPRing progress={xpProgress} size={36} />}
+                </div>
+                <div>
+                  <p className="text-sm font-bold leading-tight">{user?.name}</p>
+                  <p className="text-[10px] text-muted-foreground">{user?.email}</p>
+                </div>
+              </div>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={onClose}
+                className="w-8 h-8 rounded-xl bg-white/7 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X size={15} />
+              </motion.button>
+            </div>
+
+            {/* Nav grid */}
+            <div className="overflow-y-auto" style={{ maxHeight: "calc(88vh - 110px)" }}>
+              <div className="p-4 grid grid-cols-3 gap-2.5">
+                {items.map((item, i) => (
+                  <motion.button
+                    key={i}
+                    initial={{ opacity: 0, y: 8, scale: 0.94 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: i * 0.025, type: "spring", stiffness: 400, damping: 24 }}
+                    whileTap={{ scale: 0.93 }}
+                    onClick={() => handleItem(item)}
+                    className={`flex flex-col items-center justify-center gap-2 py-4 px-2 rounded-2xl border transition-all active:bg-white/10 ${item.bg}`}
+                  >
+                    <span className={item.color}>{item.icon}</span>
+                    <span className="text-[11px] font-semibold text-center leading-tight text-foreground/85">{item.label}</span>
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* Logout */}
+              <div className="px-4 pb-8">
+                <motion.button
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => { logout(); onClose(); }}
+                  className="w-full py-3.5 rounded-2xl bg-red-500/8 border border-red-500/18 text-red-400 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-red-500/14 transition-all"
+                >
+                  <LogOut size={16} /> Sair da conta
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const [location] = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [adminExpanded, setAdminExpanded] = useState(false);
+  const [maisOpen, setMaisOpen] = useState(false);
+  const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
+
   const { data: notifs } = useListNotifications(undefined, { query: { queryKey: ["notifications"], enabled: !!user } });
   const unread = notifs?.filter((n: any) => !n.isRead).length ?? 0;
 
@@ -209,6 +351,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     staleTime: 15000,
   });
   const unreadMessages: number = unreadMsgsData?.total ?? 0;
+
+  /* ⌘K / Ctrl+K shortcut */
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") { e.preventDefault(); setGlobalSearchOpen(v => !v); }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   if (!user) return null;
 
@@ -229,6 +380,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen overflow-hidden relative">
       <AppAmbientBackground />
+
+      {/* Global search */}
+      <GlobalSearch open={globalSearchOpen} onClose={() => setGlobalSearchOpen(false)} />
+
+      {/* Mais nav hub */}
+      <MaisNavSheet
+        open={maisOpen}
+        onClose={() => setMaisOpen(false)}
+        user={user}
+        logout={logout}
+        onSearchOpen={() => setGlobalSearchOpen(true)}
+      />
 
       {/* ── Desktop sidebar ── */}
       <motion.aside
@@ -430,8 +593,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </div>
             )}
 
-            {/* Global Search */}
-            <GlobalSearchButton />
+            {/* Search button */}
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              onClick={() => setGlobalSearchOpen(true)}
+              title="Buscar (⌘K)"
+              className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/6 transition-all"
+            >
+              <Search size={17} />
+            </motion.button>
 
             <NotificationBell unread={unread} />
 
@@ -485,6 +655,46 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <nav className="bottom-tab-bar lg:hidden z-20">
         <div className="flex items-stretch h-[58px]">
           {bottomItems.map((item) => {
+            if (item.isMais) {
+              return (
+                <motion.button
+                  key="mais"
+                  whileTap={{ scale: 0.86 }}
+                  onClick={() => setMaisOpen(true)}
+                  className={`flex-1 flex flex-col items-center justify-center h-full gap-[3px] transition-all relative ${
+                    maisOpen ? "text-primary" : "text-muted-foreground/55"
+                  }`}
+                >
+                  {maisOpen && (
+                    <motion.div
+                      layoutId="bottom-nav-bg"
+                      className="absolute inset-x-2 inset-y-1.5 rounded-xl"
+                      style={{ background: "rgba(124, 252, 0, 0.07)", boxShadow: "0 0 16px rgba(124,252,0,0.06)" }}
+                      transition={{ type: "spring", stiffness: 450, damping: 28 }}
+                    />
+                  )}
+                  {maisOpen && (
+                    <motion.div
+                      layoutId="bottom-nav-indicator"
+                      className="absolute top-0 left-1/2 -translate-x-1/2"
+                      style={{ width: 28, height: 2, borderRadius: 2, background: "hsl(88, 100%, 49%)", boxShadow: "0 0 8px rgba(124,252,0,0.75)" }}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                  <motion.div
+                    animate={maisOpen ? { scale: 1.1 } : { scale: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 22 }}
+                    className={`relative ${maisOpen ? "nav-icon-active" : ""}`}
+                  >
+                    <MoreHorizontal size={21} />
+                  </motion.div>
+                  <span className={`text-[9px] font-bold leading-none tracking-wide ${maisOpen ? "text-primary" : "text-muted-foreground/45"}`}>
+                    Mais
+                  </span>
+                </motion.button>
+              );
+            }
+
             const active = isActive(item.href);
             return (
               <Link key={item.href} href={item.href} className="flex-1">
@@ -525,6 +735,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     className={`relative ${active ? "nav-icon-active" : ""}`}
                   >
                     {item.icon}
+                    {/* Unread chat badge */}
+                    {item.href === "/app/chat" && unreadMessages > 0 && (
+                      <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] rounded-full bg-primary flex items-center justify-center text-[8px] font-bold text-black px-0.5 leading-none">
+                        {unreadMessages > 9 ? "9+" : unreadMessages}
+                      </span>
+                    )}
+                    {/* Unread notifications badge */}
+                    {item.href === "/app/notifications" && unread > 0 && (
+                      <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] rounded-full bg-red-500 flex items-center justify-center text-[8px] font-bold text-white px-0.5 leading-none">
+                        {unread > 9 ? "9+" : unread}
+                      </span>
+                    )}
                   </motion.div>
                   <span className={`text-[9px] font-bold leading-none tracking-wide ${active ? "text-primary" : "text-muted-foreground/45"}`}>
                     {item.label}

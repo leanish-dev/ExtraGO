@@ -482,6 +482,57 @@ export default function ProfilePage() {
               ))}
             </div>
           )}
+
+          {/* Marketplace Stats card — freelancers only */}
+          {user?.role === "freelancer" && (() => {
+            const FEE_MAP: Record<string, number> = { bronze: 18, silver: 16, gold: 14, elite: 10 };
+            const NEXT_LEVEL_MAP: Record<string, { label: string; jobsNeeded: number } | null> = {
+              bronze: { label: "Júnior", jobsNeeded: 20 },
+              silver: { label: "Intermediário", jobsNeeded: 100 },
+              gold: { label: "Sênior", jobsNeeded: 300 },
+              elite: null,
+            };
+            const currentFee = FEE_MAP[user?.level ?? "bronze"] ?? 18;
+            const nextLvl = NEXT_LEVEL_MAP[user?.level ?? "bronze"];
+            const jobsDone = user?.completedJobs ?? 0;
+            const jobsToNext = nextLvl ? Math.max(0, nextLvl.jobsNeeded - jobsDone) : 0;
+            const marketValue = jobsDone * 280;
+            const netRate = (100 - currentFee) / 100;
+            return (
+              <div className="mt-4 rounded-2xl border border-primary/15 overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(0,229,255,0.03) 100%)" }}>
+                <div className="px-4 py-3 border-b border-white/6 flex items-center gap-2">
+                  <span className="text-primary text-[11px] font-bold uppercase tracking-widest">📊 Marketplace Stats</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/6">
+                  <div className="p-3 text-center">
+                    <p className="text-lg font-bold text-green-400">{currentFee}%</p>
+                    <p className="text-[10px] text-muted-foreground">Taxa atual</p>
+                  </div>
+                  <div className="p-3 text-center">
+                    <p className="text-lg font-bold text-primary">{netRate * 100}%</p>
+                    <p className="text-[10px] text-muted-foreground">Você fica</p>
+                  </div>
+                  <div className="p-3 text-center">
+                    <p className="text-lg font-bold text-yellow-400">R${marketValue.toLocaleString("pt-BR")}</p>
+                    <p className="text-[10px] text-muted-foreground">Valor gerado</p>
+                  </div>
+                  <div className="p-3 text-center">
+                    {nextLvl ? (
+                      <>
+                        <p className="text-lg font-bold text-cyan-400">+{jobsToNext}</p>
+                        <p className="text-[10px] text-muted-foreground">para {nextLvl.label}</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-lg font-bold text-primary">👑</p>
+                        <p className="text-[10px] text-muted-foreground">Nível máximo</p>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
         {/* Sticky tabs */}

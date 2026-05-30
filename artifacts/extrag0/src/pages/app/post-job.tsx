@@ -126,7 +126,7 @@ export default function PostJobPage() {
             )} />
 
             <div>
-              <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2 block">Categoria</FormLabel>
+              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2 block">Categoria</label>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map(cat => (
                   <button

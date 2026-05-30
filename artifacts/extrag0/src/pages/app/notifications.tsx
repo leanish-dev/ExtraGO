@@ -56,7 +56,11 @@ export default function NotificationsPage() {
   const unread = notifs.filter(n => !n.isRead).length;
 
   return (
-    <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-6 pb-24 lg:pb-8">
+    <div className="relative p-4 sm:p-6 max-w-2xl mx-auto space-y-6 pb-24 lg:pb-8">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
+        <div className="absolute top-0 left-0 right-0 h-60 bg-gradient-to-br from-red-500/4 via-primary/3 to-transparent" />
+        <div className="absolute top-0 right-0 w-80 h-80 rounded-full" style={{ background: "radial-gradient(circle, rgba(124,252,0,0.04) 0%, transparent 70%)", filter: "blur(60px)" }} />
+      </div>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Notificações</h1>

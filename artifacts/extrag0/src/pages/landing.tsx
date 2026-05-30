@@ -465,6 +465,34 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ══════════════════════════════════════════
+            TRUST INDICATORS BAR
+        ══════════════════════════════════════════ */}
+        <section className="px-5 pb-10 pt-2">
+          <div className="max-w-5xl mx-auto">
+            <div className="relative rounded-2xl overflow-hidden border border-white/8 bg-gradient-to-r from-primary/4 via-secondary/3 to-primary/4">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,252,0,0.05),transparent_70%)]" />
+              <div className="relative grid grid-cols-2 sm:grid-cols-5 divide-y sm:divide-y-0 divide-x-0 sm:divide-x divide-white/7">
+                {[
+                  { emoji: "✅", label: "Profissionais Verificados", sub: "Identidade e documentos", color: "text-primary" },
+                  { emoji: "💳", label: "Pagamento Garantido", sub: "100% via plataforma", color: "text-green-400" },
+                  { emoji: "⭐", label: "Sistema de Reputação", sub: "Avaliações verificadas", color: "text-yellow-400" },
+                  { emoji: "🏢", label: "Empresas Ativas", sub: "Contratantes parceiros", color: "text-secondary" },
+                  { emoji: "🇧🇷", label: "Plataforma Nacional", sub: "Presença em todo o Brasil", color: "text-blue-400" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 px-5 py-4 group hover:bg-white/3 transition-colors">
+                    <span className="text-2xl flex-shrink-0">{item.emoji}</span>
+                    <div>
+                      <p className={`text-xs sm:text-sm font-bold leading-tight ${item.color}`}>{item.label}</p>
+                      <p className="text-[11px] text-muted-foreground/65 mt-0.5">{item.sub}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── Content bg art — from below hero to footer ── */}
         <div className="relative">
           <div

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useGetMyReferral, useGetReferralLeaderboard } from "@workspace/api-client-react";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -99,6 +99,86 @@ const RANK_STYLES = [
   "bg-slate-300/15 text-slate-300 border border-slate-300/25",
   "bg-orange-400/15 text-orange-400 border border-orange-400/25",
 ];
+
+function SimuladorGanhos({ activeReferrals }: { activeReferrals: number }) {
+  const [jobsPerMonth, setJobsPerMonth] = useState(3);
+  const [avgValue, setAvgValue] = useState(280);
+  const [refs, setRefs] = useState(Math.max(1, activeReferrals || 3));
+
+  const monthly = refs * jobsPerMonth * avgValue * 0.03;
+  const annual = monthly * 12;
+  const projection3y = annual * 3;
+
+  return (
+    <div className="space-y-5">
+      <div className="grid sm:grid-cols-3 gap-4">
+        <div>
+          <div className="flex justify-between text-[11px] mb-2">
+            <span className="text-muted-foreground font-medium">Indicados Ativos</span>
+            <span className="font-bold text-primary">{refs}</span>
+          </div>
+          <input
+            type="range" min={1} max={50} value={refs}
+            onChange={e => setRefs(Number(e.target.value))}
+            className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
+            style={{ accentColor: "hsl(88, 100%, 49%)" }}
+          />
+          <div className="flex justify-between text-[10px] text-muted-foreground/50 mt-1">
+            <span>1</span><span>50</span>
+          </div>
+        </div>
+        <div>
+          <div className="flex justify-between text-[11px] mb-2">
+            <span className="text-muted-foreground font-medium">Jobs/mês por indicado</span>
+            <span className="font-bold text-secondary">{jobsPerMonth}</span>
+          </div>
+          <input
+            type="range" min={1} max={10} value={jobsPerMonth}
+            onChange={e => setJobsPerMonth(Number(e.target.value))}
+            className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
+            style={{ accentColor: "hsl(180, 100%, 50%)" }}
+          />
+          <div className="flex justify-between text-[10px] text-muted-foreground/50 mt-1">
+            <span>1</span><span>10</span>
+          </div>
+        </div>
+        <div>
+          <div className="flex justify-between text-[11px] mb-2">
+            <span className="text-muted-foreground font-medium">Valor médio do job</span>
+            <span className="font-bold text-yellow-400">R${avgValue}</span>
+          </div>
+          <input
+            type="range" min={100} max={600} step={50} value={avgValue}
+            onChange={e => setAvgValue(Number(e.target.value))}
+            className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
+            style={{ accentColor: "hsl(45, 100%, 50%)" }}
+          />
+          <div className="flex justify-between text-[10px] text-muted-foreground/50 mt-1">
+            <span>R$100</span><span>R$600</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
+        <div className="rounded-xl border border-primary/15 bg-primary/5 p-3 text-center">
+          <p className="text-[10px] text-muted-foreground mb-1">Por Mês</p>
+          <p className="text-lg font-bold text-primary">R${monthly.toFixed(0)}</p>
+        </div>
+        <div className="rounded-xl border border-secondary/15 bg-secondary/5 p-3 text-center">
+          <p className="text-[10px] text-muted-foreground mb-1">Por Ano</p>
+          <p className="text-lg font-bold text-secondary">R${annual.toFixed(0)}</p>
+        </div>
+        <div className="rounded-xl border border-yellow-400/15 bg-yellow-400/5 p-3 text-center">
+          <p className="text-[10px] text-muted-foreground mb-1">3 Anos</p>
+          <p className="text-lg font-bold text-yellow-400">R${projection3y.toFixed(0)}</p>
+        </div>
+      </div>
+      <p className="text-[10px] text-muted-foreground/55 text-center">
+        Comissão de 3% sobre cada job concluído pelos seus indicados ativos. Sem limite de ganhos.
+      </p>
+    </div>
+  );
+}
 
 export default function ReferralsPage() {
   const { user } = useAuth();
@@ -635,6 +715,24 @@ export default function ReferralsPage() {
             </div>
           </motion.div>
         )}
+
+        {/* Earnings Simulator */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.17 }}
+          className="glass-card rounded-2xl p-5 border border-primary/12 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.03) 0%, rgba(0,229,255,0.02) 100%)" }}
+        >
+          <div className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(124,252,0,0.06) 0%, transparent 70%)", filter: "blur(30px)" }} />
+          <h2 className="font-bold mb-1 flex items-center gap-2 text-sm">
+            <DollarSign size={14} className="text-primary" />
+            Simulador de Ganhos com Indicações
+          </h2>
+          <p className="text-[11px] text-muted-foreground mb-5">Calcule quanto você pode ganhar com sua rede de indicados</p>
+
+          <SimuladorGanhos activeReferrals={activeReferrals} />
+        </motion.div>
 
         {/* Leaderboard */}
         {leaderboard.length > 0 && (

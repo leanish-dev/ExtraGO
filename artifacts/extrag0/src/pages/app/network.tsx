@@ -168,7 +168,11 @@ export default function NetworkPage() {
   const items = activeTab === "freelancers" ? freelancers : companies;
 
   return (
-    <div className="pb-24">
+    <div className="pb-24 relative">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
+        <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-br from-secondary/6 via-primary/2 to-transparent" />
+        <div className="absolute top-0 left-0 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 70%)", filter: "blur(70px)" }} />
+      </div>
       {/* Header */}
       <div className="sticky top-0 z-20 bg-[#060809]/95 backdrop-blur-xl border-b border-white/6">
         <div className="px-4 sm:px-6 pt-4 pb-3 max-w-3xl mx-auto">

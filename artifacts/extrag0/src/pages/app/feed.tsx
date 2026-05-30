@@ -529,7 +529,11 @@ export default function FeedPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-5 pb-24">
+    <div className="relative p-4 sm:p-6 max-w-2xl mx-auto space-y-5 pb-24">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
+        <div className="absolute top-0 left-0 right-0 h-72 bg-gradient-to-br from-primary/6 via-transparent to-secondary/3" />
+        <div className="absolute top-12 right-0 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 70%)", filter: "blur(60px)" }} />
+      </div>
       <PageHeader title="Feed" subtitle="Compartilhe experiências e conecte-se com profissionais" />
 
       <CreatePostCard onCreated={handleCreated} />
