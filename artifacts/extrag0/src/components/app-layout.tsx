@@ -8,7 +8,7 @@ import {
   Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
   ChevronRight, TrendingUp, Bell, Rss, Globe, MessageCircle, Layers,
   Activity, MapPin, LineChart, MoreHorizontal, HelpCircle, X, Search,
-  User as UserIcon,
+  User as UserIcon, BookOpen,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useListNotifications } from "@workspace/api-client-react";
@@ -203,11 +203,14 @@ const BASE_MAIS_ITEMS: MaisItem[] = [
   { icon: <Wallet size={19} />, label: "Carteira", href: "/app/wallet", color: "text-green-400", bg: "bg-green-400/10 border-green-400/20" },
   { icon: <Trophy size={19} />, label: "Indicações", href: "/app/referrals", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/20" },
   { icon: <UserIcon size={19} />, label: "Perfil", href: "/app/profile", color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/20" },
+  { icon: <Settings size={19} />, label: "Configurações", href: "/app/profile", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
   { icon: <Bell size={19} />, label: "Notificações", href: "/app/notifications", color: "text-red-400", bg: "bg-red-400/10 border-red-400/20" },
   { icon: <MessageCircle size={19} />, label: "Chat", href: "/app/chat", color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20" },
   { icon: <Search size={19} />, label: "Pesquisa", action: "search", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
-  { icon: <Settings size={19} />, label: "Configurações", href: "/app/profile", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
   { icon: <HelpCircle size={19} />, label: "Suporte", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <HelpCircle size={19} />, label: "Ajuda", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <Layers size={19} />, label: "Sobre a Plataforma", href: "/", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <BookOpen size={19} />, label: "Central de Recursos", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
 ];
 
 const ADMIN_MAIS_ITEMS: MaisItem[] = [
@@ -222,6 +225,8 @@ const ADMIN_MAIS_ITEMS: MaisItem[] = [
   { icon: <Search size={19} />, label: "Pesquisa", action: "search", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
   { icon: <Settings size={19} />, label: "Configurações", href: "/app/profile", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
   { icon: <HelpCircle size={19} />, label: "Suporte", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <Layers size={19} />, label: "Sobre a Plataforma", href: "/", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <BookOpen size={19} />, label: "Central de Recursos", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
 ];
 
 function MaisNavSheet({ open, onClose, user, logout, onSearchOpen }: {

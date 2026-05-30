@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import heroBanner from "@assets/1779463788546_1779532320944.png";
 import logoMain from "@assets/1779451173221_1779452671733.png";
-import navbarBg from "@assets/file_00000000bc5071f5b878b717c4a2492e~2_1780137044826.png";
+import navbarBg from "@assets/file_00000000a5a0720e9612b56b01bfe4f0~2_1780139707862.png";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,7 @@ import { useLivePlatformStats } from "@/hooks/use-live-platform-stats";
 
 /* ─────────── Floating particles ─────────── */
 function FloatingParticles() {
-  const particles = Array.from({ length: 28 }, (_, i) => ({
+  const particles = Array.from({ length: 14 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
@@ -230,19 +230,13 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
       {/* ── Background orbs ── */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <AnimatedOrb color="#7CFC00" size={650} left="-8%" top="-12%" duration={20} />
-        <AnimatedOrb color="#00E5FF" size={480} left="64%" top="18%" duration={16} delay={3} />
-        <AnimatedOrb color="#7CFC00" size={320} left="78%" top="-10%" duration={18} delay={5} />
-        <AnimatedOrb color="#00E5FF" size={280} left="8%" top="58%" duration={15} delay={7} />
-        <AnimatedOrb color="#7CFC00" size={180} left="52%" top="82%" duration={12} delay={2} />
-        <AnimatedOrb color="#00E5FF" size={240} left="30%" top="45%" duration={19} delay={9} />
+        <AnimatedOrb color="#7CFC00" size={580} left="-8%" top="-12%" duration={22} />
+        <AnimatedOrb color="#00E5FF" size={420} left="66%" top="14%" duration={18} delay={4} />
+        <AnimatedOrb color="#7CFC00" size={260} left="8%" top="62%" duration={16} delay={8} />
       </div>
 
       {/* ── Floating particles ── */}
       <FloatingParticles />
-
-      {/* ── Noise grain ── */}
-      <div className="fixed inset-0 z-0 opacity-[0.06] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
 
       {/* ── Sticky top navbar ── */}
       <motion.header
@@ -255,8 +249,11 @@ export default function LandingPage() {
             : "border-b border-white/[0.055] shadow-[0_1px_0_rgba(255,255,255,0.03)]"
         }`}
       >
-        <div className="flex items-center justify-between px-5 sm:px-8 py-4 sm:py-3.5 max-w-7xl mx-auto">
+        <div className="flex items-center justify-between px-5 sm:px-8 py-2.5 sm:py-2 max-w-7xl mx-auto">
 
+          <Link href="/" className="flex-shrink-0 mr-2">
+            <img src={logoMain} alt="extraGO" className="h-6 object-contain" />
+          </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
             {/* Explorar mega dropdown */}
             <div className="relative">
@@ -410,8 +407,8 @@ export default function LandingPage() {
               transition={{ duration: 0.6, delay: 0.5 }}
               className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
             >
-              A plataforma que conecta gastronomia, hotelaria, eventos e serviços premium{" "}
-              aos melhores profissionais do país — em tempo real, com pagamento garantido e reputação verificada.
+              Profissionais verificados. Empresas confiantes. Pagamento garantido.{" "}
+              A infraestrutura definitiva para gastronomia, hotelaria e eventos — em escala nacional.
             </motion.p>
 
             {/* CTAs */}
@@ -459,33 +456,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════
-            TRUST INDICATORS BAR
-        ══════════════════════════════════════════ */}
-        <section className="px-5 pb-10 pt-2">
-          <div className="max-w-5xl mx-auto">
-            <div className="relative rounded-2xl overflow-hidden border border-white/8 bg-gradient-to-r from-primary/4 via-secondary/3 to-primary/4">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,252,0,0.05),transparent_70%)]" />
-              <div className="relative grid grid-cols-2 sm:grid-cols-5 divide-y sm:divide-y-0 divide-x-0 sm:divide-x divide-white/7">
-                {[
-                  { emoji: "✅", label: "Profissionais Verificados", sub: "Identidade e documentos", color: "text-primary" },
-                  { emoji: "💳", label: "Pagamento Garantido", sub: "100% via plataforma", color: "text-green-400" },
-                  { emoji: "⭐", label: "Sistema de Reputação", sub: "Avaliações verificadas", color: "text-yellow-400" },
-                  { emoji: "🏢", label: "Empresas Ativas", sub: "Contratantes parceiros", color: "text-secondary" },
-                  { emoji: "🇧🇷", label: "Plataforma Nacional", sub: "Presença em todo o Brasil", color: "text-blue-400" },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 px-5 py-4 group hover:bg-white/3 transition-colors">
-                    <span className="text-2xl flex-shrink-0">{item.emoji}</span>
-                    <div>
-                      <p className={`text-xs sm:text-sm font-bold leading-tight ${item.color}`}>{item.label}</p>
-                      <p className="text-[11px] text-muted-foreground/65 mt-0.5">{item.sub}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* ── Content bg art — from below hero to footer ── */}
         <div className="relative">
@@ -504,7 +474,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             LIVE STATS — Real database data
         ══════════════════════════════════════════ */}
-        <section className="px-5 pb-20">
+        <section className="px-5 pb-12">
           <ScrollSection>
             <div className="max-w-5xl mx-auto">
               <div className="relative rounded-3xl overflow-hidden">
@@ -549,14 +519,14 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             HOW IT WORKS
         ══════════════════════════════════════════ */}
-        <section id="como-funciona" className="px-5 py-14 sm:py-20">
+        <section id="como-funciona" className="px-5 py-10 sm:py-14">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
-              <div className="text-center mb-14">
-                <span className="chip-primary mb-4 inline-flex">
+              <div className="text-center mb-10">
+                <span className="chip-primary mb-3 inline-flex">
                   <Zap size={10} className="fill-primary" /> Como funciona
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4 mt-2">Simples como deve ser</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2">Simples como deve ser</h2>
                 <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">Do cadastro ao pagamento, tudo em uma só plataforma.</p>
               </div>
             </ScrollSection>
@@ -586,15 +556,15 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             FOR WHOM
         ══════════════════════════════════════════ */}
-        <section id="para-quem" className="px-5 py-14 sm:py-20">
+        <section id="para-quem" className="px-5 py-10 sm:py-14">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
-              <div className="text-center mb-14">
-                <span className="chip-primary mb-4 inline-flex" style={{ background: "rgba(0,229,255,0.12)", borderColor: "rgba(0,229,255,0.25)", color: "hsl(186,100%,50%)" }}>
+              <div className="text-center mb-10">
+                <span className="chip-primary mb-3 inline-flex" style={{ background: "rgba(0,229,255,0.12)", borderColor: "rgba(0,229,255,0.25)", color: "hsl(186,100%,50%)" }}>
                   Para quem é
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4 mt-2">Feito para os dois lados</h2>
-                <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">Empresas que precisam de profissionais e profissionais que buscam mais.</p>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2">Feito para os dois lados</h2>
+                <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">Empresas que precisam de profissionais. Profissionais que buscam mais.</p>
               </div>
             </ScrollSection>
 
@@ -674,53 +644,15 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════
-            WHY EXTRAGO
-        ══════════════════════════════════════════ */}
-        <section className="px-5 py-16 sm:py-20">
-          <div className="max-w-5xl mx-auto">
-            <ScrollSection>
-              <div className="relative rounded-3xl overflow-hidden p-8 sm:p-12">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/6" />
-                <div className="absolute inset-0 border border-white/8 rounded-3xl" />
-                <div className="relative grid sm:grid-cols-3 gap-10 text-center">
-                  {[
-                    { icon: <Zap size={30} />, title: "Instantâneo", desc: "Match entre empresa e profissional em minutos. Sem burocracia, sem intermediários desnecessários.", color: "text-primary", glow: "rgba(124,252,0,0.3)" },
-                    { icon: <Shield size={30} />, title: "Confiável", desc: "Perfis verificados, pagamento garantido, avaliações reais e reputação transparente.", color: "text-secondary", glow: "rgba(0,229,255,0.3)" },
-                    { icon: <Award size={30} />, title: "Escalável", desc: "Infraestrutura SaaS para crescer com sua operação — de um bar a uma rede nacional.", color: "text-yellow-400", glow: "rgba(250,204,21,0.3)" },
-                  ].map((item, i) => (
-                    <ScrollSection key={i} delay={i * 0.1}>
-                      <motion.div
-                        whileHover={{ scale: 1.04 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                        className="flex flex-col items-center cursor-default"
-                      >
-                        <motion.div
-                          className={`w-16 h-16 rounded-2xl mb-4 flex items-center justify-center ${item.color}`}
-                          style={{ background: `rgba(${item.glow.replace("rgba(", "").replace(")", "").split(",").slice(0, 3).join(",")}, 0.1)`, border: `1px solid ${item.glow.replace("rgba(", "rgba(").replace(", 0.3)", ", 0.2)")}` }}
-                          whileHover={{ boxShadow: `0 0 30px ${item.glow}` }}
-                        >
-                          {item.icon}
-                        </motion.div>
-                        <h3 className="text-xl font-bold mb-2">{item.title}</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed max-w-[200px] mx-auto">{item.desc}</p>
-                      </motion.div>
-                    </ScrollSection>
-                  ))}
-                </div>
-              </div>
-            </ScrollSection>
-          </div>
-        </section>
 
         {/* ══════════════════════════════════════════
             SECTORS
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-12 sm:py-16">
+        <section className="px-5 py-8 sm:py-12">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
-              <div className="text-center mb-10">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-3">Presente em todos os setores</h2>
+              <div className="text-center mb-8">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2">Presente em todos os setores</h2>
                 <p className="text-muted-foreground text-sm max-w-md mx-auto">Da gastronomia ao entretenimento, a extraGO conecta quem precisa com quem faz acontecer.</p>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -843,14 +775,14 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             TESTIMONIALS
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-14 sm:py-20">
+        <section className="px-5 py-10 sm:py-14">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
-              <div className="text-center mb-14">
-                <span className="chip-primary mb-4 inline-flex">
+              <div className="text-center mb-10">
+                <span className="chip-primary mb-3 inline-flex">
                   <Sparkles size={10} /> Depoimentos reais
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4 mt-2">O que dizem sobre nós</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2">O que dizem sobre nós</h2>
               </div>
             </ScrollSection>
             <div className="grid sm:grid-cols-3 gap-5">
@@ -1010,23 +942,23 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             CTA FINAL
         ══════════════════════════════════════════ */}
-        <section className="px-5 pb-24 sm:pb-32">
+        <section className="px-5 pb-16 sm:pb-20">
           <div className="max-w-3xl mx-auto text-center">
             <ScrollSection>
-              <div className="relative rounded-3xl overflow-hidden p-10 sm:p-16">
+              <div className="relative rounded-3xl overflow-hidden p-8 sm:p-12">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/12 via-[#08111a] to-secondary/10" />
                 <div className="absolute inset-0 border border-primary/18 rounded-3xl" />
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
                 <div className="relative">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary mb-6 tracking-wide">
-                    <Clock size={11} /> Comece em menos de 2 minutos
+                    <Clock size={11} /> Cadastro em menos de 2 minutos
                   </div>
                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                    Pronto para dar o<br />
-                    <span className="neon-text-gradient">próximo passo</span>?
+                    A workforce do futuro<br />
+                    <span className="neon-text-gradient">começa aqui</span>
                   </h2>
                   <p className="text-muted-foreground mb-8 text-base max-w-md mx-auto leading-relaxed">
-                    Junte-se a milhares de profissionais e empresas que já transformaram a forma de trabalhar.
+                    Empresas líderes e profissionais de elite escolhem a extraGO para transformar como o trabalho acontece.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <Link href="/register?role=company">
