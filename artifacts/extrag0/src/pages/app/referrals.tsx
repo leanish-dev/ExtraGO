@@ -38,7 +38,7 @@ const LEVEL_CONFIG = [
     requirements: [
       { label: "Nível padrão", met: true },
     ],
-    perks: ["Acesso a vagas básicas", "Suporte padrão"],
+    perks: ["Acesso a extras básicos", "Suporte padrão"],
   },
   {
     level: "silver",
@@ -54,7 +54,7 @@ const LEVEL_CONFIG = [
       { label: "20 extras concluídos", met: false },
       { label: "Avaliação ≥ 4.5 ⭐", met: false },
     ],
-    perks: ["Vagas premium desbloqueadas", "Destaque no perfil"],
+    perks: ["Extras premium desbloqueados", "Destaque no perfil"],
   },
   {
     level: "gold",
@@ -71,7 +71,7 @@ const LEVEL_CONFIG = [
       { label: "6 meses na plataforma", met: false },
       { label: "Avaliação ≥ 4.7 ⭐", met: false },
     ],
-    perks: ["Vagas exclusivas", "Bônus automático por job"],
+    perks: ["Extras exclusivos", "Bônus automático por extra"],
   },
   {
     level: "elite",
@@ -129,7 +129,7 @@ function SimuladorGanhos({ activeReferrals }: { activeReferrals: number }) {
         </div>
         <div>
           <div className="flex justify-between text-[11px] mb-2">
-            <span className="text-muted-foreground font-medium">Jobs/mês por indicado</span>
+            <span className="text-muted-foreground font-medium">Extras/mês por indicado</span>
             <span className="font-bold text-secondary">{jobsPerMonth}</span>
           </div>
           <input
@@ -144,7 +144,7 @@ function SimuladorGanhos({ activeReferrals }: { activeReferrals: number }) {
         </div>
         <div>
           <div className="flex justify-between text-[11px] mb-2">
-            <span className="text-muted-foreground font-medium">Valor médio do job</span>
+            <span className="text-muted-foreground font-medium">Valor médio do extra</span>
             <span className="font-bold text-yellow-400">R${avgValue}</span>
           </div>
           <input
@@ -174,7 +174,7 @@ function SimuladorGanhos({ activeReferrals }: { activeReferrals: number }) {
         </div>
       </div>
       <p className="text-[10px] text-muted-foreground/55 text-center">
-        Comissão de 3% sobre cada job concluído pelos seus indicados ativos. Sem limite de ganhos.
+        Comissão de 3% sobre cada extra concluído pelos seus indicados ativos. Sem limite de ganhos.
       </p>
     </div>
   );
@@ -390,7 +390,7 @@ export default function ReferralsPage() {
               transition={{ duration: 2, repeat: Infinity }}
               className="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full"
             >
-              3% por job concluído
+              3% por extra concluído
             </motion.span>
           </div>
 

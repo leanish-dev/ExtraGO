@@ -46,13 +46,13 @@ interface PostComment {
 
 const POST_TYPE_MAP = {
   general: { label: "Geral", icon: <MoreHorizontal size={12} />, color: "text-muted-foreground" },
-  job_completion: { label: "Job Concluído", icon: <Briefcase size={12} />, color: "text-primary" },
+  job_completion: { label: "Extra Concluído", icon: <Briefcase size={12} />, color: "text-primary" },
   availability: { label: "Disponível", icon: <Wifi size={12} />, color: "text-green-400" },
 };
 
 const FILTER_TABS = [
   { key: "all", label: "Todos" },
-  { key: "job_completion", label: "Jobs" },
+  { key: "job_completion", label: "Extras" },
   { key: "availability", label: "Disponíveis" },
   { key: "general", label: "Posts" },
 ];

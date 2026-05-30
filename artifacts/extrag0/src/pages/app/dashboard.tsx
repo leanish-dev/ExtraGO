@@ -187,7 +187,7 @@ function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }
           title={role === "company"
             ? `${app.freelancer?.name ?? "Profissional"} se candidatou`
             : `Candidatura ${statusInfo.label.toLowerCase()}`}
-          sub={app.job?.title ?? "Vaga"}
+          sub={app.job?.title ?? "Extra"}
           time={timeStr}
           icon={<FileText size={13} />}
           iconBg="bg-yellow-400/10 text-yellow-400"
@@ -320,7 +320,7 @@ function PlatformStatsBanner() {
 
   const items = [
     { label: "Ativos (24h)", value: stats?.activeUsers24h ?? 0, color: "text-primary", dot: "bg-primary" },
-    { label: "Vagas Hoje", value: stats?.jobsToday ?? 0, color: "text-secondary", dot: "bg-secondary" },
+    { label: "Extras Hoje", value: stats?.jobsToday ?? 0, color: "text-secondary", dot: "bg-secondary" },
     { label: "Em Andamento", value: stats?.jobsInProgress ?? 0, color: "text-green-400", dot: "bg-green-400" },
     { label: "Total Extras", value: stats?.totalFreelancers ?? 0, color: "text-yellow-400", dot: "bg-yellow-400" },
   ];
@@ -380,12 +380,12 @@ function CompanyDashboard() {
 
         <GreetingHeader
           name={user?.name?.split(" ")[0] ?? "Empresa"}
-          subtitle="Acompanhe suas vagas e contratações."
+          subtitle="Acompanhe seus extras e contratações."
           action={
             <Link href="/app/jobs/new">
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl text-sm px-4 h-10 gap-1.5">
-                  <Plus size={15} /> Nova Vaga
+                  <Plus size={15} /> Novo Extra
                 </Button>
               </motion.div>
             </Link>
@@ -396,16 +396,16 @@ function CompanyDashboard() {
         <PlatformStatsBanner />
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <StatCard icon={<Briefcase size={18} />} label="Vagas Abertas" value={stats?.activeJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} />
+          <StatCard icon={<Briefcase size={18} />} label="Extras Abertos" value={stats?.activeJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} />
           <StatCard icon={<Users size={18} />} label="Profissionais" value={stats?.totalWorkers ?? 0} color="secondary" isLoading={statsLoading} delay={0.1} />
-          <StatCard icon={<CheckCircle size={18} />} label="Jobs Publicados" value={stats?.totalJobsPosted ?? 0} color="green" isLoading={statsLoading} delay={0.15} />
+          <StatCard icon={<CheckCircle size={18} />} label="Extras Publicados" value={stats?.totalJobsPosted ?? 0} color="green" isLoading={statsLoading} delay={0.15} />
           <StatCard icon={<DollarSign size={18} />} label="Gasto Total" value={`R$ ${((stats?.totalSpent ?? 0) / 100).toFixed(2)}`} sub="histórico" color="yellow" isLoading={statsLoading} delay={0.2} />
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold">Vagas Recentes</h2>
+              <h2 className="text-base font-semibold">Extras Recentes</h2>
               <Link href="/app/jobs">
                 <motion.button
                   whileHover={{ x: 2 }}
@@ -423,9 +423,9 @@ function CompanyDashboard() {
               <div className="glass-card rounded-2xl">
                 <EmptyState
                   icon={<Briefcase size={28} />}
-                  title="Nenhuma vaga ativa"
-                  description="Publique sua primeira vaga e encontre os melhores profissionais."
-                  actionLabel="Publicar primeira vaga"
+                  title="Nenhum extra ativo"
+                  description="Publique seu primeiro extra e encontre os melhores profissionais."
+                  actionLabel="Publicar primeiro extra"
                   actionHref="/app/jobs/new"
                 />
               </div>
@@ -453,6 +453,7 @@ function CompanyDashboard() {
                           <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${s.class}`}>{s.label}</span>
                             <span className="text-[10px] text-muted-foreground">{job.workersApproved}/{job.workersNeeded} vagas</span>
+
                           </div>
                         </div>
                       </Link>
@@ -514,7 +515,7 @@ function FreelancerDashboard() {
   const progress = Math.min(100, ((user?.completedJobs ?? 0) / levelInfo.threshold) * 100);
 
   const quickActions = [
-    { href: "/app/jobs", icon: <Briefcase size={16} />, label: "Buscar Vagas", sub: "Ver oportunidades", iconBg: "bg-primary/8 border-primary/18 text-primary", hoverBorder: "hover:border-primary/30", color: "text-primary" },
+    { href: "/app/jobs", icon: <Briefcase size={16} />, label: "Buscar Extras", sub: "Ver oportunidades", iconBg: "bg-primary/8 border-primary/18 text-primary", hoverBorder: "hover:border-primary/30", color: "text-primary" },
     { href: "/app/wallet", icon: <Wallet size={16} />, label: "Carteira", sub: "Saldo e PIX", iconBg: "bg-secondary/8 border-secondary/18 text-secondary", hoverBorder: "hover:border-secondary/30", color: "text-secondary" },
     { href: "/app/referrals", icon: <Star size={16} />, label: "Indicações", sub: "Ganhe bônus", iconBg: "bg-yellow-400/8 border-yellow-400/18 text-yellow-400", hoverBorder: "hover:border-yellow-400/30", color: "text-yellow-400" },
   ];
@@ -568,7 +569,7 @@ function FreelancerDashboard() {
         <PlatformStatsBanner />
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <StatCard icon={<CheckCircle size={18} />} label="Jobs Feitos" value={user?.completedJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} />
+          <StatCard icon={<CheckCircle size={18} />} label="Extras Feitos" value={user?.completedJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} />
           <StatCard icon={<Star size={18} />} label="Reputação" value={(user?.reputationScore ?? 0)} sub="/ 5.0" color="yellow" isLoading={statsLoading} delay={0.1} />
           <StatCard icon={<DollarSign size={18} />} label="Ganhos Totais" value={`R$ ${((stats?.totalEarned ?? 0) / 100).toFixed(2)}`} color="green" isLoading={statsLoading} delay={0.15} />
           <StatCard icon={<TrendingUp size={18} />} label="Concluídos" value={stats?.completedJobs ?? 0} color="secondary" isLoading={statsLoading} delay={0.2} />
@@ -593,12 +594,12 @@ function FreelancerDashboard() {
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold text-primary leading-none">{user?.completedJobs ?? 0}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">de {levelInfo.threshold} jobs</p>
+              <p className="text-[10px] text-muted-foreground mt-1">de {levelInfo.threshold} extras</p>
             </div>
           </div>
           <Progress value={progress} glow={currentLevel === "elite"} />
           <p className="text-xs text-muted-foreground mt-2">
-            {Math.max(0, levelInfo.threshold - (user?.completedJobs ?? 0))} jobs para o próximo nível
+            {Math.max(0, levelInfo.threshold - (user?.completedJobs ?? 0))} extras para o próximo nível
           </p>
         </motion.div>
 
@@ -686,8 +687,8 @@ function FreelancerDashboard() {
                 <EmptyState
                   icon={<FileText size={24} />}
                   title="Nenhuma candidatura"
-                  description="Busque vagas e candidate-se agora."
-                  actionLabel="Buscar Vagas"
+                  description="Busque extras e candidate-se agora."
+                  actionLabel="Buscar Extras"
                   actionHref="/app/jobs"
                   className="py-10"
                 />
@@ -707,7 +708,7 @@ function FreelancerDashboard() {
                         <Clock size={14} className="text-yellow-400" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold truncate">{app.job?.title ?? "Vaga"}</p>
+                        <p className="text-sm font-semibold truncate">{app.job?.title ?? "Extra"}</p>
                         <p className="text-xs text-muted-foreground mt-0.5">Aguardando avaliação</p>
                       </div>
                       <span className="text-[10px] font-bold text-yellow-400 bg-yellow-400/8 border border-yellow-400/20 px-2 py-0.5 rounded-full flex-shrink-0">

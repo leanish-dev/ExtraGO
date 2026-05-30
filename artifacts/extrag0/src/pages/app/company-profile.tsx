@@ -178,7 +178,7 @@ export default function CompanyProfilePage() {
         <div className="grid grid-cols-3 gap-3 mb-5">
           <StatBadge
             value={<AnimatedCounter target={stats?.totalJobsPosted ?? 0} />}
-            label="Vagas Postadas"
+            label="Extras Postados"
             color="text-secondary"
           />
           <StatBadge
@@ -223,7 +223,7 @@ export default function CompanyProfilePage() {
           <div className="flex gap-1 overflow-x-auto no-scrollbar py-2">
             {[
               { key: "sobre", label: "Sobre" },
-              { key: "vagas", label: `Vagas Abertas (${jobs.length})` },
+              { key: "vagas", label: `Extras Abertos (${jobs.length})` },
             ].map(tab => (
               <button
                 key={tab.key}
@@ -267,8 +267,8 @@ export default function CompanyProfilePage() {
                 </h2>
                 <div className="space-y-3">
                   {[
-                    { label: "Vagas publicadas", value: stats?.totalJobsPosted ?? 0 },
-                    { label: "Vagas ativas", value: stats?.activeJobs ?? 0 },
+                    { label: "Extras publicados", value: stats?.totalJobsPosted ?? 0 },
+                    { label: "Extras ativos", value: stats?.activeJobs ?? 0 },
                     { label: "Trabalhadores contratados", value: stats?.totalWorkers ?? 0 },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center justify-between text-sm">
@@ -305,7 +305,7 @@ export default function CompanyProfilePage() {
               {jobs.length === 0 ? (
                 <div className="glass-card rounded-2xl p-8 border border-white/6 text-center">
                   <Briefcase size={28} className="text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Nenhuma vaga aberta no momento.</p>
+                  <p className="text-sm text-muted-foreground">Nenhum extra aberto no momento.</p>
                 </div>
               ) : (
                 jobs.map((job: any) => (

@@ -49,7 +49,7 @@ function StatBadge({ value, label, color = "text-primary" }: { value: React.Reac
 
 const BADGE_DEFS = [
   { key: "first_job", label: "Primeiro Job", emoji: "🎯", threshold: 1, field: "completedJobs" },
-  { key: "ten_jobs", label: "10 Jobs", emoji: "🔟", threshold: 10, field: "completedJobs" },
+  { key: "ten_jobs", label: "10 Extras", emoji: "🔟", threshold: 10, field: "completedJobs" },
   { key: "top_rated", label: "Top Avaliado", emoji: "⭐", threshold: 4, field: "reputationScore" },
   { key: "verified", label: "Verificado", emoji: "✅", threshold: true, field: "isVerified" },
 ];
@@ -218,7 +218,7 @@ export default function FreelancerProfilePage() {
         <div className="grid grid-cols-4 gap-2 mb-5">
           <StatBadge
             value={<AnimatedCounter target={user.completedJobs ?? 0} />}
-            label="Jobs"
+            label="Extras"
             color="text-primary"
           />
           <StatBadge

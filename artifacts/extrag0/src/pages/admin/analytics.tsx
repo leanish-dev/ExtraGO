@@ -90,7 +90,7 @@ export default function AdminAnalyticsPage() {
   const chartConfigs = {
     users: { key: "newFreelancers", label: "Novos Freelancers", color: "#7CFC00", suffix: "" },
     revenue: { key: "revenue", label: "Receita", color: "#00E5FF", suffix: "R$" },
-    jobs: { key: "jobs", label: "Novas Vagas", color: "#a78bfa", suffix: "" },
+    jobs: { key: "jobs", label: "Novos Extras", color: "#a78bfa", suffix: "" },
   };
 
   return (
@@ -105,7 +105,7 @@ export default function AdminAnalyticsPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <MetricCard icon={<Users size={18} className="text-primary" />} label="Freelancers" value={d.totalFreelancers} color="border-primary/15" />
         <MetricCard icon={<Building2 size={18} className="text-secondary" />} label="Empresas" value={d.totalCompanies} color="border-secondary/15" />
-        <MetricCard icon={<CheckCircle size={18} className="text-green-400" />} label="Jobs Concluídos" value={d.completedJobs} color="border-green-400/15" />
+        <MetricCard icon={<CheckCircle size={18} className="text-green-400" />} label="Extras Concluídos" value={d.completedJobs} color="border-green-400/15" />
         <MetricCard
           icon={<DollarSign size={18} className="text-yellow-400" />}
           label="Volume Total"
@@ -124,7 +124,7 @@ export default function AdminAnalyticsPage() {
                 className={`text-[11px] px-3 py-1 rounded-full font-semibold transition-all ${
                   activeChart === k ? "bg-primary text-black" : "bg-white/5 text-muted-foreground hover:bg-white/8"
                 }`}>
-                {k === "users" ? "Usuários" : k === "revenue" ? "Receita" : "Vagas"}
+                {k === "users" ? "Usuários" : k === "revenue" ? "Receita" : "Extras"}
               </button>
             ))}
           </div>
@@ -178,7 +178,7 @@ export default function AdminAnalyticsPage() {
               { label: "Candidaturas Totais", value: d.totalApplications, color: "bg-primary/20 border-primary/20", pct: 100 },
               { label: "Taxa de Aprovação", value: `${d.conversionRate}%`, color: "bg-secondary/20 border-secondary/20", pct: d.conversionRate },
               { label: "Taxa de Conclusão", value: `${d.completionRate}%`, color: "bg-green-400/20 border-green-400/20", pct: d.completionRate },
-              { label: "Jobs Concluídos", value: d.completedJobs, color: "bg-yellow-400/20 border-yellow-400/20", pct: d.totalApplications > 0 ? Math.round((d.completedJobs / d.totalApplications) * 100) : 0 },
+              { label: "Extras Concluídos", value: d.completedJobs, color: "bg-yellow-400/20 border-yellow-400/20", pct: d.totalApplications > 0 ? Math.round((d.completedJobs / d.totalApplications) * 100) : 0 },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
                 <div className={`flex-shrink-0 w-1 h-8 rounded-full ${item.color.split(" ")[0].replace("/20", "")}`} />
@@ -230,7 +230,7 @@ export default function AdminAnalyticsPage() {
 
       {/* Top Companies */}
       <div className="glass-card rounded-2xl p-5">
-        <h2 className="text-sm font-bold mb-4 flex items-center gap-2"><Building2 size={14} className="text-secondary" /> Top Empresas por Vagas</h2>
+        <h2 className="text-sm font-bold mb-4 flex items-center gap-2"><Building2 size={14} className="text-secondary" /> Top Empresas por Extras</h2>
         <div className="space-y-2">
           {d.topCompanies.map((c, i) => (
             <div key={c.id} className="flex items-center gap-3 py-2 border-b border-white/4 last:border-0">
@@ -240,7 +240,7 @@ export default function AdminAnalyticsPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold truncate">{c.companyName || c.name}</p>
-                <p className="text-[10px] text-muted-foreground">{c.jobsPosted} vagas publicadas</p>
+                <p className="text-[10px] text-muted-foreground">{c.jobsPosted} extras publicados</p>
               </div>
               <span className="text-xs font-bold text-secondary">{c.jobsPosted}</span>
             </div>

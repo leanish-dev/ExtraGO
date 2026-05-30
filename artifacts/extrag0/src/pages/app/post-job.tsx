@@ -82,10 +82,10 @@ export default function PostJobPage() {
           totalValue: watchedHours ? Math.round(watchedHours.total * 100) : 0,
         } as any
       });
-      toast.success("Vaga publicada com sucesso!");
+      toast.success("Extra publicado com sucesso!");
       setLocation("/app/jobs");
     } catch (e: any) {
-      toast.error(e?.data?.error ?? "Erro ao publicar vaga");
+      toast.error(e?.data?.error ?? "Erro ao publicar extra");
     }
   };
 
@@ -99,7 +99,7 @@ export default function PostJobPage() {
           <ChevronLeft size={18} />
         </button>
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold leading-tight">Publicar Nova Vaga</h1>
+          <h1 className="text-xl sm:text-2xl font-bold leading-tight">Publicar Novo Extra</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Conecte-se aos melhores profissionais do Brasil</p>
         </div>
       </div>
@@ -113,7 +113,7 @@ export default function PostJobPage() {
             transition={{ duration: 0.4 }}
             className="glass-card rounded-2xl p-5 sm:p-6 space-y-5"
           >
-            <SectionHeader icon={<Briefcase size={14} />} title="Informações da Vaga" color="primary" />
+            <SectionHeader icon={<Briefcase size={14} />} title="Informações do Extra" color="primary" />
 
             <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem>
@@ -265,7 +265,7 @@ export default function PostJobPage() {
           >
             {createJob.isPending ? (
               <><Loader2 size={15} className="mr-2 animate-spin" />Publicando...</>
-            ) : "Publicar Vaga"}
+            ) : "Publicar Extra"}
           </Button>
         </form>
       </Form>

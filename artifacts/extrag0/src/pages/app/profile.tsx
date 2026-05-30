@@ -496,7 +496,7 @@ export default function ProfilePage() {
           {user?.role === "freelancer" && (
             <div className="grid grid-cols-3 gap-3 mt-4">
               {[
-                { label: "Jobs Feitos", value: user?.completedJobs ?? 0, color: "text-primary" },
+                { label: "Extras Feitos", value: user?.completedJobs ?? 0, color: "text-primary" },
                 { label: "Reputação", value: `${(user?.reputationScore ?? 0).toFixed(1)} ★`, color: "text-yellow-400" },
                 { label: "Nível", value: levelInfo.label, color: levelInfo.color },
               ].map((item, i) => (

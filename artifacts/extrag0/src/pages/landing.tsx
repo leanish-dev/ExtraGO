@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import heroBanner from "@assets/1779463788546_1779532320944.png";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import navbarBg from "@assets/file_00000000a5a0720e9612b56b01bfe4f0~2_1780139707862.png";
+import referralArt from "@assets/file_00000000f534720e8e4eab1278948eb7_1780142932397.png";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -101,7 +102,7 @@ const TICKER_ITEMS = [
   { icon: "⭐", text: "Profissionais verificados" },
   { icon: "🌎", text: "Todo o Brasil" },
   { icon: "🎮", text: "Gamificação e níveis" },
-  { icon: "⚡", text: "Jobs confirmados em 24h" },
+  { icon: "⚡", text: "Extras confirmados em 24h" },
   { icon: "💳", text: "PIX imediato" },
   { icon: "🏆", text: "Top freelancers" },
 ];
@@ -230,8 +231,8 @@ function ScrollSection({ children, delay = 0, className = "" }: { children: Reac
 
 const HOW_IT_WORKS = [
   { step: "01", icon: <Users size={24} />, title: "Crie sua conta", desc: "Cadastre-se como empresa ou freelancer em menos de 2 minutos.", color: "text-primary", bg: "bg-primary/10 border-primary/20", glow: "hover:shadow-[0_0_30px_rgba(124,252,0,0.12)]" },
-  { step: "02", icon: <Briefcase size={24} />, title: "Publique ou candidate-se", desc: "Empresas publicam vagas com detalhes. Freelancers se candidatam com um clique.", color: "text-secondary", bg: "bg-secondary/10 border-secondary/20", glow: "hover:shadow-[0_0_30px_rgba(0,229,255,0.12)]" },
-  { step: "03", icon: <CheckCircle size={24} />, title: "Trabalhe e receba", desc: "Conclua o job e receba seu pagamento via PIX direto na carteira.", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20", glow: "hover:shadow-[0_0_30px_rgba(250,204,21,0.12)]" },
+  { step: "02", icon: <Briefcase size={24} />, title: "Publique ou candidate-se", desc: "Empresas publicam extras com detalhes. Freelancers se candidatam com um clique.", color: "text-secondary", bg: "bg-secondary/10 border-secondary/20", glow: "hover:shadow-[0_0_30px_rgba(0,229,255,0.12)]" },
+  { step: "03", icon: <CheckCircle size={24} />, title: "Trabalhe e receba", desc: "Conclua o extra e receba seu pagamento via PIX direto na carteira.", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20", glow: "hover:shadow-[0_0_30px_rgba(250,204,21,0.12)]" },
 ];
 
 const FEATURES_COMPANY = [
@@ -241,13 +242,13 @@ const FEATURES_COMPANY = [
 ];
 
 const FEATURES_FREELANCER = [
-  "Vagas exclusivas em gastronomia e eventos",
+  "Extras exclusivos em gastronomia e eventos",
   "Pagamento garantido via PIX",
   "Sistema de níveis e indicações com bônus",
 ];
 
 const TESTIMONIALS = [
-  { name: "Rodrigo M.", role: "Garçom · Nível Ouro", text: "Já fiz mais de 30 jobs pela extraGO. O pagamento via PIX é imediato e as vagas são ótimas!", stars: 5 },
+  { name: "Rodrigo M.", role: "Garçom · Nível Ouro", text: "Já fiz mais de 30 extras pela extraGO. O pagamento via PIX é imediato e os extras são ótimos!", stars: 5 },
   { name: "Marina K.", role: "Bar São Paulo", text: "Contratamos freelancers em menos de 24h. A plataforma é incrível para eventos de última hora.", stars: 5 },
   { name: "Felipe S.", role: "Barman · Nível Elite", text: "O sistema de gamificação me motiva a sempre buscar mais. Já subi para Elite e as ofertas melhoraram muito.", stars: 5 },
 ];
@@ -272,7 +273,7 @@ const EXPLORAR_ITEMS = [
   { icon: <Home size={15} />, label: "Início", desc: "Página principal", href: "/" },
   { icon: <Building2 size={15} />, label: "Para Empresas", desc: "Contrate profissionais", href: "/register?role=company" },
   { icon: <Users size={15} />, label: "Para Freelancers", desc: "Encontre vagas extras", href: "/register?role=freelancer" },
-  { icon: <Briefcase size={15} />, label: "Vagas Abertas", desc: "Explore oportunidades", href: "/login" },
+  { icon: <Briefcase size={15} />, label: "Extras Abertos", desc: "Explore oportunidades", href: "/login" },
   { icon: <Zap size={15} />, label: "Como Funciona", desc: "Entenda a plataforma", href: "#como-funciona" },
   { icon: <Globe size={15} />, label: "Setores", desc: "Gastronomia, Hotelaria e +", href: "#para-quem" },
   { icon: <Trophy size={15} />, label: "Indicações", desc: "Ganhe comissões", href: "/register" },
@@ -312,7 +313,7 @@ export default function LandingPage() {
       value: statsLoading ? undefined : (platformStats?.completedJobs ?? 0),
       fallback: 0,
       suffix: "+",
-      label: "Jobs concluídos",
+      label: "Extras concluídos",
       icon: <CheckCircle size={22} />,
       color: "text-green-400",
     },
@@ -320,7 +321,7 @@ export default function LandingPage() {
       value: statsLoading ? undefined : (platformStats?.activeJobs ?? 0),
       fallback: 0,
       suffix: "",
-      label: "Vagas abertas agora",
+      label: "Extras abertos agora",
       icon: <TrendingUp size={22} />,
       color: "text-yellow-400",
     },
@@ -422,10 +423,10 @@ export default function LandingPage() {
             </a>
             {user ? (
               <Link href="/app/jobs" className="text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1">
-                <Briefcase size={14} /> Vagas
+                <Briefcase size={14} /> Extras
               </Link>
             ) : (
-              <LockedNavLink href="/login">Vagas</LockedNavLink>
+              <LockedNavLink href="/login">Extras</LockedNavLink>
             )}
           </nav>
 
@@ -493,7 +494,7 @@ export default function LandingPage() {
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/12 border border-primary/25 text-xs font-bold text-primary mb-7 tracking-wide"
             >
               <span className="live-dot" />
-              {statsLoading ? "Carregando dados ao vivo..." : `${(platformStats?.activeJobs ?? 0)} vagas abertas agora`}
+              {statsLoading ? "Carregando dados ao vivo..." : `${(platformStats?.activeJobs ?? 0)} extras abertos agora`}
             </motion.div>
 
             {/* Main headline */}
@@ -757,6 +758,102 @@ export default function LandingPage() {
 
 
         {/* ══════════════════════════════════════════
+            REFERRAL HERO BANNER
+        ══════════════════════════════════════════ */}
+        <section className="px-5 py-8 sm:py-12">
+          <div className="max-w-5xl mx-auto">
+            <ScrollSection>
+              <Link href="/indicacoes">
+                <motion.div
+                  whileHover={{ y: -4, scale: 1.005 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 24 }}
+                  className="relative overflow-hidden rounded-3xl cursor-pointer group"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(5,8,12,0.97) 0%, rgba(8,18,10,0.97) 100%)",
+                    border: "1px solid rgba(124,252,0,0.18)",
+                    boxShadow: "0 0 60px rgba(124,252,0,0.07), 0 24px 80px rgba(0,0,0,0.55)",
+                  }}
+                >
+                  {/* Top accent line */}
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/55 to-transparent" />
+                  {/* Ambient glow */}
+                  <div className="absolute -top-20 -left-20 w-60 h-60 rounded-full pointer-events-none"
+                    style={{ background: "radial-gradient(circle, rgba(124,252,0,0.07) 0%, transparent 70%)", filter: "blur(40px)" }} />
+
+                  <div className="flex flex-col lg:flex-row items-stretch">
+                    {/* Left: text content */}
+                    <div className="flex-1 p-7 sm:p-10 lg:py-12 relative z-10">
+                      {/* Badge */}
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/22 text-[11px] font-bold text-primary mb-5 tracking-widest uppercase">
+                        <Users size={11} /> Sistema de Indicações
+                      </div>
+
+                      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-3">
+                        Indique profissionais e<br />
+                        ganhe <span style={{ background: "linear-gradient(90deg, #7CFC00, #9aff1c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>comissões para sempre</span>
+                      </h2>
+
+                      <p className="text-muted-foreground text-sm sm:text-base mb-7 max-w-lg leading-relaxed">
+                        Convide novos profissionais para a <strong className="text-foreground">extraGO</strong> e receba{" "}
+                        <strong className="text-primary">3% de comissão</strong> sobre cada extra concluído por eles na plataforma — para sempre, sem limite.
+                      </p>
+
+                      {/* 4 benefit tiles */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-8">
+                        {[
+                          { icon: "💰", title: "3% de comissão", desc: "Por extra concluído pelo indicado" },
+                          { icon: "🔄", title: "Ganhos vitalícios", desc: "Comissão enquanto ele trabalhar" },
+                          { icon: "👥", title: "Rede que cresce", desc: "Quanto mais indica, mais ganha" },
+                          { icon: "🎮", title: "Gamificação", desc: "Top indicadores ganham recompensas" },
+                        ].map((b, i) => (
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.07 }}
+                            className="p-3 rounded-2xl border border-white/7 bg-white/[0.025] hover:border-primary/22 hover:bg-primary/[0.04] transition-all"
+                          >
+                            <span className="text-lg mb-1.5 block">{b.icon}</span>
+                            <p className="text-[11px] font-bold text-primary mb-0.5 leading-tight">{b.title}</p>
+                            <p className="text-[10px] text-muted-foreground leading-tight">{b.desc}</p>
+                          </motion.div>
+                        ))}
+                      </div>
+
+                      {/* CTA row */}
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <div
+                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-black transition-all group-hover:shadow-[0_0_28px_rgba(124,252,0,0.45)]"
+                          style={{ background: "linear-gradient(135deg, #7CFC00, #9aff1c)" }}
+                        >
+                          Começar a indicar <ArrowRight size={14} />
+                        </div>
+                        <span className="text-xs text-muted-foreground">Sem limite de ganhos</span>
+                      </div>
+                    </div>
+
+                    {/* Right: artwork */}
+                    <div className="lg:w-[400px] xl:w-[460px] flex-shrink-0 relative min-h-[200px] lg:min-h-0 overflow-hidden rounded-b-3xl lg:rounded-r-3xl lg:rounded-bl-none">
+                      <img
+                        src={referralArt}
+                        alt="Sistema de Indicações extraGO"
+                        className="w-full h-full object-cover object-left-top opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-700"
+                        style={{ minHeight: 200 }}
+                      />
+                      {/* Blend edges */}
+                      <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#05080c] to-transparent hidden lg:block" />
+                      <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-[#05080c] to-transparent lg:hidden" />
+                      <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#050808] to-transparent" />
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </ScrollSection>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
             SECTORS
         ══════════════════════════════════════════ */}
         <section className="px-5 py-8 sm:py-12">
@@ -954,7 +1051,7 @@ export default function LandingPage() {
                     <Link href="/register?role=freelancer">
                       <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                         <Button size="lg" className="bg-primary text-black hover:bg-primary/90 neon-glow rounded-full font-bold px-8 border-none">
-                          <Users size={18} className="mr-2" /> Encontrar Vagas
+                          <Users size={18} className="mr-2" /> Encontrar Extras
                         </Button>
                       </motion.div>
                     </Link>

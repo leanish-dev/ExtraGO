@@ -237,7 +237,7 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
               <Link href={`/app/jobs/${job.id}`} onClick={onClose}>
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
                   <Button className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl h-12">
-                    Gerenciar Vaga <ExternalLink size={14} className="ml-2" />
+                    Gerenciar Extra <ExternalLink size={14} className="ml-2" />
                   </Button>
                 </motion.div>
               </Link>
@@ -248,7 +248,7 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
                   onClick={handleApply}
                   disabled={applying || job.status !== "open" || liveStatus === "finished"}
                 >
-                  {applying ? "Enviando candidatura..." : liveStatus === "finished" ? "Vaga encerrada" : "Candidatar-se agora"}
+                  {applying ? "Enviando candidatura..." : liveStatus === "finished" ? "Extra encerrado" : "Candidatar-se agora"}
                 </Button>
               </motion.div>
             )}
@@ -497,7 +497,7 @@ export default function JobsPage() {
     : POPULAR_CITIES.filter(c => c.toLowerCase() !== cityFilter.toLowerCase()).slice(0, 6);
 
   const handleApply = async (jobId: number) => {
-    await applyMutation.mutateAsync({ data: { jobId, message: "Tenho interesse nessa vaga e acredito que minhas habilidades se encaixam perfeitamente." } });
+    await applyMutation.mutateAsync({ data: { jobId, message: "Tenho interesse nesse extra e acredito que minhas habilidades se encaixam perfeitamente." } });
     toast.success("Candidatura enviada!");
   };
 
@@ -527,7 +527,7 @@ export default function JobsPage() {
       >
         <img
           src={jobsBanner}
-          alt="Buscar Vagas extraGO"
+          alt="Buscar Extras extraGO"
           className="w-full object-cover"
           style={{ maxHeight: 170, objectPosition: "center center" }}
         />
@@ -552,17 +552,17 @@ export default function JobsPage() {
         >
           <div>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
-              {user?.role === "company" ? "Minhas Vagas" : "Buscar Vagas"}
+              {user?.role === "company" ? "Meus Extras" : "Buscar Extras"}
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              <span className="text-primary font-semibold">{filtered.length}</span> vaga{filtered.length !== 1 ? "s" : ""} encontrada{filtered.length !== 1 ? "s" : ""}
+              <span className="text-primary font-semibold">{filtered.length}</span> extra{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
             </p>
           </div>
           {user?.role === "company" && (
             <Link href="/app/jobs/new">
               <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl text-sm px-4 h-10 gap-1.5">
-                  <Star size={14} /> Publicar Vaga
+                  <Star size={14} /> Publicar Extra
                 </Button>
               </motion.div>
             </Link>
@@ -776,7 +776,7 @@ export default function JobsPage() {
           <div className="glass-card rounded-2xl">
             <EmptyState
               icon={<Briefcase size={28} />}
-              title="Nenhuma vaga encontrada"
+              title="Nenhum extra encontrado"
               description="Tente outros filtros ou termos de busca para encontrar oportunidades."
             />
           </div>

@@ -177,8 +177,8 @@ export default function ApplicationsPage() {
         <EmptyState
           icon={<FileText size={28} />}
           title="Nenhuma candidatura encontrada"
-          description={isCompany ? "Nenhum profissional se candidatou ainda." : "Você ainda não se candidatou a nenhuma vaga."}
-          actionLabel={!isCompany ? "Buscar Vagas" : undefined}
+          description={isCompany ? "Nenhum profissional se candidatou ainda." : "Você ainda não se candidatou a nenhum extra."}
+          actionLabel={!isCompany ? "Buscar Extras" : undefined}
           actionHref="/app/jobs"
         />
       )}

@@ -231,7 +231,7 @@ function CompanyStep2({ onNext, onBack }: { onNext: () => void; onBack: () => vo
           onClick={onNext}
           className="flex-1 bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl h-11"
         >
-          Publicar Vaga 🚀
+          Publicar Extra 🚀
         </Button>
       </div>
     </div>

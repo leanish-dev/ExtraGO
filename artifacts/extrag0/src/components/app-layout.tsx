@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import logoMain from "@assets/1779451173221_1779452671733.png";
+import navbarBg from "@assets/file_00000000a5a0720e9612b56b01bfe4f0~2_1780139707862.png";
 import {
   LayoutDashboard, Briefcase, FileText, Wallet, Settings,
   LogOut, Star, Trophy, Home,
@@ -31,7 +31,7 @@ function getNavItems(role: string): NavItem[] {
     return [
       { href: "/admin", label: "Painel Admin", icon: <BarChart3 size={18} /> },
       { href: "/admin/users", label: "Usuários", icon: <Users size={18} /> },
-      { href: "/admin/jobs", label: "Vagas", icon: <Briefcase size={18} /> },
+      { href: "/admin/jobs", label: "Extras", icon: <Briefcase size={18} /> },
       { href: "/admin/withdrawals", label: "Saques", icon: <CreditCard size={18} /> },
       { href: "/admin/analytics", label: "Analytics", icon: <LineChart size={18} /> },
       { href: "/admin/ops", label: "Operações", icon: <Activity size={18} /> },
@@ -41,8 +41,8 @@ function getNavItems(role: string): NavItem[] {
   if (role === "company") {
     return [
       { href: "/app/dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
-      { href: "/app/jobs", label: "Minhas Vagas", icon: <Briefcase size={18} /> },
-      { href: "/app/jobs/new", label: "Publicar Vaga", icon: <FileText size={18} /> },
+      { href: "/app/jobs", label: "Meus Extras", icon: <Briefcase size={18} /> },
+      { href: "/app/jobs/new", label: "Publicar Extra", icon: <FileText size={18} /> },
       { href: "/app/applications", label: "Candidaturas", icon: <UserCheck size={18} /> },
       { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
       { href: "/app/profile", label: "Perfil", icon: <Settings size={18} /> },
@@ -52,7 +52,7 @@ function getNavItems(role: string): NavItem[] {
     { href: "/app/dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
     { href: "/app/feed", label: "Feed", icon: <Rss size={18} /> },
     { href: "/app/network", label: "Rede", icon: <Globe size={18} /> },
-    { href: "/app/jobs", label: "Buscar Vagas", icon: <Briefcase size={18} /> },
+    { href: "/app/jobs", label: "Buscar Extras", icon: <Briefcase size={18} /> },
     { href: "/app/applications", label: "Candidaturas", icon: <FileText size={18} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
     { href: "/app/referrals", label: "Indicações", icon: <Trophy size={18} /> },
@@ -63,7 +63,7 @@ function getNavItems(role: string): NavItem[] {
 function getAdminPlatformItems(): NavItem[] {
   return [
     { href: "/app/dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
-    { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={18} /> },
+    { href: "/app/jobs", label: "Extras", icon: <Briefcase size={18} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={18} /> },
   ];
 }
@@ -75,7 +75,7 @@ function getBottomTabItems(role: string): NavItem[] {
 
   return [
     homeItem,
-    { href: "/app/jobs", label: "Buscar Vagas", icon: <Briefcase size={21} /> },
+    { href: "/app/jobs", label: "Buscar Extras", icon: <Briefcase size={21} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
     { href: "/app/profile", label: "Perfil", icon: <UserIcon size={21} /> },
     { href: "#mais", label: "Menu", icon: <MoreHorizontal size={21} />, isMais: true },
@@ -196,7 +196,7 @@ const BASE_MAIS_ITEMS: MaisItem[] = [
 const ADMIN_MAIS_ITEMS: MaisItem[] = [
   { icon: <BarChart3 size={19} />, label: "Painel Admin", href: "/admin", color: "text-primary", bg: "bg-primary/10 border-primary/20" },
   { icon: <Users size={19} />, label: "Usuários", href: "/admin/users", color: "text-secondary", bg: "bg-secondary/10 border-secondary/20" },
-  { icon: <Briefcase size={19} />, label: "Vagas", href: "/admin/jobs", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20" },
+  { icon: <Briefcase size={19} />, label: "Extras", href: "/admin/jobs", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20" },
   { icon: <CreditCard size={19} />, label: "Saques", href: "/admin/withdrawals", color: "text-green-400", bg: "bg-green-400/10 border-green-400/20" },
   { icon: <LineChart size={19} />, label: "Analytics", href: "/admin/analytics", color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20" },
   { icon: <Activity size={19} />, label: "Operações", href: "/admin/ops", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/20" },
@@ -360,6 +360,31 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const isChatPage = location === "/app/chat" || location.startsWith("/app/chat");
 
+  const PAGE_TITLES: Record<string, string> = {
+    "/app/dashboard": "Dashboard",
+    "/app/feed": "Feed",
+    "/app/network": "Rede",
+    "/app/jobs": "Buscar Extras",
+    "/app/jobs/new": "Publicar Extra",
+    "/app/applications": "Candidaturas",
+    "/app/wallet": "Carteira",
+    "/app/referrals": "Indicações",
+    "/app/profile": "Perfil",
+    "/app/notifications": "Notificações",
+    "/app/chat": "Chat",
+    "/admin": "Painel Admin",
+    "/admin/users": "Usuários",
+    "/admin/jobs": "Extras",
+    "/admin/withdrawals": "Saques",
+    "/admin/analytics": "Analytics",
+    "/admin/ops": "Operações",
+    "/admin/map": "Mapa Brasil",
+  };
+  const currentPageTitle =
+    PAGE_TITLES[location] ??
+    PAGE_TITLES[Object.keys(PAGE_TITLES).find(k => k !== "/app/dashboard" && k !== "/admin" && location.startsWith(k)) ?? ""] ??
+    "extraGO";
+
   return (
     <div className="flex h-screen overflow-hidden relative">
       <AppAmbientBackground />
@@ -383,11 +408,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         className="hidden lg:flex flex-col h-full border-r border-white/5 bg-[#040608]/92 backdrop-blur-2xl flex-shrink-0 overflow-hidden z-10"
         style={{ minWidth: collapsed ? 68 : 260 }}
       >
-        {/* Logo / collapse */}
+        {/* Brand / collapse */}
         <div className={`flex items-center border-b border-white/5 flex-shrink-0 ${collapsed ? "justify-center p-3 h-[60px]" : "justify-between px-4 h-[60px]"}`}>
           {!collapsed && (
             <Link href="/">
-              <img src={logoMain} alt="extraGO" className="h-7 object-contain cursor-pointer hover:opacity-80 transition-opacity" />
+              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+                <div className="w-7 h-7 rounded-lg bg-primary/15 border border-primary/25 flex items-center justify-center flex-shrink-0">
+                  <span className="text-[9px] font-black text-primary leading-none">xG</span>
+                </div>
+                <span className="text-sm font-bold text-foreground/85 tracking-tight">extraGO</span>
+              </div>
             </Link>
           )}
           <button
@@ -576,25 +606,36 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* ── Main content ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden z-10">
-        {/* Top header */}
-        <header className="flex items-center gap-3 h-[56px] px-4 lg:px-5 border-b border-white/5 flex-shrink-0 bg-[#040608]/80 backdrop-blur-2xl">
-          {/* Mobile: logo */}
-          <div className="flex-1 lg:hidden">
-            <Link href="/">
-              <img src={logoMain} alt="extraGO" className="h-6 object-contain" />
-            </Link>
-          </div>
-
-          {/* Desktop: greeting */}
-          <div className="hidden lg:flex flex-col flex-1">
-            <p className="text-xs text-muted-foreground font-medium">{greeting}, <span className="text-foreground font-semibold">{firstName}</span> 👋</p>
+        {/* Top header — matches landing page navbar style */}
+        <header
+          className="flex items-center gap-3 h-[60px] px-4 lg:px-5 border-b border-white/8 flex-shrink-0 relative"
+          style={{
+            backgroundImage: `url(${navbarBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backdropFilter: "blur(28px)",
+            WebkitBackdropFilter: "blur(28px)",
+            boxShadow: "0 4px 32px rgba(0,0,0,0.45)",
+          }}
+        >
+          {/* Left: page title (desktop) / greeting (mobile) */}
+          <div className="flex-1 min-w-0">
+            <div className="lg:hidden">
+              <p className="text-sm font-semibold truncate">
+                {greeting}, <span className="text-primary font-bold">{firstName}</span>
+              </p>
+            </div>
+            <div className="hidden lg:block">
+              <p className="text-[15px] font-bold leading-tight truncate">{currentPageTitle}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{greeting}, {firstName}</p>
+            </div>
           </div>
 
           <div className="flex items-center gap-1.5">
             {user.role === "freelancer" && (
               <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/8 border border-primary/18 mr-1">
                 <TrendingUp size={11} className="text-primary" />
-                <span className="text-[11px] font-bold text-primary">{user.completedJobs ?? 0} jobs</span>
+                <span className="text-[11px] font-bold text-primary">{user.completedJobs ?? 0} extras</span>
               </div>
             )}
 

@@ -61,8 +61,8 @@ export default function AdminJobsPage() {
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Gerenciar Vagas</h1>
-        <p className="text-muted-foreground mt-1">{filtered.length} vaga{filtered.length !== 1 ? "s" : ""}</p>
+        <h1 className="text-2xl font-bold">Gerenciar Extras</h1>
+        <p className="text-muted-foreground mt-1">{filtered.length} extra{filtered.length !== 1 ? "s" : ""}</p>
       </div>
 
       <div className="space-y-3">
@@ -100,7 +100,7 @@ export default function AdminJobsPage() {
       {!isLoading && filtered.length === 0 && (
         <div className="text-center py-16">
           <Briefcase size={40} className="text-muted-foreground mx-auto mb-3" />
-          <p className="text-muted-foreground">Nenhuma vaga encontrada</p>
+          <p className="text-muted-foreground">Nenhum extra encontrado</p>
         </div>
       )}
 

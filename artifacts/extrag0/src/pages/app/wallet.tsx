@@ -572,7 +572,7 @@ export default function WalletPage() {
               icon={<Wallet size={24} />}
               title="Nenhuma movimentação ainda"
               description="Suas transações aparecerão aqui após a conclusão de jobs aprovados."
-              actionLabel="Buscar Vagas"
+              actionLabel="Buscar Extras"
               actionHref="/app/jobs"
               className="py-10"
             />

@@ -161,7 +161,7 @@ function JobStatusCard({ stats }: { stats: any }) {
   return (
     <div className="glass-card rounded-2xl p-5">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-semibold">Status das Vagas</h2>
+        <h2 className="text-base font-semibold">Status dos Extras</h2>
         <Briefcase size={18} className="text-muted-foreground opacity-60" />
       </div>
       <div className="h-2 rounded-full overflow-hidden flex mb-4">
@@ -218,7 +218,7 @@ function LivePlatformStats() {
 
   const liveItems = [
     { label: "Usuários Ativos (24h)", value: stats?.activeUsers24h ?? 0, color: "text-primary" },
-    { label: "Vagas Hoje", value: stats?.jobsToday ?? 0, color: "text-secondary" },
+    { label: "Extras Hoje", value: stats?.jobsToday ?? 0, color: "text-secondary" },
     { label: "Em Andamento", value: stats?.jobsInProgress ?? 0, color: "text-green-400" },
     { label: "Total de Extras", value: stats?.totalFreelancers ?? 0, color: "text-yellow-400" },
   ];
@@ -287,7 +287,7 @@ export default function AdminDashboard() {
       {/* Main KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={<Users size={22} />} label="Total Usuários" value={stats?.totalUsers ?? 0} sub={`+${stats?.usersThisMonth ?? 0} este mês`} color="primary" isLoading={isLoading} />
-        <StatCard icon={<Briefcase size={22} />} label="Total Vagas" value={stats?.totalJobs ?? 0} sub={`${stats?.jobsByStatus?.open ?? 0} abertas`} color="secondary" isLoading={isLoading} />
+        <StatCard icon={<Briefcase size={22} />} label="Total Extras" value={stats?.totalJobs ?? 0} sub={`${stats?.jobsByStatus?.open ?? 0} abertos`} color="secondary" isLoading={isLoading} />
         <StatCard icon={<DollarSign size={22} />} label="Receita Total" value={`R$ ${((stats?.totalRevenue ?? 0) / 100).toFixed(0)}`} sub="em transações" color="yellow" isLoading={isLoading} />
         <StatCard icon={<AlertCircle size={22} />} label="Saques Pendentes" value={stats?.pendingWithdrawals ?? 0} sub="aguardando aprovação" color="red" isLoading={isLoading} />
       </div>
@@ -313,7 +313,7 @@ export default function AdminDashboard() {
           <h2 className="text-lg font-semibold mb-4">Acesso Rápido</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             <QuickLink href="/admin/users" icon={<Users size={18} className="text-primary" />} label="Gerenciar Usuários" sub={`${stats?.pendingVerifications ?? 0} verificações pendentes`} color="bg-primary/10 border border-primary/20" />
-            <QuickLink href="/admin/jobs" icon={<Briefcase size={18} className="text-secondary" />} label="Gerenciar Vagas" sub={`${stats?.jobsByStatus?.open ?? 0} vagas abertas`} color="bg-secondary/10 border border-secondary/20" />
+            <QuickLink href="/admin/jobs" icon={<Briefcase size={18} className="text-secondary" />} label="Gerenciar Extras" sub={`${stats?.jobsByStatus?.open ?? 0} extras abertos`} color="bg-secondary/10 border border-secondary/20" />
             <QuickLink href="/admin/withdrawals" icon={<DollarSign size={18} className="text-yellow-400" />} label="Aprovar Saques" sub={`${stats?.pendingWithdrawals ?? 0} saques aguardando`} color="bg-yellow-400/10 border border-yellow-400/20" />
             <QuickLink href="/admin/users" icon={<Shield size={18} className="text-green-400" />} label="Verificar Profissionais" sub="Validar documentação de extras" color="bg-green-400/10 border border-green-400/20" />
           </div>

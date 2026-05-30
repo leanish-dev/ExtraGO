@@ -97,7 +97,7 @@ export default function NotificationsPage() {
             icon={<BellOff size={28} />}
             title="Nenhuma notificação"
             description="Você está em dia! Novas notificações sobre vagas, candidaturas e pagamentos aparecerão aqui."
-            actionLabel="Buscar Vagas"
+            actionLabel="Buscar Extras"
             actionHref="/app/jobs"
           />
         </div>
