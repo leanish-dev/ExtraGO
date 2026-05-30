@@ -83,7 +83,7 @@ function getBottomTabItems(role: string): NavItem[] {
   return [
     { href: "/app/dashboard", label: "Início", icon: <LayoutDashboard size={21} /> },
     { href: "/app/jobs", label: "Vagas", icon: <Briefcase size={21} /> },
-    { href: "/app/applications", label: "Minhas", icon: <UserCheck size={21} /> },
+    { href: "/app/referrals", label: "Indicações", icon: <Trophy size={21} /> },
     { href: "/app/wallet", label: "Carteira", icon: <Wallet size={21} /> },
     { href: "/app/profile", label: "Perfil", icon: <Settings size={21} /> },
   ];
@@ -99,10 +99,10 @@ function getGreeting() {
 
 function LevelBadge({ level }: { level?: string }) {
   const map: Record<string, { label: string; color: string; emoji: string }> = {
-    bronze: { label: "Bronze", color: "text-orange-400 border-orange-400/28 bg-orange-400/8", emoji: "🥉" },
-    silver: { label: "Prata", color: "text-slate-300 border-slate-300/28 bg-slate-300/8", emoji: "🥈" },
-    gold: { label: "Ouro", color: "text-yellow-400 border-yellow-400/28 bg-yellow-400/8", emoji: "🥇" },
-    elite: { label: "Elite", color: "text-primary border-primary/28 bg-primary/8", emoji: "👑" },
+    bronze: { label: "Iniciante", color: "text-sky-400 border-sky-400/28 bg-sky-400/8", emoji: "🔵" },
+    silver: { label: "Júnior", color: "text-cyan-400 border-cyan-400/28 bg-cyan-400/8", emoji: "⚡" },
+    gold: { label: "Intermediário", color: "text-yellow-400 border-yellow-400/28 bg-yellow-400/8", emoji: "🥇" },
+    elite: { label: "Sênior", color: "text-primary border-primary/28 bg-primary/8", emoji: "👑" },
   };
   const info = map[level ?? "bronze"] ?? map.bronze;
   return (

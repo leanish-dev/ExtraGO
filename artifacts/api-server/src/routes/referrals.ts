@@ -33,14 +33,21 @@ router.get("/referrals/me", requireAuth, async (req, res) => {
   }));
 
   const totalConverted = inviteeData.filter(i => i.status === "converted").length;
-  const totalRewardEarned = totalConverted * 50; // R$50 per converted referral
+  const activeReferrals = inviteeData.filter(i => (i.completedJobs ?? 0) >= 1).length;
+  // 3% of platform intermediation fee — approx R$20 per job avg
+  const totalRewardEarned = inviteeData.reduce((sum, inv) => {
+    const jobs = inv.completedJobs ?? 0;
+    const platformFeePerJob = 20; // avg R$20 platform fee per job
+    return sum + (jobs * platformFeePerJob * 0.03);
+  }, 0);
 
   res.json({
     code,
     link,
     totalInvited: invitees.length,
     totalConverted,
-    totalRewardEarned,
+    activeReferrals,
+    totalRewardEarned: Math.round(totalRewardEarned * 100) / 100,
     invitees: inviteeData,
   });
 });

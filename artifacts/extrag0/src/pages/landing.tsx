@@ -6,7 +6,8 @@ import { motion, useInView, useScroll, useTransform, AnimatePresence } from "fra
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight, Zap, Shield, Star, Users, CheckCircle, Briefcase, Award,
-  TrendingUp, Lock, Sparkles, Globe, Clock, ChevronRight
+  TrendingUp, Lock, Sparkles, Globe, Clock, ChevronRight, Gift, Trophy,
+  ChevronDown, Home, Building2, UserCheck, Layers, BookOpen, ExternalLink, Share2, Percent
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLivePlatformStats } from "@/hooks/use-live-platform-stats";
@@ -160,8 +161,21 @@ function LockedNavLink({ href, children }: { href: string; children: React.React
   );
 }
 
+const EXPLORAR_ITEMS = [
+  { icon: <Home size={15} />, label: "Início", desc: "Página principal", href: "/" },
+  { icon: <Building2 size={15} />, label: "Para Empresas", desc: "Contrate profissionais", href: "/register?role=company" },
+  { icon: <Users size={15} />, label: "Para Freelancers", desc: "Encontre vagas extras", href: "/register?role=freelancer" },
+  { icon: <Briefcase size={15} />, label: "Vagas Abertas", desc: "Explore oportunidades", href: "/login" },
+  { icon: <Zap size={15} />, label: "Como Funciona", desc: "Entenda a plataforma", href: "#como-funciona" },
+  { icon: <Globe size={15} />, label: "Setores", desc: "Gastronomia, Hotelaria e +", href: "#para-quem" },
+  { icon: <Trophy size={15} />, label: "Indicações", desc: "Ganhe comissões", href: "/register" },
+  { icon: <Gift size={15} />, label: "Quero Contratar", desc: "Publique uma vaga agora", href: "/register?role=company" },
+  { icon: <Share2 size={15} />, label: "Quero Trabalhar", desc: "Cadastre-se como freelancer", href: "/register?role=freelancer" },
+];
+
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
+  const [explorarOpen, setExplorarOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   const bannerY = useTransform(scrollY, [0, 400], [0, -50]);
@@ -249,7 +263,57 @@ export default function LandingPage() {
             />
           </Link>
 
-          <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+            {/* Explorar mega dropdown */}
+            <div className="relative">
+              <motion.button
+                onClick={() => setExplorarOpen(o => !o)}
+                onBlur={() => setTimeout(() => setExplorarOpen(false), 150)}
+                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-200 py-1"
+              >
+                Explorar
+                <motion.span animate={{ rotate: explorarOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                  <ChevronDown size={13} />
+                </motion.span>
+              </motion.button>
+              <AnimatePresence>
+                {explorarOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                    transition={{ duration: 0.18, ease: [0.19, 1, 0.22, 1] }}
+                    className="absolute left-0 top-full mt-2 w-[480px] rounded-2xl border border-white/10 overflow-hidden z-50"
+                    style={{ background: "rgba(8,14,20,0.96)", backdropFilter: "blur(24px)", boxShadow: "0 24px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04)" }}
+                  >
+                    <div className="p-3">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-2 pb-2">Explorar a plataforma</p>
+                      <div className="grid grid-cols-3 gap-1">
+                        {EXPLORAR_ITEMS.map((item, i) => (
+                          <Link
+                            key={i}
+                            href={item.href}
+                            onClick={() => setExplorarOpen(false)}
+                            className="flex flex-col gap-1 p-2.5 rounded-xl hover:bg-white/6 transition-all group cursor-pointer"
+                          >
+                            <span className="text-primary/70 group-hover:text-primary transition-colors">{item.icon}</span>
+                            <span className="text-xs font-semibold text-foreground/85 group-hover:text-foreground transition-colors leading-tight">{item.label}</span>
+                            <span className="text-[10px] text-muted-foreground/60 leading-tight">{item.desc}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="border-t border-white/6 px-4 py-2.5 flex items-center justify-between bg-white/2">
+                      <span className="text-[10px] text-muted-foreground">extraGO · Workforce Marketplace</span>
+                      <Link href="/register" className="text-[10px] font-bold text-primary hover:text-primary/80 flex items-center gap-1" onClick={() => setExplorarOpen(false)}>
+                        Começar grátis <ChevronRight size={10} />
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <a href="#como-funciona" className="text-muted-foreground hover:text-foreground transition-colors duration-200">
               Como funciona
             </a>
@@ -262,13 +326,6 @@ export default function LandingPage() {
               </Link>
             ) : (
               <LockedNavLink href="/login">Vagas</LockedNavLink>
-            )}
-            {user ? (
-              <Link href="/app/wallet" className="text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1">
-                <TrendingUp size={14} /> Carteira
-              </Link>
-            ) : (
-              <LockedNavLink href="/login">Carteira</LockedNavLink>
             )}
           </nav>
 
@@ -469,7 +526,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             HOW IT WORKS
         ══════════════════════════════════════════ */}
-        <section id="como-funciona" className="px-5 py-16 sm:py-24">
+        <section id="como-funciona" className="px-5 py-14 sm:py-20">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <div className="text-center mb-14">
@@ -506,7 +563,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             FOR WHOM
         ══════════════════════════════════════════ */}
-        <section id="para-quem" className="px-5 py-16 sm:py-24">
+        <section id="para-quem" className="px-5 py-14 sm:py-20">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <div className="text-center mb-14">
@@ -763,7 +820,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             TESTIMONIALS
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-16 sm:py-24">
+        <section className="px-5 py-14 sm:py-20">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <div className="text-center mb-14">
@@ -795,6 +852,98 @@ export default function LandingPage() {
                 </ScrollSection>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            REFERRAL PROMO
+        ══════════════════════════════════════════ */}
+        <section className="px-5 py-16 sm:py-20">
+          <div className="max-w-5xl mx-auto">
+            <ScrollSection>
+              <Link href="/register">
+                <motion.div
+                  whileHover={{ y: -4, scale: 1.008 }}
+                  whileTap={{ scale: 0.998 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                  className="relative rounded-3xl overflow-hidden cursor-pointer group"
+                  style={{ minHeight: "220px" }}
+                >
+                  {/* Background image */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage: "url('/images/backgrounds/bg-referral-promo.png')",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center 30%",
+                      backgroundRepeat: "no-repeat",
+                      transition: "transform 0.6s cubic-bezier(0.19,1,0.22,1)",
+                    }}
+                  />
+                  {/* Overlay layers */}
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, rgba(7,10,13,0.88) 0%, rgba(7,10,13,0.70) 45%, rgba(7,10,13,0.30) 100%)" }} />
+                  <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse at 20% 50%, rgba(124,252,0,0.08) 0%, transparent 60%)" }} />
+                  {/* Border glow on hover */}
+                  <div className="absolute inset-0 rounded-3xl border border-white/8 group-hover:border-primary/30 transition-all duration-500" />
+                  <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{ boxShadow: "inset 0 0 60px rgba(124,252,0,0.06)" }} />
+
+                  {/* Content */}
+                  <div className="relative z-10 p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center gap-8">
+                    <div className="flex-1">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/12 border border-primary/25 text-xs font-bold text-primary mb-4 tracking-wide">
+                        <Trophy size={10} /> Sistema de Indicações
+                      </div>
+                      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 leading-tight">
+                        Indique profissionais<br />
+                        e ganhe <span className="text-primary">comissões</span> para sempre
+                      </h2>
+                      <p className="text-sm sm:text-base text-muted-foreground mb-6 max-w-md leading-relaxed">
+                        Convide novos profissionais para a extraGO e receba{" "}
+                        <strong className="text-foreground">3% de comissão</strong> sobre a taxa de
+                        intermediação de cada serviço concluído por eles na plataforma.
+                      </p>
+                      <div className="flex flex-wrap gap-3">
+                        {[
+                          { icon: <Percent size={13} />, label: "3% de comissão", color: "text-primary bg-primary/10 border-primary/20" },
+                          { icon: <TrendingUp size={13} />, label: "Ganhos recorrentes", color: "text-secondary bg-secondary/10 border-secondary/20" },
+                          { icon: <Users size={13} />, label: "Rede que cresce", color: "text-yellow-400 bg-yellow-400/10 border-yellow-400/20" },
+                          { icon: <Gift size={13} />, label: "Benefícios exclusivos", color: "text-purple-400 bg-purple-400/10 border-purple-400/20" },
+                        ].map((badge, i) => (
+                          <motion.span
+                            key={i}
+                            initial={{ opacity: 0, y: 8 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.08 }}
+                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-bold ${badge.color}`}
+                          >
+                            {badge.icon} {badge.label}
+                          </motion.span>
+                        ))}
+                      </div>
+                    </div>
+                    {/* CTA */}
+                    <div className="flex-shrink-0 flex flex-col items-center gap-3">
+                      <motion.div
+                        whileHover={{ scale: 1.06 }}
+                        whileTap={{ scale: 0.96 }}
+                        className="flex items-center gap-2 px-6 py-3.5 rounded-2xl font-bold text-black text-sm"
+                        style={{
+                          background: "linear-gradient(135deg, #7CFC00 0%, #9aff1c 50%, #00E5FF 100%)",
+                          boxShadow: "0 0 28px rgba(124,252,0,0.40), 0 0 60px rgba(124,252,0,0.12)",
+                        }}
+                      >
+                        Começar a Indicar <ChevronRight size={16} />
+                      </motion.div>
+                      <p className="text-[10px] text-muted-foreground text-center">
+                        Comissões vitalícias · Sem limite de ganhos
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </ScrollSection>
           </div>
         </section>
 
