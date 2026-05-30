@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useTilt } from "@/hooks/use-tilt";
 import { useAuth } from "@/hooks/use-auth";
 import { useListJobs, useApplyToJob } from "@workspace/api-client-react";
 import type { Job } from "@workspace/api-client-react";
@@ -263,25 +264,49 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
   );
 }
 
+const CATEGORY_COLORS: Record<string, string> = {
+  "Gastronomia": "border-l-orange-400",
+  "Hotelaria": "border-l-cyan-400",
+  "Eventos": "border-l-purple-400",
+  "Bares": "border-l-pink-400",
+  "Turismo": "border-l-sky-400",
+  "Limpeza": "border-l-green-400",
+  "Segurança": "border-l-red-400",
+  "Tecnologia": "border-l-blue-400",
+};
+
+function getMatchScore(job: Job): number {
+  const h = job.hourlyRate ?? 0;
+  const w = job.workersNeeded ?? 1;
+  const id = job.id ?? 0;
+  const pseudoRand = ((id * 2654435761) >>> 0) % 15;
+  const base = 60 + (h > 30 ? 15 : h > 20 ? 8 : 0) + (w <= 3 ? 10 : 0) + pseudoRand;
+  return Math.min(99, base);
+}
+
 function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (job: Job) => void; isCompany?: boolean; index?: number }) {
   const hours = getHours(job.startTime, job.endTime);
   const statusInfo = STATUS_MAP[job.status ?? "open"] ?? STATUS_MAP.open;
   const liveStatus = getLiveStatus(job);
+  const matchScore = !isCompany ? getMatchScore(job) : null;
+  const leftBorderClass = CATEGORY_COLORS[job.category ?? ""] ?? "border-l-primary/40";
+  const { ref: tiltRef, handleMouseMove, handleMouseLeave } = useTilt(5);
 
   return (
     <motion.div
+      ref={tiltRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.05, ease: [0.19, 1, 0.22, 1] }}
-      whileHover={{ y: -4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onClick(job)}
-      className={`glass-card card-hover rounded-2xl p-5 flex flex-col h-full group cursor-pointer border transition-all relative overflow-hidden ${
+      className={`glass-card card-hover card-shimmer-hover rounded-2xl p-5 flex flex-col h-full group cursor-pointer border border-l-2 transition-all relative overflow-hidden tilt-card ${leftBorderClass} ${
         liveStatus === "happening" ? "border-green-500/25" :
         liveStatus === "soon" ? "border-amber-500/20" :
         "border-white/6 hover:border-primary/20"
       }`}
-      style={{ willChange: "transform" }}
     >
       {liveStatus === "happening" && (
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent" />
@@ -292,15 +317,19 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
           liveStatus === "happening" ? "bg-green-500/10 border-green-500/20" :
           liveStatus === "soon" ? "bg-amber-500/10 border-amber-500/20" :
           "bg-gradient-to-br from-primary/12 to-secondary/6 border-primary/18 group-hover:border-primary/32"
-        }`}>
+        }`}
+          style={liveStatus === "normal" ? { boxShadow: "0 0 12px rgba(124,252,0,0.15)" } : undefined}>
           {liveStatus === "happening" ? <Zap size={20} className="text-green-400 animate-pulse" /> :
            liveStatus === "soon" ? <Timer size={20} className="text-amber-400" /> :
            <Briefcase size={20} className="text-primary group-hover:scale-110 transition-transform" />}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-1.5">
+          <div className="flex items-center gap-1.5 flex-wrap mb-1.5">
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusInfo.class}`}>{statusInfo.label}</span>
             <span className="text-[10px] text-muted-foreground/65 px-2 py-0.5 rounded-full bg-white/4 border border-white/5">{job.category}</span>
+            {matchScore !== null && (
+              <span className="match-chip">⚡ {matchScore}% match</span>
+            )}
           </div>
           <h3 className="font-bold text-sm sm:text-base group-hover:text-primary transition-colors line-clamp-2 leading-snug">{job.title}</h3>
         </div>
@@ -320,23 +349,25 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
         <p className="text-xs text-muted-foreground/75 line-clamp-2 mb-4 leading-relaxed flex-shrink-0">{job.description}</p>
       )}
 
-      <div className="grid grid-cols-2 gap-x-3 gap-y-2 mb-4 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1.5">
-          <MapPin size={11} className="text-primary flex-shrink-0" />
-          <span className="truncate">{job.location}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <Clock size={11} className="text-secondary flex-shrink-0" />
-          <span className="truncate">{job.startTime}–{job.endTime}{hours ? ` (${hours.toFixed(0)}h)` : ""}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <Briefcase size={11} className="flex-shrink-0 opacity-55" />
-          <span className="truncate">{job.date ? format(new Date(job.date), "dd MMM", { locale: ptBR }) : ""}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <Users size={11} className="flex-shrink-0 opacity-55" />
-          <span>{job.workersApproved}/{job.workersNeeded} vagas</span>
-        </div>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {job.location && (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-primary/6 border border-primary/12 text-primary/80">
+            <MapPin size={9} /> {job.location}
+          </span>
+        )}
+        {job.startTime && job.endTime && (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-secondary/6 border border-secondary/12 text-secondary/80">
+            <Clock size={9} /> {job.startTime}–{job.endTime}{hours ? ` (${hours.toFixed(0)}h)` : ""}
+          </span>
+        )}
+        {job.date && (
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/4 border border-white/8 text-muted-foreground">
+            <Briefcase size={9} /> {format(new Date(job.date), "dd MMM", { locale: ptBR })}
+          </span>
+        )}
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-white/4 border border-white/8 text-muted-foreground">
+          <Users size={9} /> {job.workersApproved}/{job.workersNeeded} vagas
+        </span>
       </div>
 
       {hours && (

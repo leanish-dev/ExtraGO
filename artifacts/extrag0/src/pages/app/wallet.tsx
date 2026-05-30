@@ -60,18 +60,31 @@ function TransactionRow({ tx, index }: { tx: Transaction; index: number }) {
     ? { bg: "bg-yellow-400/10 border-yellow-400/20 text-yellow-400", icon: <Send size={14} /> }
     : { bg: "bg-destructive/10 border-destructive/20 text-destructive", icon: <ArrowUpRight size={14} /> };
 
+  const dotColor = isCredit
+    ? { background: "hsl(88,100%,49%)", boxShadow: "0 0 6px rgba(124,252,0,0.7)" }
+    : isBonus
+    ? { background: "hsl(186,100%,50%)", boxShadow: "0 0 6px rgba(0,229,255,0.7)" }
+    : isWithdrawal
+    ? { background: "hsl(42,100%,55%)", boxShadow: "0 0 6px rgba(250,195,0,0.7)" }
+    : { background: "hsl(0,80%,55%)", boxShadow: "0 0 6px rgba(200,50,50,0.6)" };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay: index * 0.035 }}
-      className="flex items-center gap-3 sm:gap-4 py-3.5 border-b border-white/5 last:border-0 group hover:bg-white/[0.015] rounded-lg transition-colors px-1"
+      className="flex items-center gap-3 sm:gap-4 py-3.5 border-b border-white/5 last:border-0 group hover:bg-white/[0.015] rounded-lg transition-colors px-1 relative"
     >
-      <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${iconConfig.bg}`}>
+      {/* Category color dot */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r-full flex-shrink-0"
+        style={dotColor} />
+      <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ml-2 ${iconConfig.bg}`}>
         {iconConfig.icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate leading-snug">{tx.description}</p>
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-medium truncate leading-snug">{tx.description}</p>
+        </div>
         <p className="text-xs text-muted-foreground mt-0.5">
           {tx.createdAt ? format(new Date(tx.createdAt), "dd MMM 'às' HH:mm", { locale: ptBR }) : "—"}
         </p>
@@ -195,6 +208,66 @@ export default function WalletPage() {
       </motion.div>
 
       <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-5">
+
+        {/* Donut ring category split */}
+        {!walletLoading && (creditTotal > 0 || debitTotal > 0) && (() => {
+          const total = creditTotal + debitTotal;
+          const creditPct = total > 0 ? creditTotal / total : 0.65;
+          const debitPct = total > 0 ? debitTotal / total : 0.35;
+          const size = 88;
+          const r = (size - 10) / 2;
+          const circ = 2 * Math.PI * r;
+          const creditDash = circ * creditPct;
+          const debitDash = circ * debitPct;
+          const gap = 4;
+          return (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.55, delay: 0.1, ease: [0.19, 1, 0.22, 1] }}
+              className="glass-card rounded-2xl p-4 border border-white/6 flex items-center gap-5"
+            >
+              <div className="relative flex-shrink-0">
+                <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+                  <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
+                  <circle
+                    cx={size/2} cy={size/2} r={r} fill="none"
+                    stroke="hsl(88,100%,49%)" strokeWidth="6"
+                    strokeLinecap="round"
+                    strokeDasharray={`${creditDash - gap} ${circ - creditDash + gap}`}
+                    className="donut-ring-track"
+                    style={{ filter: "drop-shadow(0 0 4px rgba(124,252,0,0.6))" }}
+                  />
+                  <circle
+                    cx={size/2} cy={size/2} r={r} fill="none"
+                    stroke="hsl(186,100%,50%)" strokeWidth="6"
+                    strokeLinecap="round"
+                    strokeDasharray={`${debitDash - gap} ${circ - debitDash + gap}`}
+                    strokeDashoffset={-(creditDash)}
+                    className="donut-ring-track"
+                    style={{ filter: "drop-shadow(0 0 4px rgba(0,229,255,0.5))" }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-foreground/60">{Math.round(creditPct * 100)}%</span>
+                </div>
+              </div>
+              <div className="flex-1 space-y-2.5">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">Distribuição</p>
+                <div className="flex items-center gap-2">
+                  <span className="cat-dot bg-primary" style={{ boxShadow: "0 0 6px rgba(124,252,0,0.6)" }} />
+                  <span className="text-xs text-muted-foreground flex-1">Entradas</span>
+                  <span className="text-xs font-bold text-primary">R$ {creditTotal.toFixed(0)}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="cat-dot bg-secondary" style={{ boxShadow: "0 0 6px rgba(0,229,255,0.5)" }} />
+                  <span className="text-xs text-muted-foreground flex-1">Saídas</span>
+                  <span className="text-xs font-bold text-secondary">R$ {debitTotal.toFixed(0)}</span>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })()}
 
         {/* Hero balance card */}
         {walletLoading ? (
@@ -362,6 +435,31 @@ export default function WalletPage() {
                     <h3 className="font-bold text-sm">Solicitar Saque PIX</h3>
                     <p className="text-xs text-muted-foreground">Saldo disponível: R$ {(balance / 100).toFixed(2)}</p>
                   </div>
+                </div>
+
+                {/* Step indicators */}
+                <div className="flex items-center gap-2 mt-1">
+                  {[
+                    { n: "1", label: "Valor" },
+                    { n: "2", label: "Chave PIX" },
+                    { n: "3", label: "Confirmar" },
+                  ].map((step, i) => (
+                    <React.Fragment key={step.n}>
+                      <div className="flex items-center gap-1.5">
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black ${
+                          (i === 0 && !!amount) || (i === 1 && !!pixKey) || (i === 2 && !!amount && !!pixKey)
+                            ? "bg-primary text-black"
+                            : "bg-white/8 border border-white/12 text-muted-foreground"
+                        }`}
+                          style={(i === 0 && !!amount) || (i === 1 && !!pixKey) || (i === 2 && !!amount && !!pixKey)
+                            ? { boxShadow: "0 0 8px rgba(124,252,0,0.4)" } : undefined}>
+                          {step.n}
+                        </div>
+                        <span className="text-[10px] text-muted-foreground font-medium">{step.label}</span>
+                      </div>
+                      {i < 2 && <div className="flex-1 h-px bg-white/8 max-w-8" />}
+                    </React.Fragment>
+                  ))}
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">

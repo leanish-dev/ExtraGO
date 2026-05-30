@@ -361,22 +361,47 @@ export default function ProfilePage() {
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
-      {/* Banner area — clickable upload */}
-      <div className="relative w-full h-36 sm:h-44 overflow-hidden group cursor-pointer" onClick={() => bannerInputRef.current?.click()}>
+      {/* Banner area — clickable upload, full-width cinematic hero */}
+      <div className="relative w-full h-40 sm:h-52 overflow-hidden group cursor-pointer" onClick={() => bannerInputRef.current?.click()}>
         {bannerPreview || (user as any)?.bannerUrl ? (
           <img src={bannerPreview || (user as any)?.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-primary/15 via-secondary/8 to-transparent relative">
-            {/* bg-profile.webp — identity/reputation art layer */}
+          <div className="w-full h-full relative">
+            {/* Blurred avatar initial as cinematic banner backdrop */}
             <div
-              className="absolute inset-0 opacity-[0.22] bg-cover bg-center mix-blend-screen pointer-events-none"
+              className="absolute inset-0 profile-banner-blur"
+              style={{
+                background: `linear-gradient(135deg, rgba(124,252,0,0.22) 0%, rgba(0,229,255,0.14) 40%, rgba(124,252,0,0.08) 70%, rgba(0,229,255,0.18) 100%)`,
+              }}
+            />
+            <div
+              className="absolute inset-0 opacity-[0.28] bg-cover bg-center mix-blend-screen pointer-events-none"
               style={{ backgroundImage: "url(/images/backgrounds/bg-profile.webp)" }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/8 via-transparent to-cyan-500/6 pointer-events-none" />
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.06]" />
+            {/* Animated shimmer overlay */}
+            <div className="absolute inset-0 pointer-events-none"
+              style={{
+                background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.04) 50%, transparent 70%)",
+                animation: "shimmer 4s ease-in-out infinite",
+              }} />
+            {/* Large blurred avatar initial centered */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-8 pointer-events-none select-none">
+              <span className="text-[200px] font-black leading-none"
+                style={{
+                  color: "rgba(124,252,0,0.08)",
+                  fontFamily: "var(--font-display)",
+                  filter: "blur(8px)",
+                  textShadow: "0 0 80px rgba(124,252,0,0.3)",
+                }}>
+                {user?.name?.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            {/* Neon scan line at top */}
+            <div className="absolute top-0 left-0 right-0 h-px"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.55), rgba(0,229,255,0.4), transparent)" }} />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#08111a] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#08111a] via-[#08111a]/20 to-transparent" />
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
           <div className="flex items-center gap-2 bg-black/60 px-3 py-2 rounded-xl text-xs font-semibold text-white">
             <Camera size={13} /> Alterar banner
@@ -645,29 +670,45 @@ export default function ProfilePage() {
                 </h2>
                 <p className="text-xs text-muted-foreground mb-4">Selecione as funções que você exerce</p>
                 <div className="flex flex-wrap gap-2">
-                  {CATEGORIES.map(cat => (
-                    <button
-                      key={cat.slug}
-                      onClick={() => toggleCategory(cat.name)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${
-                        categories.includes(cat.name)
-                          ? "bg-primary text-black border-primary neon-glow"
-                          : "border-white/10 text-muted-foreground hover:border-white/25 hover:text-foreground"
-                      }`}
-                    >
-                      {cat.name}
-                    </button>
-                  ))}
+                  {CATEGORIES.map((cat, i) => {
+                    const isSelected = categories.includes(cat.name);
+                    return (
+                      <motion.button
+                        key={cat.slug}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: i * 0.02, type: "spring", stiffness: 400, damping: 24 }}
+                        onClick={() => toggleCategory(cat.name)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border skill-tag ${
+                          isSelected
+                            ? "bg-primary text-black border-primary neon-glow"
+                            : "border-white/10 text-muted-foreground hover:border-primary/35 hover:text-foreground"
+                        }`}
+                        style={isSelected ? {
+                          textShadow: "0 0 8px rgba(0,0,0,0.5)",
+                          boxShadow: "0 0 12px rgba(124,252,0,0.35), 0 0 0 1px rgba(124,252,0,0.5)",
+                        } : undefined}
+                      >
+                        {cat.name}
+                      </motion.button>
+                    );
+                  })}
                 </div>
                 {categories.length > 0 && (
                   <div className="mt-4 pt-4 border-t border-white/6">
                     <p className="text-xs text-muted-foreground font-semibold mb-2">Selecionadas:</p>
                     <div className="flex flex-wrap gap-2">
-                      {categories.map(cat => (
-                        <span key={cat} className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary">
+                      {categories.map((cat, i) => (
+                        <motion.span
+                          key={cat}
+                          initial={{ opacity: 0, scale: 0.85 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: i * 0.03 }}
+                          className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-primary/10 border border-primary/25 text-primary skill-tag"
+                        >
                           {cat}
-                          <button onClick={() => toggleCategory(cat)}><X size={9} /></button>
-                        </span>
+                          <button onClick={() => toggleCategory(cat)} className="hover:text-primary/70 transition-colors"><X size={9} /></button>
+                        </motion.span>
                       ))}
                     </div>
                   </div>

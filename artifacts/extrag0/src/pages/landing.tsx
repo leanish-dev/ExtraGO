@@ -13,6 +13,116 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { useLivePlatformStats } from "@/hooks/use-live-platform-stats";
 
+/* ─────────── Typewriter word swap ─────────── */
+const TYPEWRITER_WORDS = ["gastronomia", "hotelaria", "eventos"];
+
+function TypewriterWord() {
+  const [idx, setIdx] = useState(0);
+  const [phase, setPhase] = useState<"show" | "hide">("show");
+
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout>;
+    if (phase === "show") {
+      t = setTimeout(() => setPhase("hide"), 2200);
+    } else {
+      t = setTimeout(() => {
+        setIdx(i => (i + 1) % TYPEWRITER_WORDS.length);
+        setPhase("show");
+      }, 380);
+    }
+    return () => clearTimeout(t);
+  }, [phase, idx]);
+
+  return (
+    <span className="relative inline-block">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={idx}
+          initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: -14, filter: "blur(4px)" }}
+          transition={{ duration: 0.36, ease: [0.19, 1, 0.22, 1] }}
+          className="neon-text-gradient inline-block"
+        >
+          {TYPEWRITER_WORDS[idx]}
+        </motion.span>
+      </AnimatePresence>
+      <span className="typewriter-cursor" />
+    </span>
+  );
+}
+
+/* ─────────── Deep background particles (slower, larger) ─────────── */
+function BackgroundParticlesDeep() {
+  const particles = Array.from({ length: 8 }, (_, i) => ({
+    id: i,
+    x: [10, 25, 45, 60, 72, 82, 90, 35][i],
+    y: [15, 55, 25, 75, 40, 10, 65, 85][i],
+    size: 4 + (i % 3) * 2.5,
+    duration: 28 + i * 5,
+    delay: i * 3,
+    color: i % 2 === 0 ? "rgba(124,252,0,0.12)" : "rgba(0,229,255,0.1)",
+  }));
+
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+      {particles.map(p => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            left: `${p.x}%`, top: `${p.y}%`,
+            width: p.size, height: p.size,
+            background: p.color,
+            boxShadow: `0 0 ${p.size * 4}px ${p.color}`,
+            filter: "blur(1px)",
+          }}
+          animate={{
+            y: [-30, 30, -30],
+            x: [0, 20, -10, 0],
+            opacity: [0.4, 0.8, 0.3, 0.8, 0.4],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ─────────── Trust ticker ─────────── */
+const TICKER_ITEMS = [
+  { icon: "✓", text: "Sem mensalidade" },
+  { icon: "🔒", text: "Pagamento garantido" },
+  { icon: "⭐", text: "Profissionais verificados" },
+  { icon: "🌎", text: "Todo o Brasil" },
+  { icon: "🎮", text: "Gamificação e níveis" },
+  { icon: "⚡", text: "Jobs confirmados em 24h" },
+  { icon: "💳", text: "PIX imediato" },
+  { icon: "🏆", text: "Top freelancers" },
+];
+
+function TrustTicker() {
+  const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  return (
+    <div className="overflow-hidden w-full mt-10 mask-x-fade" style={{ maskImage: "linear-gradient(90deg, transparent, black 12%, black 88%, transparent)" }}>
+      <div className="ticker-track">
+        {items.map((item, i) => (
+          <span key={i} className="inline-flex items-center gap-1.5 text-xs text-muted-foreground flex-shrink-0">
+            <span className="text-sm">{item.icon}</span>
+            <span>{item.text}</span>
+            <span className="w-1 h-1 rounded-full bg-white/15 ml-2" />
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─────────── Floating particles ─────────── */
 function FloatingParticles() {
   const particles = Array.from({ length: 14 }, (_, i) => ({
@@ -231,6 +341,9 @@ export default function LandingPage() {
         <AnimatedOrb color="#7CFC00" size={260} left="8%" top="62%" duration={16} delay={8} />
       </div>
 
+      {/* ── Background deep particles (slower, larger) ── */}
+      <BackgroundParticlesDeep />
+
       {/* ── Floating particles ── */}
       <FloatingParticles />
 
@@ -390,8 +503,8 @@ export default function LandingPage() {
               transition={{ duration: 0.8, delay: 0.35 }}
               className="text-4xl sm:text-5xl md:text-[64px] lg:text-7xl font-bold tracking-tight mb-5 leading-[1.04] max-w-4xl mx-auto"
             >
-              A infraestrutura de{" "}
-              <span className="neon-text-gradient">mão de obra</span>
+              O marketplace de{" "}
+              <TypewriterWord />
               <br className="hidden sm:block" />
               {" "}do Brasil
             </motion.h1>
@@ -430,24 +543,13 @@ export default function LandingPage() {
               </Link>
             </motion.div>
 
-            {/* Trust signals */}
+            {/* Trust signals — scrolling ticker */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.85 }}
-              className="flex items-center gap-5 sm:gap-8 mt-10 text-xs sm:text-sm text-muted-foreground flex-wrap justify-center"
             >
-              {[
-                { icon: <CheckCircle size={13} className="text-primary" />, text: "Sem mensalidade" },
-                { icon: <Shield size={13} className="text-secondary" />, text: "Pagamento garantido" },
-                { icon: <Star size={13} className="text-yellow-400" />, text: "Profissionais verificados" },
-                { icon: <Globe size={13} className="text-primary" />, text: "Todo o Brasil" },
-                { icon: <Award size={13} className="text-purple-400" />, text: "Gamificação e níveis" },
-              ].map((item, i) => (
-                <span key={i} className="flex items-center gap-1.5">
-                  {item.icon} {item.text}
-                </span>
-              ))}
+              <TrustTicker />
             </motion.div>
           </div>
         </section>
@@ -528,16 +630,29 @@ export default function LandingPage() {
             </ScrollSection>
 
             <div className="grid sm:grid-cols-3 gap-5 relative">
-              <div className="hidden sm:block absolute top-12 left-[calc(33%+24px)] right-[calc(33%+24px)] h-px bg-gradient-to-r from-primary/30 via-secondary/20 to-transparent" />
+              <div className="hidden sm:block absolute top-14 left-[calc(33%+32px)] right-[calc(33%+32px)] h-px"
+                style={{ background: "linear-gradient(90deg, rgba(124,252,0,0.4), rgba(0,229,255,0.3))" }} />
               {HOW_IT_WORKS.map((item, i) => (
                 <ScrollSection key={i} delay={i * 0.12}>
                   <motion.div
                     whileHover={{ y: -6, scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className={`glass-card rounded-2xl p-6 border ${item.bg} ${item.glow} relative transition-all cursor-default`}
+                    className={`glass-card rounded-2xl p-6 border ${item.bg} ${item.glow} relative transition-all cursor-default overflow-hidden`}
                   >
-                    <div className="absolute top-4 right-4 text-[10px] font-bold text-white/12 font-mono tracking-widest">{item.step}</div>
-                    <div className={`w-12 h-12 rounded-2xl ${item.bg} border flex items-center justify-center mb-5 ${item.color}`}>
+                    {/* Large step number watermark */}
+                    <div className="absolute -top-2 -right-1 text-[72px] font-black leading-none select-none pointer-events-none"
+                      style={{ color: "rgba(255,255,255,0.025)", fontFamily: "var(--font-display)" }}>
+                      {item.step}
+                    </div>
+                    {/* Step indicator pill */}
+                    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold mb-4 ${item.bg} border ${item.color}`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                      Passo {item.step}
+                    </div>
+                    <div className={`w-12 h-12 rounded-2xl ${item.bg} border flex items-center justify-center mb-4 ${item.color}`}
+                      style={i === 0 ? { boxShadow: "0 0 18px rgba(124,252,0,0.25)" } :
+                             i === 1 ? { boxShadow: "0 0 18px rgba(0,229,255,0.25)" } :
+                             { boxShadow: "0 0 18px rgba(250,204,21,0.25)" }}>
                       {item.icon}
                     </div>
                     <h3 className="font-bold text-base mb-2">{item.title}</h3>

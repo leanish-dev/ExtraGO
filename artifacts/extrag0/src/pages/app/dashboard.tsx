@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useTilt } from "@/hooks/use-tilt";
 import { useAuth } from "@/hooks/use-auth";
 import { useGetCompanyStats, useGetFreelancerStats, useListJobs, useListApplications, useListTransactions } from "@workspace/api-client-react";
 import type { Application, Transaction } from "@workspace/api-client-react";
@@ -51,6 +52,33 @@ const STAT_COLOR_MAP: Record<StatColor, { container: string; icon: string; value
   },
 };
 
+const SPARKLINE_HEIGHTS = [35, 55, 40, 70, 45, 85, 60, 75, 50, 90, 65, 80];
+
+function SparklineBars({ color }: { color: string }) {
+  const colorMap: Record<string, string> = {
+    primary: "rgba(124,252,0,0.45)",
+    secondary: "rgba(0,229,255,0.45)",
+    yellow: "rgba(250,204,21,0.45)",
+    green: "rgba(34,197,94,0.45)",
+  };
+  const barColor = colorMap[color] ?? colorMap.primary;
+  return (
+    <div className="flex items-end gap-[2px] h-8 mt-3 overflow-hidden opacity-60">
+      {SPARKLINE_HEIGHTS.map((h, i) => (
+        <div
+          key={i}
+          className="sparkline-bar flex-1 rounded-sm"
+          style={{
+            height: `${h}%`,
+            background: barColor,
+            animationDelay: `${i * 0.04}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading, delay = 0 }: {
   icon: React.ReactNode;
   label: string;
@@ -63,14 +91,17 @@ function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading
 }) {
   const numValue = typeof value === "number" ? value : parseFloat(String(value).replace(/[^0-9.]/g, "")) || 0;
   const c = STAT_COLOR_MAP[color];
+  const { ref: tiltRef, handleMouseMove, handleMouseLeave } = useTilt(6);
   if (isLoading) return <SkeletonStatCard />;
   return (
     <motion.div
+      ref={tiltRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       initial={{ opacity: 0, y: 20, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.5, delay, ease: [0.19, 1, 0.22, 1] }}
-      whileHover={{ y: -3, scale: 1.02 }}
-      className={`glass-card rounded-2xl p-4 sm:p-5 bg-gradient-to-br ${c.container} border cursor-default transition-all`}
+      className={`glass-card rounded-2xl p-4 sm:p-5 bg-gradient-to-br ${c.container} border cursor-default tilt-card card-shimmer-hover`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
@@ -85,10 +116,13 @@ function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading
           {sub && <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{sub}</p>}
           {trend && <p className="text-xs text-green-400 mt-1 font-semibold">{trend}</p>}
         </div>
-        <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 ${c.icon}`}>
+        <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 ${c.icon}`}
+          style={color === "primary" ? { boxShadow: "0 0 14px rgba(124,252,0,0.25)" } :
+                 color === "secondary" ? { boxShadow: "0 0 14px rgba(0,229,255,0.25)" } : undefined}>
           {icon}
         </div>
       </div>
+      <SparklineBars color={color} />
     </motion.div>
   );
 }

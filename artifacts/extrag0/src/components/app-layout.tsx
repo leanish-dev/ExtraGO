@@ -400,31 +400,46 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* User section */}
-        <div className={`border-b border-white/5 flex-shrink-0 ${collapsed ? "py-4 px-2 flex justify-center" : "px-4 py-4"}`}>
+        <div className={`border-b border-white/5 flex-shrink-0 ${collapsed ? "py-4 px-2 flex justify-center" : "px-3 py-3"}`}>
           {collapsed ? (
             <div className="relative">
               <AvatarInitials name={user.name} size="sm" />
               {user.role === "freelancer" && <XPRing progress={xpProgress} size={38} />}
             </div>
           ) : (
-            <div>
-              <div className="flex items-center gap-3">
+            <div className="rounded-xl p-2.5 relative"
+              style={{
+                background: "rgba(255,255,255,0.025)",
+                border: "1px solid rgba(255,255,255,0.07)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
+              }}>
+              {/* Subtle gradient border effect */}
+              <div className="absolute inset-0 rounded-xl pointer-events-none"
+                style={{
+                  background: "linear-gradient(135deg, rgba(124,252,0,0.06) 0%, transparent 50%, rgba(0,229,255,0.04) 100%)",
+                }} />
+              <div className="flex items-center gap-3 relative">
                 <div className="relative flex-shrink-0">
                   <AvatarInitials name={user.name} />
                   {user.role === "freelancer" && <XPRing progress={xpProgress} size={44} />}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] text-muted-foreground/65 font-medium">{greeting}</p>
+                  <p className="text-[9px] text-muted-foreground/60 font-medium uppercase tracking-widest">{greeting}</p>
                   <p className="text-sm font-bold truncate leading-tight mt-0.5">{user.name}</p>
-                  <p className="text-[10px] text-muted-foreground truncate mt-0.5">{user.email}</p>
+                  <p className="text-[10px] text-muted-foreground/65 truncate mt-0.5">{user.email}</p>
                 </div>
               </div>
-              <div className="mt-2.5 flex items-center gap-2 flex-wrap">
+              <div className="mt-2 flex items-center gap-2 flex-wrap relative">
                 {user.role === "freelancer" && <LevelBadge level={user.level ?? "bronze"} />}
                 {user.role === "freelancer" && user.reputationScore != null && (
                   <span className="text-[10px] text-yellow-400/75 flex items-center gap-0.5">
                     <Star size={9} className="fill-yellow-400 text-yellow-400" />
                     {(user.reputationScore ?? 0).toFixed(1)}
+                  </span>
+                )}
+                {user.role === "freelancer" && (
+                  <span className="text-[10px] text-muted-foreground/50 ml-auto">
+                    {Math.round(xpProgress)}% XP
                   </span>
                 )}
                 {user.role === "company" && (
@@ -465,7 +480,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
                     />
                   )}
-                  <span className={`flex-shrink-0 transition-colors ${active ? "text-primary nav-icon-active" : "text-muted-foreground group-hover:text-foreground"}`}>
+                  <span className={`flex-shrink-0 transition-all ${
+                    active
+                      ? "text-primary nav-icon-active"
+                      : "text-muted-foreground group-hover:text-foreground"
+                  }`}
+                    style={active ? {
+                      filter: "drop-shadow(0 0 6px rgba(124,252,0,0.8))",
+                    } : undefined}>
                     {item.icon}
                   </span>
                   {!collapsed && (

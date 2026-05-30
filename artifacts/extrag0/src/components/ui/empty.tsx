@@ -101,20 +101,27 @@ interface EmptyStateProps {
 function EmptyState({ icon, title, description, actionLabel, actionHref, onAction, className }: EmptyStateProps) {
   return (
     <div className={cn("flex flex-col items-center justify-center py-14 px-4 text-center", className)}>
-      <div className="w-14 h-14 rounded-2xl bg-white/4 border border-white/8 flex items-center justify-center text-muted-foreground mb-4">
-        {icon}
+      <div className="relative mb-5">
+        <div className="empty-icon-ring">
+          <div className="w-16 h-16 rounded-full bg-[rgba(255,255,255,0.04)] flex items-center justify-center text-muted-foreground/70 relative z-10"
+            style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)" }}>
+            {icon}
+          </div>
+        </div>
+        <div className="absolute inset-0 rounded-full opacity-20"
+          style={{ background: "radial-gradient(circle, rgba(124,252,0,0.18) 0%, transparent 70%)", filter: "blur(12px)" }} />
       </div>
       <p className="text-base font-semibold mb-1.5">{title}</p>
       {description && <p className="text-sm text-muted-foreground max-w-xs mb-6 leading-relaxed">{description}</p>}
       {actionLabel && (
         actionHref ? (
           <Link href={actionHref}>
-            <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-semibold rounded-xl px-6">
+            <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-semibold rounded-xl px-6 btn-shimmer">
               {actionLabel}
             </Button>
           </Link>
         ) : onAction ? (
-          <Button onClick={onAction} className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-semibold rounded-xl px-6">
+          <Button onClick={onAction} className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-semibold rounded-xl px-6 btn-shimmer">
             {actionLabel}
           </Button>
         ) : null

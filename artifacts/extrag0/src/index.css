@@ -110,10 +110,21 @@
   --chart-4: 200 100% 50%;
   --chart-5: 220 100% 50%;
 
+  --font-display: 'Space Grotesk', sans-serif;
   --app-font-sans: "Outfit", "Inter", sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: 0.5rem;
+
+  --glass-1: rgba(255, 255, 255, 0.022);
+  --glass-2: rgba(255, 255, 255, 0.048);
+  --glass-3: rgba(255, 255, 255, 0.082);
+  --accent-gold: hsl(42, 100%, 58%);
+  --accent-gold-muted: rgba(255, 196, 0, 0.18);
+
+  --shadow-neon-green-xs: 0 0 6px rgba(124, 252, 0, 0.18), 0 0 12px rgba(124, 252, 0, 0.07);
+  --shadow-neon-green-md: 0 0 30px rgba(124, 252, 0, 0.5), 0 0 80px rgba(124, 252, 0, 0.18);
+  --shadow-neon-green-lg: 0 0 50px rgba(124, 252, 0, 0.65), 0 0 120px rgba(124, 252, 0, 0.28);
 
   --shadow-2xs: 0px 1px 2px rgba(0,0,0,0.35);
   --shadow-xs: 0px 2px 4px rgba(0,0,0,0.4);
@@ -419,6 +430,187 @@
   }
   .float-badge { animation: floatBadge 3s ease-in-out infinite; }
 
+  /* ── Display headings (Space Grotesk) ── */
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Glass card levels ── */
+  .glass-1 {
+    background: var(--glass-1);
+    backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .glass-2 {
+    background: var(--glass-2);
+    backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255,255,255,0.09);
+  }
+  .glass-3 {
+    background: var(--glass-3);
+    backdrop-filter: blur(24px) saturate(170%);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  /* ── Tilt card (applied via useTilt hook) ── */
+  .tilt-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* ── Button primary shimmer sweep on hover ── */
+  .btn-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -80%;
+    width: 55%; height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.28) 50%, transparent 100%);
+    transform: skewX(-20deg);
+    transition: left 0s;
+    pointer-events: none;
+  }
+  .btn-shimmer:hover::after {
+    left: 140%;
+    transition: left 0.52s ease;
+  }
+
+  /* ── Card shimmer hover (for job cards etc) ── */
+  .card-shimmer-hover {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-shimmer-hover::after {
+    content: '';
+    position: absolute;
+    top: -100%; left: -100%;
+    width: 65%; height: 300%;
+    background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.055) 50%, transparent 70%);
+    transform: skewX(-20deg);
+    transition: left 0s, top 0s;
+    pointer-events: none;
+  }
+  .card-shimmer-hover:hover::after {
+    top: -100%;
+    left: 140%;
+    transition: left 0.62s ease, top 0s;
+  }
+
+  /* ── Auto-scrolling ticker ── */
+  .ticker-track {
+    display: flex;
+    gap: 2.5rem;
+    animation: tickerScroll 24s linear infinite;
+    white-space: nowrap;
+    will-change: transform;
+  }
+  .ticker-track:hover { animation-play-state: paused; }
+  @keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── Typewriter cursor ── */
+  .typewriter-cursor {
+    display: inline-block;
+    width: 3px;
+    height: 0.85em;
+    background: hsl(88,100%,49%);
+    border-radius: 1px;
+    margin-left: 3px;
+    vertical-align: middle;
+    animation: cursorBlink 0.9s ease-in-out infinite;
+  }
+  @keyframes cursorBlink {
+    0%, 45% { opacity: 1; }
+    55%, 100% { opacity: 0; }
+  }
+
+  /* ── Sparkline bars (dashboard stat cards) ── */
+  .sparkline-bar {
+    border-radius: 2px 2px 0 0;
+    transition: transform 0.3s ease;
+    transform-origin: bottom;
+  }
+  .sparkline-bar:hover { transform: scaleY(1.2); }
+
+  /* ── Match chip (jobs) ── */
+  .match-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    background: linear-gradient(135deg, rgba(124,252,0,0.15), rgba(0,229,255,0.1));
+    border: 1px solid rgba(124,252,0,0.3);
+    color: hsl(88,100%,49%);
+    text-shadow: 0 0 8px rgba(124,252,0,0.5);
+  }
+
+  /* ── Skill tag glow ── */
+  .skill-tag {
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .skill-tag:hover {
+    box-shadow: 0 0 12px rgba(124,252,0,0.3), 0 0 0 1px rgba(124,252,0,0.45);
+    border-color: rgba(124,252,0,0.4);
+  }
+
+  /* ── Empty state gradient ring ── */
+  .empty-icon-ring {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .empty-icon-ring::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(124,252,0,0.5) 0%,
+      rgba(0,229,255,0.4) 35%,
+      rgba(124,252,0,0.15) 65%,
+      rgba(0,229,255,0.5) 100%
+    );
+    animation: emptyRingRotate 5s linear infinite;
+    z-index: -1;
+  }
+  @keyframes emptyRingRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Donut ring (wallet) ── */
+  .donut-ring-track { transition: stroke-dashoffset 1s cubic-bezier(0.19,1,0.22,1); }
+
+  /* ── Category dot ── */
+  .cat-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Profile banner blur/glow ── */
+  .profile-banner-blur {
+    filter: blur(40px) saturate(180%) brightness(0.9);
+    transform: scale(1.15);
+  }
+
+  /* ── Gold accent utility ── */
+  .text-accent-gold { color: var(--accent-gold); }
+  .bg-accent-gold { background: var(--accent-gold); }
+  .border-accent-gold { border-color: rgba(255,196,0,0.35); }
+
   /* ── Fade-up sections ── */
   .section-fade-up {
     opacity: 0;
@@ -432,10 +624,10 @@
 
   /* ── Page enter animation ── */
   .page-enter {
-    animation: pageEnter 0.45s var(--ease-out-expo) both;
+    animation: pageEnter 0.6s var(--ease-out-expo) both;
   }
   @keyframes pageEnter {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
