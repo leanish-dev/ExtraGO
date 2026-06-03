@@ -67,6 +67,22 @@ router.get("/wallet/transactions", requireAuth, async (req, res) => {
   const statusFilter = req.query.status as string | undefined;
   if (statusFilter) transactions = transactions.filter(t => t.status === statusFilter);
 
+  const fromFilter = req.query.from as string | undefined;
+  const toFilter = req.query.to as string | undefined;
+  if (fromFilter) {
+    const fromDate = new Date(fromFilter);
+    if (!isNaN(fromDate.getTime())) {
+      transactions = transactions.filter(t => t.createdAt && t.createdAt >= fromDate);
+    }
+  }
+  if (toFilter) {
+    const toDate = new Date(toFilter);
+    if (!isNaN(toDate.getTime())) {
+      toDate.setHours(23, 59, 59, 999);
+      transactions = transactions.filter(t => t.createdAt && t.createdAt <= toDate);
+    }
+  }
+
   res.json(transactions.map(formatTransaction));
 });
 

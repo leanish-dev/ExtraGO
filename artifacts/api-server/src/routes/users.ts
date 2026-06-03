@@ -3,6 +3,7 @@ import { db, usersTable, ratingsTable, userFollowsTable } from "@workspace/db";
 import { eq, like, and, or, sql, count } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { UpdateUserBody, RateUserBody, ListFreelancersQueryParams } from "@workspace/api-zod";
+import { recalculateReputation } from "../lib/ecosystem";
 
 const router = Router();
 
@@ -164,10 +165,8 @@ router.post("/users/:id/rating", requireAuth, async (req, res) => {
     comment: parsed.data.comment ?? null,
   });
 
-  // Update average rating
-  const ratings = await db.select().from(ratingsTable).where(eq(ratingsTable.ratedId, ratedId));
-  const avg = ratings.reduce((sum, r) => sum + r.score, 0) / ratings.length;
-  await db.update(usersTable).set({ reputationScore: avg }).where(eq(usersTable.id, ratedId));
+  // Recalculate full weighted reputation score
+  await recalculateReputation(ratedId);
 
   res.status(201).json({ message: "Rating submitted" });
 });

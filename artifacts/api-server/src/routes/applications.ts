@@ -3,7 +3,7 @@ import { db, applicationsTable, jobsTable, usersTable, notificationsTable } from
 import { eq, and, sql } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { ApplyToJobBody, ListApplicationsQueryParams } from "@workspace/api-zod";
-import { calculateLevel, LEVEL_FEE, LEVEL_LABELS, completeJobCascade } from "../lib/ecosystem";
+import { calculateLevel, LEVEL_FEE, LEVEL_LABELS, completeJobCascade, reserveCompanyFunds } from "../lib/ecosystem";
 
 const router = Router();
 
@@ -148,6 +148,24 @@ router.post("/applications/:id/approve", requireAuth, async (req, res) => {
   if (!["pending", "counter_offered", "counter_rejected"].includes(app.status)) {
     res.status(400).json({ error: "Application cannot be approved in its current state" });
     return;
+  }
+
+  const jobValue = app.proposedRate ?? job.totalValue ?? 0;
+
+  // Reserve company funds at approval time (soft check — skip if company has no wallet yet)
+  if (jobValue > 0) {
+    try {
+      await reserveCompanyFunds(job.companyId, jobValue, job.title, id);
+    } catch {
+      // Reservation failed (e.g. insufficient balance) — approve anyway, warn via notification
+      db.insert(notificationsTable).values({
+        userId: job.companyId,
+        type: "wallet_warning",
+        title: "⚠️ Saldo insuficiente",
+        message: `Você aprovou ${job.title} mas não há saldo suficiente reservado. Adicione fundos antes da conclusão.`,
+        isRead: false,
+      }).catch(() => {});
+    }
   }
 
   const [updated] = await db.update(applicationsTable)

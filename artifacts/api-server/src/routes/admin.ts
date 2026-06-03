@@ -286,14 +286,20 @@ router.get("/admin/representatives", requireAdmin, async (req, res) => {
     : [];
   const userMap = new Map(users.map(u => [u.id, u]));
 
-  res.json(reps.map(r => ({
-    id: r.id,
-    userId: r.userId,
-    stateCode: r.stateCode,
-    commissionRate: r.commissionRate,
-    user: userMap.get(r.userId) ? formatUser(userMap.get(r.userId)!) : null,
-    createdAt: r.createdAt?.toISOString(),
-  })));
+  res.json(reps.map(r => {
+    const u = userMap.get(r.userId);
+    return {
+      id: r.id,
+      userId: r.userId,
+      state: r.stateCode,
+      commissionRate: r.commissionRate,
+      isActive: true,
+      userName: u?.name ?? null,
+      userEmail: u?.email ?? null,
+      userAvatarUrl: u?.avatarUrl ?? null,
+      createdAt: r.createdAt?.toISOString(),
+    };
+  }));
 });
 
 // POST /admin/representatives
@@ -312,7 +318,17 @@ router.post("/admin/representatives", requireAdmin, async (req, res) => {
 
   await ensureWallet(userId, "representative");
 
-  res.status(201).json({ id: rep.id, userId: rep.userId, stateCode: rep.stateCode, commissionRate: rep.commissionRate });
+  res.status(201).json({
+    id: rep.id,
+    userId: rep.userId,
+    state: rep.stateCode,
+    commissionRate: rep.commissionRate,
+    isActive: true,
+    userName: user.name ?? null,
+    userEmail: user.email ?? null,
+    userAvatarUrl: user.avatarUrl ?? null,
+    createdAt: rep.createdAt?.toISOString(),
+  });
 });
 
 // DELETE /admin/representatives/:id
@@ -421,21 +437,36 @@ router.get("/admin/analytics", requireAdmin, async (req, res) => {
     if (stateData.has(state)) stateData.get(state)!.jobs += 1;
   });
 
-  const byState = Object.fromEntries(stateData);
+  // byState as array matching OpenAPI StateStats schema
+  const byState = Array.from(stateData.entries()).map(([state, data]) => ({
+    state,
+    totalFreelancers: data.freelancers,
+    totalJobs: data.jobs,
+    totalRevenue: data.revenue,
+    representative: null as string | null,
+  }));
 
-  // Month-over-month growth
-  const now = new Date();
-  const thisMonth = now.toISOString().slice(0, 7);
-  const lastMonthD = new Date(now); lastMonthD.setMonth(lastMonthD.getMonth() - 1);
-  const lastMonth = lastMonthD.toISOString().slice(0, 7);
-  const thisMonthUsers = allUsers.filter(u => u.createdAt?.toISOString().slice(0, 7) === thisMonth).length;
-  const lastMonthUsers = allUsers.filter(u => u.createdAt?.toISOString().slice(0, 7) === lastMonth).length;
-  const userGrowthRate = lastMonthUsers > 0 ? +((thisMonthUsers - lastMonthUsers) / lastMonthUsers * 100).toFixed(1) : 0;
+  // Level distribution as array matching schema
+  const levelDistributionArray = Object.entries(levelDistribution).map(([level, count]) => {
+    const levelFreelancers = freelancers.filter(u => u.level === level);
+    const avgReputation = levelFreelancers.length > 0
+      ? +(levelFreelancers.reduce((s, u) => s + (u.reputationScore ?? 0), 0) / levelFreelancers.length).toFixed(2)
+      : 0;
+    return { level, count, avgReputation };
+  });
 
-  const regionCounts: Record<string, number> = {};
-  allUsers.forEach(u => { (u.serviceRegions ?? []).forEach((r: string) => { regionCounts[r] = (regionCounts[r] ?? 0) + 1; }); });
+  // Revenue by month as array matching MonthAmount schema
+  const revenueByMonth = growthByMonth.map(g => ({ month: g.month, amount: g.revenue }));
 
-  res.json({ growthByMonth, levelDistribution, topEarners, topCompanies, conversionRate, completionRate, totalApplications: totalApps, completedJobs: completedApps, totalGross, totalCommissions, totalPlatformFees, regionCounts, totalFreelancers: freelancers.length, totalCompanies: allUsers.filter(u => u.role === "company").length, byState, userGrowthRate });
+  // Fees by level
+  const feesByLevel = ["bronze", "silver", "gold", "elite"].map(level => {
+    const feeRate = { bronze: 0.18, silver: 0.16, gold: 0.14, elite: 0.10 }[level] ?? 0;
+    const levelFreelancerCount = freelancers.filter(u => u.level === level).length;
+    const totalFees = Math.round(totalGross * feeRate * (levelFreelancerCount / Math.max(freelancers.length, 1)));
+    return { level, totalFees, avgFee: feeRate, count: levelFreelancerCount };
+  });
+
+  res.json({ byState, levelDistribution: levelDistributionArray, revenueByMonth, feesByLevel, growthByMonth, topEarners, topCompanies, conversionRate, completionRate, totalApplications: totalApps, completedJobs: completedApps, totalGross, totalCommissions, totalPlatformFees, totalFreelancers: freelancers.length, totalCompanies: allUsers.filter(u => u.role === "company").length });
 });
 
 // GET /admin/ops
@@ -459,7 +490,25 @@ router.get("/admin/ops", requireAdmin, async (req, res) => {
   const pendingWithdrawalsAmount = pendingWith.reduce((s, t) => s + t.amount, 0);
   const pendingDepositsAmount = pendingDeposits.reduce((s, d) => s + d.amount, 0);
 
-  res.json({ timestamp: now.toISOString(), totalUsers: allUsers.length, openJobs: openJobs.length, jobsInProgress: inProgressJobs.length, pendingWithdrawals: pendingWith.length, pendingWithdrawalsAmount, pendingDeposits: pendingDeposits.length, pendingDepositsAmount, todayPayments, todayWithdrawals, newUsersToday, appsToday: allApps.length, approvedToday: allApps.filter(a => a.status === "approved").length });
+  const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const activeFreelancers24h = allUsers.filter(u => u.role === "freelancer" && u.createdAt && u.createdAt >= twentyFourHoursAgo).length;
+  const activeCompanies24h = allUsers.filter(u => u.role === "company" && u.createdAt && u.createdAt >= twentyFourHoursAgo).length;
+
+  const [platformWallet] = await db.select({ balance: walletsTable.balance }).from(walletsTable).where(eq(walletsTable.userId, 0));
+
+  res.json({
+    openJobs: openJobs.length,
+    jobsInProgress: inProgressJobs.length,
+    pendingApplications: allApps.length,
+    pendingWithdrawals: pendingWith.length,
+    pendingWithdrawalAmount: pendingWith.reduce((s, t) => s + t.amount, 0),
+    pendingDeposits: pendingDeposits.length,
+    pendingDepositAmount: pendingDeposits.reduce((s, d) => s + d.amount, 0),
+    unreadNotifications: 0,
+    platformWalletBalance: platformWallet?.balance ?? 0,
+    activeFreelancers24h,
+    activeCompanies24h,
+  });
 });
 
 export default router;
