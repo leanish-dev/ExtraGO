@@ -13,6 +13,7 @@ import feedRouter from "./feed";
 import profileSectionsRouter from "./profile-sections";
 import chatRouter from "./chat";
 import setupRouter from "./setup";
+import seedRouter from "./seed";
 
 const router: IRouter = Router();
 
@@ -30,5 +31,6 @@ router.use(feedRouter);
 router.use(profileSectionsRouter);
 router.use(chatRouter);
 router.use(setupRouter);
+router.use(seedRouter);
 
 export default router;
