@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useGetMyReferral, useGetReferralLeaderboard } from "@workspace/api-client-react";
 import { useAuth } from "@/hooks/use-auth";
+import { LevelBadgeIcon } from "@/components/level-badge";
 import {
   Trophy, Users, Copy, Share2, Star, Crown, TrendingUp, Gift,
   Zap, Lock, CheckCircle, Percent, Info, Smartphone, Link2,
@@ -312,14 +313,12 @@ export default function ReferralsPage() {
             style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.png)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/4 via-transparent to-cyan-500/4 pointer-events-none" />
-          <div className="absolute -right-4 -top-4 text-8xl opacity-[0.06] select-none pointer-events-none">{currentLevel.icon}</div>
-
           <div className="flex items-start gap-4 relative">
-            <motion.span
+            <motion.div
               animate={{ rotate: [0, 5, -5, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="text-4xl flex-shrink-0 block mt-1"
-            >{currentLevel.icon}</motion.span>
+              className="flex-shrink-0 mt-1"
+            ><LevelBadgeIcon level={currentLevel.level} size="lg" /></motion.div>
             <div className="flex-1 min-w-0">
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-0.5">Seu nível atual</p>
               <p className={`text-2xl font-bold ${currentLevel.color} leading-tight`}>{currentLevel.label}</p>
@@ -516,8 +515,8 @@ export default function ReferralsPage() {
 
             {/* Current rate highlight */}
             <div className={`flex items-center gap-3 p-3.5 rounded-xl border mb-4 ${currentLevel.bg} ${currentLevel.glow}`}>
-              <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${currentLevel.iconClass}`}>
-                {currentLevel.icon}
+              <div className="flex-shrink-0">
+                <LevelBadgeIcon level={currentLevel.level} size="sm" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-muted-foreground font-medium">Sua taxa atual — {currentLevel.label}</p>
@@ -552,7 +551,7 @@ export default function ReferralsPage() {
                     className={`grid grid-cols-4 gap-0 border-b last:border-b-0 border-white/5 transition-all ${isCurrent ? lvl.bg : "hover:bg-white/2"}`}
                   >
                     <div className="px-3 py-3 flex items-center gap-1.5">
-                      <span className="text-sm">{lvl.icon}</span>
+                      <LevelBadgeIcon level={lvl.level} size="xs" />
                       <div>
                         <span className={`text-xs font-bold block leading-tight ${isCurrent ? lvl.color : "text-muted-foreground/70"}`}>{lvl.label}</span>
                         {isCurrent && <span className={`text-[8px] font-bold ${lvl.color}`}>Atual</span>}
@@ -611,7 +610,7 @@ export default function ReferralsPage() {
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-2xl flex-shrink-0">{lvl.icon}</span>
+                    <LevelBadgeIcon level={lvl.level} size="sm" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className={`font-bold text-sm ${lvl.color}`}>{lvl.label}</p>

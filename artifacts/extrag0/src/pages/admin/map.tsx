@@ -63,6 +63,8 @@ export default function AdminMapPage() {
 
   const regionCounts = data?.regionCounts ?? {};
   const maxCount = Math.max(...Object.values(regionCounts), 1);
+  const totalFreelancers = data?.totalFreelancers ?? 0;
+  const totalCompanies = data?.totalCompanies ?? 0;
 
   const filteredStates = BRAZIL_STATES
     .filter(s => activeRegion === "Todos" || s.region === activeRegion)
@@ -83,9 +85,25 @@ export default function AdminMapPage() {
   return (
     <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-5 pb-20 lg:pb-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2"><MapPin size={20} className="text-primary" /> Mapa Brasil</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Distribuição geográfica de usuários pela plataforma</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2"><MapPin size={20} className="text-primary" /> Mapa Brasil</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Distribuição geográfica de usuários pela plataforma</p>
+        </div>
+        <div className="flex gap-2 flex-shrink-0">
+          <div className="glass-card rounded-xl px-3.5 py-2.5 border border-white/8 text-center flex-shrink-0">
+            <p className="text-lg font-bold text-primary leading-none">{totalFreelancers}</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">Freelancers</p>
+          </div>
+          <div className="glass-card rounded-xl px-3.5 py-2.5 border border-white/8 text-center flex-shrink-0">
+            <p className="text-lg font-bold text-secondary leading-none">{totalCompanies}</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">Empresas</p>
+          </div>
+          <div className="glass-card rounded-xl px-3.5 py-2.5 border border-white/8 text-center flex-shrink-0">
+            <p className="text-lg font-bold leading-none">{totalFreelancers + totalCompanies}</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">Total</p>
+          </div>
+        </div>
       </div>
 
       {/* Region summary cards */}

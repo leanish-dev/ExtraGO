@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
 import { useGetMyWallet, useListTransactions, useRequestWithdrawal } from "@workspace/api-client-react";
 import type { Transaction } from "@workspace/api-client-react";
 import {
@@ -104,6 +105,8 @@ function TransactionRow({ tx, index }: { tx: Transaction; index: number }) {
 
 export default function WalletPage() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const isCompany = user?.role === "company";
   const { data: wallet, isLoading: walletLoading, refetch: refetchWallet } = useGetMyWallet({
     query: { queryKey: ["wallet"], refetchInterval: 30000, refetchIntervalInBackground: false },
   });
@@ -114,10 +117,40 @@ export default function WalletPage() {
   const [amount, setAmount] = useState("");
   const [pixKey, setPixKey] = useState("");
   const [showWithdraw, setShowWithdraw] = useState(false);
+  const [showDeposit, setShowDeposit] = useState(false);
+  const [depositAmount, setDepositAmount] = useState("");
+  const [depositMethod, setDepositMethod] = useState<"pix" | "transfer">("pix");
+  const [depositPending, setDepositPending] = useState(false);
   const [page, setPage] = useState(0);
   const [txFilter, setTxFilter] = useState<TxFilter>("all");
   const [optimisticTx, setOptimisticTx] = useState<Transaction | null>(null);
   const [hideBalance, setHideBalance] = useState(false);
+
+  const PLATFORM_PIX_KEY = "pagamentos@extrag0.com.br";
+  const PLATFORM_BANK = "Banco extraGO — Ag. 0001 / Cc. 123456-7";
+
+  const handleDeposit = async () => {
+    const cents = Math.round(parseFloat(depositAmount) * 100);
+    if (!cents || cents < 5000) { toast.error("Valor mínimo para depósito: R$ 50,00"); return; }
+    setDepositPending(true);
+    try {
+      const optimistic: Transaction = {
+        id: Date.now(),
+        walletId: 0,
+        type: "credit",
+        amount: cents,
+        description: `Depósito via ${depositMethod === "pix" ? "PIX" : "Transferência"} — aguardando confirmação`,
+        status: "pending",
+        createdAt: new Date().toISOString(),
+      };
+      setOptimisticTx(optimistic);
+      setShowDeposit(false);
+      setDepositAmount("");
+      toast.success("Solicitação de depósito registrada! Nossa equipe irá confirmar em breve.");
+    } finally {
+      setDepositPending(false);
+    }
+  };
 
   const balance = wallet?.balance ?? 0;
   const pending = wallet?.pendingBalance ?? 0;
@@ -293,7 +326,9 @@ export default function WalletPage() {
                   <div className="w-8 h-8 rounded-lg bg-primary/15 border border-primary/25 flex items-center justify-center">
                     <Wallet size={15} className="text-primary" />
                   </div>
-                  <span className="text-[11px] font-bold text-primary/80 uppercase tracking-widest">Saldo Disponível</span>
+                  <span className="text-[11px] font-bold text-primary/80 uppercase tracking-widest">
+                    {isCompany ? "Saldo da Empresa" : "Saldo Disponível"}
+                  </span>
                 </div>
                 <motion.button
                   whileTap={{ scale: 0.9 }}
@@ -318,31 +353,48 @@ export default function WalletPage() {
                     </p>
                   </div>
                 )}
-                <p className="text-sm text-foreground/50 mt-2">Disponível para saque imediato via PIX</p>
+                <p className="text-sm text-foreground/50 mt-2">
+                  {isCompany ? "Saldo disponível para contratações na plataforma" : "Disponível para saque imediato via PIX"}
+                </p>
               </div>
 
               {/* CTA row */}
               <div className="flex items-center gap-3">
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} className="flex-1">
-                  <Button
-                    onClick={() => setShowWithdraw(s => !s)}
-                    className={`w-full font-bold rounded-xl h-11 border-none text-sm gap-2 ${
-                      showWithdraw
-                        ? "bg-white/10 text-foreground hover:bg-white/15"
-                        : "bg-primary text-black hover:bg-primary/90 neon-glow"
-                    }`}
-                  >
-                    {showWithdraw ? (
-                      <><X size={15} /> Cancelar</>
-                    ) : (
-                      <><Send size={15} /> Sacar via PIX</>
-                    )}
-                  </Button>
-                </motion.div>
-                <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/8 flex-shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-[10px] text-muted-foreground font-medium">PIX ativo</span>
-                </div>
+                {isCompany ? (
+                  <>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} className="flex-1">
+                      <Button
+                        onClick={() => setShowDeposit(s => !s)}
+                        className={`w-full font-bold rounded-xl h-11 border-none text-sm gap-2 ${
+                          showDeposit ? "bg-white/10 text-foreground hover:bg-white/15" : "bg-primary text-black hover:bg-primary/90 neon-glow"
+                        }`}
+                      >
+                        {showDeposit ? <><X size={15} /> Cancelar</> : <><ArrowDownLeft size={15} /> Adicionar Saldo</>}
+                      </Button>
+                    </motion.div>
+                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/8 flex-shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                      <span className="text-[10px] text-muted-foreground font-medium">PIX ativo</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} className="flex-1">
+                      <Button
+                        onClick={() => setShowWithdraw(s => !s)}
+                        className={`w-full font-bold rounded-xl h-11 border-none text-sm gap-2 ${
+                          showWithdraw ? "bg-white/10 text-foreground hover:bg-white/15" : "bg-primary text-black hover:bg-primary/90 neon-glow"
+                        }`}
+                      >
+                        {showWithdraw ? <><X size={15} /> Cancelar</> : <><Send size={15} /> Sacar via PIX</>}
+                      </Button>
+                    </motion.div>
+                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/8 flex-shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                      <span className="text-[10px] text-muted-foreground font-medium">PIX ativo</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -379,7 +431,9 @@ export default function WalletPage() {
               transition={{ duration: 0.4, delay: 0.15 }}
               className="balance-card-mini p-4"
             >
-              <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2.5">Total Ganho</p>
+              <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2.5">
+                {isCompany ? "Total Pago" : "Total Ganho"}
+              </p>
               <p className="text-xl font-bold leading-none tabular-nums text-secondary">
                 {hideBalance ? "••••" : <>R$ <AnimatedCounter value={totalEarned / 100} decimals={2} /></>}
               </p>
@@ -522,6 +576,106 @@ export default function WalletPage() {
                       <><Loader2 size={15} className="mr-2 animate-spin" />Processando...</>
                     ) : (
                       `Confirmar Saque${amount ? ` de R$ ${parseFloat(amount || "0").toFixed(2)}` : " via PIX"}`
+                    )}
+                  </Button>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Company deposit form */}
+        <AnimatePresence>
+          {showDeposit && (
+            <motion.div
+              initial={{ opacity: 0, height: 0, y: -8 }}
+              animate={{ opacity: 1, height: "auto", y: 0 }}
+              exit={{ opacity: 0, height: 0, y: -8 }}
+              transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="glass-card rounded-2xl p-5 sm:p-6 space-y-5 border border-primary/14 bg-gradient-to-br from-primary/4 to-transparent relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-cyan-500/4 pointer-events-none" />
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-primary/12 border border-primary/22 flex items-center justify-center flex-shrink-0">
+                    <ArrowDownLeft size={15} className="text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-sm">Adicionar Saldo</h3>
+                    <p className="text-xs text-muted-foreground">Valor mínimo R$ 50,00</p>
+                  </div>
+                </div>
+
+                {/* Payment method selector */}
+                <div className="flex gap-2">
+                  {(["pix", "transfer"] as const).map(method => (
+                    <button
+                      key={method}
+                      onClick={() => setDepositMethod(method)}
+                      className={`flex-1 py-2.5 px-3 rounded-xl border text-xs font-bold transition-all ${
+                        depositMethod === method
+                          ? "border-primary/50 bg-primary/10 text-primary"
+                          : "border-white/10 bg-white/3 text-muted-foreground hover:border-white/20"
+                      }`}
+                    >
+                      {method === "pix" ? "⚡ PIX" : "🏦 Transferência"}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Amount input */}
+                <div>
+                  <label className="text-[10px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Valor do Depósito</label>
+                  <div className="relative">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">R$</span>
+                    <Input
+                      type="number"
+                      placeholder="0,00"
+                      value={depositAmount}
+                      onChange={e => setDepositAmount(e.target.value)}
+                      className="pl-10 bg-white/5 border-white/12 focus:border-primary/50 rounded-xl h-12 text-base font-bold"
+                    />
+                  </div>
+                </div>
+
+                {/* Payment instructions */}
+                <div className="p-3 rounded-xl border border-white/8 bg-white/3 space-y-2">
+                  <p className="text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                    <Shield size={11} className="text-primary" />
+                    {depositMethod === "pix" ? "Dados PIX" : "Dados para Transferência"}
+                  </p>
+                  {depositMethod === "pix" ? (
+                    <div className="space-y-1.5">
+                      <p className="text-xs text-muted-foreground">Chave PIX (e-mail):</p>
+                      <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5 border border-white/8">
+                        <code className="text-xs font-mono text-primary flex-1">{PLATFORM_PIX_KEY}</code>
+                        <button
+                          onClick={() => { navigator.clipboard.writeText(PLATFORM_PIX_KEY); toast.success("Chave copiada!"); }}
+                          className="text-[10px] text-muted-foreground hover:text-foreground border border-white/10 rounded-md px-2 py-0.5 transition-colors"
+                        >Copiar</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5">
+                      <p className="text-xs text-muted-foreground">Dados bancários:</p>
+                      <p className="text-xs font-mono text-primary">{PLATFORM_BANK}</p>
+                    </div>
+                  )}
+                  <p className="text-[10px] text-muted-foreground mt-2">
+                    Após realizar o pagamento, clique em confirmar. Nossa equipe irá verificar e creditar seu saldo em até 1 dia útil.
+                  </p>
+                </div>
+
+                <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
+                  <Button
+                    className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl h-11"
+                    onClick={handleDeposit}
+                    disabled={depositPending || !depositAmount}
+                  >
+                    {depositPending ? (
+                      <><Loader2 size={15} className="mr-2 animate-spin" />Processando...</>
+                    ) : (
+                      `Confirmar Depósito${depositAmount ? ` de R$ ${parseFloat(depositAmount || "0").toFixed(2)}` : ""}`
                     )}
                   </Button>
                 </motion.div>

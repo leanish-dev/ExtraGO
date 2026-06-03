@@ -16,13 +16,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CATEGORIES, CATEGORY_NAMES } from "@/lib/categories";
 
 import { apiFetch } from "@/lib/api-fetch";
-
-const LEVEL_MAP: Record<string, { label: string; color: string; bg: string; icon: string }> = {
-  bronze: { label: "Bronze", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/25", icon: "🥉" },
-  silver: { label: "Prata", color: "text-slate-300", bg: "bg-slate-300/10 border-slate-300/25", icon: "🥈" },
-  gold: { label: "Ouro", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/25", icon: "🥇" },
-  elite: { label: "Elite", color: "text-primary", bg: "bg-primary/10 border-primary/25", icon: "👑" },
-};
+import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS, LEVEL_COLORS } from "@/components/level-badge";
 
 const LANGUAGE_OPTIONS = ["Português", "Inglês", "Espanhol", "Francês", "Alemão", "Italiano", "Mandarim", "Japonês", "Árabe"];
 const REGION_OPTIONS = ["São Paulo - SP", "Rio de Janeiro - RJ", "Belo Horizonte - MG", "Curitiba - PR", "Porto Alegre - RS", "Salvador - BA", "Fortaleza - CE", "Recife - PE", "Brasília - DF", "Manaus - AM", "Todo o Brasil"];
@@ -329,7 +323,6 @@ export default function ProfilePage() {
   };
 
   const completion = user?.profileCompletion ?? 0;
-  const levelInfo = LEVEL_MAP[user?.level ?? "bronze"] ?? LEVEL_MAP.bronze;
   const completionColor = completion >= 80 ? "text-primary" : completion >= 50 ? "text-yellow-400" : "text-destructive";
 
   const TABS = user?.role === "freelancer"
@@ -454,9 +447,7 @@ export default function ProfilePage() {
               <p className="text-xs text-muted-foreground">{user?.email}</p>
               <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                 {user?.role === "freelancer" && (
-                  <span className={`text-xs font-bold px-2.5 py-1 rounded-xl border inline-flex items-center gap-1 ${levelInfo.bg} ${levelInfo.color}`}>
-                    {levelInfo.icon} {levelInfo.label}
-                  </span>
+                  <LevelBadge level={user?.level} size="sm" />
                 )}
                 {user?.isVerified ? (
                   <span className="text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
@@ -498,7 +489,7 @@ export default function ProfilePage() {
               {[
                 { label: "Extras Feitos", value: user?.completedJobs ?? 0, color: "text-primary" },
                 { label: "Reputação", value: `${(user?.reputationScore ?? 0).toFixed(1)} ★`, color: "text-yellow-400" },
-                { label: "Nível", value: levelInfo.label, color: levelInfo.color },
+                { label: "Nível", value: LEVEL_LABELS[user?.level ?? "bronze"], color: LEVEL_COLORS[user?.level ?? "bronze"]?.text ?? "text-primary" },
               ].map((item, i) => (
                 <div key={i} className="text-center p-3 rounded-xl bg-white/3 border border-white/6">
                   <p className={`text-base font-bold ${item.color}`}>{item.value}</p>

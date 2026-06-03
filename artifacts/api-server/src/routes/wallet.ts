@@ -105,4 +105,36 @@ router.post("/wallet/withdraw", requireAuth, async (req, res) => {
   });
 });
 
+// POST /wallet/deposit-request — companies request a balance top-up
+router.post("/wallet/deposit-request", requireAuth, async (req, res) => {
+  const user = (req as any).user;
+  if (user.role !== "company") { res.status(403).json({ error: "Only companies can request deposits" }); return; }
+
+  const { amount, method } = req.body;
+  if (!amount || amount < 5000) { res.status(400).json({ error: "Minimum deposit is R$50" }); return; }
+
+  let [wallet] = await db.select().from(walletsTable).where(eq(walletsTable.userId, user.id));
+  if (!wallet) {
+    [wallet] = await db.insert(walletsTable).values({ userId: user.id }).returning();
+  }
+
+  const [transaction] = await db.insert(transactionsTable).values({
+    walletId: wallet.id,
+    type: "credit",
+    amount,
+    description: `Depósito via ${method === "pix" ? "PIX" : "Transferência"} — aguardando confirmação`,
+    status: "pending",
+  }).returning();
+
+  res.status(201).json({
+    id: transaction.id,
+    walletId: transaction.walletId,
+    type: transaction.type,
+    amount: transaction.amount,
+    description: transaction.description,
+    status: transaction.status,
+    createdAt: transaction.createdAt?.toISOString(),
+  });
+});
+
 export default router;

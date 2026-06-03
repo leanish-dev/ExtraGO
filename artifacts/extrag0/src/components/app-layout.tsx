@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import navbarBg from "@assets/file_00000000a5a0720e9612b56b01bfe4f0~2_1780139707862.png";
@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlobalSearch } from "@/components/global-search";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api-fetch";
+import { LevelBadge, LevelBadgeIcon } from "@/components/level-badge";
 
 interface NavItem {
   href: string;
@@ -90,20 +91,6 @@ function getGreeting() {
   return "Boa noite";
 }
 
-function LevelBadge({ level }: { level?: string }) {
-  const map: Record<string, { label: string; color: string; emoji: string }> = {
-    bronze: { label: "Iniciante", color: "text-sky-400 border-sky-400/28 bg-sky-400/8", emoji: "🔵" },
-    silver: { label: "Júnior", color: "text-cyan-400 border-cyan-400/28 bg-cyan-400/8", emoji: "⚡" },
-    gold: { label: "Intermediário", color: "text-yellow-400 border-yellow-400/28 bg-yellow-400/8", emoji: "🥇" },
-    elite: { label: "Sênior", color: "text-primary border-primary/28 bg-primary/8", emoji: "👑" },
-  };
-  const info = map[level ?? "bronze"] ?? map.bronze;
-  return (
-    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border tracking-wide inline-flex items-center gap-1 ${info.color}`}>
-      <span>{info.emoji}</span>{info.label}
-    </span>
-  );
-}
 
 function XPRing({ progress, size = 44 }: { progress: number; size?: number }) {
   const r = (size - 6) / 2;
@@ -322,6 +309,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [adminExpanded, setAdminExpanded] = useState(false);
   const [maisOpen, setMaisOpen] = useState(false);
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false);
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
 
   const { data: notifs } = useListNotifications(undefined, { query: { queryKey: ["notifications"], enabled: !!user } });
   const unread = notifs?.filter((n: any) => !n.isRead).length ?? 0;
@@ -344,6 +333,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
+  /* Account menu — close on outside click */
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target as Node)) {
+        setAccountMenuOpen(false);
+      }
+    };
+    if (accountMenuOpen) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [accountMenuOpen]);
+
   if (!user) return null;
 
   const navItems = getNavItems(user.role);
@@ -359,6 +359,43 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     location === href || (href !== "/app/dashboard" && href !== "/admin" && location.startsWith(href));
 
   const isChatPage = location === "/app/chat" || location.startsWith("/app/chat");
+
+  /* Account hub dropdown items by role */
+  type AccountMenuItem = { href: string; icon: React.ReactNode; label: string };
+  const accountMenuItems: AccountMenuItem[] = isAdmin ? [
+    { href: "/admin", icon: <BarChart3 size={14} />, label: "Painel Administrativo" },
+    { href: "/admin/users", icon: <Users size={14} />, label: "Representantes" },
+    { href: "/admin/jobs", icon: <Briefcase size={14} />, label: "Extras" },
+    { href: "/admin/withdrawals", icon: <CreditCard size={14} />, label: "Financeiro" },
+    { href: "/admin/analytics", icon: <LineChart size={14} />, label: "Analytics" },
+    { href: "/admin/ops", icon: <Activity size={14} />, label: "Centro Nacional de Operações" },
+    { href: "/admin/map", icon: <MapPin size={14} />, label: "Mapa Brasil" },
+    { href: "/app/notifications", icon: <Bell size={14} />, label: "Notificações" },
+    { href: "/", icon: <Home size={14} />, label: "Landing Page" },
+  ] : user.role === "company" ? [
+    { href: "/app/dashboard", icon: <LayoutDashboard size={14} />, label: "Dashboard" },
+    { href: "/app/profile", icon: <UserIcon size={14} />, label: "Perfil" },
+    { href: "/app/jobs", icon: <Briefcase size={14} />, label: "Buscar Extras" },
+    { href: "/app/applications", icon: <UserCheck size={14} />, label: "Candidaturas" },
+    { href: "/app/wallet", icon: <Wallet size={14} />, label: "Carteira" },
+    { href: "/app/chat", icon: <MessageCircle size={14} />, label: "Chat" },
+    { href: "/app/notifications", icon: <Bell size={14} />, label: "Notificações" },
+    { href: "/app/profile", icon: <Settings size={14} />, label: "Configurações" },
+    { href: "/", icon: <Home size={14} />, label: "Landing Page" },
+  ] : [
+    { href: "/app/dashboard", icon: <LayoutDashboard size={14} />, label: "Dashboard" },
+    { href: "/app/profile", icon: <UserIcon size={14} />, label: "Perfil" },
+    { href: "/app/network", icon: <Globe size={14} />, label: "Rede" },
+    { href: "/app/feed", icon: <Rss size={14} />, label: "Feed" },
+    { href: "/app/jobs", icon: <Briefcase size={14} />, label: "Buscar Extras" },
+    { href: "/app/applications", icon: <FileText size={14} />, label: "Candidaturas" },
+    { href: "/app/wallet", icon: <Wallet size={14} />, label: "Carteira" },
+    { href: "/app/referrals", icon: <Trophy size={14} />, label: "Indicações" },
+    { href: "/app/chat", icon: <MessageCircle size={14} />, label: "Chat" },
+    { href: "/app/notifications", icon: <Bell size={14} />, label: "Notificações" },
+    { href: "/app/profile", icon: <Settings size={14} />, label: "Configurações" },
+    { href: "/", icon: <Home size={14} />, label: "Landing Page" },
+  ];
 
   const PAGE_TITLES: Record<string, string> = {
     "/app/dashboard": "Dashboard",
@@ -671,22 +708,99 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </Link>
             )}
 
-            {/* Logout button in header for quick access */}
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={logout}
-              className="hidden lg:flex w-9 h-9 rounded-xl items-center justify-center text-muted-foreground hover:text-red-400 hover:bg-red-400/8 transition-all"
-              title="Sair da conta"
-            >
-              <LogOut size={16} />
-            </motion.button>
-
-            {/* Mobile avatar */}
-            <div className="lg:hidden relative ml-1">
-              <div className="relative">
+            {/* Account hub — avatar + full dropdown (all screen sizes) */}
+            <div className="relative ml-1" ref={accountMenuRef}>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setAccountMenuOpen(v => !v)}
+                className={`relative rounded-xl flex items-center justify-center transition-all outline-none ${
+                  accountMenuOpen ? "ring-2 ring-primary/50 ring-offset-1 ring-offset-black" : ""
+                }`}
+                title="Minha conta"
+              >
                 <AvatarInitials name={user.name} size="sm" />
                 {user.role === "freelancer" && <XPRing progress={xpProgress} size={36} />}
-              </div>
+                {user.role === "freelancer" && (
+                  <span className="absolute -bottom-1 -right-1 pointer-events-none" style={{ zIndex: 1 }}>
+                    <LevelBadgeIcon level={user.level} size="xs" />
+                  </span>
+                )}
+              </motion.button>
+
+              <AnimatePresence>
+                {accountMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.94, y: -6 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.94, y: -6 }}
+                    transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
+                    className="absolute right-0 top-full mt-2.5 w-64 rounded-2xl border border-white/10 shadow-2xl z-50 overflow-hidden"
+                    style={{
+                      background: "rgba(4, 6, 10, 0.97)",
+                      backdropFilter: "blur(40px) saturate(180%)",
+                      boxShadow: "0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06) inset",
+                    }}
+                  >
+                    {/* User info */}
+                    <div className="p-3.5 border-b border-white/7">
+                      <div className="flex items-center gap-3">
+                        <div className="relative flex-shrink-0">
+                          <AvatarInitials name={user.name} />
+                          {user.role === "freelancer" && <XPRing progress={xpProgress} size={44} />}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-bold text-sm truncate leading-tight">{user.name}</p>
+                          <p className="text-[11px] text-muted-foreground truncate mt-0.5">{user.email}</p>
+                          <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+                            {user.role === "freelancer" && <LevelBadge level={user.level} size="xs" />}
+                            {isAdmin && (
+                              <span className="inline-flex items-center gap-1 text-[10px] text-primary font-bold px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/20">
+                                <Shield size={9} /> {adminRoleLabel}
+                              </span>
+                            )}
+                            {user.role === "company" && user.companyName && (
+                              <span className="text-[10px] text-muted-foreground truncate">{user.companyName}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Nav items */}
+                    <div className="p-1.5 max-h-[60vh] overflow-y-auto">
+                      {accountMenuItems.map((item, i) => (
+                        <Link key={i} href={item.href}>
+                          <motion.div
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => setAccountMenuOpen(false)}
+                            className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all cursor-pointer group ${
+                              isActive(item.href) && item.href !== "/"
+                                ? "text-primary bg-primary/8 font-semibold"
+                                : "text-muted-foreground hover:text-foreground hover:bg-white/6 font-medium"
+                            }`}
+                          >
+                            <span className={`flex-shrink-0 ${isActive(item.href) && item.href !== "/" ? "text-primary" : "text-muted-foreground/70 group-hover:text-foreground"}`}>
+                              {item.icon}
+                            </span>
+                            {item.label}
+                          </motion.div>
+                        </Link>
+                      ))}
+                    </div>
+
+                    {/* Logout */}
+                    <div className="p-1.5 border-t border-white/7">
+                      <motion.button
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => { logout(); setAccountMenuOpen(false); }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-red-400 hover:bg-red-400/8 transition-all font-medium"
+                      >
+                        <LogOut size={14} className="flex-shrink-0" /> Sair da conta
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </header>

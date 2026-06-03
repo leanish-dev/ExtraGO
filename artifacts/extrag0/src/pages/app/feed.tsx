@@ -12,6 +12,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 import { apiFetch } from "@/lib/api-fetch";
+import { LevelBadge } from "@/components/level-badge";
 
 interface PostAuthor {
   id: number;
@@ -57,12 +58,6 @@ const FILTER_TABS = [
   { key: "general", label: "Posts" },
 ];
 
-const LEVEL_COLORS: Record<string, string> = {
-  bronze: "text-orange-400",
-  silver: "text-slate-300",
-  gold: "text-yellow-400",
-  elite: "text-primary",
-};
 
 function Avatar({ user, size = 40 }: { user?: PostAuthor | null; size?: number }) {
   if (user?.avatarUrl) {
@@ -263,9 +258,7 @@ function PostCard({ post, onDelete }: { post: FeedPost; onDelete: (id: number) =
                   <CheckCircle size={13} className="text-primary flex-shrink-0" />
                 )}
                 {post.author?.level && (
-                  <span className={`text-[10px] font-bold ${LEVEL_COLORS[post.author.level] ?? "text-muted-foreground"}`}>
-                    {post.author.level.toUpperCase()}
-                  </span>
+                  <LevelBadge level={post.author.level} size="xs" />
                 )}
               </div>
               {post.author?.categories && post.author.categories.length > 0 && (

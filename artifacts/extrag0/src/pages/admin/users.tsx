@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAdminListUsers, useAdminBanUser, useAdminVerifyUser } from "@workspace/api-client-react";
 import type { User } from "@workspace/api-client-react";
 import { Users, Search, Shield, Ban, CheckCircle, Star, Briefcase, ChevronDown, Crown } from "lucide-react";
+import { LevelBadgeIcon } from "@/components/level-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -103,7 +104,7 @@ function UserRow({
             <>
               <span className="flex items-center gap-1"><Briefcase size={10} /> {user.completedJobs ?? 0} jobs</span>
               <span className="flex items-center gap-1"><Star size={10} className="text-yellow-400" /> {(user.reputationScore ?? 0).toFixed(1)}</span>
-              <span className="capitalize">{user.level ?? "bronze"}</span>
+              <span className="flex items-center gap-1"><LevelBadgeIcon level={user.level} size="xs" /><span className="capitalize">{user.level ?? "bronze"}</span></span>
             </>
           )}
           {user.role === "company" && user.companyName && (

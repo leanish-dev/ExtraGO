@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import dashboardBanner from "@assets/file_00000000a88071f79bcf2c132d090401_1779868066995.png";
+import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS, LEVEL_COLORS } from "@/components/level-badge";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -504,11 +505,11 @@ function FreelancerDashboard() {
   const { data: myApps, isLoading: appsLoading } = useListApplications({ status: "pending" });
   const pendingApps = myApps?.slice(0, 4) ?? [];
 
-  const levelMap: Record<string, { next: string; threshold: number; color: string; emoji: string }> = {
-    bronze: { next: "Prata", threshold: 5, color: "text-orange-400", emoji: "🥉" },
-    silver: { next: "Ouro", threshold: 15, color: "text-slate-300", emoji: "🥈" },
-    gold: { next: "Elite", threshold: 30, color: "text-yellow-400", emoji: "🥇" },
-    elite: { next: "Elite", threshold: 100, color: "text-primary", emoji: "👑" },
+  const levelMap: Record<string, { next: string; threshold: number }> = {
+    bronze: { next: "Júnior", threshold: 20 },
+    silver: { next: "Intermediário", threshold: 100 },
+    gold: { next: "Sênior", threshold: 300 },
+    elite: { next: "Sênior", threshold: 300 },
   };
   const currentLevel = user?.level ?? "bronze";
   const levelInfo = levelMap[currentLevel] ?? levelMap.bronze;
@@ -546,15 +547,7 @@ function FreelancerDashboard() {
           subtitle="Aqui está seu desempenho na plataforma."
           badge={
             <div className="flex items-center gap-2 flex-wrap">
-              <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border inline-flex items-center gap-1.5 ${
-                currentLevel === "elite" ? "text-primary border-primary/30 bg-primary/8" :
-                currentLevel === "gold" ? "text-yellow-400 border-yellow-400/30 bg-yellow-400/8" :
-                currentLevel === "silver" ? "text-slate-300 border-slate-300/30 bg-slate-300/8" :
-                "text-orange-400 border-orange-400/30 bg-orange-400/8"
-              }`}>
-                <span>{levelInfo.emoji}</span>
-                Nível {currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)}
-              </span>
+              <LevelBadge level={currentLevel} size="sm" />
               {user?.reputationScore != null && user.reputationScore > 0 && (
                 <span className="text-[11px] text-yellow-400 flex items-center gap-1 font-semibold">
                   <Star size={10} className="fill-yellow-400" />
@@ -587,8 +580,7 @@ function FreelancerDashboard() {
             <div>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">Progresso de Nível</p>
               <p className="font-bold text-base flex items-center gap-2">
-                <span className={levelInfo.color}>{levelInfo.emoji}</span>
-                <span className="text-foreground">{currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1)}</span>
+                <LevelBadge level={currentLevel} size="sm" />
                 <span className="text-muted-foreground text-sm font-normal">→ {levelInfo.next}</span>
               </p>
             </div>
