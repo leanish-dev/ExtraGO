@@ -140,7 +140,7 @@ function App() {
         <ErrorBoundary>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <AuthProvider>
-            <div className="dark min-h-[100dvh] bg-background text-foreground overflow-x-hidden">
+            <div className="dark min-h-[100dvh] text-foreground overflow-x-hidden">
               <Router />
             </div>
           </AuthProvider>
