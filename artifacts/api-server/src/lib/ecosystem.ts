@@ -145,6 +145,26 @@ export async function recalculateReputation(userId: number): Promise<number> {
   return reputationScore;
 }
 
+export async function adjustCounterOfferReservation(
+  companyId: number,
+  originalJobValue: number,
+  newProposedRate: number,
+) {
+  const companyWallet = await ensureWallet(companyId, "company");
+  const currentReserved = companyWallet.reservedBalance;
+  // Release whatever was previously reserved for this job (capped to current reserved)
+  const toRelease = Math.min(currentReserved, originalJobValue);
+  // Net additional funds needed from balance
+  const netNew = newProposedRate - toRelease;
+  if (netNew > 0 && companyWallet.balance < netNew) {
+    throw new Error("Insufficient company balance to reserve counter-offer amount");
+  }
+  await db.update(walletsTable).set({
+    reservedBalance: sql`GREATEST(${walletsTable.reservedBalance} - ${toRelease}, 0) + ${newProposedRate}`,
+    balance: sql`${walletsTable.balance} + ${toRelease} - ${newProposedRate}`,
+  }).where(eq(walletsTable.id, companyWallet.id));
+}
+
 export async function completeJobCascade(
   applicationId: number,
   jobId: number,
@@ -152,6 +172,7 @@ export async function completeJobCascade(
   companyId: number,
   jobTitle: string,
   jobValue: number,
+  jobLocation?: string,
 ) {
   const result = await db.transaction(async (tx) => {
     // --- 1. Strict company funds check before any mutations ---
@@ -226,11 +247,14 @@ export async function completeJobCascade(
       referenceId: `app:${applicationId}`,
     });
 
-    // Release reserved balance from company wallet, debit total spent
+    // Release reserved balance from company wallet, debit total spent (strict split ledger)
     const [companyWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, companyId));
     if (companyWallet) {
+      const fromReserved = Math.min(companyWallet.reservedBalance, jobValue);
+      const fromBalance = jobValue - fromReserved;
       await tx.update(walletsTable).set({
-        reservedBalance: sql`GREATEST(${walletsTable.reservedBalance} - ${jobValue}, 0)`,
+        reservedBalance: sql`${walletsTable.reservedBalance} - ${fromReserved}`,
+        balance: sql`${walletsTable.balance} - ${fromBalance}`,
         totalSpent: sql`${walletsTable.totalSpent} + ${jobValue}`,
       }).where(eq(walletsTable.id, companyWallet.id));
 
@@ -266,11 +290,11 @@ export async function completeJobCascade(
       }
     }
 
-    // State representative commission (from platform fee)
+    // State representative commission (from platform fee — keyed by job location state)
     const representatives = await tx.select().from(stateRepresentativesTable);
-    const freelancerRegions = freelancer.serviceRegions ?? [];
+    const jobStateCode = (jobLocation ?? "").toUpperCase().replace(/[^A-Z]/g, "").slice(0, 2);
     for (const rep of representatives) {
-      if (freelancerRegions.includes(rep.stateCode)) {
+      if (jobStateCode && rep.stateCode === jobStateCode) {
         const repCommission = Math.round(platformFee * rep.commissionRate);
         if (repCommission > 0) {
           const [repWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, rep.userId));

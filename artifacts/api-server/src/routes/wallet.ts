@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db, walletsTable, transactionsTable, depositRequestsTable, usersTable } from "@workspace/db";
-import { eq, sql, and, desc } from "drizzle-orm";
+import { eq, sql, and, desc, gte, lte } from "drizzle-orm";
 import { requireAuth } from "../lib/auth";
 import { RequestWithdrawalBody, ListTransactionsQueryParams } from "@workspace/api-zod";
 import { ensureWallet } from "../lib/ecosystem";
@@ -56,32 +56,33 @@ router.get("/wallet/transactions", requireAuth, async (req, res) => {
   const walletType = user.role === "company" ? "company" : user.role === "admin" ? "platform" : "freelancer";
   const wallet = await ensureWallet(user.id, walletType as any);
 
-  let transactions = await db.select().from(transactionsTable)
-    .where(eq(transactionsTable.walletId, wallet.id))
-    .orderBy(desc(transactionsTable.createdAt))
-    .limit(limit)
-    .offset(offset);
+  const conditions = [eq(transactionsTable.walletId, wallet.id)];
 
-  if (type) transactions = transactions.filter(t => t.type === type);
+  if (type) conditions.push(eq(transactionsTable.type, type as any));
 
   const statusFilter = req.query.status as string | undefined;
-  if (statusFilter) transactions = transactions.filter(t => t.status === statusFilter);
+  if (statusFilter) conditions.push(eq(transactionsTable.status, statusFilter as any));
 
   const fromFilter = req.query.from as string | undefined;
-  const toFilter = req.query.to as string | undefined;
   if (fromFilter) {
     const fromDate = new Date(fromFilter);
-    if (!isNaN(fromDate.getTime())) {
-      transactions = transactions.filter(t => t.createdAt && t.createdAt >= fromDate);
-    }
+    if (!isNaN(fromDate.getTime())) conditions.push(gte(transactionsTable.createdAt, fromDate));
   }
+
+  const toFilter = req.query.to as string | undefined;
   if (toFilter) {
     const toDate = new Date(toFilter);
     if (!isNaN(toDate.getTime())) {
       toDate.setHours(23, 59, 59, 999);
-      transactions = transactions.filter(t => t.createdAt && t.createdAt <= toDate);
+      conditions.push(lte(transactionsTable.createdAt, toDate));
     }
   }
+
+  const transactions = await db.select().from(transactionsTable)
+    .where(and(...conditions))
+    .orderBy(desc(transactionsTable.createdAt))
+    .limit(limit)
+    .offset(offset);
 
   res.json(transactions.map(formatTransaction));
 });

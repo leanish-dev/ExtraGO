@@ -3,7 +3,7 @@ import { db, applicationsTable, jobsTable, usersTable, notificationsTable } from
 import { eq, and, sql } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { ApplyToJobBody, ListApplicationsQueryParams } from "@workspace/api-zod";
-import { calculateLevel, LEVEL_FEE, LEVEL_LABELS, completeJobCascade, reserveCompanyFunds } from "../lib/ecosystem";
+import { calculateLevel, LEVEL_FEE, LEVEL_LABELS, completeJobCascade, reserveCompanyFunds, adjustCounterOfferReservation } from "../lib/ecosystem";
 
 const router = Router();
 
@@ -252,6 +252,7 @@ router.post("/applications/:id/complete", requireAuth, async (req, res) => {
     job.companyId,
     job.title,
     jobValue,
+    job.location ?? undefined,
   );
 
   const [freelancer] = await db.select().from(usersTable).where(eq(usersTable.id, app.freelancerId));
@@ -324,6 +325,13 @@ router.post("/applications/:id/accept-counter", requireAuth, async (req, res) =>
   const [job] = await db.select().from(jobsTable).where(eq(jobsTable.id, app.jobId));
   if (!job || (job.companyId !== user.id && user.role !== "admin")) {
     res.status(403).json({ error: "Forbidden" }); return;
+  }
+
+  // Adjust company wallet reservation from original job value to counter-offer rate
+  const originalJobValue = job.totalValue ?? 0;
+  const counterRate = app.proposedRate ?? originalJobValue;
+  if (counterRate > 0) {
+    await adjustCounterOfferReservation(job.companyId, originalJobValue, counterRate);
   }
 
   const [updated] = await db.update(applicationsTable)
