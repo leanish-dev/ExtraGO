@@ -284,7 +284,6 @@ export type DepositRequestInputPaymentMethod = typeof DepositRequestInputPayment
 export const DepositRequestInputPaymentMethod = {
   pix: 'pix',
   credit_card: 'credit_card',
-  bank_transfer: 'bank_transfer',
 } as const;
 
 export interface DepositRequestInput {
@@ -300,7 +299,6 @@ export type DepositRequestPaymentMethod = typeof DepositRequestPaymentMethod[key
 export const DepositRequestPaymentMethod = {
   pix: 'pix',
   credit_card: 'credit_card',
-  bank_transfer: 'bank_transfer',
 } as const;
 
 export type DepositRequestStatus = typeof DepositRequestStatus[keyof typeof DepositRequestStatus];

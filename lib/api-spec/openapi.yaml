@@ -1619,7 +1619,7 @@ components:
           type: number
         paymentMethod:
           type: string
-          enum: [pix, credit_card, bank_transfer]
+          enum: [pix, credit_card]
         pixKey:
           type: ["string", "null"]
 
@@ -1636,7 +1636,7 @@ components:
           type: number
         paymentMethod:
           type: string
-          enum: [pix, credit_card, bank_transfer]
+          enum: [pix, credit_card]
         pixKey:
           type: ["string", "null"]
         status:

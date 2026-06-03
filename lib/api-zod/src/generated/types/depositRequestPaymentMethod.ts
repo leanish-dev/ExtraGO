@@ -12,5 +12,4 @@ export type DepositRequestPaymentMethod = typeof DepositRequestPaymentMethod[key
 export const DepositRequestPaymentMethod = {
   pix: 'pix',
   credit_card: 'credit_card',
-  bank_transfer: 'bank_transfer',
 } as const;

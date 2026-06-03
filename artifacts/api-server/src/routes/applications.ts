@@ -150,11 +150,14 @@ router.post("/applications/:id/approve", requireAuth, async (req, res) => {
     return;
   }
 
-  const jobValue = app.proposedRate ?? job.totalValue ?? 0;
-
-  // Reserve company funds at approval time — hard fail if insufficient balance
-  if (jobValue > 0) {
-    await reserveCompanyFunds(job.companyId, jobValue, job.title, id);
+  // Only reserve funds on the first approval (pending → approved).
+  // counter_rejected always comes from counter_offered which came from approved,
+  // so funds are already reserved — do not double-reserve.
+  if (app.status === "pending") {
+    const jobValue = job.totalValue ?? 0;
+    if (jobValue > 0) {
+      await reserveCompanyFunds(job.companyId, jobValue, job.title, id);
+    }
   }
 
   const [updated] = await db.update(applicationsTable)

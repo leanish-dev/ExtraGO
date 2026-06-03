@@ -200,8 +200,10 @@ export async function completeJobCascade(
     const platformFee = Math.round(jobValue * feeRate);
     const freelancerEarnings = Math.round(jobValue - platformFee);
 
-    const [freelancerWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, freelancerId));
-    if (!freelancerWallet) throw new Error("Freelancer wallet not found");
+    let [freelancerWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, freelancerId));
+    if (!freelancerWallet) {
+      [freelancerWallet] = await tx.insert(walletsTable).values({ userId: freelancerId, walletType: "freelancer" }).returning();
+    }
 
     await tx.update(walletsTable).set({
       balance: sql`${walletsTable.balance} + ${freelancerEarnings}`,

@@ -1182,7 +1182,7 @@ export const AdminListDepositRequestsResponseItem = zod.object({
   "walletId": zod.number(),
   "userId": zod.number().optional(),
   "amount": zod.number(),
-  "paymentMethod": zod.enum(['pix', 'credit_card', 'bank_transfer']),
+  "paymentMethod": zod.enum(['pix', 'credit_card']),
   "pixKey": zod.string().nullish(),
   "status": zod.enum(['pending', 'confirmed', 'rejected', 'credited']),
   "adminNote": zod.string().nullish(),
@@ -1554,7 +1554,7 @@ export const RejectCounterOfferResponse = zod.object({
  */
 export const RequestDepositBody = zod.object({
   "amount": zod.number(),
-  "paymentMethod": zod.enum(['pix', 'credit_card', 'bank_transfer']).optional(),
+  "paymentMethod": zod.enum(['pix', 'credit_card']).optional(),
   "pixKey": zod.string().nullish()
 })
 
@@ -1567,7 +1567,7 @@ export const ListDepositRequestsResponseItem = zod.object({
   "walletId": zod.number(),
   "userId": zod.number().optional(),
   "amount": zod.number(),
-  "paymentMethod": zod.enum(['pix', 'credit_card', 'bank_transfer']),
+  "paymentMethod": zod.enum(['pix', 'credit_card']),
   "pixKey": zod.string().nullish(),
   "status": zod.enum(['pending', 'confirmed', 'rejected', 'credited']),
   "adminNote": zod.string().nullish(),
