@@ -207,7 +207,6 @@ export async function completeJobCascade(
       balance: sql`${walletsTable.balance} + ${freelancerEarnings}`,
       totalEarned: sql`${walletsTable.totalEarned} + ${freelancerEarnings}`,
       totalFeesPaid: sql`${walletsTable.totalFeesPaid} + ${platformFee}`,
-      reservedBalance: sql`GREATEST(${walletsTable.reservedBalance} - ${jobValue}, 0)`,
     }).where(eq(walletsTable.id, freelancerWallet.id));
 
     await tx.insert(transactionsTable).values({

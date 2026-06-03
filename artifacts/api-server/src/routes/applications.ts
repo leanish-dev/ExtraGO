@@ -261,19 +261,8 @@ router.post("/applications/:id/complete", requireAuth, async (req, res) => {
 
   const jobValue = app.proposedRate ?? job.totalValue ?? 0;
 
-  if (jobValue <= 0) {
-    // No financial value — just mark completed without cascade
-    const [updated] = await db.update(applicationsTable)
-      .set({ status: "completed" })
-      .where(eq(applicationsTable.id, id))
-      .returning();
-    const [freelancer] = await db.select().from(usersTable).where(eq(usersTable.id, app.freelancerId));
-    const [company] = await db.select().from(usersTable).where(eq(usersTable.id, job.companyId));
-    res.json(formatApp(updated, formatJob(job, company), freelancer));
-    return;
-  }
-
-  // completeJobCascade marks application as completed atomically inside its transaction
+  // Always run the full cascade (completedJobs, level, reputation, notifications)
+  // even for zero-value jobs — financial side-effects are no-ops when jobValue=0
   const cascade = await completeJobCascade(
     id,
     job.id,

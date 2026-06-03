@@ -203,7 +203,37 @@ router.get("/admin/deposit-requests", requireAdmin, async (req, res) => {
   })));
 });
 
-// POST /admin/deposit-requests/:id/approve
+// POST /admin/deposit-requests/:id/confirm — pending → confirmed (payment received, not yet credited)
+router.post("/admin/deposit-requests/:id/confirm", requireAdmin, async (req, res) => {
+  const id = parseInt(req.params.id as string);
+  const adminUser = (req as any).user;
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+
+  const [deposit] = await db.select().from(depositRequestsTable).where(eq(depositRequestsTable.id, id));
+  if (!deposit) { res.status(404).json({ error: "Not found" }); return; }
+  if (deposit.status !== "pending") { res.status(400).json({ error: "Deposit must be in pending state to confirm" }); return; }
+
+  const { adminNote } = req.body;
+
+  await db.update(depositRequestsTable).set({
+    status: "confirmed",
+    adminNote: adminNote ?? null,
+    approvedById: adminUser.id,
+    updatedAt: new Date(),
+  }).where(eq(depositRequestsTable.id, id));
+
+  await db.insert(notificationsTable).values({
+    userId: deposit.userId,
+    type: "deposit_confirmed",
+    title: "📋 Pagamento recebido",
+    message: `Recebemos seu pagamento de R$${(deposit.amount / 100).toFixed(2)}. O saldo será creditado em breve.`,
+    isRead: false,
+  }).catch(() => {});
+
+  res.json({ message: "Deposit confirmed — payment received, pending credit" });
+});
+
+// POST /admin/deposit-requests/:id/approve — confirmed → credited (credit balance)
 router.post("/admin/deposit-requests/:id/approve", requireAdmin, async (req, res) => {
   const id = parseInt(req.params.id as string);
   const adminUser = (req as any).user;
@@ -211,7 +241,10 @@ router.post("/admin/deposit-requests/:id/approve", requireAdmin, async (req, res
 
   const [deposit] = await db.select().from(depositRequestsTable).where(eq(depositRequestsTable.id, id));
   if (!deposit) { res.status(404).json({ error: "Not found" }); return; }
-  if (deposit.status !== "pending") { res.status(400).json({ error: "Deposit not in pending state" }); return; }
+  // Accept confirmed (proper flow) or pending (admin shortcut)
+  if (!["confirmed", "pending"].includes(deposit.status)) {
+    res.status(400).json({ error: "Deposit must be confirmed or pending to approve" }); return;
+  }
 
   const { adminNote } = req.body;
 

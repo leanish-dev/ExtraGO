@@ -141,7 +141,7 @@ router.post("/wallet/deposit-request", requireAuth, async (req, res) => {
     res.status(400).json({ error: "Minimum deposit is R$50.00" }); return;
   }
 
-  const validMethods = ["pix", "credit_card", "bank_transfer"];
+  const validMethods = ["pix", "credit_card"];
   if (paymentMethod && !validMethods.includes(paymentMethod)) {
     res.status(400).json({ error: "Invalid payment method" }); return;
   }
@@ -161,7 +161,7 @@ router.post("/wallet/deposit-request", requireAuth, async (req, res) => {
     walletId: wallet.id,
     type: "deposit",
     amount,
-    description: `Depósito via ${paymentMethod === "credit_card" ? "Cartão de Crédito" : paymentMethod === "bank_transfer" ? "Transferência" : "PIX"} — aguardando confirmação`,
+    description: `Depósito via ${paymentMethod === "credit_card" ? "Cartão de Crédito" : "PIX"} — aguardando confirmação`,
     status: "pending",
     referenceId: `deposit:${depositRequest.id}`,
   }).catch(() => {});
