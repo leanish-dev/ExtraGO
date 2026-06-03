@@ -447,34 +447,59 @@ router.get("/admin/analytics", requireAdmin, async (req, res) => {
   const totalCommissions = allTransactions.filter(t => t.type === "commission").reduce((s, t) => s + t.amount, 0);
   const totalPlatformFees = allTransactions.filter(t => t.type === "platform_fee").reduce((s, t) => s + t.amount, 0);
 
-  // State-level aggregation from serviceRegions
-  const stateData = new Map<string, { users: number; freelancers: number; companies: number; revenue: number; jobs: number }>();
+  // State-level aggregation — authoritative sources only
   const BR_STATES = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
-  BR_STATES.forEach(s => stateData.set(s, { users: 0, freelancers: 0, companies: 0, revenue: 0, jobs: 0 }));
+  const stateData = new Map<string, { freelancers: number; jobs: number; revenue: number }>();
+  BR_STATES.forEach(s => stateData.set(s, { freelancers: 0, jobs: 0, revenue: 0 }));
 
-  allUsers.forEach(u => {
+  // Freelancers per state — from serviceRegions (stated service area declared by user)
+  allUsers.filter(u => u.role === "freelancer").forEach(u => {
     (u.serviceRegions ?? []).forEach((region: string) => {
-      const code = region.toUpperCase().slice(0, 2);
-      if (stateData.has(code)) {
-        const entry = stateData.get(code)!;
-        entry.users += 1;
-        if (u.role === "freelancer") entry.freelancers += 1;
-        if (u.role === "company") entry.companies += 1;
-        const wallet = walletMap.get(u.id);
-        if (wallet) entry.revenue += wallet.totalEarned;
-      }
+      const code = region.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 2);
+      if (stateData.has(code)) stateData.get(code)!.freelancers += 1;
     });
   });
 
+  // Jobs per state — keyed by job.location (authoritative job location)
   allJobs.forEach(j => {
-    const state = (j.location ?? "").toUpperCase().slice(0, 2);
+    const state = (j.location ?? "").toUpperCase().replace(/[^A-Z]/g, "").slice(0, 2);
     if (stateData.has(state)) stateData.get(state)!.jobs += 1;
   });
+
+  // Companies per state — companies with at least one job posted in that state
+  const companyStateSet = new Map<string, Set<number>>();
+  allJobs.forEach(j => {
+    const state = (j.location ?? "").toUpperCase().replace(/[^A-Z]/g, "").slice(0, 2);
+    if (stateData.has(state)) {
+      if (!companyStateSet.has(state)) companyStateSet.set(state, new Set());
+      companyStateSet.get(state)!.add(j.companyId);
+    }
+  });
+
+  // Revenue per state — from platform_fee transactions linked to apps → jobs → location
+  // referenceId format: "app:{applicationId}"
+  const appLocationMap = new Map<number, string>(); // appId → stateCode
+  allJobs.forEach(j => {
+    const stateCode = (j.location ?? "").toUpperCase().replace(/[^A-Z]/g, "").slice(0, 2);
+    if (stateData.has(stateCode)) {
+      allApps.filter(a => a.jobId === j.id).forEach(a => appLocationMap.set(a.id, stateCode));
+    }
+  });
+  allTransactions
+    .filter(t => t.type === "platform_fee" && t.referenceId?.startsWith("app:"))
+    .forEach(t => {
+      const appId = parseInt((t.referenceId ?? "").replace("app:", ""));
+      if (!isNaN(appId)) {
+        const stateCode = appLocationMap.get(appId);
+        if (stateCode && stateData.has(stateCode)) stateData.get(stateCode)!.revenue += t.amount;
+      }
+    });
 
   // byState as array matching OpenAPI StateStats schema
   const byState = Array.from(stateData.entries()).map(([state, data]) => ({
     state,
     totalFreelancers: data.freelancers,
+    totalCompanies: companyStateSet.get(state)?.size ?? 0,
     totalJobs: data.jobs,
     totalRevenue: data.revenue,
     representative: null as string | null,

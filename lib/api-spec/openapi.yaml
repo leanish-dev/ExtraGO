@@ -2122,15 +2122,20 @@ components:
           type: string
         totalFreelancers:
           type: integer
+        totalCompanies:
+          type: integer
+          description: Companies with at least one job posted in this state
         totalJobs:
           type: integer
         totalRevenue:
           type: number
+          description: Sum of platform_fee transactions for jobs in this state
         representative:
           type: ["string", "null"]
       required:
         - state
         - totalFreelancers
+        - totalCompanies
         - totalJobs
         - totalRevenue
 

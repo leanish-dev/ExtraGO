@@ -379,48 +379,49 @@ export async function completeJobCascade(
       await tx.update(usersTable).set({ level: newLevel }).where(eq(usersTable.id, freelancerId));
     }
 
+    // Notifications inside the transaction so they are atomic with all financial/stat mutations.
+    // If the transaction rolls back (e.g. insufficient funds), no notifications are sent.
+    await tx.insert(notificationsTable).values({
+      userId: freelancerId,
+      type: "job_completed",
+      title: "✅ Extra concluído!",
+      message: `Seu trabalho em "${jobTitle}" foi concluído. R$${(freelancerEarnings / 100).toFixed(2)} disponível na carteira.`,
+      isRead: false,
+    });
+
+    await tx.insert(notificationsTable).values({
+      userId: companyId,
+      type: "job_completed",
+      title: "✅ Extra finalizado",
+      message: `O Extra "${jobTitle}" foi concluído com sucesso.`,
+      isRead: false,
+    });
+
+    if (levelChanged) {
+      await tx.insert(notificationsTable).values({
+        userId: freelancerId,
+        type: "level_up",
+        title: "🎉 Você subiu de nível!",
+        message: `Parabéns! Você agora é ${LEVEL_LABELS[newLevel]}. Taxa reduzida para ${(LEVEL_FEE[newLevel] * 100).toFixed(0)}%.`,
+        isRead: false,
+      });
+    }
+
+    if (freelancer.referredById) {
+      const commission = Math.round(freelancerEarnings * 0.03);
+      if (commission > 0) {
+        await tx.insert(notificationsTable).values({
+          userId: freelancer.referredById,
+          type: "commission_received",
+          title: "💰 Comissão de indicação!",
+          message: `+R$${(commission / 100).toFixed(2)} pelo Extra concluído por ${freelancer.name}`,
+          isRead: false,
+        });
+      }
+    }
+
     return { completedApp, freelancer, freelancerEarnings, platformFee, feeRate, newLevel, levelChanged, newReputationScore };
   });
-
-  // Fire-and-forget notifications (non-critical, outside transaction)
-  if (result.levelChanged) {
-    db.insert(notificationsTable).values({
-      userId: freelancerId,
-      type: "level_up",
-      title: "🎉 Você subiu de nível!",
-      message: `Parabéns! Você agora é ${LEVEL_LABELS[result.newLevel]}. Taxa reduzida para ${(LEVEL_FEE[result.newLevel] * 100).toFixed(0)}%.`,
-      isRead: false,
-    }).catch(() => {});
-  }
-
-  if (result.freelancer.referredById) {
-    const commission = Math.round(result.freelancerEarnings * 0.03);
-    if (commission > 0) {
-      db.insert(notificationsTable).values({
-        userId: result.freelancer.referredById,
-        type: "commission_received",
-        title: "💰 Comissão de indicação!",
-        message: `+R$${(commission / 100).toFixed(2)} pelo Extra concluído por ${result.freelancer.name}`,
-        isRead: false,
-      }).catch(() => {});
-    }
-  }
-
-  db.insert(notificationsTable).values({
-    userId: freelancerId,
-    type: "job_completed",
-    title: "✅ Extra concluído!",
-    message: `Seu trabalho em "${jobTitle}" foi concluído. R$${(result.freelancerEarnings / 100).toFixed(2)} disponível na carteira.`,
-    isRead: false,
-  }).catch(() => {});
-
-  db.insert(notificationsTable).values({
-    userId: companyId,
-    type: "job_completed",
-    title: "✅ Extra finalizado",
-    message: `O Extra "${jobTitle}" foi concluído com sucesso.`,
-    isRead: false,
-  }).catch(() => {});
 
   return { completedApp: result.completedApp, freelancerEarnings: result.freelancerEarnings, platformFee: result.platformFee, newLevel: result.newLevel, levelChanged: result.levelChanged, newReputation: result.newReputationScore };
 }

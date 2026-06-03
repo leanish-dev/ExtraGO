@@ -3,7 +3,7 @@ import { db, applicationsTable, jobsTable, usersTable, notificationsTable, walle
 import { eq, and, sql } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { ApplyToJobBody, ListApplicationsQueryParams } from "@workspace/api-zod";
-import { calculateLevel, LEVEL_FEE, LEVEL_LABELS, completeJobCascade, reserveCompanyFunds, adjustCounterOfferReservation } from "../lib/ecosystem";
+import { calculateLevel, LEVEL_FEE, LEVEL_LABELS, completeJobCascade, reserveCompanyFunds, adjustCounterOfferReservation, recalculateReputation } from "../lib/ecosystem";
 
 const router = Router();
 
@@ -242,6 +242,9 @@ router.post("/applications/:id/reject", requireAuth, async (req, res) => {
     message: `Sua candidatura para ${job.title} não foi selecionada desta vez`,
     isRead: false,
   }).catch(() => {});
+
+  // Rejection affects completionRate and attendance score — recalculate reputation post-commit
+  recalculateReputation(app.freelancerId).catch(() => {});
 
   const [freelancer] = await db.select().from(usersTable).where(eq(usersTable.id, app.freelancerId));
   const [company] = await db.select().from(usersTable).where(eq(usersTable.id, job.companyId));

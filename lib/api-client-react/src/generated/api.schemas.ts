@@ -527,7 +527,10 @@ export interface AdminDepositRejectInput {
 export interface StateStats {
   state: string;
   totalFreelancers: number;
+  /** Companies with at least one job posted in this state */
+  totalCompanies: number;
   totalJobs: number;
+  /** Sum of platform_fee transactions for jobs in this state */
   totalRevenue: number;
   /** @nullable */
   representative?: string | null;

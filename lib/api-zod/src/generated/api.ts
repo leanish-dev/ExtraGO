@@ -1290,8 +1290,9 @@ export const GetAdminAnalyticsResponse = zod.object({
   "byState": zod.array(zod.object({
   "state": zod.string(),
   "totalFreelancers": zod.number(),
+  "totalCompanies": zod.number().describe('Companies with at least one job posted in this state'),
   "totalJobs": zod.number(),
-  "totalRevenue": zod.number(),
+  "totalRevenue": zod.number().describe('Sum of platform_fee transactions for jobs in this state'),
   "representative": zod.string().nullish()
 })),
   "levelDistribution": zod.array(zod.object({
