@@ -202,7 +202,7 @@ export default function ReferralsPage() {
 
   const monthlyEarnings = (referral?.totalRewardEarned ?? 0) / Math.max(1, 3);
   const projectedAnnual = (referral?.totalRewardEarned ?? 0) * 4;
-  const activeReferrals = referral?.activeReferrals ?? 0;
+  const activeReferrals = referral?.totalConverted ?? 0;
   const inactiveReferrals = Math.max(0, (referral?.totalInvited ?? 0) - activeReferrals);
 
   const currentLevel = LEVEL_CONFIG.find(l => l.level === (user?.level ?? "bronze")) ?? LEVEL_CONFIG[0];

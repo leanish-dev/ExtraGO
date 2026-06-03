@@ -287,7 +287,7 @@ export default function AdminDashboard() {
       {/* Main KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={<Users size={22} />} label="Total Usuários" value={stats?.totalUsers ?? 0} sub={`+${stats?.usersThisMonth ?? 0} este mês`} color="primary" isLoading={isLoading} />
-        <StatCard icon={<Briefcase size={22} />} label="Total Extras" value={stats?.totalJobs ?? 0} sub={`${stats?.jobsByStatus?.open ?? 0} abertos`} color="secondary" isLoading={isLoading} />
+        <StatCard icon={<Briefcase size={22} />} label="Total Extras" value={stats?.totalJobs ?? 0} sub="publicados na plataforma" color="secondary" isLoading={isLoading} />
         <StatCard icon={<DollarSign size={22} />} label="Receita Total" value={`R$ ${((stats?.totalRevenue ?? 0) / 100).toFixed(0)}`} sub="em transações" color="yellow" isLoading={isLoading} />
         <StatCard icon={<AlertCircle size={22} />} label="Saques Pendentes" value={stats?.pendingWithdrawals ?? 0} sub="aguardando aprovação" color="red" isLoading={isLoading} />
       </div>
@@ -313,7 +313,7 @@ export default function AdminDashboard() {
           <h2 className="text-lg font-semibold mb-4">Acesso Rápido</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             <QuickLink href="/admin/users" icon={<Users size={18} className="text-primary" />} label="Gerenciar Usuários" sub={`${stats?.pendingVerifications ?? 0} verificações pendentes`} color="bg-primary/10 border border-primary/20" />
-            <QuickLink href="/admin/jobs" icon={<Briefcase size={18} className="text-secondary" />} label="Gerenciar Extras" sub={`${stats?.jobsByStatus?.open ?? 0} extras abertos`} color="bg-secondary/10 border border-secondary/20" />
+            <QuickLink href="/admin/jobs" icon={<Briefcase size={18} className="text-secondary" />} label="Gerenciar Extras" sub={`${stats?.totalJobs ?? 0} extras publicados`} color="bg-secondary/10 border border-secondary/20" />
             <QuickLink href="/admin/withdrawals" icon={<DollarSign size={18} className="text-yellow-400" />} label="Aprovar Saques" sub={`${stats?.pendingWithdrawals ?? 0} saques aguardando`} color="bg-yellow-400/10 border border-yellow-400/20" />
             <QuickLink href="/admin/users" icon={<Shield size={18} className="text-green-400" />} label="Verificar Profissionais" sub="Validar documentação de extras" color="bg-green-400/10 border border-green-400/20" />
           </div>

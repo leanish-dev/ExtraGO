@@ -485,7 +485,6 @@ export default function JobsPage() {
     const matchesSearch = !search || j.title?.toLowerCase().includes(q) || j.location?.toLowerCase().includes(q);
     const cityQ = cityFilter.toLowerCase();
     const matchesCity = !cityFilter || (
-      j.city?.toLowerCase().includes(cityQ) ||
       j.location?.toLowerCase().includes(cityQ) ||
       j.title?.toLowerCase().includes(cityQ)
     );

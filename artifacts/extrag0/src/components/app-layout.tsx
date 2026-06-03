@@ -37,6 +37,7 @@ function getNavItems(role: string): NavItem[] {
       { href: "/admin/analytics", label: "Analytics", icon: <LineChart size={18} /> },
       { href: "/admin/ops", label: "Operações", icon: <Activity size={18} /> },
       { href: "/admin/map", label: "Mapa Brasil", icon: <MapPin size={18} /> },
+      { href: "/admin/representatives", label: "Representantes", icon: <Globe size={18} /> },
     ];
   }
   if (role === "company") {
@@ -188,6 +189,7 @@ const ADMIN_MAIS_ITEMS: MaisItem[] = [
   { icon: <LineChart size={19} />, label: "Analytics", href: "/admin/analytics", color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20" },
   { icon: <Activity size={19} />, label: "Operações", href: "/admin/ops", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/20" },
   { icon: <MapPin size={19} />, label: "Mapa Brasil", href: "/admin/map", color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20" },
+  { icon: <Globe size={19} />, label: "Representantes", href: "/admin/representatives", color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/20" },
   { icon: <Bell size={19} />, label: "Notificações", href: "/app/notifications", color: "text-red-400", bg: "bg-red-400/10 border-red-400/20" },
   { icon: <Settings size={19} />, label: "Configurações", href: "/app/profile", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
   { icon: <HelpCircle size={19} />, label: "Suporte", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
@@ -364,7 +366,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   type AccountMenuItem = { href: string; icon: React.ReactNode; label: string };
   const accountMenuItems: AccountMenuItem[] = isAdmin ? [
     { href: "/admin", icon: <BarChart3 size={14} />, label: "Painel Administrativo" },
-    { href: "/admin/users", icon: <Users size={14} />, label: "Representantes" },
+    { href: "/admin/representatives", icon: <Users size={14} />, label: "Representantes" },
     { href: "/admin/jobs", icon: <Briefcase size={14} />, label: "Extras" },
     { href: "/admin/withdrawals", icon: <CreditCard size={14} />, label: "Financeiro" },
     { href: "/admin/analytics", icon: <LineChart size={14} />, label: "Analytics" },
@@ -416,6 +418,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     "/admin/analytics": "Analytics",
     "/admin/ops": "Operações",
     "/admin/map": "Mapa Brasil",
+    "/admin/representatives": "Representantes",
   };
   const currentPageTitle =
     PAGE_TITLES[location] ??
