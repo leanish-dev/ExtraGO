@@ -1,8 +1,11 @@
-import { pgTable, serial, integer, text, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, serial, integer, text, timestamp, pgEnum, real } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
-export const applicationStatusEnum = pgEnum("application_status", ["pending", "approved", "rejected", "completed"]);
+export const applicationStatusEnum = pgEnum("application_status", [
+  "pending", "approved", "rejected", "completed", "cancelled",
+  "counter_offered", "counter_accepted", "counter_rejected",
+]);
 
 export const applicationsTable = pgTable("applications", {
   id: serial("id").primaryKey(),
@@ -10,6 +13,7 @@ export const applicationsTable = pgTable("applications", {
   freelancerId: integer("freelancer_id").notNull(),
   status: applicationStatusEnum("status").notNull().default("pending"),
   message: text("message"),
+  proposedRate: real("proposed_rate"),
   appliedAt: timestamp("applied_at").notNull().defaultNow(),
 });
 

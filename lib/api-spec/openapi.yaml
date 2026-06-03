@@ -947,6 +947,286 @@ paths:
               schema:
                 $ref: "#/components/schemas/AdminStats"
 
+  /admin/withdrawals/{id}/reject:
+    post:
+      operationId: adminRejectWithdrawal
+      tags: [admin]
+      summary: Reject a withdrawal and refund balance
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Withdrawal rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/deposit-requests:
+    get:
+      operationId: adminListDepositRequests
+      tags: [admin]
+      summary: Admin list all deposit requests
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deposit requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DepositRequest"
+
+  /admin/deposit-requests/{id}/approve:
+    post:
+      operationId: adminApproveDepositRequest
+      tags: [admin]
+      summary: Approve and credit a deposit request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminDepositApproveInput"
+      responses:
+        "200":
+          description: Deposit approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/deposit-requests/{id}/reject:
+    post:
+      operationId: adminRejectDepositRequest
+      tags: [admin]
+      summary: Reject a deposit request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminDepositRejectInput"
+      responses:
+        "200":
+          description: Deposit rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/representatives:
+    get:
+      operationId: adminListRepresentatives
+      tags: [admin]
+      summary: List state representatives
+      responses:
+        "200":
+          description: Representatives
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StateRepresentative"
+    post:
+      operationId: adminCreateRepresentative
+      tags: [admin]
+      summary: Assign a state representative
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRepresentativeInput"
+      responses:
+        "201":
+          description: Representative assigned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StateRepresentative"
+
+  /admin/representatives/{id}:
+    delete:
+      operationId: adminDeleteRepresentative
+      tags: [admin]
+      summary: Remove a state representative
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /admin/analytics:
+    get:
+      operationId: getAdminAnalytics
+      tags: [admin]
+      summary: Get extended analytics including by-state data
+      responses:
+        "200":
+          description: Analytics data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminAnalytics"
+
+  /admin/ops:
+    get:
+      operationId: getAdminOps
+      tags: [admin]
+      summary: Get live operational metrics
+      responses:
+        "200":
+          description: Ops metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpsMetrics"
+
+  /applications/{id}/complete:
+    post:
+      operationId: completeApplication
+      tags: [applications]
+      summary: Mark an application as completed and trigger payment cascade
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}/counter-offer:
+    patch:
+      operationId: counterOfferApplication
+      tags: [applications]
+      summary: Gold/Elite freelancer proposes a counter-offer rate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CounterOfferInput"
+      responses:
+        "200":
+          description: Counter-offer submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}/accept-counter:
+    post:
+      operationId: acceptCounterOffer
+      tags: [applications]
+      summary: Company accepts a freelancer counter-offer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Counter-offer accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/{id}/reject-counter:
+    post:
+      operationId: rejectCounterOffer
+      tags: [applications]
+      summary: Company rejects a freelancer counter-offer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Counter-offer rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /wallet/deposit-request:
+    post:
+      operationId: requestDeposit
+      tags: [wallet]
+      summary: Company requests a balance deposit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepositRequestInput"
+      responses:
+        "201":
+          description: Deposit request created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DepositRequest"
+
+  /wallet/deposit-requests:
+    get:
+      operationId: listDepositRequests
+      tags: [wallet]
+      summary: Company lists their deposit requests
+      responses:
+        "200":
+          description: Deposit requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DepositRequest"
+
 components:
   schemas:
     HealthStatus:
@@ -1229,7 +1509,11 @@ components:
           type: integer
         status:
           type: string
-          enum: [pending, approved, rejected, completed]
+          enum: [pending, approved, rejected, completed, cancelled, counter_offered, counter_accepted, counter_rejected]
+        message:
+          type: ["string", "null"]
+        proposedRate:
+          type: ["number", "null"]
         appliedAt:
           type: string
         job:
@@ -1242,6 +1526,13 @@ components:
         - freelancerId
         - status
         - appliedAt
+
+    CounterOfferInput:
+      type: object
+      required: [proposedRate]
+      properties:
+        proposedRate:
+          type: number
 
     ApplicationInput:
       type: object
@@ -1259,7 +1550,12 @@ components:
           type: integer
         userId:
           type: integer
+        walletType:
+          type: string
+          enum: [freelancer, company, representative, platform]
         balance:
+          type: number
+        reservedBalance:
           type: number
         pendingBalance:
           type: number
@@ -1267,13 +1563,21 @@ components:
           type: number
         totalWithdrawn:
           type: number
+        totalFeesPaid:
+          type: number
+        totalSpent:
+          type: number
       required:
         - id
         - userId
+        - walletType
         - balance
+        - reservedBalance
         - pendingBalance
         - totalEarned
         - totalWithdrawn
+        - totalFeesPaid
+        - totalSpent
 
     Transaction:
       type: object
@@ -1284,15 +1588,17 @@ components:
           type: integer
         type:
           type: string
-          enum: [credit, debit, withdrawal, commission, refund]
+          enum: [credit, debit, withdrawal, commission, refund, deposit, platform_fee, reservation, release]
         amount:
           type: number
         description:
           type: string
         status:
           type: string
-          enum: [pending, completed, failed]
+          enum: [pending, completed, failed, rejected]
         pixKey:
+          type: ["string", "null"]
+        referenceId:
           type: ["string", "null"]
         createdAt:
           type: string
@@ -1302,6 +1608,57 @@ components:
         - type
         - amount
         - description
+        - status
+        - createdAt
+
+    DepositRequestInput:
+      type: object
+      required: [amount]
+      properties:
+        amount:
+          type: number
+        paymentMethod:
+          type: string
+          enum: [pix, credit_card, bank_transfer]
+        pixKey:
+          type: ["string", "null"]
+
+    DepositRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        walletId:
+          type: integer
+        userId:
+          type: integer
+        amount:
+          type: number
+        paymentMethod:
+          type: string
+          enum: [pix, credit_card, bank_transfer]
+        pixKey:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, confirmed, rejected, credited]
+        adminNote:
+          type: ["string", "null"]
+        userName:
+          type: ["string", "null"]
+        userEmail:
+          type: ["string", "null"]
+        companyName:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - walletId
+        - amount
+        - paymentMethod
         - status
         - createdAt
 
@@ -1519,14 +1876,55 @@ components:
           type: integer
         totalEarned:
           type: number
+        totalFeesPaid:
+          type: number
         pendingEarnings:
           type: number
         averageRating:
           type: number
         level:
           type: string
-        nextLevelProgress:
+        levelLabel:
+          type: string
+        currentFee:
+          type: number
+        nextLevelFee:
+          type: number
+        feeReductionAtNextLevel:
+          type: number
+        nextLevel:
+          type: ["string", "null"]
+        nextLevelLabel:
+          type: ["string", "null"]
+        progressPercent:
           type: integer
+        jobsNeeded:
+          type: integer
+        repNeeded:
+          type: number
+        jobsDone:
+          type: integer
+        repDone:
+          type: number
+        jobsRequired:
+          type: ["integer", "null"]
+        repRequired:
+          type: ["number", "null"]
+        reputationBreakdown:
+          type: object
+          properties:
+            overall:
+              type: number
+            ratingAvg:
+              type: number
+            completionRate:
+              type: number
+            cancellationRate:
+              type: number
+            responseRate:
+              type: number
+            totalRatings:
+              type: integer
         earnsByMonth:
           type: array
           items:
@@ -1541,7 +1939,7 @@ components:
         - pendingEarnings
         - averageRating
         - level
-        - nextLevelProgress
+        - progressPercent
         - earnsByMonth
         - badges
 
@@ -1624,3 +2022,153 @@ components:
       required:
         - month
         - amount
+
+    StateRepresentative:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        state:
+          type: string
+        commissionRate:
+          type: number
+        isActive:
+          type: boolean
+        userName:
+          type: ["string", "null"]
+        userEmail:
+          type: ["string", "null"]
+        userAvatarUrl:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - userId
+        - state
+        - commissionRate
+        - isActive
+        - createdAt
+
+    CreateRepresentativeInput:
+      type: object
+      required: [userId, state]
+      properties:
+        userId:
+          type: integer
+        state:
+          type: string
+        commissionRate:
+          type: number
+
+    AdminDepositApproveInput:
+      type: object
+      properties:
+        adminNote:
+          type: string
+
+    AdminDepositRejectInput:
+      type: object
+      properties:
+        adminNote:
+          type: string
+
+    StateStats:
+      type: object
+      properties:
+        state:
+          type: string
+        totalFreelancers:
+          type: integer
+        totalJobs:
+          type: integer
+        totalRevenue:
+          type: number
+        representative:
+          type: ["string", "null"]
+      required:
+        - state
+        - totalFreelancers
+        - totalJobs
+        - totalRevenue
+
+    AdminAnalytics:
+      type: object
+      properties:
+        byState:
+          type: array
+          items:
+            $ref: "#/components/schemas/StateStats"
+        levelDistribution:
+          type: array
+          items:
+            type: object
+            properties:
+              level:
+                type: string
+              count:
+                type: integer
+              avgReputation:
+                type: number
+        revenueByMonth:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonthAmount"
+        feesByLevel:
+          type: array
+          items:
+            type: object
+            properties:
+              level:
+                type: string
+              totalFees:
+                type: number
+              avgFee:
+                type: number
+              count:
+                type: integer
+      required:
+        - byState
+        - levelDistribution
+        - revenueByMonth
+        - feesByLevel
+
+    OpsMetrics:
+      type: object
+      properties:
+        openJobs:
+          type: integer
+        jobsInProgress:
+          type: integer
+        pendingApplications:
+          type: integer
+        pendingWithdrawals:
+          type: integer
+        pendingWithdrawalAmount:
+          type: number
+        pendingDeposits:
+          type: integer
+        pendingDepositAmount:
+          type: number
+        unreadNotifications:
+          type: integer
+        platformWalletBalance:
+          type: number
+        activeFreelancers24h:
+          type: integer
+        activeCompanies24h:
+          type: integer
+      required:
+        - openJobs
+        - jobsInProgress
+        - pendingApplications
+        - pendingWithdrawals
+        - pendingWithdrawalAmount
+        - pendingDeposits
+        - pendingDepositAmount
+        - unreadNotifications
+        - platformWalletBalance
+        - activeFreelancers24h
+        - activeCompanies24h

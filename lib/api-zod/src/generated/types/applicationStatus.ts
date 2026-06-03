@@ -14,4 +14,8 @@ export const ApplicationStatus = {
   approved: 'approved',
   rejected: 'rejected',
   completed: 'completed',
+  cancelled: 'cancelled',
+  counter_offered: 'counter_offered',
+  counter_accepted: 'counter_accepted',
+  counter_rejected: 'counter_rejected',
 } as const;

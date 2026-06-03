@@ -117,7 +117,7 @@ router.get("/chat/conversations", requireAuth, async (req: any, res) => {
           ORDER BY conversation_id, created_at DESC`
     );
     const lastMsgMap = new Map<number, { content: string; senderId: number }>();
-    (lastMsgsRaw.rows ?? lastMsgsRaw as any[]).forEach((row: any) => {
+    (lastMsgsRaw.rows ?? lastMsgsRaw as unknown as any[]).forEach((row: any) => {
       lastMsgMap.set(row.conversation_id, { content: row.content, senderId: row.sender_id });
     });
 
@@ -181,7 +181,7 @@ router.post("/chat/conversations", requireAuth, async (req: any, res) => {
 router.get("/chat/conversations/:id/messages", requireAuth, async (req: any, res) => {
   try {
     const userId = req.user.id as number;
-    const convId = parseInt(req.params.id);
+    const convId = parseInt(req.params.id as string);
 
     const [conv] = await db.select().from(conversations).where(eq(conversations.id, convId)).limit(1);
     if (!conv || (conv.participant1Id !== userId && conv.participant2Id !== userId)) {
@@ -204,7 +204,7 @@ router.get("/chat/conversations/:id/messages", requireAuth, async (req: any, res
 router.post("/chat/conversations/:id/messages", requireAuth, async (req: any, res) => {
   try {
     const userId = req.user.id as number;
-    const convId = parseInt(req.params.id);
+    const convId = parseInt(req.params.id as string);
     const { content, type = "text" } = req.body;
 
     if (!content?.trim()) { res.status(400).json({ error: "Content is required" }); return; }
@@ -237,7 +237,7 @@ router.post("/chat/conversations/:id/messages", requireAuth, async (req: any, re
 router.post("/chat/conversations/:id/typing", requireAuth, async (req: any, res) => {
   try {
     const userId = req.user.id as number;
-    const convId = parseInt(req.params.id);
+    const convId = parseInt(req.params.id as string);
     const { isTyping } = req.body;
 
     const [conv] = await db.select().from(conversations).where(eq(conversations.id, convId)).limit(1);
@@ -257,7 +257,7 @@ router.post("/chat/conversations/:id/typing", requireAuth, async (req: any, res)
 router.post("/chat/conversations/:id/read", requireAuth, async (req: any, res) => {
   try {
     const userId = req.user.id as number;
-    const convId = parseInt(req.params.id);
+    const convId = parseInt(req.params.id as string);
 
     const [conv] = await db.select().from(conversations).where(eq(conversations.id, convId)).limit(1);
     if (!conv || (conv.participant1Id !== userId && conv.participant2Id !== userId)) {

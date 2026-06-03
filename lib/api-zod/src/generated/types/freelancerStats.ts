@@ -5,15 +5,34 @@
  * extraGO — Workforce Marketplace API
  * OpenAPI spec version: 0.1.0
  */
+import type { FreelancerStatsReputationBreakdown } from './freelancerStatsReputationBreakdown';
 import type { MonthAmount } from './monthAmount';
 
 export interface FreelancerStats {
   completedJobs: number;
   totalEarned: number;
+  totalFeesPaid?: number;
   pendingEarnings: number;
   averageRating: number;
   level: string;
-  nextLevelProgress: number;
+  levelLabel?: string;
+  currentFee?: number;
+  nextLevelFee?: number;
+  feeReductionAtNextLevel?: number;
+  /** @nullable */
+  nextLevel?: string | null;
+  /** @nullable */
+  nextLevelLabel?: string | null;
+  progressPercent: number;
+  jobsNeeded?: number;
+  repNeeded?: number;
+  jobsDone?: number;
+  repDone?: number;
+  /** @nullable */
+  jobsRequired?: number | null;
+  /** @nullable */
+  repRequired?: number | null;
+  reputationBreakdown?: FreelancerStatsReputationBreakdown;
   earnsByMonth: MonthAmount[];
   badges: string[];
 }

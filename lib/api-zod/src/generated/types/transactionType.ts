@@ -15,4 +15,8 @@ export const TransactionType = {
   withdrawal: 'withdrawal',
   commission: 'commission',
   refund: 'refund',
+  deposit: 'deposit',
+  platform_fee: 'platform_fee',
+  reservation: 'reservation',
+  release: 'release',
 } as const;

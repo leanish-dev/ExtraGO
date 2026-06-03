@@ -33,7 +33,7 @@ router.get("/notifications", requireAuth, async (req, res) => {
 
 // POST /notifications/:id/read
 router.post("/notifications/:id/read", requireAuth, async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   const user = (req as any).user;
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 

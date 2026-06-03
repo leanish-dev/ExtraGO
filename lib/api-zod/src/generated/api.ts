@@ -532,7 +532,9 @@ export const ListApplicationsResponseItem = zod.object({
   "id": zod.number(),
   "jobId": zod.number(),
   "freelancerId": zod.number(),
-  "status": zod.enum(['pending', 'approved', 'rejected', 'completed']),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'completed', 'cancelled', 'counter_offered', 'counter_accepted', 'counter_rejected']),
+  "message": zod.string().nullish(),
+  "proposedRate": zod.number().nullish(),
   "appliedAt": zod.string(),
   "job": zod.object({
   "id": zod.number(),
@@ -598,7 +600,9 @@ export const GetApplicationResponse = zod.object({
   "id": zod.number(),
   "jobId": zod.number(),
   "freelancerId": zod.number(),
-  "status": zod.enum(['pending', 'approved', 'rejected', 'completed']),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'completed', 'cancelled', 'counter_offered', 'counter_accepted', 'counter_rejected']),
+  "message": zod.string().nullish(),
+  "proposedRate": zod.number().nullish(),
   "appliedAt": zod.string(),
   "job": zod.object({
   "id": zod.number(),
@@ -654,7 +658,9 @@ export const ApproveApplicationResponse = zod.object({
   "id": zod.number(),
   "jobId": zod.number(),
   "freelancerId": zod.number(),
-  "status": zod.enum(['pending', 'approved', 'rejected', 'completed']),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'completed', 'cancelled', 'counter_offered', 'counter_accepted', 'counter_rejected']),
+  "message": zod.string().nullish(),
+  "proposedRate": zod.number().nullish(),
   "appliedAt": zod.string(),
   "job": zod.object({
   "id": zod.number(),
@@ -710,7 +716,9 @@ export const RejectApplicationResponse = zod.object({
   "id": zod.number(),
   "jobId": zod.number(),
   "freelancerId": zod.number(),
-  "status": zod.enum(['pending', 'approved', 'rejected', 'completed']),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'completed', 'cancelled', 'counter_offered', 'counter_accepted', 'counter_rejected']),
+  "message": zod.string().nullish(),
+  "proposedRate": zod.number().nullish(),
   "appliedAt": zod.string(),
   "job": zod.object({
   "id": zod.number(),
@@ -761,10 +769,14 @@ export const RejectApplicationResponse = zod.object({
 export const GetMyWalletResponse = zod.object({
   "id": zod.number(),
   "userId": zod.number(),
+  "walletType": zod.enum(['freelancer', 'company', 'representative', 'platform']),
   "balance": zod.number(),
+  "reservedBalance": zod.number(),
   "pendingBalance": zod.number(),
   "totalEarned": zod.number(),
-  "totalWithdrawn": zod.number()
+  "totalWithdrawn": zod.number(),
+  "totalFeesPaid": zod.number(),
+  "totalSpent": zod.number()
 })
 
 
@@ -779,11 +791,12 @@ export const ListTransactionsQueryParams = zod.object({
 export const ListTransactionsResponseItem = zod.object({
   "id": zod.number(),
   "walletId": zod.number(),
-  "type": zod.enum(['credit', 'debit', 'withdrawal', 'commission', 'refund']),
+  "type": zod.enum(['credit', 'debit', 'withdrawal', 'commission', 'refund', 'deposit', 'platform_fee', 'reservation', 'release']),
   "amount": zod.number(),
   "description": zod.string(),
-  "status": zod.enum(['pending', 'completed', 'failed']),
+  "status": zod.enum(['pending', 'completed', 'failed', 'rejected']),
   "pixKey": zod.string().nullish(),
+  "referenceId": zod.string().nullish(),
   "createdAt": zod.string()
 })
 export const ListTransactionsResponse = zod.array(ListTransactionsResponseItem)
@@ -954,10 +967,31 @@ export const GetFreelancerStatsParams = zod.object({
 export const GetFreelancerStatsResponse = zod.object({
   "completedJobs": zod.number(),
   "totalEarned": zod.number(),
+  "totalFeesPaid": zod.number().optional(),
   "pendingEarnings": zod.number(),
   "averageRating": zod.number(),
   "level": zod.string(),
-  "nextLevelProgress": zod.number(),
+  "levelLabel": zod.string().optional(),
+  "currentFee": zod.number().optional(),
+  "nextLevelFee": zod.number().optional(),
+  "feeReductionAtNextLevel": zod.number().optional(),
+  "nextLevel": zod.string().nullish(),
+  "nextLevelLabel": zod.string().nullish(),
+  "progressPercent": zod.number(),
+  "jobsNeeded": zod.number().optional(),
+  "repNeeded": zod.number().optional(),
+  "jobsDone": zod.number().optional(),
+  "repDone": zod.number().optional(),
+  "jobsRequired": zod.number().nullish(),
+  "repRequired": zod.number().nullish(),
+  "reputationBreakdown": zod.object({
+  "overall": zod.number().optional(),
+  "ratingAvg": zod.number().optional(),
+  "completionRate": zod.number().optional(),
+  "cancellationRate": zod.number().optional(),
+  "responseRate": zod.number().optional(),
+  "totalRatings": zod.number().optional()
+}).optional(),
   "earnsByMonth": zod.array(zod.object({
   "month": zod.string(),
   "amount": zod.number()
@@ -1063,11 +1097,12 @@ export const AdminListWithdrawalsQueryParams = zod.object({
 export const AdminListWithdrawalsResponseItem = zod.object({
   "id": zod.number(),
   "walletId": zod.number(),
-  "type": zod.enum(['credit', 'debit', 'withdrawal', 'commission', 'refund']),
+  "type": zod.enum(['credit', 'debit', 'withdrawal', 'commission', 'refund', 'deposit', 'platform_fee', 'reservation', 'release']),
   "amount": zod.number(),
   "description": zod.string(),
-  "status": zod.enum(['pending', 'completed', 'failed']),
+  "status": zod.enum(['pending', 'completed', 'failed', 'rejected']),
   "pixKey": zod.string().nullish(),
+  "referenceId": zod.string().nullish(),
   "createdAt": zod.string()
 })
 export const AdminListWithdrawalsResponse = zod.array(AdminListWithdrawalsResponseItem)
@@ -1121,5 +1156,427 @@ export const GetAdminStatsResponse = zod.object({
   "createdAt": zod.string()
 }))
 })
+
+
+/**
+ * @summary Reject a withdrawal and refund balance
+ */
+export const AdminRejectWithdrawalParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminRejectWithdrawalResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary Admin list all deposit requests
+ */
+export const AdminListDepositRequestsQueryParams = zod.object({
+  "status": zod.coerce.string().optional()
+})
+
+export const AdminListDepositRequestsResponseItem = zod.object({
+  "id": zod.number(),
+  "walletId": zod.number(),
+  "userId": zod.number().optional(),
+  "amount": zod.number(),
+  "paymentMethod": zod.enum(['pix', 'credit_card', 'bank_transfer']),
+  "pixKey": zod.string().nullish(),
+  "status": zod.enum(['pending', 'confirmed', 'rejected', 'credited']),
+  "adminNote": zod.string().nullish(),
+  "userName": zod.string().nullish(),
+  "userEmail": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().optional()
+})
+export const AdminListDepositRequestsResponse = zod.array(AdminListDepositRequestsResponseItem)
+
+
+/**
+ * @summary Approve and credit a deposit request
+ */
+export const AdminApproveDepositRequestParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminApproveDepositRequestBody = zod.object({
+  "adminNote": zod.string().optional()
+})
+
+export const AdminApproveDepositRequestResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary Reject a deposit request
+ */
+export const AdminRejectDepositRequestParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminRejectDepositRequestBody = zod.object({
+  "adminNote": zod.string().optional()
+})
+
+export const AdminRejectDepositRequestResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary List state representatives
+ */
+export const AdminListRepresentativesResponseItem = zod.object({
+  "id": zod.number(),
+  "userId": zod.number(),
+  "state": zod.string(),
+  "commissionRate": zod.number(),
+  "isActive": zod.boolean(),
+  "userName": zod.string().nullish(),
+  "userEmail": zod.string().nullish(),
+  "userAvatarUrl": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const AdminListRepresentativesResponse = zod.array(AdminListRepresentativesResponseItem)
+
+
+/**
+ * @summary Assign a state representative
+ */
+export const AdminCreateRepresentativeBody = zod.object({
+  "userId": zod.number(),
+  "state": zod.string(),
+  "commissionRate": zod.number().optional()
+})
+
+
+/**
+ * @summary Remove a state representative
+ */
+export const AdminDeleteRepresentativeParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminDeleteRepresentativeResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary Get extended analytics including by-state data
+ */
+export const GetAdminAnalyticsResponse = zod.object({
+  "byState": zod.array(zod.object({
+  "state": zod.string(),
+  "totalFreelancers": zod.number(),
+  "totalJobs": zod.number(),
+  "totalRevenue": zod.number(),
+  "representative": zod.string().nullish()
+})),
+  "levelDistribution": zod.array(zod.object({
+  "level": zod.string().optional(),
+  "count": zod.number().optional(),
+  "avgReputation": zod.number().optional()
+})),
+  "revenueByMonth": zod.array(zod.object({
+  "month": zod.string(),
+  "amount": zod.number()
+})),
+  "feesByLevel": zod.array(zod.object({
+  "level": zod.string().optional(),
+  "totalFees": zod.number().optional(),
+  "avgFee": zod.number().optional(),
+  "count": zod.number().optional()
+}))
+})
+
+
+/**
+ * @summary Get live operational metrics
+ */
+export const GetAdminOpsResponse = zod.object({
+  "openJobs": zod.number(),
+  "jobsInProgress": zod.number(),
+  "pendingApplications": zod.number(),
+  "pendingWithdrawals": zod.number(),
+  "pendingWithdrawalAmount": zod.number(),
+  "pendingDeposits": zod.number(),
+  "pendingDepositAmount": zod.number(),
+  "unreadNotifications": zod.number(),
+  "platformWalletBalance": zod.number(),
+  "activeFreelancers24h": zod.number(),
+  "activeCompanies24h": zod.number()
+})
+
+
+/**
+ * @summary Mark an application as completed and trigger payment cascade
+ */
+export const CompleteApplicationParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const CompleteApplicationResponse = zod.object({
+  "id": zod.number(),
+  "jobId": zod.number(),
+  "freelancerId": zod.number(),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'completed', 'cancelled', 'counter_offered', 'counter_accepted', 'counter_rejected']),
+  "message": zod.string().nullish(),
+  "proposedRate": zod.number().nullish(),
+  "appliedAt": zod.string(),
+  "job": zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string(),
+  "location": zod.string(),
+  "date": zod.string(),
+  "startTime": zod.string(),
+  "endTime": zod.string(),
+  "workersNeeded": zod.number(),
+  "workersApproved": zod.number(),
+  "hourlyRate": zod.number(),
+  "totalValue": zod.number(),
+  "status": zod.enum(['open', 'in_progress', 'completed', 'cancelled']),
+  "companyId": zod.number(),
+  "companyName": zod.string().nullish(),
+  "companyAvatarUrl": zod.string().nullish(),
+  "createdAt": zod.string()
+}).optional(),
+  "freelancer": zod.object({
+  "id": zod.number(),
+  "email": zod.string(),
+  "name": zod.string(),
+  "role": zod.enum(['company', 'freelancer', 'admin']),
+  "adminRole": zod.string().nullish().describe('Sub-role for admin users (super_admin, finance_admin, etc.)'),
+  "avatarUrl": zod.string().nullish(),
+  "bio": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "pixKey": zod.string().nullish(),
+  "categories": zod.array(zod.string()),
+  "level": zod.enum(['bronze', 'silver', 'gold', 'elite']),
+  "reputationScore": zod.number(),
+  "completedJobs": zod.number(),
+  "isVerified": zod.boolean(),
+  "isBanned": zod.boolean(),
+  "profileCompletion": zod.number(),
+  "referralCode": zod.string(),
+  "createdAt": zod.string()
+}).optional()
+})
+
+
+/**
+ * @summary Gold/Elite freelancer proposes a counter-offer rate
+ */
+export const CounterOfferApplicationParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const CounterOfferApplicationBody = zod.object({
+  "proposedRate": zod.number()
+})
+
+export const CounterOfferApplicationResponse = zod.object({
+  "id": zod.number(),
+  "jobId": zod.number(),
+  "freelancerId": zod.number(),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'completed', 'cancelled', 'counter_offered', 'counter_accepted', 'counter_rejected']),
+  "message": zod.string().nullish(),
+  "proposedRate": zod.number().nullish(),
+  "appliedAt": zod.string(),
+  "job": zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string(),
+  "location": zod.string(),
+  "date": zod.string(),
+  "startTime": zod.string(),
+  "endTime": zod.string(),
+  "workersNeeded": zod.number(),
+  "workersApproved": zod.number(),
+  "hourlyRate": zod.number(),
+  "totalValue": zod.number(),
+  "status": zod.enum(['open', 'in_progress', 'completed', 'cancelled']),
+  "companyId": zod.number(),
+  "companyName": zod.string().nullish(),
+  "companyAvatarUrl": zod.string().nullish(),
+  "createdAt": zod.string()
+}).optional(),
+  "freelancer": zod.object({
+  "id": zod.number(),
+  "email": zod.string(),
+  "name": zod.string(),
+  "role": zod.enum(['company', 'freelancer', 'admin']),
+  "adminRole": zod.string().nullish().describe('Sub-role for admin users (super_admin, finance_admin, etc.)'),
+  "avatarUrl": zod.string().nullish(),
+  "bio": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "pixKey": zod.string().nullish(),
+  "categories": zod.array(zod.string()),
+  "level": zod.enum(['bronze', 'silver', 'gold', 'elite']),
+  "reputationScore": zod.number(),
+  "completedJobs": zod.number(),
+  "isVerified": zod.boolean(),
+  "isBanned": zod.boolean(),
+  "profileCompletion": zod.number(),
+  "referralCode": zod.string(),
+  "createdAt": zod.string()
+}).optional()
+})
+
+
+/**
+ * @summary Company accepts a freelancer counter-offer
+ */
+export const AcceptCounterOfferParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AcceptCounterOfferResponse = zod.object({
+  "id": zod.number(),
+  "jobId": zod.number(),
+  "freelancerId": zod.number(),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'completed', 'cancelled', 'counter_offered', 'counter_accepted', 'counter_rejected']),
+  "message": zod.string().nullish(),
+  "proposedRate": zod.number().nullish(),
+  "appliedAt": zod.string(),
+  "job": zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string(),
+  "location": zod.string(),
+  "date": zod.string(),
+  "startTime": zod.string(),
+  "endTime": zod.string(),
+  "workersNeeded": zod.number(),
+  "workersApproved": zod.number(),
+  "hourlyRate": zod.number(),
+  "totalValue": zod.number(),
+  "status": zod.enum(['open', 'in_progress', 'completed', 'cancelled']),
+  "companyId": zod.number(),
+  "companyName": zod.string().nullish(),
+  "companyAvatarUrl": zod.string().nullish(),
+  "createdAt": zod.string()
+}).optional(),
+  "freelancer": zod.object({
+  "id": zod.number(),
+  "email": zod.string(),
+  "name": zod.string(),
+  "role": zod.enum(['company', 'freelancer', 'admin']),
+  "adminRole": zod.string().nullish().describe('Sub-role for admin users (super_admin, finance_admin, etc.)'),
+  "avatarUrl": zod.string().nullish(),
+  "bio": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "pixKey": zod.string().nullish(),
+  "categories": zod.array(zod.string()),
+  "level": zod.enum(['bronze', 'silver', 'gold', 'elite']),
+  "reputationScore": zod.number(),
+  "completedJobs": zod.number(),
+  "isVerified": zod.boolean(),
+  "isBanned": zod.boolean(),
+  "profileCompletion": zod.number(),
+  "referralCode": zod.string(),
+  "createdAt": zod.string()
+}).optional()
+})
+
+
+/**
+ * @summary Company rejects a freelancer counter-offer
+ */
+export const RejectCounterOfferParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const RejectCounterOfferResponse = zod.object({
+  "id": zod.number(),
+  "jobId": zod.number(),
+  "freelancerId": zod.number(),
+  "status": zod.enum(['pending', 'approved', 'rejected', 'completed', 'cancelled', 'counter_offered', 'counter_accepted', 'counter_rejected']),
+  "message": zod.string().nullish(),
+  "proposedRate": zod.number().nullish(),
+  "appliedAt": zod.string(),
+  "job": zod.object({
+  "id": zod.number(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "category": zod.string(),
+  "location": zod.string(),
+  "date": zod.string(),
+  "startTime": zod.string(),
+  "endTime": zod.string(),
+  "workersNeeded": zod.number(),
+  "workersApproved": zod.number(),
+  "hourlyRate": zod.number(),
+  "totalValue": zod.number(),
+  "status": zod.enum(['open', 'in_progress', 'completed', 'cancelled']),
+  "companyId": zod.number(),
+  "companyName": zod.string().nullish(),
+  "companyAvatarUrl": zod.string().nullish(),
+  "createdAt": zod.string()
+}).optional(),
+  "freelancer": zod.object({
+  "id": zod.number(),
+  "email": zod.string(),
+  "name": zod.string(),
+  "role": zod.enum(['company', 'freelancer', 'admin']),
+  "adminRole": zod.string().nullish().describe('Sub-role for admin users (super_admin, finance_admin, etc.)'),
+  "avatarUrl": zod.string().nullish(),
+  "bio": zod.string().nullish(),
+  "phone": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "pixKey": zod.string().nullish(),
+  "categories": zod.array(zod.string()),
+  "level": zod.enum(['bronze', 'silver', 'gold', 'elite']),
+  "reputationScore": zod.number(),
+  "completedJobs": zod.number(),
+  "isVerified": zod.boolean(),
+  "isBanned": zod.boolean(),
+  "profileCompletion": zod.number(),
+  "referralCode": zod.string(),
+  "createdAt": zod.string()
+}).optional()
+})
+
+
+/**
+ * @summary Company requests a balance deposit
+ */
+export const RequestDepositBody = zod.object({
+  "amount": zod.number(),
+  "paymentMethod": zod.enum(['pix', 'credit_card', 'bank_transfer']).optional(),
+  "pixKey": zod.string().nullish()
+})
+
+
+/**
+ * @summary Company lists their deposit requests
+ */
+export const ListDepositRequestsResponseItem = zod.object({
+  "id": zod.number(),
+  "walletId": zod.number(),
+  "userId": zod.number().optional(),
+  "amount": zod.number(),
+  "paymentMethod": zod.enum(['pix', 'credit_card', 'bank_transfer']),
+  "pixKey": zod.string().nullish(),
+  "status": zod.enum(['pending', 'confirmed', 'rejected', 'credited']),
+  "adminNote": zod.string().nullish(),
+  "userName": zod.string().nullish(),
+  "userEmail": zod.string().nullish(),
+  "companyName": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string().optional()
+})
+export const ListDepositRequestsResponse = zod.array(ListDepositRequestsResponseItem)
 
 

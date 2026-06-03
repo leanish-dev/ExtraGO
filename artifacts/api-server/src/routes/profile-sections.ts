@@ -99,7 +99,7 @@ router.post("/profile/experience", requireAuth, async (req, res) => {
 // PUT /profile/experience/:id
 router.put("/profile/experience/:id", requireAuth, async (req, res) => {
   const userId = (req as any).user.id;
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const parsed = CreateExperienceBody.safeParse(req.body);
@@ -126,7 +126,7 @@ router.put("/profile/experience/:id", requireAuth, async (req, res) => {
 // DELETE /profile/experience/:id
 router.delete("/profile/experience/:id", requireAuth, async (req, res) => {
   const userId = (req as any).user.id;
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   await db.delete(workExperiencesTable).where(
@@ -158,7 +158,7 @@ router.post("/profile/skills", requireAuth, async (req, res) => {
 // DELETE /profile/skills/:id
 router.delete("/profile/skills/:id", requireAuth, async (req, res) => {
   const userId = (req as any).user.id;
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   await db.delete(userSkillsTable).where(
@@ -201,7 +201,7 @@ router.post("/profile/banner", requireAuth, async (req, res) => {
 
 // GET /api/users/:userId/experience  (public)
 router.get("/users/:userId/experience", async (req, res) => {
-  const userId = parseInt(req.params.userId);
+  const userId = parseInt(req.params.userId as string);
   if (isNaN(userId)) { res.status(400).json({ error: "Invalid user ID" }); return; }
   const exps = await db
     .select()
@@ -212,7 +212,7 @@ router.get("/users/:userId/experience", async (req, res) => {
 
 // GET /api/users/:userId/skills  (public)
 router.get("/users/:userId/skills", async (req, res) => {
-  const userId = parseInt(req.params.userId);
+  const userId = parseInt(req.params.userId as string);
   if (isNaN(userId)) { res.status(400).json({ error: "Invalid user ID" }); return; }
   const skills = await db
     .select()
@@ -223,7 +223,7 @@ router.get("/users/:userId/skills", async (req, res) => {
 
 // GET /api/users/:userId/categories  (public)
 router.get("/users/:userId/categories", async (req, res) => {
-  const userId = parseInt(req.params.userId);
+  const userId = parseInt(req.params.userId as string);
   if (isNaN(userId)) { res.status(400).json({ error: "Invalid user ID" }); return; }
   const cats = await db
     .select()

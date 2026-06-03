@@ -6,12 +6,12 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type TransactionStatus = typeof TransactionStatus[keyof typeof TransactionStatus];
+export type DepositRequestStatus = typeof DepositRequestStatus[keyof typeof DepositRequestStatus];
 
 
-export const TransactionStatus = {
+export const DepositRequestStatus = {
   pending: 'pending',
-  completed: 'completed',
-  failed: 'failed',
+  confirmed: 'confirmed',
   rejected: 'rejected',
+  credited: 'credited',
 } as const;

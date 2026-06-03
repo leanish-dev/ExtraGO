@@ -1,0 +1,286 @@
+import { db, usersTable, walletsTable, transactionsTable, notificationsTable, depositRequestsTable, stateRepresentativesTable, applicationsTable, ratingsTable } from "@workspace/db";
+import { eq, sql, and } from "drizzle-orm";
+
+export const LEVEL_FEE: Record<string, number> = {
+  bronze: 0.18,
+  silver: 0.16,
+  gold: 0.14,
+  elite: 0.10,
+};
+
+export const LEVEL_LABELS: Record<string, string> = {
+  bronze: "Iniciante",
+  silver: "Júnior",
+  gold: "Intermediário",
+  elite: "Sênior",
+};
+
+export const LEVEL_THRESHOLDS = {
+  elite: { jobs: 300, rep: 4.8 },
+  gold: { jobs: 100, rep: 4.7 },
+  silver: { jobs: 20, rep: 4.5 },
+};
+
+export function calculateLevel(completedJobs: number, rep: number): "bronze" | "silver" | "gold" | "elite" {
+  if (completedJobs >= LEVEL_THRESHOLDS.elite.jobs && rep >= LEVEL_THRESHOLDS.elite.rep) return "elite";
+  if (completedJobs >= LEVEL_THRESHOLDS.gold.jobs && rep >= LEVEL_THRESHOLDS.gold.rep) return "gold";
+  if (completedJobs >= LEVEL_THRESHOLDS.silver.jobs && rep >= LEVEL_THRESHOLDS.silver.rep) return "silver";
+  return "bronze";
+}
+
+export function getLevelProgress(completedJobs: number, rep: number, currentLevel: string) {
+  const nextLevelMap: Record<string, { label: string; jobs: number; rep: number } | null> = {
+    bronze: { label: "Júnior", jobs: LEVEL_THRESHOLDS.silver.jobs, rep: LEVEL_THRESHOLDS.silver.rep },
+    silver: { label: "Intermediário", jobs: LEVEL_THRESHOLDS.gold.jobs, rep: LEVEL_THRESHOLDS.gold.rep },
+    gold: { label: "Sênior", jobs: LEVEL_THRESHOLDS.elite.jobs, rep: LEVEL_THRESHOLDS.elite.rep },
+    elite: null,
+  };
+
+  const prevJobsMap: Record<string, number> = {
+    bronze: 0,
+    silver: LEVEL_THRESHOLDS.silver.jobs,
+    gold: LEVEL_THRESHOLDS.gold.jobs,
+    elite: LEVEL_THRESHOLDS.elite.jobs,
+  };
+
+  const next = nextLevelMap[currentLevel];
+  if (!next) {
+    return {
+      nextLevel: null,
+      nextLevelLabel: null,
+      progressPercent: 100,
+      jobsNeeded: 0,
+      repNeeded: 0,
+      jobsDone: completedJobs,
+      repDone: rep,
+    };
+  }
+
+  const prevJobs = prevJobsMap[currentLevel] ?? 0;
+  const jobsRange = next.jobs - prevJobs;
+  const jobsProgress = Math.min(completedJobs - prevJobs, jobsRange);
+  const jobsPercent = jobsRange > 0 ? (jobsProgress / jobsRange) * 100 : 100;
+
+  const repMin = currentLevel === "bronze" ? 0 : LEVEL_THRESHOLDS[currentLevel as keyof typeof LEVEL_THRESHOLDS]?.rep ?? 0;
+  const repRange = next.rep - repMin;
+  const repProgress = Math.min(Math.max(rep - repMin, 0), repRange);
+  const repPercent = repRange > 0 ? (repProgress / repRange) * 100 : 100;
+
+  const progressPercent = Math.round((jobsPercent + repPercent) / 2);
+
+  return {
+    nextLevel: Object.keys(LEVEL_THRESHOLDS).find(k => LEVEL_LABELS[k === "elite" ? "elite" : k] === next.label) ??
+      (currentLevel === "bronze" ? "silver" : currentLevel === "silver" ? "gold" : "elite"),
+    nextLevelLabel: next.label,
+    progressPercent: Math.min(progressPercent, 99),
+    jobsNeeded: Math.max(next.jobs - completedJobs, 0),
+    repNeeded: Math.max(+(next.rep - rep).toFixed(2), 0),
+    jobsDone: completedJobs,
+    repDone: +rep.toFixed(2),
+    jobsRequired: next.jobs,
+    repRequired: next.rep,
+  };
+}
+
+export async function ensureWallet(userId: number, walletType: "freelancer" | "company" | "representative" | "platform" = "freelancer") {
+  let [wallet] = await db.select().from(walletsTable).where(eq(walletsTable.userId, userId));
+  if (!wallet) {
+    [wallet] = await db.insert(walletsTable).values({ userId, walletType }).returning();
+  }
+  return wallet;
+}
+
+export async function getPlatformWallet() {
+  const PLATFORM_USER_ID = 0;
+  let [wallet] = await db.select().from(walletsTable).where(eq(walletsTable.userId, PLATFORM_USER_ID));
+  if (!wallet) {
+    [wallet] = await db.insert(walletsTable).values({ userId: PLATFORM_USER_ID, walletType: "platform" }).returning();
+  }
+  return wallet;
+}
+
+export async function recalculateReputation(userId: number): Promise<number> {
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+  if (!user) return 0;
+
+  const ratings = await db.select().from(ratingsTable).where(eq(ratingsTable.ratedId, userId));
+  const ratingAvg = ratings.length > 0
+    ? ratings.reduce((s, r) => s + r.score, 0) / ratings.length
+    : 0;
+
+  const allApps = await db.select().from(applicationsTable).where(eq(applicationsTable.freelancerId, userId));
+  const totalApps = allApps.length;
+  const completedApps = allApps.filter(a => a.status === "completed").length;
+  const cancelledApps = allApps.filter(a => a.status === "cancelled").length;
+
+  const completionRate = totalApps > 0 ? completedApps / totalApps : 0;
+  const cancellationRate = totalApps > 0 ? cancelledApps / totalApps : 0;
+  const attendanceScore = Math.max(0, 1 - cancellationRate);
+
+  const responseRate = Math.min((user.responseRate ?? 0) / 100, 1);
+
+  const accountAgeDays = user.createdAt
+    ? (Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24)
+    : 0;
+  const tenureScore = Math.min(accountAgeDays / 365, 1);
+
+  const ratingNormalized = ratingAvg / 5;
+
+  const weightedScore =
+    ratingNormalized * 0.50 +
+    completionRate * 0.20 +
+    attendanceScore * 0.15 +
+    responseRate * 0.10 +
+    tenureScore * 0.05;
+
+  const reputationScore = +(weightedScore * 5).toFixed(2);
+  await db.update(usersTable).set({ reputationScore }).where(eq(usersTable.id, userId));
+  return reputationScore;
+}
+
+export async function completeJobCascade(
+  applicationId: number,
+  jobId: number,
+  freelancerId: number,
+  companyId: number,
+  jobTitle: string,
+  jobValue: number,
+) {
+  const [freelancer] = await db.update(usersTable)
+    .set({ completedJobs: sql`${usersTable.completedJobs} + 1` })
+    .where(eq(usersTable.id, freelancerId))
+    .returning();
+
+  if (!freelancer) return;
+
+  const newReputation = await recalculateReputation(freelancerId);
+
+  const newLevel = calculateLevel(freelancer.completedJobs, newReputation);
+  const levelChanged = newLevel !== freelancer.level;
+  if (levelChanged) {
+    await db.update(usersTable).set({ level: newLevel }).where(eq(usersTable.id, freelancerId));
+    await db.insert(notificationsTable).values({
+      userId: freelancerId,
+      type: "level_up",
+      title: "🎉 Você subiu de nível!",
+      message: `Parabéns! Você agora é ${LEVEL_LABELS[newLevel]}. Taxa reduzida para ${(LEVEL_FEE[newLevel] * 100).toFixed(0)}%.`,
+      isRead: false,
+    }).catch(() => {});
+  }
+
+  const feeRate = LEVEL_FEE[levelChanged ? newLevel : (freelancer.level as string)] ?? 0.18;
+  const platformFee = Math.round(jobValue * feeRate);
+  const freelancerEarnings = Math.round(jobValue - platformFee);
+
+  const freelancerWallet = await ensureWallet(freelancerId, "freelancer");
+  await db.update(walletsTable).set({
+    balance: sql`${walletsTable.balance} + ${freelancerEarnings}`,
+    totalEarned: sql`${walletsTable.totalEarned} + ${freelancerEarnings}`,
+    totalFeesPaid: sql`${walletsTable.totalFeesPaid} + ${platformFee}`,
+    reservedBalance: sql`GREATEST(${walletsTable.reservedBalance} - ${jobValue}, 0)`,
+  }).where(eq(walletsTable.id, freelancerWallet.id));
+
+  await db.insert(transactionsTable).values({
+    walletId: freelancerWallet.id,
+    type: "credit",
+    amount: freelancerEarnings,
+    description: `Pagamento: ${jobTitle}`,
+    status: "completed",
+    referenceId: `app:${applicationId}`,
+  }).catch(() => {});
+
+  await db.insert(transactionsTable).values({
+    walletId: freelancerWallet.id,
+    type: "platform_fee",
+    amount: platformFee,
+    description: `Taxa da plataforma (${(feeRate * 100).toFixed(0)}%): ${jobTitle}`,
+    status: "completed",
+    referenceId: `app:${applicationId}`,
+  }).catch(() => {});
+
+  const companyWallet = await ensureWallet(companyId, "company");
+  await db.update(walletsTable).set({
+    reservedBalance: sql`GREATEST(${walletsTable.reservedBalance} - ${jobValue}, 0)`,
+    totalSpent: sql`${walletsTable.totalSpent} + ${jobValue}`,
+  }).where(eq(walletsTable.id, companyWallet.id));
+
+  await db.insert(transactionsTable).values({
+    walletId: companyWallet.id,
+    type: "debit",
+    amount: jobValue,
+    description: `Pagamento por Extra: ${jobTitle}`,
+    status: "completed",
+    referenceId: `app:${applicationId}`,
+  }).catch(() => {});
+
+  if (freelancer.referredById) {
+    const commission = Math.round(freelancerEarnings * 0.03);
+    if (commission > 0) {
+      const refWallet = await ensureWallet(freelancer.referredById, "freelancer");
+      await db.update(walletsTable).set({
+        balance: sql`${walletsTable.balance} + ${commission}`,
+        totalEarned: sql`${walletsTable.totalEarned} + ${commission}`,
+      }).where(eq(walletsTable.id, refWallet.id));
+      await db.insert(transactionsTable).values({
+        walletId: refWallet.id,
+        type: "commission",
+        amount: commission,
+        description: `Comissão de indicação: ${freelancer.name}`,
+        status: "completed",
+        referenceId: `app:${applicationId}`,
+      }).catch(() => {});
+      await db.insert(notificationsTable).values({
+        userId: freelancer.referredById,
+        type: "commission_received",
+        title: "💰 Comissão de indicação!",
+        message: `+R$${(commission / 100).toFixed(2)} pelo Extra concluído por ${freelancer.name}`,
+        isRead: false,
+      }).catch(() => {});
+    }
+  }
+
+  const representatives = await db.select().from(stateRepresentativesTable);
+  if (representatives.length > 0) {
+    const [updatedFreelancer] = await db.select().from(usersTable).where(eq(usersTable.id, freelancerId));
+    const freelancerRegions = updatedFreelancer?.serviceRegions ?? [];
+    for (const rep of representatives) {
+      if (freelancerRegions.includes(rep.stateCode)) {
+        const repCommission = Math.round(platformFee * rep.commissionRate);
+        if (repCommission > 0) {
+          const repWallet = await ensureWallet(rep.userId, "representative");
+          await db.update(walletsTable).set({
+            balance: sql`${walletsTable.balance} + ${repCommission}`,
+            totalEarned: sql`${walletsTable.totalEarned} + ${repCommission}`,
+          }).where(eq(walletsTable.id, repWallet.id));
+          await db.insert(transactionsTable).values({
+            walletId: repWallet.id,
+            type: "commission",
+            amount: repCommission,
+            description: `Comissão regional: ${jobTitle}`,
+            status: "completed",
+            referenceId: `app:${applicationId}`,
+          }).catch(() => {});
+        }
+        break;
+      }
+    }
+  }
+
+  await db.insert(notificationsTable).values({
+    userId: freelancerId,
+    type: "job_completed",
+    title: "✅ Extra concluído!",
+    message: `Seu trabalho em "${jobTitle}" foi concluído. R$${(freelancerEarnings / 100).toFixed(2)} disponível na carteira.`,
+    isRead: false,
+  }).catch(() => {});
+
+  await db.insert(notificationsTable).values({
+    userId: companyId,
+    type: "job_completed",
+    title: "✅ Extra finalizado",
+    message: `O Extra "${jobTitle}" foi concluído com sucesso.`,
+    isRead: false,
+  }).catch(() => {});
+
+  return { freelancerEarnings, platformFee, newLevel, levelChanged, newReputation };
+}

@@ -14,6 +14,10 @@ export interface Application {
   jobId: number;
   freelancerId: number;
   status: ApplicationStatus;
+  /** @nullable */
+  message?: string | null;
+  /** @nullable */
+  proposedRate?: number | null;
   appliedAt: string;
   job?: Job;
   freelancer?: User;

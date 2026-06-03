@@ -91,7 +91,7 @@ router.post("/jobs", requireAuth, async (req, res) => {
 
 // GET /jobs/:id
 router.get("/jobs/:id", requireAuth, async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const [job] = await db.select().from(jobsTable).where(eq(jobsTable.id, id));
@@ -103,7 +103,7 @@ router.get("/jobs/:id", requireAuth, async (req, res) => {
 
 // PATCH /jobs/:id
 router.patch("/jobs/:id", requireAuth, async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   const user = (req as any).user;
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
@@ -124,7 +124,7 @@ router.patch("/jobs/:id", requireAuth, async (req, res) => {
 
 // DELETE /jobs/:id
 router.delete("/jobs/:id", requireAuth, async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   const user = (req as any).user;
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
@@ -141,7 +141,7 @@ router.delete("/jobs/:id", requireAuth, async (req, res) => {
 
 // POST /jobs/:id/cancel
 router.post("/jobs/:id/cancel", requireAuth, async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   const user = (req as any).user;
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 

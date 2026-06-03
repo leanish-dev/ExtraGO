@@ -17,5 +17,7 @@ export interface Transaction {
   status: TransactionStatus;
   /** @nullable */
   pixKey?: string | null;
+  /** @nullable */
+  referenceId?: string | null;
   createdAt: string;
 }

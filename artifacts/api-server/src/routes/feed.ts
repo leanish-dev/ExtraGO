@@ -101,7 +101,7 @@ router.post("/posts", requireAuth, async (req, res) => {
 // DELETE /posts/:id
 router.delete("/posts/:id", requireAuth, async (req, res) => {
   const userId = (req as any).user.id;
-  const postId = parseInt(req.params.id);
+  const postId = parseInt(req.params.id as string);
   if (isNaN(postId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const [post] = await db.select().from(postsTable).where(eq(postsTable.id, postId));
@@ -117,7 +117,7 @@ router.delete("/posts/:id", requireAuth, async (req, res) => {
 // POST /posts/:id/like
 router.post("/posts/:id/like", requireAuth, async (req, res) => {
   const userId = (req as any).user.id;
-  const postId = parseInt(req.params.id);
+  const postId = parseInt(req.params.id as string);
   if (isNaN(postId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const [existing] = await db
@@ -139,7 +139,7 @@ router.post("/posts/:id/like", requireAuth, async (req, res) => {
 // POST /posts/:id/save
 router.post("/posts/:id/save", requireAuth, async (req, res) => {
   const userId = (req as any).user.id;
-  const postId = parseInt(req.params.id);
+  const postId = parseInt(req.params.id as string);
   if (isNaN(postId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const [existing] = await db
@@ -160,7 +160,7 @@ router.post("/posts/:id/save", requireAuth, async (req, res) => {
 
 // POST /posts/:id/repost
 router.post("/posts/:id/repost", requireAuth, async (req, res) => {
-  const postId = parseInt(req.params.id);
+  const postId = parseInt(req.params.id as string);
   if (isNaN(postId)) { res.status(400).json({ error: "Invalid ID" }); return; }
   const [post] = await db.select().from(postsTable).where(eq(postsTable.id, postId));
   if (!post) { res.status(404).json({ error: "Post not found" }); return; }
@@ -170,7 +170,7 @@ router.post("/posts/:id/repost", requireAuth, async (req, res) => {
 
 // GET /posts/:id/comments
 router.get("/posts/:id/comments", requireAuth, async (req, res) => {
-  const postId = parseInt(req.params.id);
+  const postId = parseInt(req.params.id as string);
   if (isNaN(postId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const comments = await db
@@ -193,7 +193,7 @@ router.get("/posts/:id/comments", requireAuth, async (req, res) => {
 // POST /posts/:id/comments
 router.post("/posts/:id/comments", requireAuth, async (req, res) => {
   const userId = (req as any).user.id;
-  const postId = parseInt(req.params.id);
+  const postId = parseInt(req.params.id as string);
   if (isNaN(postId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const parsed = CreateCommentBody.safeParse(req.body);
@@ -209,7 +209,7 @@ router.post("/posts/:id/comments", requireAuth, async (req, res) => {
 // DELETE /posts/:postId/comments/:commentId
 router.delete("/posts/:postId/comments/:commentId", requireAuth, async (req, res) => {
   const userId = (req as any).user.id;
-  const commentId = parseInt(req.params.commentId);
+  const commentId = parseInt(req.params.commentId as string);
   if (isNaN(commentId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const [comment] = await db.select().from(postCommentsTable).where(eq(postCommentsTable.id, commentId));

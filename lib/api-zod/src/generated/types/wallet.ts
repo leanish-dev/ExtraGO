@@ -5,12 +5,17 @@
  * extraGO — Workforce Marketplace API
  * OpenAPI spec version: 0.1.0
  */
+import type { WalletWalletType } from './walletWalletType';
 
 export interface Wallet {
   id: number;
   userId: number;
+  walletType: WalletWalletType;
   balance: number;
+  reservedBalance: number;
   pendingBalance: number;
   totalEarned: number;
   totalWithdrawn: number;
+  totalFeesPaid: number;
+  totalSpent: number;
 }

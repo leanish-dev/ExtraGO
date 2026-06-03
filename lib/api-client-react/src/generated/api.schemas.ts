@@ -186,6 +186,10 @@ export const ApplicationStatus = {
   approved: 'approved',
   rejected: 'rejected',
   completed: 'completed',
+  cancelled: 'cancelled',
+  counter_offered: 'counter_offered',
+  counter_accepted: 'counter_accepted',
+  counter_rejected: 'counter_rejected',
 } as const;
 
 export interface Application {
@@ -193,9 +197,17 @@ export interface Application {
   jobId: number;
   freelancerId: number;
   status: ApplicationStatus;
+  /** @nullable */
+  message?: string | null;
+  /** @nullable */
+  proposedRate?: number | null;
   appliedAt: string;
   job?: Job;
   freelancer?: User;
+}
+
+export interface CounterOfferInput {
+  proposedRate: number;
 }
 
 export interface ApplicationInput {
@@ -204,13 +216,27 @@ export interface ApplicationInput {
   message?: string | null;
 }
 
+export type WalletWalletType = typeof WalletWalletType[keyof typeof WalletWalletType];
+
+
+export const WalletWalletType = {
+  freelancer: 'freelancer',
+  company: 'company',
+  representative: 'representative',
+  platform: 'platform',
+} as const;
+
 export interface Wallet {
   id: number;
   userId: number;
+  walletType: WalletWalletType;
   balance: number;
+  reservedBalance: number;
   pendingBalance: number;
   totalEarned: number;
   totalWithdrawn: number;
+  totalFeesPaid: number;
+  totalSpent: number;
 }
 
 export type TransactionType = typeof TransactionType[keyof typeof TransactionType];
@@ -222,6 +248,10 @@ export const TransactionType = {
   withdrawal: 'withdrawal',
   commission: 'commission',
   refund: 'refund',
+  deposit: 'deposit',
+  platform_fee: 'platform_fee',
+  reservation: 'reservation',
+  release: 'release',
 } as const;
 
 export type TransactionStatus = typeof TransactionStatus[keyof typeof TransactionStatus];
@@ -231,6 +261,7 @@ export const TransactionStatus = {
   pending: 'pending',
   completed: 'completed',
   failed: 'failed',
+  rejected: 'rejected',
 } as const;
 
 export interface Transaction {
@@ -242,7 +273,65 @@ export interface Transaction {
   status: TransactionStatus;
   /** @nullable */
   pixKey?: string | null;
+  /** @nullable */
+  referenceId?: string | null;
   createdAt: string;
+}
+
+export type DepositRequestInputPaymentMethod = typeof DepositRequestInputPaymentMethod[keyof typeof DepositRequestInputPaymentMethod];
+
+
+export const DepositRequestInputPaymentMethod = {
+  pix: 'pix',
+  credit_card: 'credit_card',
+  bank_transfer: 'bank_transfer',
+} as const;
+
+export interface DepositRequestInput {
+  amount: number;
+  paymentMethod?: DepositRequestInputPaymentMethod;
+  /** @nullable */
+  pixKey?: string | null;
+}
+
+export type DepositRequestPaymentMethod = typeof DepositRequestPaymentMethod[keyof typeof DepositRequestPaymentMethod];
+
+
+export const DepositRequestPaymentMethod = {
+  pix: 'pix',
+  credit_card: 'credit_card',
+  bank_transfer: 'bank_transfer',
+} as const;
+
+export type DepositRequestStatus = typeof DepositRequestStatus[keyof typeof DepositRequestStatus];
+
+
+export const DepositRequestStatus = {
+  pending: 'pending',
+  confirmed: 'confirmed',
+  rejected: 'rejected',
+  credited: 'credited',
+} as const;
+
+export interface DepositRequest {
+  id: number;
+  walletId: number;
+  userId?: number;
+  amount: number;
+  paymentMethod: DepositRequestPaymentMethod;
+  /** @nullable */
+  pixKey?: string | null;
+  status: DepositRequestStatus;
+  /** @nullable */
+  adminNote?: string | null;
+  /** @nullable */
+  userName?: string | null;
+  /** @nullable */
+  userEmail?: string | null;
+  /** @nullable */
+  companyName?: string | null;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 export interface WithdrawalInput {
@@ -352,6 +441,15 @@ export interface CompanyStats {
   jobsByMonth: MonthCount[];
 }
 
+export type FreelancerStatsReputationBreakdown = {
+  overall?: number;
+  ratingAvg?: number;
+  completionRate?: number;
+  cancellationRate?: number;
+  responseRate?: number;
+  totalRatings?: number;
+};
+
 export interface MonthAmount {
   month: string;
   amount: number;
@@ -360,10 +458,28 @@ export interface MonthAmount {
 export interface FreelancerStats {
   completedJobs: number;
   totalEarned: number;
+  totalFeesPaid?: number;
   pendingEarnings: number;
   averageRating: number;
   level: string;
-  nextLevelProgress: number;
+  levelLabel?: string;
+  currentFee?: number;
+  nextLevelFee?: number;
+  feeReductionAtNextLevel?: number;
+  /** @nullable */
+  nextLevel?: string | null;
+  /** @nullable */
+  nextLevelLabel?: string | null;
+  progressPercent: number;
+  jobsNeeded?: number;
+  repNeeded?: number;
+  jobsDone?: number;
+  repDone?: number;
+  /** @nullable */
+  jobsRequired?: number | null;
+  /** @nullable */
+  repRequired?: number | null;
+  reputationBreakdown?: FreelancerStatsReputationBreakdown;
   earnsByMonth: MonthAmount[];
   badges: string[];
 }
@@ -377,6 +493,78 @@ export interface AdminStats {
   usersThisMonth: number;
   revenueByMonth: MonthAmount[];
   topFreelancers: User[];
+}
+
+export interface StateRepresentative {
+  id: number;
+  userId: number;
+  state: string;
+  commissionRate: number;
+  isActive: boolean;
+  /** @nullable */
+  userName?: string | null;
+  /** @nullable */
+  userEmail?: string | null;
+  /** @nullable */
+  userAvatarUrl?: string | null;
+  createdAt: string;
+}
+
+export interface CreateRepresentativeInput {
+  userId: number;
+  state: string;
+  commissionRate?: number;
+}
+
+export interface AdminDepositApproveInput {
+  adminNote?: string;
+}
+
+export interface AdminDepositRejectInput {
+  adminNote?: string;
+}
+
+export interface StateStats {
+  state: string;
+  totalFreelancers: number;
+  totalJobs: number;
+  totalRevenue: number;
+  /** @nullable */
+  representative?: string | null;
+}
+
+export type AdminAnalyticsLevelDistributionItem = {
+  level?: string;
+  count?: number;
+  avgReputation?: number;
+};
+
+export type AdminAnalyticsFeesByLevelItem = {
+  level?: string;
+  totalFees?: number;
+  avgFee?: number;
+  count?: number;
+};
+
+export interface AdminAnalytics {
+  byState: StateStats[];
+  levelDistribution: AdminAnalyticsLevelDistributionItem[];
+  revenueByMonth: MonthAmount[];
+  feesByLevel: AdminAnalyticsFeesByLevelItem[];
+}
+
+export interface OpsMetrics {
+  openJobs: number;
+  jobsInProgress: number;
+  pendingApplications: number;
+  pendingWithdrawals: number;
+  pendingWithdrawalAmount: number;
+  pendingDeposits: number;
+  pendingDepositAmount: number;
+  unreadNotifications: number;
+  platformWalletBalance: number;
+  activeFreelancers24h: number;
+  activeCompanies24h: number;
 }
 
 export type ListFreelancersParams = {
@@ -425,6 +613,10 @@ page?: number;
 };
 
 export type AdminListWithdrawalsParams = {
+status?: string;
+};
+
+export type AdminListDepositRequestsParams = {
 status?: string;
 };
 

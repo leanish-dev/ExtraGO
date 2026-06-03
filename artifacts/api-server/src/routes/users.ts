@@ -76,7 +76,7 @@ router.get("/users/companies", requireAuth, async (req, res) => {
 
 // GET /users/:id
 router.get("/users/:id", requireAuth, async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, id));
@@ -101,7 +101,7 @@ router.get("/users/:id", requireAuth, async (req, res) => {
 
 // PATCH /users/:id
 router.patch("/users/:id", requireAuth, async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id as string);
   const currentUser = (req as any).user;
 
   if (currentUser.id !== id && currentUser.role !== "admin") {
@@ -149,7 +149,7 @@ router.patch("/users/:id", requireAuth, async (req, res) => {
 
 // POST /users/:id/rating
 router.post("/users/:id/rating", requireAuth, async (req, res) => {
-  const ratedId = parseInt(req.params.id);
+  const ratedId = parseInt(req.params.id as string);
   const raterId = (req as any).user.id;
   if (isNaN(ratedId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
@@ -174,7 +174,7 @@ router.post("/users/:id/rating", requireAuth, async (req, res) => {
 
 // POST /users/:id/follow
 router.post("/users/:id/follow", requireAuth, async (req, res) => {
-  const followingId = parseInt(req.params.id);
+  const followingId = parseInt(req.params.id as string);
   const followerId = (req as any).user.id;
   if (isNaN(followingId)) { res.status(400).json({ error: "Invalid ID" }); return; }
   if (followerId === followingId) { res.status(400).json({ error: "Cannot follow yourself" }); return; }
@@ -193,7 +193,7 @@ router.post("/users/:id/follow", requireAuth, async (req, res) => {
 
 // DELETE /users/:id/follow
 router.delete("/users/:id/follow", requireAuth, async (req, res) => {
-  const followingId = parseInt(req.params.id);
+  const followingId = parseInt(req.params.id as string);
   const followerId = (req as any).user.id;
   if (isNaN(followingId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
@@ -206,7 +206,7 @@ router.delete("/users/:id/follow", requireAuth, async (req, res) => {
 
 // GET /users/:id/followers
 router.get("/users/:id/followers", requireAuth, async (req, res) => {
-  const userId = parseInt(req.params.id);
+  const userId = parseInt(req.params.id as string);
   if (isNaN(userId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const follows = await db.select().from(userFollowsTable).where(eq(userFollowsTable.followingId, userId));
@@ -221,7 +221,7 @@ router.get("/users/:id/followers", requireAuth, async (req, res) => {
 
 // GET /users/:id/following
 router.get("/users/:id/following", requireAuth, async (req, res) => {
-  const userId = parseInt(req.params.id);
+  const userId = parseInt(req.params.id as string);
   if (isNaN(userId)) { res.status(400).json({ error: "Invalid ID" }); return; }
 
   const follows = await db.select().from(userFollowsTable).where(eq(userFollowsTable.followerId, userId));
