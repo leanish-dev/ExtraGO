@@ -165,9 +165,12 @@ router.post("/applications/:id/approve", requireAuth, async (req, res) => {
     .where(eq(applicationsTable.id, id))
     .returning();
 
-  await db.update(jobsTable)
-    .set({ workersApproved: sql`${jobsTable.workersApproved} + 1` })
-    .where(eq(jobsTable.id, job.id));
+  // Only increment on first approval (pending → approved); re-approvals don't add new workers
+  if (app.status === "pending") {
+    await db.update(jobsTable)
+      .set({ workersApproved: sql`${jobsTable.workersApproved} + 1` })
+      .where(eq(jobsTable.id, job.id));
+  }
 
   await db.insert(notificationsTable).values({
     userId: app.freelancerId,
@@ -359,6 +362,11 @@ router.post("/applications/:id/accept-counter", requireAuth, async (req, res) =>
     .set({ status: "counter_accepted" })
     .where(eq(applicationsTable.id, id))
     .returning();
+
+  // Increment workersApproved — counter_accepted is the approval for apps that went through counter-offer
+  await db.update(jobsTable)
+    .set({ workersApproved: sql`${jobsTable.workersApproved} + 1` })
+    .where(eq(jobsTable.id, job.id));
 
   await db.insert(notificationsTable).values({
     userId: app.freelancerId,

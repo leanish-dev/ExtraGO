@@ -3770,6 +3770,76 @@ export function useAdminListDepositRequests<TData = Awaited<ReturnType<typeof ad
 
 
 
+export const getAdminConfirmDepositRequestUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/deposit-requests/${id}/confirm`
+}
+
+/**
+ * @summary Confirm a deposit request (pending → confirmed)
+ */
+export const adminConfirmDepositRequest = async (id: number, options?: RequestInit): Promise<MessageResponse> => {
+
+  return customFetch<MessageResponse>(getAdminConfirmDepositRequestUrl(id),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+export const getAdminConfirmDepositRequestMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminConfirmDepositRequest>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminConfirmDepositRequest>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['adminConfirmDepositRequest'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminConfirmDepositRequest>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  adminConfirmDepositRequest(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminConfirmDepositRequestMutationResult = NonNullable<Awaited<ReturnType<typeof adminConfirmDepositRequest>>>
+
+    export type AdminConfirmDepositRequestMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Confirm a deposit request (pending → confirmed)
+ */
+export const useAdminConfirmDepositRequest = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminConfirmDepositRequest>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof adminConfirmDepositRequest>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getAdminConfirmDepositRequestMutationOptions(options));
+    }
+
 export const getAdminApproveDepositRequestUrl = (id: number,) => {
 
 

@@ -41,7 +41,16 @@ router.get("/wallet/me", requireAuth, async (req, res) => {
   const user = (req as any).user;
   const walletType = user.role === "company" ? "company" : user.role === "admin" ? "platform" : "freelancer";
   const wallet = await ensureWallet(user.id, walletType as any);
-  res.json(formatWallet(wallet));
+
+  let pendingDeposits = 0;
+  if (user.role === "company") {
+    const [row] = await db.select({ total: sql<number>`COALESCE(SUM(${depositRequestsTable.amount}), 0)` })
+      .from(depositRequestsTable)
+      .where(and(eq(depositRequestsTable.walletId, wallet.id), eq(depositRequestsTable.status, "pending")));
+    pendingDeposits = Number(row?.total ?? 0);
+  }
+
+  res.json({ ...formatWallet(wallet), pendingDeposits });
 });
 
 // GET /wallet/transactions

@@ -776,7 +776,8 @@ export const GetMyWalletResponse = zod.object({
   "totalEarned": zod.number(),
   "totalWithdrawn": zod.number(),
   "totalFeesPaid": zod.number(),
-  "totalSpent": zod.number()
+  "totalSpent": zod.number(),
+  "pendingDeposits": zod.number().optional().describe('Sum of pending deposit requests (company wallets only)')
 })
 
 
@@ -785,7 +786,11 @@ export const GetMyWalletResponse = zod.object({
  */
 export const ListTransactionsQueryParams = zod.object({
   "page": zod.coerce.number().optional(),
-  "type": zod.coerce.string().optional()
+  "limit": zod.coerce.number().optional(),
+  "type": zod.coerce.string().optional(),
+  "status": zod.coerce.string().optional(),
+  "from": zod.coerce.string().optional().describe('Start date (YYYY-MM-DD)'),
+  "to": zod.coerce.string().optional().describe('End date (YYYY-MM-DD)')
 })
 
 export const ListTransactionsResponseItem = zod.object({
@@ -1193,6 +1198,18 @@ export const AdminListDepositRequestsResponseItem = zod.object({
   "updatedAt": zod.string().optional()
 })
 export const AdminListDepositRequestsResponse = zod.array(AdminListDepositRequestsResponseItem)
+
+
+/**
+ * @summary Confirm a deposit request (pending → confirmed)
+ */
+export const AdminConfirmDepositRequestParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const AdminConfirmDepositRequestResponse = zod.object({
+  "message": zod.string()
+})
 
 
 /**

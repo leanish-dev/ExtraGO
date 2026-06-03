@@ -237,6 +237,8 @@ export interface Wallet {
   totalWithdrawn: number;
   totalFeesPaid: number;
   totalSpent: number;
+  /** Sum of pending deposit requests (company wallets only) */
+  pendingDeposits?: number;
 }
 
 export type TransactionType = typeof TransactionType[keyof typeof TransactionType];
@@ -592,7 +594,17 @@ status?: string;
 
 export type ListTransactionsParams = {
 page?: number;
+limit?: number;
 type?: string;
+status?: string;
+/**
+ * Start date (YYYY-MM-DD)
+ */
+from?: string;
+/**
+ * End date (YYYY-MM-DD)
+ */
+to?: string;
 };
 
 export type ListNotificationsParams = {

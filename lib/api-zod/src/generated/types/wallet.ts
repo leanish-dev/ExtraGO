@@ -18,4 +18,6 @@ export interface Wallet {
   totalWithdrawn: number;
   totalFeesPaid: number;
   totalSpent: number;
+  /** Sum of pending deposit requests (company wallets only) */
+  pendingDeposits?: number;
 }

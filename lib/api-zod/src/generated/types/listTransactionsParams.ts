@@ -8,5 +8,15 @@
 
 export type ListTransactionsParams = {
 page?: number;
+limit?: number;
 type?: string;
+status?: string;
+/**
+ * Start date (YYYY-MM-DD)
+ */
+from?: string;
+/**
+ * End date (YYYY-MM-DD)
+ */
+to?: string;
 };

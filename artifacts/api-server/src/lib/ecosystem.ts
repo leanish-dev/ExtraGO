@@ -321,15 +321,42 @@ export async function completeJobCascade(
       }
     }
 
-    // Level progression inside transaction for full atomicity
-    // freelancer.completedJobs is already the incremented value (UPDATE...RETURNING)
-    const newLevel = calculateLevel(freelancer.completedJobs, freelancer.reputationScore ?? 0);
+    // Reputation recalculation — atomically inside the transaction so it either fully
+    // succeeds with all financial mutations or rolls back together (no orphaned state).
+    // PostgreSQL READ COMMITTED: our own writes in this tx (status="completed", completedJobs++)
+    // are immediately visible to our own reads, so freshApps includes the completed one.
+    const freshRatings = await tx.select().from(ratingsTable).where(eq(ratingsTable.ratedId, freelancerId));
+    const ratingAvg = freshRatings.length > 0
+      ? freshRatings.reduce((s: number, r: any) => s + (r.score ?? 0), 0) / freshRatings.length
+      : 0;
+    const freshApps = await tx.select().from(applicationsTable).where(eq(applicationsTable.freelancerId, freelancerId));
+    const completedCount = freshApps.filter((a: any) => a.status === "completed").length;
+    const cancelledCount = freshApps.filter((a: any) => a.status === "cancelled").length;
+    const totalAppsCount = freshApps.length;
+    const completionRate = totalAppsCount > 0 ? completedCount / totalAppsCount : 0;
+    const attendanceScore = Math.max(0, 1 - (totalAppsCount > 0 ? cancelledCount / totalAppsCount : 0));
+    const responseRate = Math.min((freelancer.responseRate ?? 0) / 100, 1);
+    const accountAgeDays = freelancer.createdAt
+      ? (Date.now() - new Date(String(freelancer.createdAt)).getTime()) / (1000 * 60 * 60 * 24)
+      : 0;
+    const tenureScore = Math.min(accountAgeDays / 365, 1);
+    const weightedScore =
+      (ratingAvg / 5) * 0.50 +
+      completionRate * 0.20 +
+      attendanceScore * 0.15 +
+      responseRate * 0.10 +
+      tenureScore * 0.05;
+    const newReputationScore = +(weightedScore * 5).toFixed(2);
+    await tx.update(usersTable).set({ reputationScore: newReputationScore }).where(eq(usersTable.id, freelancerId));
+
+    // Level progression — re-evaluate with the freshly computed reputation score
+    const newLevel = calculateLevel(freelancer.completedJobs, newReputationScore);
     const levelChanged = newLevel !== (freelancer.level as string);
     if (levelChanged) {
       await tx.update(usersTable).set({ level: newLevel }).where(eq(usersTable.id, freelancerId));
     }
 
-    return { completedApp, freelancer, freelancerEarnings, platformFee, feeRate, newLevel, levelChanged };
+    return { completedApp, freelancer, freelancerEarnings, platformFee, feeRate, newLevel, levelChanged, newReputationScore };
   });
 
   // Fire-and-forget notifications (non-critical, outside transaction)
@@ -372,10 +399,7 @@ export async function completeJobCascade(
     isRead: false,
   }).catch(() => {});
 
-  // Recalculate weighted reputation score post-commit (reads committed state)
-  const newReputation = await recalculateReputation(freelancerId);
-
-  return { completedApp: result.completedApp, freelancerEarnings: result.freelancerEarnings, platformFee: result.platformFee, newLevel: result.newLevel, levelChanged: result.levelChanged, newReputation };
+  return { completedApp: result.completedApp, freelancerEarnings: result.freelancerEarnings, platformFee: result.platformFee, newLevel: result.newLevel, levelChanged: result.levelChanged, newReputation: result.newReputationScore };
 }
 
 export async function reserveCompanyFunds(companyId: number, amount: number, jobTitle: string, applicationId: number) {
