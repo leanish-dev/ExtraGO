@@ -268,25 +268,26 @@ export async function completeJobCascade(
       });
     }
 
-    // Referral commission (3% of freelancer earnings)
+    // Referral commission (3% of freelancer earnings) — ensure wallet exists in transaction
     if (freelancer.referredById) {
       const commission = Math.round(freelancerEarnings * 0.03);
       if (commission > 0) {
-        const [refWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, freelancer.referredById));
-        if (refWallet) {
-          await tx.update(walletsTable).set({
-            balance: sql`${walletsTable.balance} + ${commission}`,
-            totalEarned: sql`${walletsTable.totalEarned} + ${commission}`,
-          }).where(eq(walletsTable.id, refWallet.id));
-          await tx.insert(transactionsTable).values({
-            walletId: refWallet.id,
-            type: "commission",
-            amount: commission,
-            description: `Comissão de indicação: ${freelancer.name}`,
-            status: "completed",
-            referenceId: `app:${applicationId}`,
-          });
+        let [refWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, freelancer.referredById));
+        if (!refWallet) {
+          [refWallet] = await tx.insert(walletsTable).values({ userId: freelancer.referredById, walletType: "freelancer" }).returning();
         }
+        await tx.update(walletsTable).set({
+          balance: sql`${walletsTable.balance} + ${commission}`,
+          totalEarned: sql`${walletsTable.totalEarned} + ${commission}`,
+        }).where(eq(walletsTable.id, refWallet.id));
+        await tx.insert(transactionsTable).values({
+          walletId: refWallet.id,
+          type: "commission",
+          amount: commission,
+          description: `Comissão de indicação: ${freelancer.name}`,
+          status: "completed",
+          referenceId: `app:${applicationId}`,
+        });
       }
     }
 
@@ -297,47 +298,50 @@ export async function completeJobCascade(
       if (jobStateCode && rep.stateCode === jobStateCode) {
         const repCommission = Math.round(platformFee * rep.commissionRate);
         if (repCommission > 0) {
-          const [repWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, rep.userId));
-          if (repWallet) {
-            await tx.update(walletsTable).set({
-              balance: sql`${walletsTable.balance} + ${repCommission}`,
-              totalEarned: sql`${walletsTable.totalEarned} + ${repCommission}`,
-            }).where(eq(walletsTable.id, repWallet.id));
-            await tx.insert(transactionsTable).values({
-              walletId: repWallet.id,
-              type: "commission",
-              amount: repCommission,
-              description: `Comissão regional: ${jobTitle}`,
-              status: "completed",
-              referenceId: `app:${applicationId}`,
-            });
+          // Ensure representative wallet exists in transaction
+          let [repWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, rep.userId));
+          if (!repWallet) {
+            [repWallet] = await tx.insert(walletsTable).values({ userId: rep.userId, walletType: "representative" }).returning();
           }
+          await tx.update(walletsTable).set({
+            balance: sql`${walletsTable.balance} + ${repCommission}`,
+            totalEarned: sql`${walletsTable.totalEarned} + ${repCommission}`,
+          }).where(eq(walletsTable.id, repWallet.id));
+          await tx.insert(transactionsTable).values({
+            walletId: repWallet.id,
+            type: "commission",
+            amount: repCommission,
+            description: `Comissão regional: ${jobTitle}`,
+            status: "completed",
+            referenceId: `app:${applicationId}`,
+          });
         }
         break;
       }
     }
 
-    return { completedApp, freelancer, freelancerEarnings, platformFee, feeRate };
+    // Level progression inside transaction for full atomicity
+    // freelancer.completedJobs is already the incremented value (UPDATE...RETURNING)
+    const newLevel = calculateLevel(freelancer.completedJobs, freelancer.reputationScore ?? 0);
+    const levelChanged = newLevel !== (freelancer.level as string);
+    if (levelChanged) {
+      await tx.update(usersTable).set({ level: newLevel }).where(eq(usersTable.id, freelancerId));
+    }
+
+    return { completedApp, freelancer, freelancerEarnings, platformFee, feeRate, newLevel, levelChanged };
   });
 
-  // Recalculate reputation + level after transaction (reads need fresh state)
-  const newReputation = await recalculateReputation(freelancerId);
-  const newCompletedJobs = result.freelancer.completedJobs + 1;
-  const newLevel = calculateLevel(newCompletedJobs, newReputation);
-  const levelChanged = newLevel !== result.freelancer.level;
-
-  if (levelChanged) {
-    await db.update(usersTable).set({ level: newLevel }).where(eq(usersTable.id, freelancerId));
+  // Fire-and-forget notifications (non-critical, outside transaction)
+  if (result.levelChanged) {
     db.insert(notificationsTable).values({
       userId: freelancerId,
       type: "level_up",
       title: "🎉 Você subiu de nível!",
-      message: `Parabéns! Você agora é ${LEVEL_LABELS[newLevel]}. Taxa reduzida para ${(LEVEL_FEE[newLevel] * 100).toFixed(0)}%.`,
+      message: `Parabéns! Você agora é ${LEVEL_LABELS[result.newLevel]}. Taxa reduzida para ${(LEVEL_FEE[result.newLevel] * 100).toFixed(0)}%.`,
       isRead: false,
     }).catch(() => {});
   }
 
-  // Fire-and-forget notifications (non-critical)
   if (result.freelancer.referredById) {
     const commission = Math.round(result.freelancerEarnings * 0.03);
     if (commission > 0) {
@@ -367,7 +371,10 @@ export async function completeJobCascade(
     isRead: false,
   }).catch(() => {});
 
-  return { completedApp: result.completedApp, freelancerEarnings: result.freelancerEarnings, platformFee: result.platformFee, newLevel, levelChanged, newReputation };
+  // Recalculate weighted reputation score post-commit (reads committed state)
+  const newReputation = await recalculateReputation(freelancerId);
+
+  return { completedApp: result.completedApp, freelancerEarnings: result.freelancerEarnings, platformFee: result.platformFee, newLevel: result.newLevel, levelChanged: result.levelChanged, newReputation };
 }
 
 export async function reserveCompanyFunds(companyId: number, amount: number, jobTitle: string, applicationId: number) {

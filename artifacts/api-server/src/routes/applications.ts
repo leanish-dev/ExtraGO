@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, applicationsTable, jobsTable, usersTable, notificationsTable } from "@workspace/db";
+import { db, applicationsTable, jobsTable, usersTable, notificationsTable, walletsTable, transactionsTable } from "@workspace/db";
 import { eq, and, sql } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { ApplyToJobBody, ListApplicationsQueryParams } from "@workspace/api-zod";
@@ -189,10 +189,39 @@ router.post("/applications/:id/reject", requireAuth, async (req, res) => {
   const [app] = await db.select().from(applicationsTable).where(eq(applicationsTable.id, id));
   if (!app) { res.status(404).json({ error: "Not found" }); return; }
 
+  if (["rejected", "completed", "cancelled"].includes(app.status)) {
+    res.status(400).json({ error: "Application is already finalized" }); return;
+  }
+
   const [job] = await db.select().from(jobsTable).where(eq(jobsTable.id, app.jobId));
   if (!job || (job.companyId !== user.id && user.role !== "admin")) {
     res.status(403).json({ error: "Forbidden" });
     return;
+  }
+
+  // If the app was approved, release reserved funds back to company balance
+  if (["approved", "counter_accepted"].includes(app.status)) {
+    const reservedAmount = app.proposedRate ?? job.totalValue ?? 0;
+    if (reservedAmount > 0) {
+      const [companyWallet] = await db.select().from(walletsTable).where(eq(walletsTable.userId, job.companyId));
+      if (companyWallet) {
+        const toRelease = Math.min(companyWallet.reservedBalance, reservedAmount);
+        if (toRelease > 0) {
+          await db.update(walletsTable).set({
+            reservedBalance: sql`${walletsTable.reservedBalance} - ${toRelease}`,
+            balance: sql`${walletsTable.balance} + ${toRelease}`,
+          }).where(eq(walletsTable.id, companyWallet.id));
+          db.insert(transactionsTable).values({
+            walletId: companyWallet.id,
+            type: "release",
+            amount: toRelease,
+            description: `Liberação de reserva: ${job.title}`,
+            status: "completed",
+            referenceId: `app:${id}`,
+          }).catch(() => {});
+        }
+      }
+    }
   }
 
   const [updated] = await db.update(applicationsTable)
