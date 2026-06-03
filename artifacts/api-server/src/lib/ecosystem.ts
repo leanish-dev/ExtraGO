@@ -86,6 +86,12 @@ export async function ensureWallet(userId: number, walletType: "freelancer" | "c
   let [wallet] = await db.select().from(walletsTable).where(eq(walletsTable.userId, userId));
   if (!wallet) {
     [wallet] = await db.insert(walletsTable).values({ userId, walletType }).returning();
+  } else if (wallet.walletType !== walletType) {
+    // Reconcile wallet type if it was created with the wrong default
+    [wallet] = await db.update(walletsTable)
+      .set({ walletType })
+      .where(eq(walletsTable.id, wallet.id))
+      .returning();
   }
   return wallet;
 }
@@ -148,6 +154,20 @@ export async function completeJobCascade(
   jobValue: number,
 ) {
   const result = await db.transaction(async (tx) => {
+    // --- 1. Strict company funds check before any mutations ---
+    const [companyWalletCheck] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, companyId));
+    const totalAvailable = (companyWalletCheck?.reservedBalance ?? 0) + (companyWalletCheck?.balance ?? 0);
+    if (totalAvailable < jobValue) {
+      throw new Error(`Insufficient company funds: need ${jobValue}, have ${totalAvailable}`);
+    }
+
+    // --- 2. Mark application as completed atomically ---
+    const [completedApp] = await tx.update(applicationsTable)
+      .set({ status: "completed" })
+      .where(eq(applicationsTable.id, applicationId))
+      .returning();
+    if (!completedApp) throw new Error("Application not found");
+
     const [freelancer] = await tx.update(usersTable)
       .set({ completedJobs: sql`${usersTable.completedJobs} + 1` })
       .where(eq(usersTable.id, freelancerId))
@@ -273,7 +293,7 @@ export async function completeJobCascade(
       }
     }
 
-    return { freelancer, freelancerEarnings, platformFee, feeRate };
+    return { completedApp, freelancer, freelancerEarnings, platformFee, feeRate };
   });
 
   // Recalculate reputation + level after transaction (reads need fresh state)
@@ -323,7 +343,7 @@ export async function completeJobCascade(
     isRead: false,
   }).catch(() => {});
 
-  return { freelancerEarnings: result.freelancerEarnings, platformFee: result.platformFee, newLevel, levelChanged, newReputation };
+  return { completedApp: result.completedApp, freelancerEarnings: result.freelancerEarnings, platformFee: result.platformFee, newLevel, levelChanged, newReputation };
 }
 
 export async function reserveCompanyFunds(companyId: number, amount: number, jobTitle: string, applicationId: number) {

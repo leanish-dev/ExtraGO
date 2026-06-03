@@ -304,8 +304,9 @@ router.get("/admin/representatives", requireAdmin, async (req, res) => {
 
 // POST /admin/representatives
 router.post("/admin/representatives", requireAdmin, async (req, res) => {
-  const { userId, stateCode, commissionRate } = req.body;
-  if (!userId || !stateCode) { res.status(400).json({ error: "userId and stateCode required" }); return; }
+  const { userId, commissionRate } = req.body;
+  const stateCode = req.body.state ?? req.body.stateCode;
+  if (!userId || !stateCode) { res.status(400).json({ error: "userId and state required" }); return; }
 
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
   if (!user) { res.status(404).json({ error: "User not found" }); return; }

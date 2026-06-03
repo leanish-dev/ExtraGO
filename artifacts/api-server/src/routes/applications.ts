@@ -152,20 +152,9 @@ router.post("/applications/:id/approve", requireAuth, async (req, res) => {
 
   const jobValue = app.proposedRate ?? job.totalValue ?? 0;
 
-  // Reserve company funds at approval time (soft check — skip if company has no wallet yet)
+  // Reserve company funds at approval time — hard fail if insufficient balance
   if (jobValue > 0) {
-    try {
-      await reserveCompanyFunds(job.companyId, jobValue, job.title, id);
-    } catch {
-      // Reservation failed (e.g. insufficient balance) — approve anyway, warn via notification
-      db.insert(notificationsTable).values({
-        userId: job.companyId,
-        type: "wallet_warning",
-        title: "⚠️ Saldo insuficiente",
-        message: `Você aprovou ${job.title} mas não há saldo suficiente reservado. Adicione fundos antes da conclusão.`,
-        isRead: false,
-      }).catch(() => {});
-    }
+    await reserveCompanyFunds(job.companyId, jobValue, job.title, id);
   }
 
   const [updated] = await db.update(applicationsTable)
@@ -241,27 +230,33 @@ router.post("/applications/:id/complete", requireAuth, async (req, res) => {
     res.status(403).json({ error: "Forbidden" }); return;
   }
 
-  const [updated] = await db.update(applicationsTable)
-    .set({ status: "completed" })
-    .where(eq(applicationsTable.id, id))
-    .returning();
-
   const jobValue = app.proposedRate ?? job.totalValue ?? 0;
 
-  if (jobValue > 0) {
-    await completeJobCascade(
-      id,
-      job.id,
-      app.freelancerId,
-      job.companyId,
-      job.title,
-      jobValue,
-    );
+  if (jobValue <= 0) {
+    // No financial value — just mark completed without cascade
+    const [updated] = await db.update(applicationsTable)
+      .set({ status: "completed" })
+      .where(eq(applicationsTable.id, id))
+      .returning();
+    const [freelancer] = await db.select().from(usersTable).where(eq(usersTable.id, app.freelancerId));
+    const [company] = await db.select().from(usersTable).where(eq(usersTable.id, job.companyId));
+    res.json(formatApp(updated, formatJob(job, company), freelancer));
+    return;
   }
+
+  // completeJobCascade marks application as completed atomically inside its transaction
+  const cascade = await completeJobCascade(
+    id,
+    job.id,
+    app.freelancerId,
+    job.companyId,
+    job.title,
+    jobValue,
+  );
 
   const [freelancer] = await db.select().from(usersTable).where(eq(usersTable.id, app.freelancerId));
   const [company] = await db.select().from(usersTable).where(eq(usersTable.id, job.companyId));
-  res.json(formatApp(updated, formatJob(job, company), freelancer));
+  res.json(formatApp(cascade.completedApp, formatJob(job, company), freelancer));
 });
 
 // PATCH /applications/:id/counter-offer — gold/elite freelancers only
