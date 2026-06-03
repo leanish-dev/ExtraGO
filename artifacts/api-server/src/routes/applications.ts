@@ -351,22 +351,24 @@ router.post("/applications/:id/accept-counter", requireAuth, async (req, res) =>
     res.status(403).json({ error: "Forbidden" }); return;
   }
 
-  // Adjust company wallet reservation from original job value to counter-offer rate
-  const originalJobValue = job.totalValue ?? 0;
-  const counterRate = app.proposedRate ?? originalJobValue;
-  if (counterRate > 0) {
-    await adjustCounterOfferReservation(job.companyId, originalJobValue, counterRate);
-  }
+  // Adjust company wallet reservation application-scoped (keyed by referenceId=app:{id}).
+  // Returns reservedForApp = 0 if the app went pending→counter_offered without a prior approval,
+  // or the original reservation amount if the app was approved before the counter-offer.
+  const counterRate = app.proposedRate ?? (job.totalValue ?? 0);
+  const reservedForApp = await adjustCounterOfferReservation(job.companyId, id, counterRate);
 
   const [updated] = await db.update(applicationsTable)
     .set({ status: "counter_accepted" })
     .where(eq(applicationsTable.id, id))
     .returning();
 
-  // Increment workersApproved — counter_accepted is the approval for apps that went through counter-offer
-  await db.update(jobsTable)
-    .set({ workersApproved: sql`${jobsTable.workersApproved} + 1` })
-    .where(eq(jobsTable.id, job.id));
+  // Only increment workersApproved if this app was NEVER previously approved (reservedForApp === 0).
+  // If reservedForApp > 0, the worker was already counted when the company first approved (pending→approved).
+  if (reservedForApp === 0) {
+    await db.update(jobsTable)
+      .set({ workersApproved: sql`${jobsTable.workersApproved} + 1` })
+      .where(eq(jobsTable.id, job.id));
+  }
 
   await db.insert(notificationsTable).values({
     userId: app.freelancerId,

@@ -145,24 +145,47 @@ export async function recalculateReputation(userId: number): Promise<number> {
   return reputationScore;
 }
 
+/**
+ * Adjust the company wallet reservation for a specific application when a counter-offer is accepted.
+ * Application-scoped: looks up the reservation transaction keyed by referenceId=app:{applicationId}
+ * to determine exactly how much was reserved for THIS application (0 if the app was never approved
+ * prior to counter-offer). Returns the amount that was reserved for the app before the adjustment.
+ */
 export async function adjustCounterOfferReservation(
   companyId: number,
-  originalJobValue: number,
+  applicationId: number,
   newProposedRate: number,
-) {
+): Promise<number> {
   const companyWallet = await ensureWallet(companyId, "company");
-  const currentReserved = companyWallet.reservedBalance;
-  // Release whatever was previously reserved for this job (capped to current reserved)
-  const toRelease = Math.min(currentReserved, originalJobValue);
-  // Net additional funds needed from balance
-  const netNew = newProposedRate - toRelease;
-  if (netNew > 0 && companyWallet.balance < netNew) {
+
+  // Look up the specific reservation transaction for this application
+  const [reservationTx] = await db
+    .select()
+    .from(transactionsTable)
+    .where(
+      and(
+        eq(transactionsTable.walletId, companyWallet.id),
+        eq(transactionsTable.type, "reservation"),
+        eq(transactionsTable.referenceId, `app:${applicationId}`),
+      ),
+    );
+
+  // Amount reserved for this specific application (0 if app went pending → counter_offered directly)
+  const reservedForApp = reservationTx?.amount ?? 0;
+
+  // Net delta: positive means we need more from balance; negative means we release back to balance
+  const delta = newProposedRate - reservedForApp;
+
+  if (delta > 0 && companyWallet.balance < delta) {
     throw new Error("Insufficient company balance to reserve counter-offer amount");
   }
+
   await db.update(walletsTable).set({
-    reservedBalance: sql`GREATEST(${walletsTable.reservedBalance} - ${toRelease}, 0) + ${newProposedRate}`,
-    balance: sql`${walletsTable.balance} + ${toRelease} - ${newProposedRate}`,
+    reservedBalance: sql`${walletsTable.reservedBalance} - ${reservedForApp} + ${newProposedRate}`,
+    balance: sql`${walletsTable.balance} + ${reservedForApp} - ${newProposedRate}`,
   }).where(eq(walletsTable.id, companyWallet.id));
+
+  return reservedForApp;
 }
 
 export async function completeJobCascade(
