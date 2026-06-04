@@ -4,51 +4,28 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  CheckCircle, Star, Briefcase, MapPin, Award, Globe, ChevronLeft,
-  Zap, Building2, MessageCircle, UserPlus, UserMinus, Users, Loader2
+  CheckCircle, Briefcase, MapPin, Award, Globe, ChevronLeft,
+  Zap, Building2, MessageCircle, UserPlus, UserMinus, Users, Loader2, Star
 } from "lucide-react";
 import { Link } from "wouter";
 import { SkeletonCard } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
-
 import { apiFetch } from "@/lib/api-fetch";
-
-const LEVEL_MAP: Record<string, { label: string; color: string; bg: string; emoji: string }> = {
-  bronze: { label: "Bronze", color: "text-orange-400", bg: "bg-orange-400/10 border-orange-400/25", emoji: "🥉" },
-  silver: { label: "Prata", color: "text-slate-300", bg: "bg-slate-300/10 border-slate-300/25", emoji: "🥈" },
-  gold: { label: "Ouro", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/25", emoji: "🥇" },
-  elite: { label: "Elite", color: "text-primary", bg: "bg-primary/10 border-primary/25", emoji: "👑" },
-};
-
-function AnimatedCounter({ target, decimals = 0 }: { target: number; decimals?: number }) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (target === 0) { setCount(0); return; }
-    const steps = 40;
-    const increment = target / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) { clearInterval(timer); setCount(target); return; }
-      setCount(current);
-    }, 20);
-    return () => clearInterval(timer);
-  }, [target]);
-  return <>{decimals > 0 ? count.toFixed(decimals) : Math.round(count)}</>;
-}
+import { AnimatedCounter } from "@/components/animated-counter";
+import { LevelBadge } from "@/components/level-badge";
 
 function StatBadge({ value, label, color = "text-primary" }: { value: React.ReactNode; label: string; color?: string }) {
   return (
-    <div className="text-center px-4 py-3 rounded-xl bg-white/3 border border-white/6">
-      <p className={`text-xl font-bold ${color}`}>{value}</p>
-      <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
+    <div className="text-center px-3 py-3 rounded-xl bg-white/3 border border-white/6 flex flex-col items-center justify-center gap-0.5">
+      <p className={`text-lg font-black ${color}`}>{value}</p>
+      <p className="text-[10px] text-muted-foreground leading-tight">{label}</p>
     </div>
   );
 }
 
 const BADGE_DEFS = [
-  { key: "first_job", label: "Primeiro Job", emoji: "🎯", threshold: 1, field: "completedJobs" },
+  { key: "first_job", label: "Primeiro Extra", emoji: "🎯", threshold: 1, field: "completedJobs" },
   { key: "ten_jobs", label: "10 Extras", emoji: "🔟", threshold: 10, field: "completedJobs" },
   { key: "top_rated", label: "Top Avaliado", emoji: "⭐", threshold: 4, field: "reputationScore" },
   { key: "verified", label: "Verificado", emoji: "✅", threshold: true, field: "isVerified" },
@@ -65,6 +42,12 @@ export default function FreelancerProfilePage() {
   const { data: user, isLoading } = useQuery({
     queryKey: ["freelancer-profile", userId],
     queryFn: () => apiFetch(`/api/users/${userId}`),
+    enabled: !!userId,
+  });
+
+  const { data: stats } = useQuery<any>({
+    queryKey: ["freelancer-stats", userId],
+    queryFn: () => apiFetch(`/api/stats/freelancer/${userId}`),
     enabled: !!userId,
   });
 
@@ -109,7 +92,7 @@ export default function FreelancerProfilePage() {
   if (isLoading) {
     return (
       <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-4">
-        <div className="h-32 rounded-2xl bg-white/5 animate-pulse" />
+        <div className="h-36 rounded-2xl bg-white/5 animate-pulse" />
         <SkeletonCard />
         <SkeletonCard />
       </div>
@@ -120,18 +103,18 @@ export default function FreelancerProfilePage() {
     return (
       <div className="p-6 text-center">
         <p className="text-muted-foreground">Freelancer não encontrado.</p>
-        <Button onClick={() => setLocation("/app/jobs")} className="mt-4">Voltar</Button>
+        <Button onClick={() => setLocation("/app/network")} className="mt-4">Voltar à Rede</Button>
       </div>
     );
   }
 
-  const levelInfo = LEVEL_MAP[user.level ?? "bronze"] ?? LEVEL_MAP.bronze;
   const isMe = me?.id === userId;
+  const isCompany = me?.role === "company";
 
   const followersCount = user.followersCount ?? 0;
-  const displayFollowers = following !== null
-    ? (following ? followersCount + (user.isFollowedByMe ? 0 : 1) : followersCount - (user.isFollowedByMe ? 1 : 0))
-    : followersCount;
+  const displayFollowers = following
+    ? followersCount + (user.isFollowedByMe ? 0 : 1)
+    : followersCount - (user.isFollowedByMe ? 1 : 0);
 
   const earnedBadges = BADGE_DEFS.filter(b => {
     if (b.field === "isVerified") return user.isVerified;
@@ -139,71 +122,76 @@ export default function FreelancerProfilePage() {
     return typeof b.threshold === "boolean" ? !!val : val >= b.threshold;
   });
 
+  const totalEarnings = stats?.totalEarnings ?? 0;
+  const completedJobs = stats?.completedJobs ?? user.completedJobs ?? 0;
+  const avgRating = stats?.averageRating ?? user.reputationScore ?? 0;
+  const responseRate = stats?.responseRate ?? user.responseRate ?? 0;
+
   return (
-    <div className="pb-24">
-      {/* Banner */}
-      <div className="relative w-full h-36 sm:h-48 bg-gradient-to-br from-primary/20 via-secondary/10 to-transparent overflow-hidden">
+    <div className="page-enter pb-24 lg:pb-8">
+      {/* Hero banner */}
+      <div className="relative w-full h-36 sm:h-48 overflow-hidden">
         {user.bannerUrl ? (
           <img src={user.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
         ) : (
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
+          <div className="w-full h-full bg-gradient-to-br from-primary/25 via-secondary/10 to-transparent" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060809] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060809] via-[#060809]/10 to-transparent" />
+
+        {/* Back button */}
+        <button
+          onClick={() => window.history.back()}
+          className="absolute top-3 left-4 flex items-center gap-1.5 text-white/80 hover:text-white text-sm font-medium transition-colors bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full"
+        >
+          <ChevronLeft size={15} /> Voltar
+        </button>
       </div>
 
       <div className="px-4 sm:px-6 max-w-3xl mx-auto">
-        {/* Back button */}
-        <button
-          onClick={() => setLocation(-1 as any)}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm mb-4 mt-2 transition-colors"
-        >
-          <ChevronLeft size={16} /> Voltar
-        </button>
-
         {/* Avatar + name */}
-        <div className="relative -mt-12 sm:-mt-16 mb-4">
+        <div className="relative -mt-12 sm:-mt-14 mb-4">
           <div className="flex items-end gap-4">
             <div className="relative flex-shrink-0">
               {user.avatarUrl ? (
                 <img
                   src={user.avatarUrl}
                   alt={user.name}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-[#060809]"
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-[#060809] shadow-xl"
                 />
               ) : (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-3xl font-bold text-black border-4 border-[#060809]">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-3xl font-black text-black border-4 border-[#060809] shadow-xl">
                   {user.name?.charAt(0).toUpperCase()}
                 </div>
               )}
               {user.isVerified && (
-                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-primary flex items-center justify-center border-2 border-[#060809]"
-                  style={{ boxShadow: "0 0 12px rgba(124,252,0,0.6)" }}>
+                <div
+                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-primary flex items-center justify-center border-2 border-[#060809]"
+                  style={{ boxShadow: "0 0 12px rgba(124,252,0,0.6)" }}
+                >
                   <CheckCircle size={13} className="text-black" />
                 </div>
               )}
             </div>
-            <div className="flex-1 pb-2">
+            <div className="flex-1 pb-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl sm:text-2xl font-bold">{user.name}</h1>
+                <h1 className="text-xl sm:text-2xl font-black truncate">{user.name}</h1>
                 {user.isVerified && (
-                  <span className="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full flex-shrink-0">
                     Verificado
                   </span>
                 )}
               </div>
-              <div className="flex items-center gap-2 mt-1 flex-wrap">
-                <span className={`text-xs font-bold px-2.5 py-1 rounded-xl border inline-flex items-center gap-1 ${levelInfo.bg} ${levelInfo.color}`}>
-                  {levelInfo.emoji} {levelInfo.label}
-                </span>
+              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                <LevelBadge level={user.level ?? "bronze"} size="sm" />
                 {user.categories && user.categories.length > 0 && (
-                  <span className="text-xs text-muted-foreground">{user.categories[0]}</span>
+                  <span className="text-xs text-muted-foreground truncate">{user.categories[0]}</span>
                 )}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Badges strip */}
+        {/* Earned badges */}
         {earnedBadges.length > 0 && (
           <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
             {earnedBadges.map(b => (
@@ -217,62 +205,67 @@ export default function FreelancerProfilePage() {
         {/* Stats bar */}
         <div className="grid grid-cols-4 gap-2 mb-5">
           <StatBadge
-            value={<AnimatedCounter target={user.completedJobs ?? 0} />}
+            value={<AnimatedCounter value={completedJobs} />}
             label="Extras"
             color="text-primary"
           />
           <StatBadge
-            value={<><AnimatedCounter target={user.reputationScore ?? 0} decimals={1} /> ★</>}
-            label="Rep."
+            value={<><AnimatedCounter value={avgRating} decimals={1} /> ★</>}
+            label="Avaliação"
             color="text-yellow-400"
           />
           <StatBadge
-            value={<AnimatedCounter target={displayFollowers} />}
+            value={<AnimatedCounter value={displayFollowers} />}
             label="Seguidores"
             color="text-secondary"
           />
           <StatBadge
-            value={`${user.responseRate ?? 0}%`}
+            value={`${responseRate}%`}
             label="Resposta"
             color="text-muted-foreground"
           />
         </div>
 
         {/* CTAs */}
-        <div className={`grid gap-3 mb-6 ${isMe ? "grid-cols-1" : "grid-cols-2"}`}>
-          {!isMe && (
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-              <Button
-                onClick={() => followMutation.mutate()}
-                disabled={followMutation.isPending}
-                className={`w-full h-12 font-bold text-sm rounded-xl border-none ${
-                  following
-                    ? "bg-white/8 border border-white/15 text-foreground hover:bg-destructive/15 hover:text-red-400"
-                    : "bg-secondary text-black hover:bg-secondary/90"
-                }`}
-                style={!following ? { boxShadow: "0 0 18px rgba(0,200,200,0.2)" } : {}}
-              >
-                {followMutation.isPending ? (
-                  <Loader2 size={14} className="animate-spin mr-2" />
-                ) : following ? (
-                  <UserMinus size={14} className="mr-2" />
-                ) : (
-                  <UserPlus size={14} className="mr-2" />
-                )}
-                {following ? "Seguindo" : "Seguir"}
-              </Button>
-            </motion.div>
-          )}
-          <Link href={`/app/jobs/new?freelancer=${userId}`}>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-              <Button className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl">
-                <Zap size={15} className="mr-2" /> Contratar
-              </Button>
-            </motion.div>
-          </Link>
-        </div>
+        {!isMe && (
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <Button
+              onClick={() => followMutation.mutate()}
+              disabled={followMutation.isPending}
+              variant="outline"
+              className={`h-12 font-bold text-sm rounded-xl border-white/15 ${
+                following
+                  ? "bg-white/5 text-foreground hover:bg-destructive/10 hover:text-red-400 hover:border-destructive/30"
+                  : "bg-secondary/10 border-secondary/30 text-secondary hover:bg-secondary/20"
+              }`}
+            >
+              {followMutation.isPending ? (
+                <Loader2 size={14} className="animate-spin mr-2" />
+              ) : following ? (
+                <UserMinus size={14} className="mr-2" />
+              ) : (
+                <UserPlus size={14} className="mr-2" />
+              )}
+              {following ? "Seguindo" : "Seguir"}
+            </Button>
 
-        {/* Sticky tabs */}
+            {isCompany ? (
+              <Link href={`/app/jobs/new?freelancer=${userId}`}>
+                <Button className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl">
+                  <Zap size={15} className="mr-2" /> Contratar
+                </Button>
+              </Link>
+            ) : (
+              <Link href={`/app/chat`}>
+                <Button className="w-full bg-white/8 border border-white/15 text-foreground hover:bg-white/12 font-bold h-12 text-sm rounded-xl">
+                  <MessageCircle size={15} className="mr-2" /> Mensagem
+                </Button>
+              </Link>
+            )}
+          </div>
+        )}
+
+        {/* Tabs */}
         <div className="sticky top-0 z-20 bg-[#060809]/95 backdrop-blur-xl border-b border-white/6 mb-6 -mx-4 sm:-mx-6 px-4 sm:px-6">
           <div className="flex gap-1 overflow-x-auto no-scrollbar py-2">
             {[
@@ -323,6 +316,35 @@ export default function FreelancerProfilePage() {
                 </div>
               )}
 
+              {/* Earnings & stats card — visible to everyone */}
+              <div className="glass-card rounded-2xl p-5 border border-white/6">
+                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+                  <Star size={13} className="text-yellow-400" /> Desempenho
+                </h2>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Extras concluídos</span>
+                    <span className="font-bold text-primary">{completedJobs}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Avaliação média</span>
+                    <span className="font-bold text-yellow-400">{avgRating.toFixed(1)} ★</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Taxa de resposta</span>
+                    <span className="font-bold">{responseRate}%</span>
+                  </div>
+                  {totalEarnings > 0 && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Total ganho</span>
+                      <span className="font-bold text-green-400">
+                        R$ {(totalEarnings / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {user.serviceRegions && user.serviceRegions.length > 0 && (
                 <div className="glass-card rounded-2xl p-5 border border-white/6">
                   <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
@@ -353,14 +375,20 @@ export default function FreelancerProfilePage() {
                 </div>
               )}
 
-              {/* Follower/Following counts */}
+              {/* Social */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="glass-card rounded-2xl p-4 border border-white/6 text-center">
-                  <p className="text-2xl font-bold text-primary"><AnimatedCounter target={user.followersCount ?? 0} /></p>
-                  <p className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1"><Users size={10} /> Seguidores</p>
+                  <p className="text-2xl font-black text-primary">
+                    <AnimatedCounter value={user.followersCount ?? 0} />
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1">
+                    <Users size={10} /> Seguidores
+                  </p>
                 </div>
                 <div className="glass-card rounded-2xl p-4 border border-white/6 text-center">
-                  <p className="text-2xl font-bold text-secondary"><AnimatedCounter target={user.followingCount ?? 0} /></p>
+                  <p className="text-2xl font-black text-secondary">
+                    <AnimatedCounter value={user.followingCount ?? 0} />
+                  </p>
                   <p className="text-xs text-muted-foreground mt-1">Seguindo</p>
                 </div>
               </div>
@@ -388,8 +416,12 @@ export default function FreelancerProfilePage() {
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold">{exp.role}</p>
                         <p className="text-xs text-muted-foreground">{exp.company}</p>
-                        <p className="text-xs text-muted-foreground/65 mt-0.5">{exp.startDate} — {exp.endDate ?? "Atual"}</p>
-                        {exp.description && <p className="text-xs text-foreground/70 mt-1 leading-relaxed">{exp.description}</p>}
+                        <p className="text-xs text-muted-foreground/65 mt-0.5">
+                          {exp.startDate} — {exp.endDate ?? "Atual"}
+                        </p>
+                        {exp.description && (
+                          <p className="text-xs text-foreground/70 mt-1 leading-relaxed">{exp.description}</p>
+                        )}
                         {exp.achievements && exp.achievements.length > 0 && (
                           <ul className="mt-2 space-y-1">
                             {exp.achievements.map((a: string, i: number) => (

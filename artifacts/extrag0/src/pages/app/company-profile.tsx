@@ -5,43 +5,26 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle, Briefcase, MapPin, Building2, ChevronLeft,
-  UserPlus, UserMinus, Star, Users, Shield, Loader2
+  UserPlus, UserMinus, Users, Shield, Loader2, Globe, MessageCircle
 } from "lucide-react";
 import { Link } from "wouter";
 import { SkeletonCard } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
-
 import { apiFetch } from "@/lib/api-fetch";
+import { AnimatedCounter } from "@/components/animated-counter";
 
 function StatBadge({ value, label, color = "text-primary" }: { value: React.ReactNode; label: string; color?: string }) {
   return (
-    <div className="text-center px-4 py-3 rounded-xl bg-white/3 border border-white/6">
-      <p className={`text-xl font-bold ${color}`}>{value}</p>
-      <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
+    <div className="text-center px-3 py-3 rounded-xl bg-white/3 border border-white/6 flex flex-col items-center justify-center gap-0.5">
+      <p className={`text-lg font-black ${color}`}>{value}</p>
+      <p className="text-[10px] text-muted-foreground leading-tight">{label}</p>
     </div>
   );
 }
 
-function AnimatedCounter({ target }: { target: number }) {
-  const [count, setCount] = React.useState(0);
-  React.useEffect(() => {
-    if (target === 0) return;
-    const step = Math.ceil(target / 30);
-    const timer = setInterval(() => {
-      setCount(c => {
-        if (c + step >= target) { clearInterval(timer); return target; }
-        return c + step;
-      });
-    }, 30);
-    return () => clearInterval(timer);
-  }, [target]);
-  return <>{count}</>;
-}
-
 export default function CompanyProfilePage() {
   const [, params] = useRoute("/app/companies/:id");
-  const [, setLocation] = useLocation();
   const { user: me } = useAuth();
   const qc = useQueryClient();
   const userId = params?.id ? parseInt(params.id) : 0;
@@ -94,7 +77,7 @@ export default function CompanyProfilePage() {
   if (isLoading) {
     return (
       <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-4">
-        <div className="h-32 rounded-2xl bg-white/5 animate-pulse" />
+        <div className="h-36 rounded-2xl bg-white/5 animate-pulse" />
         <SkeletonCard />
         <SkeletonCard />
       </div>
@@ -105,39 +88,43 @@ export default function CompanyProfilePage() {
     return (
       <div className="p-6 text-center">
         <p className="text-muted-foreground">Empresa não encontrada.</p>
-        <Button onClick={() => setLocation(-1 as any)} className="mt-4">Voltar</Button>
+        <Button onClick={() => window.history.back()} className="mt-4">Voltar</Button>
       </div>
     );
   }
 
   const isMe = me?.id === userId;
+  const isFreelancer = me?.role === "freelancer";
   const followersCount = company.followersCount ?? 0;
   const displayFollowers = following !== null
-    ? (following ? followersCount + (company.isFollowedByMe ? 0 : 1) : followersCount - (company.isFollowedByMe ? 1 : 0))
+    ? (following
+        ? followersCount + (company.isFollowedByMe ? 0 : 1)
+        : followersCount - (company.isFollowedByMe ? 1 : 0))
     : followersCount;
 
+  const companyName = company.companyName || company.name;
+
   return (
-    <div className="pb-24">
-      {/* Banner */}
+    <div className="page-enter pb-24 lg:pb-8">
+      {/* Hero banner */}
       <div className="relative w-full h-36 sm:h-48 overflow-hidden">
         {company.bannerUrl ? (
           <img src={company.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-secondary/20 via-primary/10 to-transparent">
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
-          </div>
+          <div className="w-full h-full bg-gradient-to-br from-secondary/25 via-primary/10 to-transparent" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060809] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060809] via-[#060809]/10 to-transparent" />
+
+        {/* Back button */}
+        <button
+          onClick={() => window.history.back()}
+          className="absolute top-3 left-4 flex items-center gap-1.5 text-white/80 hover:text-white text-sm font-medium transition-colors bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full"
+        >
+          <ChevronLeft size={15} /> Voltar
+        </button>
       </div>
 
       <div className="px-4 sm:px-6 max-w-3xl mx-auto">
-        <button
-          onClick={() => setLocation(-1 as any)}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-sm mb-4 mt-2 transition-colors"
-        >
-          <ChevronLeft size={16} /> Voltar
-        </button>
-
         {/* Avatar + name */}
         <div className="relative -mt-14 sm:-mt-16 mb-4">
           <div className="flex items-end gap-4">
@@ -145,66 +132,73 @@ export default function CompanyProfilePage() {
               {company.avatarUrl ? (
                 <img
                   src={company.avatarUrl}
-                  alt={company.name}
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-[#060809]"
+                  alt={companyName}
+                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-[#060809] shadow-xl"
                 />
               ) : (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-3xl font-bold text-black border-4 border-[#060809]">
-                  {(company.companyName || company.name)?.charAt(0).toUpperCase()}
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-3xl font-black text-black border-4 border-[#060809] shadow-xl">
+                  {companyName?.charAt(0).toUpperCase()}
                 </div>
               )}
               {company.isVerified && (
-                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-primary flex items-center justify-center border-2 border-[#060809]"
-                  style={{ boxShadow: "0 0 12px rgba(124,252,0,0.6)" }}>
+                <div
+                  className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-primary flex items-center justify-center border-2 border-[#060809]"
+                  style={{ boxShadow: "0 0 12px rgba(124,252,0,0.6)" }}
+                >
                   <Shield size={13} className="text-black" />
                 </div>
               )}
             </div>
-            <div className="flex-1 pb-2">
+            <div className="flex-1 pb-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl sm:text-2xl font-bold">{company.companyName || company.name}</h1>
+                <h1 className="text-xl sm:text-2xl font-black truncate">{companyName}</h1>
                 {company.isVerified && (
-                  <span className="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full flex-shrink-0">
                     Verificada
                   </span>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground mt-0.5">{company.name}</p>
+              {company.name !== companyName && (
+                <p className="text-xs text-muted-foreground mt-0.5">{company.name}</p>
+              )}
+              {company.industry && (
+                <p className="text-xs text-muted-foreground/70 mt-0.5">{company.industry}</p>
+              )}
             </div>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-5">
+        <div className="grid grid-cols-3 gap-2 mb-5">
           <StatBadge
-            value={<AnimatedCounter target={stats?.totalJobsPosted ?? 0} />}
+            value={<AnimatedCounter value={stats?.totalJobsPosted ?? 0} />}
             label="Extras Postados"
             color="text-secondary"
           />
           <StatBadge
-            value={<AnimatedCounter target={displayFollowers} />}
+            value={<AnimatedCounter value={displayFollowers ?? 0} />}
             label="Seguidores"
             color="text-primary"
           />
           <StatBadge
-            value={stats?.averageRating ? `${stats.averageRating.toFixed(1)} ★` : "—"}
+            value={stats?.averageRating ? `${Number(stats.averageRating).toFixed(1)} ★` : "—"}
             label="Avaliação"
             color="text-yellow-400"
           />
         </div>
 
-        {/* Follow CTA */}
+        {/* CTAs */}
         {!isMe && (
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} className="mb-6">
+          <div className={`grid gap-3 mb-6 ${isFreelancer ? "grid-cols-2" : "grid-cols-1"}`}>
             <Button
               onClick={() => followMutation.mutate()}
               disabled={followMutation.isPending}
-              className={`w-full h-12 font-bold text-sm rounded-xl border-none ${
+              variant="outline"
+              className={`h-12 font-bold text-sm rounded-xl border-white/15 ${
                 following
-                  ? "bg-white/8 border border-white/15 text-foreground hover:bg-destructive/15 hover:text-red-400"
-                  : "bg-secondary text-black hover:bg-secondary/90"
+                  ? "bg-white/5 text-foreground hover:bg-destructive/10 hover:text-red-400 hover:border-destructive/30"
+                  : "bg-secondary/10 border-secondary/30 text-secondary hover:bg-secondary/20"
               }`}
-              style={!following ? { boxShadow: "0 0 18px rgba(0,200,200,0.25)" } : {}}
             >
               {followMutation.isPending ? (
                 <Loader2 size={15} className="animate-spin mr-2" />
@@ -215,7 +209,15 @@ export default function CompanyProfilePage() {
               )}
               {following ? "Deixar de Seguir" : "Seguir Empresa"}
             </Button>
-          </motion.div>
+
+            {isFreelancer && (
+              <Link href="/app/chat">
+                <Button className="w-full h-12 font-bold text-sm rounded-xl bg-white/8 border border-white/15 text-foreground hover:bg-white/12">
+                  <MessageCircle size={15} className="mr-2" /> Mensagem
+                </Button>
+              </Link>
+            )}
+          </div>
         )}
 
         {/* Tabs */}
@@ -223,7 +225,7 @@ export default function CompanyProfilePage() {
           <div className="flex gap-1 overflow-x-auto no-scrollbar py-2">
             {[
               { key: "sobre", label: "Sobre" },
-              { key: "vagas", label: `Extras Abertos (${jobs.length})` },
+              { key: "extras", label: `Extras Abertos (${jobs.length})` },
             ].map(tab => (
               <button
                 key={tab.key}
@@ -273,7 +275,7 @@ export default function CompanyProfilePage() {
                   ].map((item) => (
                     <div key={item.label} className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{item.label}</span>
-                      <span className="font-bold text-foreground">{item.value}</span>
+                      <span className="font-bold">{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -282,21 +284,39 @@ export default function CompanyProfilePage() {
               {company.serviceRegions && company.serviceRegions.length > 0 && (
                 <div className="glass-card rounded-2xl p-5 border border-white/6">
                   <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
-                    <MapPin size={13} className="text-secondary" /> Regiões
+                    <MapPin size={13} className="text-secondary" /> Regiões de Atuação
                   </h2>
                   <div className="flex flex-wrap gap-2">
                     {company.serviceRegions.map((r: string) => (
-                      <span key={r} className="text-xs px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary font-medium">{r}</span>
+                      <span key={r} className="text-xs px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary font-medium">
+                        {r}
+                      </span>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {company.website && (
+                <div className="glass-card rounded-2xl p-5 border border-white/6">
+                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                    <Globe size={13} className="text-primary" /> Website
+                  </h2>
+                  <a
+                    href={company.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-primary hover:underline break-all"
+                  >
+                    {company.website}
+                  </a>
                 </div>
               )}
             </motion.div>
           )}
 
-          {activeTab === "vagas" && (
+          {activeTab === "extras" && (
             <motion.div
-              key="vagas"
+              key="extras"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
@@ -306,13 +326,21 @@ export default function CompanyProfilePage() {
                 <div className="glass-card rounded-2xl p-8 border border-white/6 text-center">
                   <Briefcase size={28} className="text-muted-foreground mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground">Nenhum extra aberto no momento.</p>
+                  {isFreelancer && (
+                    <Link href="/app/jobs">
+                      <Button variant="outline" className="mt-4 border-white/15 text-sm">
+                        Ver todos os Extras
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               ) : (
                 jobs.map((job: any) => (
-                  <Link key={job.id} href={`/app/jobs`}>
+                  <Link key={job.id} href="/app/jobs">
                     <motion.div
                       whileHover={{ scale: 1.01 }}
-                      className="glass-card rounded-2xl p-4 border border-white/6 cursor-pointer hover:border-primary/20 transition-all"
+                      whileTap={{ scale: 0.98 }}
+                      className="glass-card rounded-2xl p-4 border border-white/6 cursor-pointer hover:border-primary/25 transition-all card-hover"
                     >
                       <div className="flex items-start gap-3">
                         <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
@@ -321,9 +349,15 @@ export default function CompanyProfilePage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold truncate">{job.title}</p>
                           <p className="text-xs text-muted-foreground mt-0.5">{job.category}</p>
-                          <div className="flex items-center gap-3 mt-1.5">
-                            <span className="text-[10px] text-primary font-bold">R$ {job.hourlyRate}/h</span>
-                            <span className="text-[10px] text-muted-foreground">{job.location}</span>
+                          <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                            <span className="text-[10px] text-primary font-bold">
+                              R$ {Number(job.hourlyRate ?? 0).toFixed(2)}/h
+                            </span>
+                            {job.location && (
+                              <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+                                <MapPin size={9} /> {job.location}
+                              </span>
+                            )}
                           </div>
                         </div>
                         <span className="text-[10px] px-2 py-1 rounded-full bg-green-400/10 border border-green-400/20 text-green-400 font-bold flex-shrink-0">
