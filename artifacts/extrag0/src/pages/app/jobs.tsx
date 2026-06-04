@@ -253,9 +253,11 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
               </motion.div>
             )}
             <SheetClose asChild>
-              <Button variant="outline" className="w-full border-white/10 hover:border-white/25 rounded-xl h-10 text-sm">
-                Fechar
-              </Button>
+              <Link href={`/app/jobs/${job.id}`} onClick={onClose}>
+                <Button variant="outline" className="w-full border-white/10 hover:border-white/25 rounded-xl h-10 text-sm">
+                  Ver detalhes completos
+                </Button>
+              </Link>
             </SheetClose>
           </div>
         </div>

@@ -27,6 +27,7 @@ import FreelancerProfilePage from "@/pages/app/freelancer-profile";
 import CompanyProfilePage from "@/pages/app/company-profile";
 import NetworkPage from "@/pages/app/network";
 import ChatPage from "@/pages/app/chat";
+import JobDetailPage from "@/pages/app/job-detail";
 
 import AdminDashboard from "@/pages/admin/index";
 import AdminUsersPage from "@/pages/admin/users";
@@ -106,6 +107,7 @@ function Router() {
       {/* App routes — admins can also access these for platform monitoring */}
       <Route path="/app/dashboard" component={() => <ProtectedRoute component={DashboardPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/jobs/new" component={() => <ProtectedRoute component={PostJobPage} allowedRoles={["company"]} />} />
+      <Route path="/app/jobs/:id" component={() => <ProtectedRoute component={JobDetailPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/jobs" component={() => <ProtectedRoute component={JobsPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/applications" component={() => <ProtectedRoute component={ApplicationsPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/wallet" component={() => <ProtectedRoute component={WalletPage} allowedRoles={ALL_USER_ROLES} />} />
