@@ -141,7 +141,7 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <div className="relative p-4 sm:p-6 max-w-4xl mx-auto space-y-5">
+    <div className="page-enter relative p-4 sm:p-6 max-w-4xl mx-auto space-y-5 pb-20 lg:pb-6">
       <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
         <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-br from-blue-500/5 via-primary/2 to-transparent" />
         <div className="absolute top-0 left-1/3 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(124,252,0,0.04) 0%, transparent 70%)", filter: "blur(60px)" }} />

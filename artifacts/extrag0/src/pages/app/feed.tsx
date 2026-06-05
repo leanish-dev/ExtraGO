@@ -576,7 +576,6 @@ export default function FeedPage() {
         whileTap={{ scale: 0.94 }}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className="fixed bottom-20 right-4 lg:bottom-6 w-12 h-12 rounded-full bg-primary text-black shadow-lg neon-glow flex items-center justify-center z-30"
-        style={{ boxShadow: "0 0 24px rgba(124,252,0,0.4)" }}
       >
         <Plus size={20} />
       </motion.button>

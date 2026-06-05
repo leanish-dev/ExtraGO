@@ -591,7 +591,7 @@ export default function ChatPage() {
                     disabled={!newMessage.trim() || sending}
                     className={`w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all ${
                       newMessage.trim()
-                        ? "bg-primary text-black neon-glow hover:bg-primary/90"
+                        ? "bg-primary text-black hover:bg-primary/90 shadow-[0_0_12px_rgba(124,252,0,0.35)]"
                         : "bg-white/6 text-muted-foreground/40 cursor-not-allowed"
                     }`}
                   >

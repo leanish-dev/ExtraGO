@@ -273,10 +273,10 @@ export default function AdminWithdrawalsPage() {
   const pendingDepositTotal = (deposits as any[]).filter((d: any) => d.status === "pending" || d.status === "confirmed").reduce((s: number, d: any) => s + (d.amount ?? 0), 0) / 100;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6 pb-20 lg:pb-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Financeiro — Aprovações</h1>
+        <h1 className="text-[22px] font-bold">Financeiro — Aprovações</h1>
         <p className="text-muted-foreground mt-1 text-sm">Gerencie saques de freelancers e depósitos de empresas</p>
       </div>
 

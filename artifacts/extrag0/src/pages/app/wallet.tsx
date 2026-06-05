@@ -267,7 +267,7 @@ export default function WalletPage() {
         className="relative w-full overflow-hidden"
         style={{ borderRadius: "0 0 20px 20px" }}
       >
-        <img src={walletBanner} alt="Carteira extraGO" className="w-full object-cover" style={{ maxHeight: 170, objectPosition: "center center" }} />
+        <img src={walletBanner} alt="Carteira extraGO" className="w-full object-cover" style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }} />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.2) 60%, rgba(7,10,13,0.88) 100%)" }} />
       </motion.div>
 

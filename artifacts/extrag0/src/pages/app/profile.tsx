@@ -355,7 +355,7 @@ export default function ProfilePage() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
       {/* Banner area — clickable upload, full-width cinematic hero */}
-      <div className="relative w-full h-40 sm:h-52 overflow-hidden group cursor-pointer" onClick={() => bannerInputRef.current?.click()}>
+      <div className="relative w-full h-36 sm:h-44 overflow-hidden group cursor-pointer" onClick={() => bannerInputRef.current?.click()}>
         {bannerPreview || (user as any)?.bannerUrl ? (
           <img src={bannerPreview || (user as any)?.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
         ) : (

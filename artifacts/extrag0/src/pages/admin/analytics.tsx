@@ -97,7 +97,7 @@ export default function AdminAnalyticsPage() {
     <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6 pb-20 lg:pb-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">Analytics</h1>
+        <h1 className="text-[22px] font-bold">Analytics</h1>
         <p className="text-sm text-muted-foreground mt-0.5">Visão executiva da plataforma extraGO</p>
       </div>
 

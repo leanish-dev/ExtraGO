@@ -32,13 +32,13 @@ type StatColor = "primary" | "secondary" | "yellow" | "green";
 
 const STAT_COLOR_MAP: Record<StatColor, { container: string; icon: string; valueColor: string }> = {
   primary: {
-    container: "from-primary/10 to-primary/2 border-primary/14 stat-glow-green",
-    icon: "bg-primary/14 border-primary/22 text-primary",
+    container: "from-primary/8 to-primary/2 border-primary/12",
+    icon: "bg-primary/12 border-primary/20 text-primary",
     valueColor: "text-primary",
   },
   secondary: {
-    container: "from-secondary/10 to-secondary/2 border-secondary/14 stat-glow-cyan",
-    icon: "bg-secondary/14 border-secondary/22 text-secondary",
+    container: "from-secondary/8 to-secondary/2 border-secondary/12",
+    icon: "bg-secondary/12 border-secondary/20 text-secondary",
     valueColor: "text-secondary",
   },
   yellow: {
@@ -64,7 +64,7 @@ function SparklineBars({ color }: { color: string }) {
   };
   const barColor = colorMap[color] ?? colorMap.primary;
   return (
-    <div className="flex items-end gap-[2px] h-8 mt-3 overflow-hidden opacity-60">
+    <div className="flex items-end gap-[2px] h-8 mt-3 overflow-hidden opacity-35">
       {SPARKLINE_HEIGHTS.map((h, i) => (
         <div
           key={i}
@@ -118,8 +118,8 @@ function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading
           {trend && <p className="text-xs text-green-400 mt-1 font-semibold">{trend}</p>}
         </div>
         <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 ${c.icon}`}
-          style={color === "primary" ? { boxShadow: "0 0 14px rgba(124,252,0,0.25)" } :
-                 color === "secondary" ? { boxShadow: "0 0 14px rgba(0,229,255,0.25)" } : undefined}>
+          style={color === "primary" ? { boxShadow: "0 0 10px rgba(124,252,0,0.14)" } :
+                 color === "secondary" ? { boxShadow: "0 0 10px rgba(0,229,255,0.14)" } : undefined}>
           {icon}
         </div>
       </div>
@@ -267,7 +267,7 @@ function SectionBanner() {
         src={dashboardBanner}
         alt="Dashboard extraGO"
         className="w-full object-cover"
-        style={{ maxHeight: 170, objectPosition: "center center" }}
+        style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }}
       />
       {/* bg-dashboard.webp — cinematic city/metrics art layer */}
       <div
@@ -301,7 +301,7 @@ function GreetingHeader({ name, subtitle, badge, action }: {
     >
       <div className="flex-1 min-w-0">
         <p className="text-sm text-muted-foreground font-medium mb-0.5">{greeting} 👋</p>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight leading-tight">{name}</h1>
+        <h1 className="text-[22px] sm:text-[26px] font-bold tracking-tight leading-tight">{name}</h1>
         <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
         {badge && <div className="mt-2.5">{badge}</div>}
       </div>

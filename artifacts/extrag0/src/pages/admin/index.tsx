@@ -17,11 +17,11 @@ function StatCard({ icon, label, value, sub, color = "primary", isLoading }: {
   isLoading?: boolean;
 }) {
   const colors = {
-    primary: "from-primary/20 to-primary/5 border-primary/20 text-primary",
-    secondary: "from-secondary/20 to-secondary/5 border-secondary/20 text-secondary",
-    yellow: "from-yellow-400/20 to-yellow-400/5 border-yellow-400/20 text-yellow-400",
-    green: "from-green-500/20 to-green-500/5 border-green-500/20 text-green-400",
-    red: "from-destructive/20 to-destructive/5 border-destructive/20 text-destructive",
+    primary: "from-primary/10 to-primary/3 border-primary/14 text-primary",
+    secondary: "from-secondary/10 to-secondary/3 border-secondary/14 text-secondary",
+    yellow: "from-yellow-400/10 to-yellow-400/3 border-yellow-400/14 text-yellow-400",
+    green: "from-green-500/10 to-green-500/3 border-green-500/14 text-green-400",
+    red: "from-destructive/10 to-destructive/3 border-destructive/14 text-destructive",
   };
 
   if (isLoading) return <SkeletonStatCard />;
@@ -271,13 +271,13 @@ export default function AdminDashboard() {
   });
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-8">
+    <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-8 pb-20 lg:pb-6">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
           <Shield size={20} className="text-primary" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold">Painel Administrativo</h1>
+          <h1 className="text-[22px] font-bold">Painel Administrativo</h1>
           <p className="text-muted-foreground">extraGO — Controle Total da Plataforma</p>
         </div>
       </div>

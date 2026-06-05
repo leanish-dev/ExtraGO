@@ -183,8 +183,9 @@ function SimuladorGanhos({ activeReferrals }: { activeReferrals: number }) {
 
 export default function ReferralsPage() {
   const { user } = useAuth();
-  const { data: referral } = useGetMyReferral();
-  const { data: leaderboard = [] } = useGetReferralLeaderboard();
+  const { data: referral, isLoading: referralLoading } = useGetMyReferral();
+  const { data: leaderboard = [], isLoading: leaderboardLoading } = useGetReferralLeaderboard();
+  const isLoading = referralLoading || leaderboardLoading;
 
   const code = user?.referralCode ?? "—";
   const referralLink = `${window.location.origin}/register?ref=${code}`;
@@ -227,6 +228,19 @@ export default function ReferralsPage() {
     { icon: <Users size={15} />, value: inactiveReferrals, label: "Inativos", color: "text-muted-foreground", bg: "bg-white/5 border-white/8" },
   ];
 
+  if (isLoading) {
+    return (
+      <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-4 pb-20 lg:pb-6">
+        <div className="h-32 skeleton rounded-2xl" />
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[1,2,3,4].map(i => <div key={i} className="h-20 skeleton rounded-xl" />)}
+        </div>
+        <div className="h-48 skeleton rounded-2xl" />
+        <div className="h-40 skeleton rounded-2xl" />
+      </div>
+    );
+  }
+
   return (
     <div className="page-enter pb-20 lg:pb-6 relative">
       {/* Full-page background art */}
@@ -256,7 +270,7 @@ export default function ReferralsPage() {
           src={referralsBanner}
           alt="Indicações extraGO"
           className="w-full object-cover"
-          style={{ maxHeight: 170, objectPosition: "center center" }}
+          style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }}
         />
         <div
           className="absolute inset-0 opacity-[0.30] bg-cover bg-center mix-blend-screen pointer-events-none"

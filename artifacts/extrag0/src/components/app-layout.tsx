@@ -499,7 +499,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   } ${
                     active
                       ? "bg-primary/12 text-primary"
-                      : "text-white/45 hover:text-white/85 hover:bg-white/6"
+                      : "text-white/65 hover:text-white/90 hover:bg-white/6"
                   }`}
                 >
                   {active && !collapsed && (
@@ -511,7 +511,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     />
                   )}
                   <span className={`flex-shrink-0 transition-all ${
-                    active ? "text-primary" : "text-white/40 group-hover:text-white/75"
+                    active ? "text-primary" : "text-white/55 group-hover:text-white/80"
                   }`}
                     style={active ? { filter: "drop-shadow(0 0 5px rgba(124,252,0,0.75))" } : undefined}>
                     {item.icon}
@@ -537,9 +537,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               title={collapsed ? "Landing Page" : undefined}
               className={`flex items-center rounded-xl text-sm transition-all cursor-pointer group ${
                 collapsed ? "justify-center py-3 mx-0.5" : "gap-3 px-3 py-2.5"
-              } text-white/35 hover:text-white/70 hover:bg-white/5`}
+              } text-white/55 hover:text-white/80 hover:bg-white/5`}
             >
-              <Home size={16} className="flex-shrink-0 text-white/30 group-hover:text-white/60 transition-colors" />
+              <Home size={16} className="flex-shrink-0 text-white/50 group-hover:text-white/70 transition-colors" />
               {!collapsed && <span className="flex-1 truncate font-[500]">Landing Page</span>}
             </motion.div>
           </Link>
@@ -549,7 +549,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             whileTap={{ scale: 0.96 }}
             onClick={logout}
             title={collapsed ? "Sair" : undefined}
-            className={`flex items-center rounded-xl text-sm text-white/35 hover:text-red-400 hover:bg-red-400/7 transition-all w-full ${
+            className={`flex items-center rounded-xl text-sm text-white/55 hover:text-red-400 hover:bg-red-400/7 transition-all w-full ${
               collapsed ? "justify-center py-3" : "gap-3 px-3 py-2.5"
             }`}
           >
@@ -697,9 +697,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                               key={i}
                               whileTap={{ scale: 0.97 }}
                               onClick={() => { window.open("mailto:suporte@extrag0.com.br", "_blank"); setAccountMenuOpen(false); }}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all cursor-pointer group text-white/35 hover:text-white/75 hover:bg-white/5 font-medium"
+                              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all cursor-pointer group text-white/60 hover:text-white/85 hover:bg-white/5 font-medium"
                             >
-                              <span className="flex-shrink-0 text-white/30 group-hover:text-white/60 transition-colors">{item.icon}</span>
+                              <span className="flex-shrink-0 text-white/50 group-hover:text-white/75 transition-colors">{item.icon}</span>
                               {item.label}
                             </motion.button>
                           );
@@ -712,10 +712,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                               className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all cursor-pointer group ${
                                 active
                                   ? "text-primary bg-primary/8 font-semibold"
-                                  : "text-white/55 hover:text-white/90 hover:bg-white/5 font-medium"
+                                  : "text-white/70 hover:text-white/95 hover:bg-white/5 font-medium"
                               }`}
                             >
-                              <span className={`flex-shrink-0 transition-colors ${active ? "text-primary" : "text-white/30 group-hover:text-white/65"}`}>
+                              <span className={`flex-shrink-0 transition-colors ${active ? "text-primary" : "text-white/50 group-hover:text-white/75"}`}>
                                 {item.icon}
                               </span>
                               {item.label}
@@ -785,7 +785,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   >
                     <MoreHorizontal size={20} />
                   </motion.div>
-                  <span className={`text-[9px] font-bold leading-none tracking-wide ${maisOpen ? "text-primary" : "text-white/35"}`}>
+                  <span className={`text-[9px] font-bold leading-none tracking-wide ${maisOpen ? "text-primary" : "text-white/50"}`}>
                     Mais
                   </span>
                 </motion.button>
@@ -834,7 +834,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                       </span>
                     )}
                   </motion.div>
-                  <span className={`text-[9px] font-bold leading-none tracking-wide ${active ? "text-primary" : "text-white/35"}`}>
+                  <span className={`text-[9px] font-bold leading-none tracking-wide ${active ? "text-primary" : "text-white/50"}`}>
                     {item.label}
                   </span>
                 </motion.div>

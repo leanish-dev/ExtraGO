@@ -59,9 +59,9 @@ export default function AdminJobsPage() {
   );
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-5xl mx-auto space-y-6 pb-20 lg:pb-6">
       <div>
-        <h1 className="text-2xl font-bold">Gerenciar Extras</h1>
+        <h1 className="text-[22px] font-bold">Gerenciar Extras</h1>
         <p className="text-muted-foreground mt-1">{filtered.length} extra{filtered.length !== 1 ? "s" : ""}</p>
       </div>
 

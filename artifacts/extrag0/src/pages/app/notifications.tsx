@@ -63,7 +63,7 @@ export default function NotificationsPage() {
       </div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Notificações</h1>
+          <h1 className="text-[22px] font-bold">Notificações</h1>
           <p className="text-muted-foreground mt-1 text-sm">
             {unread > 0 ? `${unread} não lida${unread !== 1 ? "s" : ""}` : "Tudo em dia!"}
           </p>

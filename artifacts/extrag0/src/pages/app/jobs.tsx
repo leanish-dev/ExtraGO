@@ -530,7 +530,7 @@ export default function JobsPage() {
           src={jobsBanner}
           alt="Buscar Extras extraGO"
           className="w-full object-cover"
-          style={{ maxHeight: 170, objectPosition: "center center" }}
+          style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }}
         />
         {/* bg-jobs.webp — city map / discovery art layer */}
         <div

@@ -101,7 +101,7 @@ export default function AdminOpsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-[22px] font-bold flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse" />
             Central de Operações
           </h1>

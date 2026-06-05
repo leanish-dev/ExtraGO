@@ -135,11 +135,11 @@ export default function AdminRepresentativesPage() {
   const uncoveredCount = 27 - coveredStates.size;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6 pb-20 lg:pb-6">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Representantes Regionais</h1>
+          <h1 className="text-[22px] font-bold">Representantes Regionais</h1>
           <p className="text-muted-foreground mt-1 text-sm">
             Gerencie os representantes por estado — recebem comissão das taxas de plataforma dos extras na sua região
           </p>

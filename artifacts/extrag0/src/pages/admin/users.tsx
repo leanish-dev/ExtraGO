@@ -253,10 +253,10 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="p-5 lg:p-6 max-w-5xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-5xl mx-auto space-y-6 pb-20 lg:pb-6">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Gerenciar Usuários</h1>
+          <h1 className="text-[22px] font-bold">Gerenciar Usuários</h1>
           <p className="text-muted-foreground mt-1">
             {filtered.length} usuário{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
           </p>

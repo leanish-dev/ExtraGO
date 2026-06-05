@@ -87,7 +87,7 @@ export default function AdminMapPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2"><MapPin size={20} className="text-primary" /> Mapa Brasil</h1>
+          <h1 className="text-[22px] font-bold flex items-center gap-2"><MapPin size={20} className="text-primary" /> Mapa Brasil</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Distribuição geográfica de usuários pela plataforma</p>
         </div>
         <div className="flex gap-2 flex-shrink-0">
