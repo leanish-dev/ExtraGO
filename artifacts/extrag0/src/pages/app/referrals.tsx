@@ -10,9 +10,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { EmptyState } from "@/components/ui/empty";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import referralsBanner from "@assets/file_00000000b14c720e9386ccbf24ee87f8_1779868067153.png";
+import { isTestAccount } from "@/lib/test-accounts";
 
 const FacebookIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -104,7 +106,7 @@ const RANK_STYLES = [
 function SimuladorGanhos({ activeReferrals }: { activeReferrals: number }) {
   const [jobsPerMonth, setJobsPerMonth] = useState(3);
   const [avgValue, setAvgValue] = useState(280);
-  const [refs, setRefs] = useState(Math.max(1, activeReferrals || 3));
+  const [refs, setRefs] = useState(Math.max(1, activeReferrals));
 
   const monthly = refs * jobsPerMonth * avgValue * 0.03;
   const annual = monthly * 12;
@@ -748,22 +750,31 @@ export default function ReferralsPage() {
         </motion.div>
 
         {/* Leaderboard */}
-        {leaderboard.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.18 }}
-            className="glass-card rounded-2xl p-5 border border-white/6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold flex items-center gap-2 text-sm">
-                <Crown size={14} className="text-yellow-400" />
-                Top Indicadores
-              </h2>
-              <span className="text-[10px] text-muted-foreground bg-white/4 border border-white/8 px-2 py-0.5 rounded-full font-semibold">
-                Ranking mensal
-              </span>
-            </div>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.18 }}
+          className="glass-card rounded-2xl p-5 border border-white/6"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold flex items-center gap-2 text-sm">
+              <Crown size={14} className="text-yellow-400" />
+              Top Indicadores
+            </h2>
+            <span className="text-[10px] text-muted-foreground bg-white/4 border border-white/8 px-2 py-0.5 rounded-full font-semibold">
+              Ranking mensal
+            </span>
+          </div>
+          {leaderboard.length === 0 ? (
+            <EmptyState
+              icon={<Trophy size={22} />}
+              title="Ainda não há indicadores no ranking"
+              description="Seja o primeiro! Indique amigos e profissionais usando seu código e apareça aqui."
+              actionLabel="Copiar meu código"
+              onAction={copyCode}
+              className="py-8"
+            />
+          ) : (
             <div className="space-y-1.5">
               {leaderboard.slice(0, 10).map((entry: any, i: number) => (
                 <motion.div
@@ -789,8 +800,8 @@ export default function ReferralsPage() {
                 </motion.div>
               ))}
             </div>
-          </motion.div>
-        )}
+          )}
+        </motion.div>
 
         <p className="text-[10px] text-muted-foreground/40 text-center leading-relaxed px-2 pb-2">
           Comissões calculadas sobre a taxa de intermediação de cada extra concluído pelo indicado.

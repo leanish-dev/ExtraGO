@@ -235,23 +235,20 @@ export default function AdminOpsPage() {
         </h2>
         <div className="space-y-3">
           {[
-            { name: "API Server", status: "online", latency: "~12ms" },
-            { name: "Banco de Dados", status: "online", latency: "~8ms" },
-            { name: "SSE / Real-time", status: "online", latency: "~50ms" },
-            { name: "Notificações", status: "online", latency: "—" },
-            { name: "Sistema de Pagamentos", status: "manual", latency: "PIX Manual" },
+            { name: "API Server", status: "online" },
+            { name: "Banco de Dados", status: "online" },
+            { name: "SSE / Real-time", status: "online" },
+            { name: "Notificações", status: "online" },
+            { name: "Sistema de Pagamentos", status: "manual" },
           ].map((sys, i) => (
             <div key={i} className="flex items-center justify-between py-1 border-b border-white/4 last:border-0">
               <div className="flex items-center gap-2.5">
                 <div className={`w-2 h-2 rounded-full ${sys.status === "online" ? "bg-green-400 animate-pulse" : sys.status === "manual" ? "bg-yellow-400" : "bg-destructive"}`} />
                 <span className="text-xs font-semibold">{sys.name}</span>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] text-muted-foreground">{sys.latency}</span>
-                <span className={`text-[10px] font-bold ${sys.status === "online" ? "text-green-400" : sys.status === "manual" ? "text-yellow-400" : "text-destructive"}`}>
-                  {sys.status === "online" ? "Online" : sys.status === "manual" ? "Manual" : "Offline"}
-                </span>
-              </div>
+              <span className={`text-[10px] font-bold ${sys.status === "online" ? "text-green-400" : sys.status === "manual" ? "text-yellow-400" : "text-destructive"}`}>
+                {sys.status === "online" ? "Online" : sys.status === "manual" ? "Manual" : "Offline"}
+              </span>
             </div>
           ))}
         </div>

@@ -19,6 +19,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import dashboardBanner from "@assets/file_00000000a88071f79bcf2c132d090401_1779868066995.png";
 import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS, LEVEL_COLORS } from "@/components/level-badge";
+import { isTestAccount } from "@/lib/test-accounts";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -54,8 +55,9 @@ const STAT_COLOR_MAP: Record<StatColor, { container: string; icon: string; value
 };
 
 const SPARKLINE_HEIGHTS = [35, 55, 40, 70, 45, 85, 60, 75, 50, 90, 65, 80];
+const SPARKLINE_FLAT = Array(12).fill(20);
 
-function SparklineBars({ color }: { color: string }) {
+function SparklineBars({ color, flat = false }: { color: string; flat?: boolean }) {
   const colorMap: Record<string, string> = {
     primary: "rgba(124,252,0,0.45)",
     secondary: "rgba(0,229,255,0.45)",
@@ -63,16 +65,17 @@ function SparklineBars({ color }: { color: string }) {
     green: "rgba(34,197,94,0.45)",
   };
   const barColor = colorMap[color] ?? colorMap.primary;
+  const heights = flat ? SPARKLINE_FLAT : SPARKLINE_HEIGHTS;
   return (
     <div className="flex items-end gap-[2px] h-8 mt-3 overflow-hidden opacity-35">
-      {SPARKLINE_HEIGHTS.map((h, i) => (
+      {heights.map((h, i) => (
         <div
           key={i}
-          className="sparkline-bar flex-1 rounded-sm"
+          className={flat ? "flex-1 rounded-sm" : "sparkline-bar flex-1 rounded-sm"}
           style={{
             height: `${h}%`,
             background: barColor,
-            animationDelay: `${i * 0.04}s`,
+            animationDelay: flat ? undefined : `${i * 0.04}s`,
           }}
         />
       ))}
@@ -80,7 +83,7 @@ function SparklineBars({ color }: { color: string }) {
   );
 }
 
-function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading, delay = 0 }: {
+function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading, delay = 0, showSparkline = false }: {
   icon: React.ReactNode;
   label: string;
   value: string | number;
@@ -89,6 +92,7 @@ function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading
   color?: StatColor;
   isLoading?: boolean;
   delay?: number;
+  showSparkline?: boolean;
 }) {
   const numValue = typeof value === "number" ? value : parseFloat(String(value).replace(/[^0-9.]/g, "")) || 0;
   const c = STAT_COLOR_MAP[color];
@@ -123,7 +127,7 @@ function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading
           {icon}
         </div>
       </div>
-      <SparklineBars color={color} />
+      <SparklineBars color={color} flat={!showSparkline} />
     </motion.div>
   );
 }
@@ -352,6 +356,7 @@ function PlatformStatsBanner() {
 /* ── Company Dashboard ── */
 function CompanyDashboard() {
   const { user } = useAuth();
+  const testAccount = isTestAccount(user?.email);
   const { data: stats, isLoading: statsLoading } = useGetCompanyStats(user?.id ?? 0, {
     query: { queryKey: ["company-stats", user?.id], enabled: !!user?.id, refetchInterval: 30000, refetchIntervalInBackground: false },
   });
@@ -397,10 +402,10 @@ function CompanyDashboard() {
         <PlatformStatsBanner />
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <StatCard icon={<Briefcase size={18} />} label="Extras Abertos" value={stats?.activeJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} />
-          <StatCard icon={<Users size={18} />} label="Profissionais" value={stats?.totalWorkers ?? 0} color="secondary" isLoading={statsLoading} delay={0.1} />
-          <StatCard icon={<CheckCircle size={18} />} label="Extras Publicados" value={stats?.totalJobsPosted ?? 0} color="green" isLoading={statsLoading} delay={0.15} />
-          <StatCard icon={<DollarSign size={18} />} label="Gasto Total" value={`R$ ${((stats?.totalSpent ?? 0) / 100).toFixed(2)}`} sub="histórico" color="yellow" isLoading={statsLoading} delay={0.2} />
+          <StatCard icon={<Briefcase size={18} />} label="Extras Abertos" value={stats?.activeJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} showSparkline={testAccount} />
+          <StatCard icon={<Users size={18} />} label="Profissionais" value={stats?.totalWorkers ?? 0} color="secondary" isLoading={statsLoading} delay={0.1} showSparkline={testAccount} />
+          <StatCard icon={<CheckCircle size={18} />} label="Extras Publicados" value={stats?.totalJobsPosted ?? 0} color="green" isLoading={statsLoading} delay={0.15} showSparkline={testAccount} />
+          <StatCard icon={<DollarSign size={18} />} label="Gasto Total" value={`R$ ${((stats?.totalSpent ?? 0) / 100).toFixed(2)}`} sub="histórico" color="yellow" isLoading={statsLoading} delay={0.2} showSparkline={testAccount} />
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
@@ -499,6 +504,7 @@ function CompanyDashboard() {
 /* ── Freelancer Dashboard ── */
 function FreelancerDashboard() {
   const { user } = useAuth();
+  const testAccount = isTestAccount(user?.email);
   const { data: stats, isLoading: statsLoading } = useGetFreelancerStats(user?.id ?? 0, {
     query: { queryKey: ["freelancer-stats", user?.id], enabled: !!user?.id, refetchInterval: 30000, refetchIntervalInBackground: false },
   });
@@ -562,10 +568,10 @@ function FreelancerDashboard() {
         <PlatformStatsBanner />
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <StatCard icon={<CheckCircle size={18} />} label="Extras Feitos" value={user?.completedJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} />
-          <StatCard icon={<Star size={18} />} label="Reputação" value={(user?.reputationScore ?? 0)} sub="/ 5.0" color="yellow" isLoading={statsLoading} delay={0.1} />
-          <StatCard icon={<DollarSign size={18} />} label="Ganhos Totais" value={`R$ ${((stats?.totalEarned ?? 0) / 100).toFixed(2)}`} color="green" isLoading={statsLoading} delay={0.15} />
-          <StatCard icon={<TrendingUp size={18} />} label="Concluídos" value={stats?.completedJobs ?? 0} color="secondary" isLoading={statsLoading} delay={0.2} />
+          <StatCard icon={<CheckCircle size={18} />} label="Extras Feitos" value={user?.completedJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} showSparkline={testAccount} />
+          <StatCard icon={<Star size={18} />} label="Reputação" value={(user?.reputationScore ?? 0)} sub="/ 5.0" color="yellow" isLoading={statsLoading} delay={0.1} showSparkline={testAccount} />
+          <StatCard icon={<DollarSign size={18} />} label="Ganhos Totais" value={`R$ ${((stats?.totalEarned ?? 0) / 100).toFixed(2)}`} color="green" isLoading={statsLoading} delay={0.15} showSparkline={testAccount} />
+          <StatCard icon={<TrendingUp size={18} />} label="Concluídos" value={stats?.completedJobs ?? 0} color="secondary" isLoading={statsLoading} delay={0.2} showSparkline={testAccount} />
         </div>
 
         {/* Level progress */}
