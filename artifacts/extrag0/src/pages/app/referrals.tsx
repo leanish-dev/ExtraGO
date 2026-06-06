@@ -27,75 +27,75 @@ const InstagramIcon = () => (
   </svg>
 );
 
-const LEVEL_CONFIG = [
-  {
-    level: "bronze",
-    label: "Iniciante",
-    min: 0, max: 19,
-    feePercent: 18,
-    color: "text-sky-400",
-    bg: "bg-sky-400/10 border-sky-400/20",
-    glow: "",
-    icon: "🔵",
-    iconClass: "bg-sky-400/15 border border-sky-400/30 text-sky-400",
-    requirements: [
-      { label: "Nível padrão", met: true },
-    ],
-    perks: ["Acesso a extras básicos", "Suporte padrão"],
-  },
-  {
-    level: "silver",
-    label: "Júnior",
-    min: 20, max: 99,
-    feePercent: 16,
-    color: "text-cyan-400",
-    bg: "bg-cyan-400/10 border-cyan-400/20",
-    glow: "",
-    icon: "⚡",
-    iconClass: "bg-cyan-400/15 border border-cyan-400/30 text-cyan-400",
-    requirements: [
-      { label: "20 extras concluídos", met: false },
-      { label: "Avaliação ≥ 4.5 ⭐", met: false },
-    ],
-    perks: ["Extras premium desbloqueados", "Destaque no perfil"],
-  },
-  {
-    level: "gold",
-    label: "Intermediário",
-    min: 100, max: 299,
-    feePercent: 14,
-    color: "text-yellow-400",
-    bg: "bg-yellow-400/10 border-yellow-400/20",
-    glow: "",
-    icon: "🥇",
-    iconClass: "bg-yellow-400/15 border border-yellow-400/30 text-yellow-400",
-    requirements: [
-      { label: "100 extras concluídos", met: false },
-      { label: "6 meses na plataforma", met: false },
-      { label: "Avaliação ≥ 4.7 ⭐", met: false },
-    ],
-    perks: ["Extras exclusivos", "Bônus automático por extra"],
-  },
-  {
-    level: "elite",
-    label: "Sênior",
-    min: 300, max: Infinity,
-    feePercent: 10,
-    color: "text-primary",
-    bg: "bg-primary/10 border-primary/20",
-    glow: "shadow-[0_0_24px_rgba(124,252,0,0.12)]",
-    icon: "👑",
-    iconClass: "bg-primary/15 border border-primary/30 text-primary",
-    requirements: [
-      { label: "300 extras concluídos", met: false },
-      { label: "12 meses na plataforma", met: false },
-      { label: "Avaliação ≥ 4.8 ⭐", met: false },
-      { label: "Frequência > 98%", met: false },
-      { label: "Documentação verificada", met: false },
-    ],
-    perks: ["Todos os benefícios", "Acesso VIP + suporte prioritário"],
-  },
-];
+function buildLevelConfig(completedJobs: number, reputationScore: number, isVerified: boolean) {
+  return [
+    {
+      level: "bronze",
+      label: "Iniciante",
+      min: 0, max: 19,
+      feePercent: 18,
+      color: "text-sky-400",
+      bg: "bg-sky-400/10 border-sky-400/20",
+      glow: "",
+      icon: "🔵",
+      iconClass: "bg-sky-400/15 border border-sky-400/30 text-sky-400",
+      requirements: [
+        { label: "Nível de entrada — sem requisitos", met: true },
+      ],
+      perks: ["Acesso a extras básicos", "Suporte padrão"],
+    },
+    {
+      level: "silver",
+      label: "Júnior",
+      min: 20, max: 99,
+      feePercent: 16,
+      color: "text-cyan-400",
+      bg: "bg-cyan-400/10 border-cyan-400/20",
+      glow: "",
+      icon: "⚡",
+      iconClass: "bg-cyan-400/15 border border-cyan-400/30 text-cyan-400",
+      requirements: [
+        { label: "20 extras concluídos", met: completedJobs >= 20 },
+        { label: "Avaliação ≥ 4.5 ⭐", met: reputationScore >= 4.5 },
+      ],
+      perks: ["Extras premium desbloqueados", "Destaque no perfil"],
+    },
+    {
+      level: "gold",
+      label: "Intermediário",
+      min: 100, max: 299,
+      feePercent: 14,
+      color: "text-yellow-400",
+      bg: "bg-yellow-400/10 border-yellow-400/20",
+      glow: "",
+      icon: "🥇",
+      iconClass: "bg-yellow-400/15 border border-yellow-400/30 text-yellow-400",
+      requirements: [
+        { label: "100 extras concluídos", met: completedJobs >= 100 },
+        { label: "Avaliação ≥ 4.7 ⭐", met: reputationScore >= 4.7 },
+        { label: "Documentação verificada", met: isVerified },
+      ],
+      perks: ["Extras exclusivos", "Bônus automático por extra"],
+    },
+    {
+      level: "elite",
+      label: "Sênior",
+      min: 300, max: Infinity,
+      feePercent: 10,
+      color: "text-primary",
+      bg: "bg-primary/10 border-primary/20",
+      glow: "shadow-[0_0_24px_rgba(124,252,0,0.12)]",
+      icon: "👑",
+      iconClass: "bg-primary/15 border border-primary/30 text-primary",
+      requirements: [
+        { label: "300 extras concluídos", met: completedJobs >= 300 },
+        { label: "Avaliação ≥ 4.8 ⭐", met: reputationScore >= 4.8 },
+        { label: "Documentação verificada", met: isVerified },
+      ],
+      perks: ["Todos os benefícios", "Acesso VIP + suporte prioritário"],
+    },
+  ];
+}
 
 const RANK_STYLES = [
   "bg-yellow-400/20 text-yellow-400 border border-yellow-400/30 shadow-[0_0_12px_rgba(250,204,21,0.18)]",
@@ -208,6 +208,7 @@ export default function ReferralsPage() {
   const activeReferrals = referral?.totalConverted ?? 0;
   const inactiveReferrals = Math.max(0, (referral?.totalInvited ?? 0) - activeReferrals);
 
+  const LEVEL_CONFIG = buildLevelConfig(user?.completedJobs ?? 0, user?.reputationScore ?? 0, user?.isVerified ?? false);
   const currentLevel = LEVEL_CONFIG.find(l => l.level === (user?.level ?? "bronze")) ?? LEVEL_CONFIG[0];
   const currentIdx = LEVEL_CONFIG.findIndex(l => l.level === (user?.level ?? "bronze"));
   const nextLevel = LEVEL_CONFIG[currentIdx + 1];

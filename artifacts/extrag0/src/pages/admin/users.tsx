@@ -261,22 +261,22 @@ export default function AdminUsersPage() {
             {filtered.length} usuário{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
           </p>
         </div>
-        <div className="flex gap-3">
-          <div className="glass-card rounded-xl px-4 py-2.5 text-center">
-            <p className="text-xs text-muted-foreground">Verificados</p>
-            <p className="text-xl font-bold text-green-400">{verifiedCount}</p>
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3">
+          <div className="glass-card rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-center">
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Verificados</p>
+            <p className="text-lg sm:text-xl font-bold text-green-400">{verifiedCount}</p>
           </div>
-          <div className="glass-card rounded-xl px-4 py-2.5 text-center">
-            <p className="text-xs text-muted-foreground">Admins</p>
-            <p className="text-xl font-bold text-yellow-400">{adminCount}</p>
+          <div className="glass-card rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-center">
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Admins</p>
+            <p className="text-lg sm:text-xl font-bold text-yellow-400">{adminCount}</p>
           </div>
-          <div className="glass-card rounded-xl px-4 py-2.5 text-center">
-            <p className="text-xs text-muted-foreground">Banidos</p>
-            <p className="text-xl font-bold text-destructive">{bannedCount}</p>
+          <div className="glass-card rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-center">
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Banidos</p>
+            <p className="text-lg sm:text-xl font-bold text-destructive">{bannedCount}</p>
           </div>
-          <div className="glass-card rounded-xl px-4 py-2.5 text-center">
-            <p className="text-xs text-muted-foreground">Total</p>
-            <p className="text-xl font-bold text-foreground">{users.length}</p>
+          <div className="glass-card rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-center">
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Total</p>
+            <p className="text-lg sm:text-xl font-bold text-foreground">{users.length}</p>
           </div>
         </div>
       </div>

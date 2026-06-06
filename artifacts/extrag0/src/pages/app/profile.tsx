@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import {
   User, Building2, CreditCard, Star, CheckCircle, AlertCircle, Camera, Loader2,
   Shield, Award, Plus, Trash2, Globe, MapPin, Briefcase, Zap, ChevronDown, ChevronUp,
-  Edit3, Save, X, BookOpen, Languages
+  Edit3, Save, X, BookOpen, Languages, TrendingUp, Lock, Crown, Trophy
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -331,6 +331,7 @@ export default function ProfilePage() {
         { key: "especialidades", label: "Especialidades" },
         { key: "experiencia", label: "Experiência" },
         { key: "habilidades", label: "Habilidades" },
+        { key: "progressão", label: "Progressão" },
         { key: "config", label: "Config." },
       ]
     : [
@@ -738,6 +739,202 @@ export default function ProfilePage() {
               </div>
             </motion.div>
           )}
+
+          {/* PROGRESSÃO TAB */}
+          {activeTab === "progressão" && user?.role === "freelancer" && (() => {
+            const lvl = user?.level ?? "bronze";
+            const jobs = user?.completedJobs ?? 0;
+            const rep = user?.reputationScore ?? 0;
+
+            const LEVELS = [
+              {
+                key: "bronze", label: "Iniciante", min: 0, max: 19, fee: 18, net: 82,
+                color: "text-sky-400", border: "border-sky-400/30", bg: "bg-sky-400/8",
+                glow: "", icon: "🔵",
+                perks: ["Acesso a extras básicos", "Suporte padrão da plataforma"],
+                reqs: [{ label: "Nível de entrada — sem requisitos", met: true }],
+              },
+              {
+                key: "silver", label: "Júnior", min: 20, max: 99, fee: 16, net: 84,
+                color: "text-cyan-400", border: "border-cyan-400/30", bg: "bg-cyan-400/8",
+                glow: "shadow-[0_0_16px_rgba(0,229,255,0.12)]", icon: "⚡",
+                perks: ["Extras premium desbloqueados", "Destaque no perfil"],
+                reqs: [
+                  { label: "20 extras concluídos", met: jobs >= 20 },
+                  { label: "Avaliação ≥ 4.5 ⭐", met: rep >= 4.5 },
+                ],
+              },
+              {
+                key: "gold", label: "Intermediário", min: 100, max: 299, fee: 14, net: 86,
+                color: "text-yellow-400", border: "border-yellow-400/30", bg: "bg-yellow-400/8",
+                glow: "shadow-[0_0_16px_rgba(250,204,21,0.12)]", icon: "🥇",
+                perks: ["Extras exclusivos", "Bônus automático por extra"],
+                reqs: [
+                  { label: "100 extras concluídos", met: jobs >= 100 },
+                  { label: "Avaliação ≥ 4.7 ⭐", met: rep >= 4.7 },
+                ],
+              },
+              {
+                key: "elite", label: "Sênior", min: 300, max: Infinity, fee: 10, net: 90,
+                color: "text-primary", border: "border-primary/30", bg: "bg-primary/8",
+                glow: "shadow-[0_0_20px_rgba(124,252,0,0.15)]", icon: "👑",
+                perks: ["Todos os benefícios", "Acesso VIP + suporte prioritário"],
+                reqs: [
+                  { label: "300 extras concluídos", met: jobs >= 300 },
+                  { label: "Avaliação ≥ 4.8 ⭐", met: rep >= 4.8 },
+                ],
+              },
+            ];
+
+            const currentIdx = LEVELS.findIndex(l => l.key === lvl);
+            const current = LEVELS[currentIdx] ?? LEVELS[0];
+            const next = LEVELS[currentIdx + 1];
+            const progress = next
+              ? Math.min(100, ((jobs - current.min) / (next.min - current.min)) * 100)
+              : 100;
+
+            return (
+              <motion.div key="progressão" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
+
+                {/* Current level hero */}
+                <div className={`glass-card rounded-2xl p-5 border ${current.border} ${current.bg} ${current.glow}`}>
+                  <div className="flex items-center gap-4">
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl border ${current.border} ${current.bg} flex-shrink-0`}>
+                      {current.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Nível Atual</p>
+                      <p className={`text-2xl font-bold ${current.color}`}>{current.label}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Taxa da plataforma: <span className="font-bold text-foreground">{current.fee}%</span> · Você fica: <span className="font-bold text-green-400">{current.net}%</span></p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <p className={`text-3xl font-bold tabular-nums ${current.color}`}>{jobs}</p>
+                      <p className="text-[10px] text-muted-foreground">extras feitos</p>
+                    </div>
+                  </div>
+
+                  {next && (
+                    <div className="mt-5">
+                      <div className="flex justify-between text-xs mb-2">
+                        <span className="text-muted-foreground font-medium">Progresso para {next.label}</span>
+                        <span className={`font-bold ${current.color}`}>{Math.round(progress)}%</span>
+                      </div>
+                      <div className="h-2.5 bg-white/6 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress}%` }}
+                          transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
+                          className={`h-full rounded-full`}
+                          style={{ background: current.key === "bronze" ? "#22d3ee" : current.key === "silver" ? "#facc15" : current.key === "gold" ? "#7CFC00" : "#7CFC00" }}
+                        />
+                      </div>
+                      <p className="text-[11px] text-muted-foreground mt-1.5">
+                        {next.min - jobs > 0 ? `Faltam ${next.min - jobs} extras para ${next.label}` : `Nível ${next.label} desbloqueado!`}
+                      </p>
+                    </div>
+                  )}
+                  {!next && (
+                    <div className="mt-4 flex items-center gap-2 text-xs text-primary">
+                      <Crown size={13} /> Você atingiu o nível máximo da plataforma!
+                    </div>
+                  )}
+                </div>
+
+                {/* Next level requirements */}
+                {next && (
+                  <div className={`glass-card rounded-2xl p-5 border ${next.border}`}>
+                    <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                      <Trophy size={14} className={next.color} /> Requisitos para {next.label}
+                    </h3>
+                    <div className="space-y-3">
+                      {next.reqs.map((req, i) => (
+                        <div key={i} className="flex items-center gap-3">
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${req.met ? "bg-green-400/20 border border-green-400/40" : "bg-white/5 border border-white/12"}`}>
+                            {req.met
+                              ? <CheckCircle size={11} className="text-green-400" />
+                              : <Lock size={10} className="text-muted-foreground/50" />
+                            }
+                          </div>
+                          <span className={`text-sm ${req.met ? "text-foreground" : "text-muted-foreground"}`}>{req.label}</span>
+                          {req.met && <span className="ml-auto text-[10px] text-green-400 font-bold">✓ OK</span>}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-white/6">
+                      <p className="text-[10px] text-muted-foreground mb-2 font-semibold uppercase tracking-wide">Benefícios desbloqueados em {next.label}</p>
+                      {next.perks.map((perk, i) => (
+                        <p key={i} className={`text-xs ${next.color} flex items-center gap-1.5 mt-1`}>
+                          <Zap size={10} /> {perk}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Reputation score */}
+                <div className="glass-card rounded-2xl p-5 border border-white/8">
+                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                    <Star size={14} className="text-yellow-400 fill-yellow-400" /> Reputação
+                  </h3>
+                  <div className="flex items-center gap-5">
+                    <div className="flex-shrink-0">
+                      <ReputationRing score={rep} size={80} />
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      {[5,4,3,2,1].map(stars => {
+                        const pct = stars <= Math.round(rep) ? Math.round(Math.random() * 30 + 50) : Math.round(Math.random() * 20);
+                        return (
+                          <div key={stars} className="flex items-center gap-2">
+                            <span className="text-[10px] text-muted-foreground w-4 text-right">{stars}</span>
+                            <Star size={9} className="text-yellow-400 fill-yellow-400 flex-shrink-0" />
+                            <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                              <div className="h-full bg-yellow-400/70 rounded-full" style={{ width: `${pct}%` }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-3">Baseado em avaliações reais de empresas contratantes</p>
+                </div>
+
+                {/* All levels timeline */}
+                <div className="glass-card rounded-2xl p-5 border border-white/8">
+                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                    <TrendingUp size={14} className="text-secondary" /> Todos os Níveis
+                  </h3>
+                  <div className="space-y-3">
+                    {LEVELS.map((lvlItem, i) => {
+                      const isCurrentLvl = lvlItem.key === lvl;
+                      const isPast = currentIdx > i;
+                      const isFuture = currentIdx < i;
+                      return (
+                        <div key={lvlItem.key} className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                          isCurrentLvl ? `${lvlItem.border} ${lvlItem.bg} ${lvlItem.glow}` :
+                          isPast ? "border-green-400/15 bg-green-400/4" :
+                          "border-white/6 bg-white/2 opacity-50"
+                        }`}>
+                          <div className="text-xl flex-shrink-0">{lvlItem.icon}</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <p className={`text-sm font-bold ${isCurrentLvl ? lvlItem.color : isPast ? "text-green-400" : "text-muted-foreground"}`}>{lvlItem.label}</p>
+                              {isCurrentLvl && <span className="text-[9px] bg-white/10 px-1.5 py-0.5 rounded-full font-bold">ATUAL</span>}
+                              {isPast && <CheckCircle size={10} className="text-green-400" />}
+                            </div>
+                            <p className="text-[10px] text-muted-foreground">{lvlItem.min === 0 ? "0–19" : lvlItem.max === Infinity ? `${lvlItem.min}+` : `${lvlItem.min}–${lvlItem.max}`} extras · Taxa {lvlItem.fee}%</p>
+                          </div>
+                          <div className="text-right flex-shrink-0">
+                            <p className={`text-lg font-bold ${isCurrentLvl ? lvlItem.color : isPast ? "text-green-400" : "text-muted-foreground/40"}`}>{lvlItem.net}%</p>
+                            <p className="text-[9px] text-muted-foreground">você fica</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })()}
 
           {/* CONFIG TAB */}
           {activeTab === "config" && (

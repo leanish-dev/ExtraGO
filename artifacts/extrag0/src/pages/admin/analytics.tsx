@@ -4,7 +4,7 @@ import { apiFetch } from "@/lib/api-fetch";
 import { motion } from "framer-motion";
 import {
   TrendingUp, Users, Briefcase, DollarSign, Star, CheckCircle,
-  BarChart3, Trophy, Building2, Percent, Crown, ArrowUp, Award
+  BarChart3, Trophy, Building2, Percent, Crown, ArrowUp, Award, AlertTriangle
 } from "lucide-react";
 
 interface AnalyticsData {
@@ -84,7 +84,19 @@ export default function AdminAnalyticsPage() {
     );
   }
 
-  const d = data!;
+  if (!data) {
+    return (
+      <div className="p-6 flex flex-col items-center justify-center gap-4 min-h-64">
+        <AlertTriangle size={36} className="text-yellow-400/60" />
+        <div className="text-center">
+          <p className="font-semibold text-sm">Erro ao carregar analytics</p>
+          <p className="text-xs text-muted-foreground mt-1">Tente recarregar a página</p>
+        </div>
+      </div>
+    );
+  }
+
+  const d = data;
   const totalLevels = Object.values(d.levelDistribution).reduce((s, v) => s + v, 0) || 1;
 
   const chartConfigs = {
