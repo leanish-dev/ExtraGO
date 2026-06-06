@@ -1042,7 +1042,7 @@ export default function LandingPage() {
                   {/* Background image */}
                   <div
                     className="absolute inset-0 bg-cover bg-center scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                    style={{ backgroundImage: "url(/investors-banner.png)" }}
+                    style={{ backgroundImage: "url(/investors-bg.png)" }}
                   />
                   {/* Dark overlays */}
                   <div className="absolute inset-0 bg-gradient-to-r from-[#050810]/90 via-[#050810]/65 to-[#050810]/25" />

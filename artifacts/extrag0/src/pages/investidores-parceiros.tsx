@@ -1,92 +1,77 @@
 import React, { useRef, useState } from "react";
 import { Link } from "wouter";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import navbarBg from "@assets/file_00000000a5a0720e9612b56b01bfe4f0~2_1780139707862.png";
 import {
-  ArrowRight, TrendingUp, Users, Globe, Zap, Shield, Star,
-  Building2, ChevronRight, CheckCircle, BarChart3, Layers,
+  ArrowRight, TrendingUp, Users, Globe, Zap, Star,
+  Building2, CheckCircle, BarChart3, Layers,
   DollarSign, MapPin, Award, Briefcase, Target, Sparkles,
-  ExternalLink, Mail, Phone, ChevronDown,
+  Mail, ChevronDown, Shield, Lock, Cpu, Wallet,
+  MessageCircle, GitBranch, Network,
 } from "lucide-react";
 
-function ScrollReveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+/* ─────────────── helpers ─────────────── */
+
+function Rev({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, margin: "-50px" });
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 32 }}
+    <motion.div ref={ref}
+      initial={{ opacity: 0, y: 28 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.72, delay, ease: [0.19, 1, 0.22, 1] }}
+      transition={{ duration: 0.68, delay, ease: [0.19, 1, 0.22, 1] }}
       className={className}
-    >
-      {children}
-    </motion.div>
+    >{children}</motion.div>
   );
 }
 
-function GlassCard({ children, className = "", glow = "" }: { children: React.ReactNode; className?: string; glow?: string }) {
+function Glass({ children, className = "", accent = "" }: { children: React.ReactNode; className?: string; accent?: string }) {
   return (
-    <div
-      className={`relative rounded-2xl border border-white/8 overflow-hidden ${className}`}
-      style={{
-        background: "rgba(8,14,22,0.72)",
-        backdropFilter: "blur(24px) saturate(160%)",
-        boxShadow: glow || "0 4px 32px rgba(0,0,0,0.35)",
-      }}
-    >
+    <div className={`relative rounded-2xl border border-white/8 overflow-hidden ${className}`}
+      style={{ background: "rgba(6,11,18,0.78)", backdropFilter: "blur(24px) saturate(160%)" }}>
+      {accent && <div className="absolute top-0 left-0 right-0 h-px" style={{ background: accent }} />}
       {children}
     </div>
   );
 }
 
-/* ── Ambient orbs ── */
-function AmbientOrb({ color, size, left, top, duration, delay = 0 }: { color: string; size: number; left: string; top: string; duration: number; delay?: number }) {
+function SectionLabel({ color, children }: { color: string; children: React.ReactNode }) {
   return (
-    <motion.div
-      className="absolute rounded-full pointer-events-none"
-      style={{ width: size, height: size, left, top, background: color, filter: `blur(${size / 2.2}px)`, opacity: 0.055 }}
-      animate={{ x: ["0%", "5%", "-4%", "0%"], y: ["0%", "7%", "3%", "0%"], scale: [1, 1.1, 0.95, 1] }}
-      transition={{ duration, delay, repeat: Infinity, ease: "easeInOut" }}
-    />
+    <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[10px] font-black tracking-[0.12em] uppercase mb-5"
+      style={{ background: `${color}12`, border: `1px solid ${color}28`, color }}>
+      {children}
+    </span>
   );
 }
 
-const TEAM = [
+/* ─────────────── data ─────────────── */
+
+const LEVELS = [
+  { name: "Iniciante", fee: 20, req: "Sem requisito mínimo", color: "#cd7f32", w: "20%" },
+  { name: "Júnior", fee: 18, req: "20 extras · Avaliação 4,5", color: "#9ca3af", w: "18%" },
+  { name: "Intermediário", fee: 16, req: "100 extras · 6 meses · Avaliação 4,7", color: "#fbbf24", w: "16%" },
+  { name: "Sênior", fee: 12, req: "300 extras · 12 meses · Avaliação 4,8+", color: "#7CFC00", w: "12%" },
+  { name: "Elite", fee: 10, req: "Perfil validado · Comparecimento 98%+", color: "#00E5FF", w: "10%" },
+];
+
+const SUBSCRIPTIONS = [
   {
-    name: "Leonardo Scheffel da Rosa",
-    role: "CEO & Founder",
-    photo: "/team-leonardo.jpg",
-    equity: "30%",
-    color: "from-primary/20 to-primary/5",
-    border: "border-primary/25",
-    glow: "0 0 40px rgba(124,252,0,0.12)",
-    bio: "Responsável pela visão estratégica, produto, operações e expansão nacional da extraGO. Experiência em gestão operacional, hotelaria, liderança de equipes e desenvolvimento de negócios.",
-    linkedin: "#",
+    name: "PRO", price: "R$ 19,90", period: "/mês",
+    color: "#7CFC00", bg: "rgba(124,252,0,0.06)", border: "rgba(124,252,0,0.2)",
+    items: ["Maior visibilidade na busca", "Badge PRO no perfil", "Estatísticas avançadas", "Alertas antecipados de extras"],
   },
   {
-    name: "Jean Carlos Dick",
-    role: "CMO & Co-Founder",
-    photo: "/team-jean.jpg",
-    equity: "20%",
-    color: "from-secondary/20 to-secondary/5",
-    border: "border-secondary/25",
-    glow: "0 0 40px rgba(0,229,255,0.12)",
-    bio: "Fundador da MyAds. Responsável por branding, marketing, growth, aquisição de usuários e posicionamento estratégico da marca.",
-    linkedin: "#",
+    name: "PREMIUM", price: "R$ 49,90", period: "/mês",
+    color: "#00E5FF", bg: "rgba(0,229,255,0.07)", border: "rgba(0,229,255,0.22)",
+    featured: true,
+    items: ["Tudo do PRO", "Destaque prioritário", "Analytics detalhado", "Acesso a extras exclusivos", "Suporte dedicado"],
   },
   {
-    name: "Qaialla Pereira",
-    role: "CCO & Co-Founder",
-    photo: "/team-qaialla.jpg",
-    equity: "10%",
-    color: "from-purple-500/20 to-purple-500/5",
-    border: "border-purple-400/25",
-    glow: "0 0 40px rgba(168,85,247,0.12)",
-    bio: "Responsável pela expansão comercial, parcerias estratégicas, relacionamento corporativo e desenvolvimento de mercado.",
-    linkedin: "#",
+    name: "ELITE", price: "R$ 99,90", period: "/mês",
+    color: "#a855f7", bg: "rgba(168,85,247,0.07)", border: "rgba(168,85,247,0.22)",
+    items: ["Tudo do PREMIUM", "Badge ELITE", "Matching inteligente", "Gestão de agenda", "Account manager"],
   },
 ];
 
@@ -94,48 +79,56 @@ const CAP_TABLE = [
   { name: "Leonardo Scheffel da Rosa", role: "CEO & Founder", pct: 30, color: "#7CFC00" },
   { name: "Jean Carlos Dick", role: "CMO & Co-Founder", pct: 20, color: "#00E5FF" },
   { name: "Qaialla Pereira", role: "CCO & Co-Founder", pct: 10, color: "#a855f7" },
-  { name: "Reserva para Investidores Estratégicos", role: "Investidores", pct: 20, color: "#f59e0b" },
-  { name: "Pool de Talentos e Executivos", role: "Equipe", pct: 10, color: "#f472b6" },
-  { name: "Reserva Estratégica da Companhia", role: "Companhia", pct: 10, color: "#64748b" },
-];
-
-const FINANCIAL_DISTRIBUTION = [
-  { label: "Caixa e Reserva Estratégica", pct: 35, color: "#7CFC00" },
-  { label: "Marketing e Crescimento", pct: 20, color: "#00E5FF" },
-  { label: "Representantes Estaduais", pct: 15, color: "#f59e0b" },
-  { label: "Tecnologia e Infraestrutura", pct: 10, color: "#a855f7" },
-  { label: "Equipe e Operações", pct: 10, color: "#f472b6" },
-  { label: "Fundo de Expansão", pct: 5, color: "#22d3ee" },
-  { label: "Programa de Indicações", pct: 5, color: "#4ade80" },
-];
-
-const LEVELS = [
-  { name: "Iniciante", fee: 18, color: "#cd7f32", bg: "rgba(205,127,50,0.12)", border: "rgba(205,127,50,0.3)" },
-  { name: "Júnior", fee: 16, color: "#c0c0c0", bg: "rgba(192,192,192,0.12)", border: "rgba(192,192,192,0.3)" },
-  { name: "Intermediário", fee: 14, color: "#ffd700", bg: "rgba(255,215,0,0.12)", border: "rgba(255,215,0,0.3)" },
-  { name: "Sênior", fee: 12, color: "#7CFC00", bg: "rgba(124,252,0,0.12)", border: "rgba(124,252,0,0.3)" },
-  { name: "Elite", fee: 10, color: "#00E5FF", bg: "rgba(0,229,255,0.12)", border: "rgba(0,229,255,0.3)" },
-];
-
-const REFERRAL_TIERS = [
-  { tier: "Indicador", commission: "5%", desc: "Usuários que indicam novos profissionais", color: "#7CFC00" },
-  { tier: "Embaixador Regional", commission: "7%", desc: "Presença em múltiplas cidades do estado", color: "#00E5FF" },
-  { tier: "Embaixador Nacional", commission: "10%", desc: "Rede nacional de alta performance", color: "#a855f7" },
+  { name: "Pool de Executivos e Talentos", role: "Equipe", pct: 5, color: "#f59e0b" },
+  { name: "Reserva Estratégica", role: "Companhia", pct: 5, color: "#64748b" },
+  { name: "Pool de Investidores", role: "Investidores Estratégicos", pct: 30, color: "#f472b6" },
 ];
 
 const ROADMAP = [
-  { phase: "Fase 1", title: "Validação Regional", desc: "Validação do produto e modelo de negócio nas primeiras regiões.", icon: <Target size={18} />, done: true },
-  { phase: "Fase 2", title: "Expansão Sul", desc: "Expansão para os principais mercados do Sul do Brasil.", icon: <MapPin size={18} />, done: false },
-  { phase: "Fase 3", title: "Expansão Nacional", desc: "Crescimento acelerado para as principais capitais brasileiras.", icon: <Globe size={18} />, done: false },
-  { phase: "Fase 4", title: "Rede de Representantes", desc: "27 representantes estaduais ativos cobrindo todo o território nacional.", icon: <Users size={18} />, done: false },
-  { phase: "Fase 5", title: "Ecossistema Financeiro", desc: "Lançamento de produtos financeiros para profissionais e empresas.", icon: <DollarSign size={18} />, done: false },
-  { phase: "Fase 6", title: "IA para Matching", desc: "Inteligência artificial para matching inteligente entre profissionais e vagas.", icon: <Zap size={18} />, done: false },
-  { phase: "Fase 7", title: "Liderança Nacional", desc: "Liderança consolidada no mercado de trabalho flexível do Brasil.", icon: <Award size={18} />, done: false },
+  { phase: "01", title: "Validação Regional", desc: "MVP validado, primeiros usuários e parceiros ativos.", color: "#7CFC00", done: true },
+  { phase: "02", title: "Expansão Sul", desc: "Crescimento para os principais mercados do Sul do Brasil.", color: "#00E5FF", done: false },
+  { phase: "03", title: "Expansão Nacional", desc: "Abertura acelerada para capitais e grandes cidades.", color: "#fbbf24", done: false },
+  { phase: "04", title: "Rede de Representantes", desc: "27 representantes estaduais ativos em todo o território.", color: "#a855f7", done: false },
+  { phase: "05", title: "Ecossistema Financeiro", desc: "Produtos financeiros, cartão e conta para profissionais.", color: "#f472b6", done: false },
+  { phase: "06", title: "IA para Matching", desc: "Inteligência artificial para matching preciso e previsivo.", color: "#22d3ee", done: false },
+  { phase: "07", title: "Liderança Nacional", desc: "Posição consolidada como infraestrutura de mão de obra do Brasil.", color: "#4ade80", done: false },
 ];
 
-const MARKET_PROBLEMS = [
-  { side: "Empresas", color: "#00E5FF", items: ["Dificuldade para contratar rapidamente", "Falta de profissionais qualificados", "Alto custo operacional", "Ausência de histórico profissional confiável"] },
-  { side: "Profissionais", color: "#7CFC00", items: ["Falta de oportunidades recorrentes", "Dependência de grupos informais", "Ausência de reputação validada", "Crescimento profissional limitado"] },
+const TEAM = [
+  {
+    name: "Leonardo Scheffel da Rosa", role: "CEO & Founder", photo: "/team-leonardo.jpg",
+    equity: "30%", color: "#7CFC00",
+    bio: "Responsável pela visão estratégica, produto, operações e expansão nacional. Experiência em gestão operacional, hotelaria, liderança de equipes e desenvolvimento de negócios.",
+  },
+  {
+    name: "Jean Carlos Dick", role: "CMO & Co-Founder", photo: "/team-jean.jpg",
+    equity: "20%", color: "#00E5FF",
+    bio: "Fundador da MyAds. Responsável por branding, marketing, growth, aquisição de usuários e posicionamento estratégico da marca.",
+  },
+  {
+    name: "Qaialla Pereira", role: "CCO & Co-Founder", photo: "/team-qaialla.jpg",
+    equity: "10%", color: "#a855f7",
+    bio: "Responsável pela expansão comercial, parcerias estratégicas, relacionamento corporativo e desenvolvimento de mercado.",
+  },
+];
+
+const COMPETITIVE = [
+  { label: "Reputação Validada", wpp: false, agency: "partial", site: false, generic: "partial", extrag0: true },
+  { label: "Geolocalização Real", wpp: false, agency: false, site: false, generic: "partial", extrag0: true },
+  { label: "Progressão de Carreira", wpp: false, agency: false, site: false, generic: false, extrag0: true },
+  { label: "Sistema de Indicações", wpp: false, agency: false, site: false, generic: false, extrag0: true },
+  { label: "Analytics & KPIs", wpp: false, agency: "partial", site: false, generic: "partial", extrag0: true },
+  { label: "Gestão Financeira", wpp: false, agency: false, site: false, generic: false, extrag0: true },
+  { label: "Ecossistema Completo", wpp: false, agency: false, site: false, generic: false, extrag0: true },
+];
+
+const SOLUTION_FEATURES = [
+  { icon: <MapPin size={20} />, title: "Geolocalização em Tempo Real", desc: "Busca por raio de distância conectando empresas aos profissionais mais próximos com disponibilidade imediata.", color: "#7CFC00" },
+  { icon: <Star size={20} />, title: "Sistema de Reputação", desc: "Avaliações verificadas e histórico profissional que geram confiança real entre todas as partes do ecossistema.", color: "#00E5FF" },
+  { icon: <TrendingUp size={20} />, title: "Progressão de Carreira", desc: "Níveis de Iniciante a Elite com benefícios crescentes, incentivando qualidade e fidelização de longo prazo.", color: "#fbbf24" },
+  { icon: <Wallet size={20} />, title: "Carteira Digital & Financeiro", desc: "Gestão financeira integrada, pagamentos via PIX e analytics operacional para decisões baseadas em dados.", color: "#a855f7" },
+  { icon: <MessageCircle size={20} />, title: "Chat em Tempo Real", desc: "Comunicação instantânea entre empresas e profissionais com histórico completo de interações.", color: "#f472b6" },
+  { icon: <GitBranch size={20} />, title: "Sistema de Indicações", desc: "Links e códigos exclusivos que geram receita recorrente para usuários que indicam novos profissionais.", color: "#4ade80" },
 ];
 
 export default function InvestidoresParceirosPage() {
@@ -148,546 +141,729 @@ export default function InvestidoresParceirosPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden" style={{ background: "#050810" }}>
-      {/* Ambient orbs */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <AmbientOrb color="#7CFC00" size={700} left="-10%" top="-15%" duration={26} />
-        <AmbientOrb color="#00E5FF" size={500} left="65%" top="8%" duration={20} delay={4} />
-        <AmbientOrb color="#a855f7" size={340} left="20%" top="55%" duration={18} delay={8} />
-        <AmbientOrb color="#7CFC00" size={280} left="75%" top="65%" duration={22} delay={12} />
-      </div>
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden" style={{ background: "#04080f" }}>
 
-      {/* ── Navbar ── */}
+      {/* ── Sticky Navbar ── */}
       <motion.header
-        initial={false}
-        animate={navScrolled ? { backdropFilter: "blur(28px)" } : { backdropFilter: "blur(18px)" }}
         style={{ backgroundImage: `url(${navbarBg})`, backgroundSize: "cover", backgroundPosition: "center" }}
-        className={`sticky top-0 z-30 w-full transition-all duration-300 ${navScrolled ? "border-b border-white/8 shadow-[0_4px_32px_rgba(0,0,0,0.5)]" : "border-b border-white/[0.055]"}`}
+        className={`sticky top-0 z-40 w-full transition-all duration-300 ${navScrolled ? "border-b border-white/8 shadow-[0_4px_32px_rgba(0,0,0,0.6)]" : "border-b border-white/[0.05]"}`}
+        animate={{ backdropFilter: navScrolled ? "blur(28px)" : "blur(18px)" }}
       >
-        <div className="flex items-center justify-between px-5 sm:px-8 py-2.5 max-w-7xl mx-auto">
-          <Link href="/" className="flex-shrink-0">
+        <div className="flex items-center justify-between px-5 sm:px-10 py-3 max-w-7xl mx-auto">
+          <Link href="/">
             <img src={logoMain} alt="extraGO" className="h-6 object-contain" />
           </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <a href="#oportunidade" className="text-muted-foreground hover:text-foreground transition-colors">Oportunidade</a>
-            <a href="#modelo" className="text-muted-foreground hover:text-foreground transition-colors">Modelo de Negócio</a>
-            <a href="#equipe" className="text-muted-foreground hover:text-foreground transition-colors">Equipe</a>
-            <a href="#roadmap" className="text-muted-foreground hover:text-foreground transition-colors">Roadmap</a>
-            <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">← Voltar</Link>
+          <nav className="hidden md:flex items-center gap-7 text-sm font-medium">
+            {[
+              { href: "#problema", label: "Problema" },
+              { href: "#solucao", label: "Solução" },
+              { href: "#modelo", label: "Modelo" },
+              { href: "#equipe", label: "Equipe" },
+              { href: "#roadmap", label: "Roadmap" },
+            ].map(item => (
+              <a key={item.href} href={item.href} className="text-white/50 hover:text-white transition-colors duration-200">{item.label}</a>
+            ))}
+            <Link href="/" className="text-white/40 hover:text-white/70 transition-colors text-xs">← Voltar</Link>
           </nav>
-          <div className="flex items-center gap-2">
-            <a href="mailto:contato@extrag0.com.br">
-              <Button className="rounded-full px-5 h-9 text-sm font-bold text-black border-none" style={{ background: "linear-gradient(135deg,#7CFC00,#9aff1c 50%,#00E5FF)", boxShadow: "0 0 20px rgba(124,252,0,0.3)" }}>
-                Falar com a Equipe
-              </Button>
-            </a>
-          </div>
+          <a href="mailto:investidores@extrag0.com.br">
+            <Button className="rounded-full px-5 h-9 text-sm font-bold text-black border-none"
+              style={{ background: "linear-gradient(135deg,#7CFC00,#9aff1c 55%,#00E5FF)", boxShadow: "0 0 20px rgba(124,252,0,0.3)" }}>
+              Falar com a Equipe
+            </Button>
+          </a>
         </div>
       </motion.header>
 
-      <main className="flex-1 relative z-10">
+      <main className="flex-1">
 
         {/* ══════════════════════════════════════════
-            HERO
+            HERO — Full bleed background
         ══════════════════════════════════════════ */}
-        <section className="relative overflow-hidden">
-          {/* Hero banner image */}
-          <div className="relative w-full" style={{ maxHeight: 520, overflow: "hidden" }}>
-            <motion.img
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-              src="/investors-banner.png"
-              alt="extraGO Investidores & Parceiros"
-              className="w-full object-cover object-center"
-              style={{ maxHeight: 520 }}
+        <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+          {/* Background image */}
+          <div className="absolute inset-0">
+            <motion.div
+              initial={{ scale: 1.06, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1.4, ease: [0.19, 1, 0.22, 1] }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: "url(/investors-bg.png)" }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#050810]/20 via-[#050810]/30 to-[#050810]" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#050810]/60 via-transparent to-[#050810]/20" />
+            {/* Layered overlays for readability without killing the image */}
+            <div className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(4,8,15,0.92) 0%, rgba(4,8,15,0.75) 45%, rgba(4,8,15,0.45) 100%)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(4,8,15,0.3) 0%, transparent 40%, rgba(4,8,15,0.85) 100%)" }} />
           </div>
 
-          {/* Hero content overlay */}
-          <div className="absolute inset-0 flex flex-col justify-center px-6 sm:px-12 lg:px-20">
-            <div className="max-w-2xl">
+          {/* Hero content — left-aligned so it never overlaps the map */}
+          <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 py-24 w-full">
+            <div className="max-w-[580px]">
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-5"
-                style={{ background: "rgba(124,252,0,0.1)", border: "1px solid rgba(124,252,0,0.25)", color: "#7CFC00" }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.14em] uppercase mb-7"
+                style={{ background: "rgba(124,252,0,0.12)", border: "1px solid rgba(124,252,0,0.3)", color: "#7CFC00" }}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                Investidores & Parceiros
+                Pitch Deck · Série Seed 2025
               </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.42 }}
+                className="text-xs sm:text-sm font-bold text-white/40 uppercase tracking-[0.18em] mb-4"
+              >
+                extraGO Workforce Technology
+              </motion.p>
 
               <motion.h1
                 initial={{ opacity: 0, y: 28 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.35 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] mb-5 tracking-tight"
+                transition={{ duration: 0.85, delay: 0.5 }}
+                className="text-[42px] sm:text-[58px] lg:text-[68px] font-black leading-[1.0] tracking-tight mb-6"
               >
-                A infraestrutura de<br />
-                <span style={{ background: "linear-gradient(90deg,#7CFC00,#9aff1c 40%,#00E5FF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                  mão de obra do Brasil.
+                A Infraestrutura<br />
+                de Mão de Obra<br />
+                <span style={{ background: "linear-gradient(90deg,#7CFC00 0%,#9aff1c 40%,#00E5FF 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  do Brasil.
                 </span>
               </motion.h1>
 
               <motion.p
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.5 }}
-                className="text-base sm:text-lg text-white/70 mb-8 max-w-xl leading-relaxed"
+                transition={{ duration: 0.7, delay: 0.65 }}
+                className="text-base sm:text-lg text-white/60 mb-10 leading-relaxed max-w-[500px]"
               >
-                Conectando profissionais, empresas e oportunidades através de tecnologia, reputação, gamificação e crescimento sustentável.
+                Uma plataforma inteligente que conecta empresas e profissionais, centralizando todo o ecossistema de contratação temporária em uma única infraestrutura escalável.
               </motion.p>
 
               <motion.div
-                initial={{ opacity: 0, y: 14 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.62 }}
+                transition={{ duration: 0.65, delay: 0.78 }}
                 className="flex flex-wrap gap-3"
               >
-                <a href="mailto:contato@extrag0.com.br">
-                  <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                    <Button size="lg" className="rounded-full font-bold px-7 h-12 border-none text-black" style={{ background: "linear-gradient(135deg,#7CFC00,#9aff1c)", boxShadow: "0 0 28px rgba(124,252,0,0.4)" }}>
-                      Investir na extraGO <ArrowRight size={16} className="ml-1" />
-                    </Button>
-                  </motion.div>
+                <a href="mailto:investidores@extrag0.com.br">
+                  <Button size="lg" className="rounded-full font-bold px-8 h-12 border-none text-black"
+                    style={{ background: "linear-gradient(135deg,#7CFC00,#9aff1c)", boxShadow: "0 0 32px rgba(124,252,0,0.45)" }}>
+                    Investir na extraGO <ArrowRight size={16} className="ml-1" />
+                  </Button>
                 </a>
                 <a href="mailto:parcerias@extrag0.com.br">
-                  <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                    <Button size="lg" variant="outline" className="rounded-full font-bold px-7 h-12 border-white/20 text-white hover:bg-white/6 hover:border-white/35">
-                      Tornar-se Parceiro
-                    </Button>
-                  </motion.div>
+                  <Button size="lg" variant="outline" className="rounded-full font-bold px-8 h-12 border-white/20 text-white hover:bg-white/6 hover:border-white/35">
+                    Tornar-se Parceiro
+                  </Button>
                 </a>
-                <a href="#oportunidade">
-                  <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                    <Button size="lg" variant="ghost" className="rounded-full font-bold px-7 h-12 text-white/70 hover:text-white hover:bg-white/6">
-                      Conhecer o Projeto <ChevronDown size={16} className="ml-1" />
-                    </Button>
-                  </motion.div>
+                <a href="#problema">
+                  <Button size="lg" variant="ghost" className="rounded-full font-bold px-6 h-12 text-white/50 hover:text-white hover:bg-white/5">
+                    Ver o Projeto <ChevronDown size={15} className="ml-1" />
+                  </Button>
                 </a>
+              </motion.div>
+
+              {/* Key stats row */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.92 }}
+                className="flex flex-wrap gap-6 mt-12 pt-8 border-t border-white/8"
+              >
+                {[
+                  { value: "74M", label: "Trabalhadores flexíveis no Brasil" },
+                  { value: "R$ 300Bi", label: "TAM estimado do setor" },
+                  { value: "85%", label: "Contratações ainda informais" },
+                ].map((stat, i) => (
+                  <div key={i}>
+                    <p className="text-2xl sm:text-3xl font-black text-white">{stat.value}</p>
+                    <p className="text-[11px] text-white/40 mt-0.5 leading-tight max-w-[130px]">{stat.label}</p>
+                  </div>
+                ))}
               </motion.div>
             </div>
           </div>
 
-          {/* Scroll indicator */}
+          {/* Scroll cue */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-            className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-1"
+            transition={{ delay: 1.4 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 hidden md:flex"
           >
-            <span className="text-[10px] text-white/30 tracking-widest uppercase">Explorar</span>
-            <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}>
-              <ChevronDown size={16} className="text-white/30" />
+            <span className="text-[9px] text-white/25 tracking-widest uppercase">Rolar</span>
+            <motion.div animate={{ y: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.7, ease: "easeInOut" }}>
+              <ChevronDown size={14} className="text-white/25" />
             </motion.div>
           </motion.div>
         </section>
 
-        {/* ── Vision bar ── */}
-        <section className="px-5 py-8">
-          <div className="max-w-5xl mx-auto">
-            <GlassCard className="px-6 sm:px-10 py-7">
-              <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-                <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(124,252,0,0.1)", border: "1px solid rgba(124,252,0,0.2)" }}>
-                  <Zap size={24} className="text-primary" />
-                </div>
-                <div>
-                  <p className="text-sm text-white/40 font-medium uppercase tracking-widest mb-1">Nossa Missão</p>
-                  <p className="text-lg sm:text-xl font-semibold text-white/90 leading-relaxed">
-                    Transformar a forma como profissionais e empresas se conectam no Brasil, criando um ambiente mais eficiente, seguro, transparente e escalável para o trabalho flexível.
-                  </p>
-                </div>
-              </div>
-            </GlassCard>
+        {/* ── Vision strip ── */}
+        <div className="relative overflow-hidden" style={{ background: "rgba(124,252,0,0.04)", borderTop: "1px solid rgba(124,252,0,0.1)", borderBottom: "1px solid rgba(124,252,0,0.08)" }}>
+          <div className="max-w-5xl mx-auto px-6 py-5">
+            <p className="text-center text-xs sm:text-sm font-semibold text-white/50 leading-relaxed">
+              "Uber transformou o transporte.&nbsp; Airbnb transformou a hospedagem.&nbsp; LinkedIn transformou o networking profissional.&nbsp;
+              <span className="text-primary font-bold">A extraGO está construindo a infraestrutura nacional de mão de obra do Brasil.</span>"
+            </p>
           </div>
-        </section>
+        </div>
 
         {/* ══════════════════════════════════════════
-            MARKET OPPORTUNITY
+            PROBLEMA
         ══════════════════════════════════════════ */}
-        <section id="oportunidade" className="px-5 py-14 sm:py-20">
-          <div className="max-w-5xl mx-auto">
-            <ScrollReveal>
-              <div className="text-center mb-12">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-4" style={{ background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.2)", color: "#00E5FF" }}>
-                  <Target size={11} /> Oportunidade de Mercado
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4">Um mercado enorme.<br />Ainda sem solução.</h2>
-                <p className="text-white/55 max-w-xl mx-auto leading-relaxed">Milhões de profissionais e empresas enfrentam diariamente os mesmos problemas — sem uma plataforma centralizada para resolvê-los.</p>
-              </div>
-            </ScrollReveal>
+        <section id="problema" className="px-6 sm:px-10 py-20 sm:py-28">
+          <div className="max-w-6xl mx-auto">
+            <Rev className="text-center mb-16">
+              <SectionLabel color="#f43f5e"><Target size={10} /> O Problema</SectionLabel>
+              <h2 className="text-3xl sm:text-5xl font-black mb-5 leading-tight">
+                Um Mercado de Bilhões<br />
+                <span className="text-white/40">Operando no Escuro</span>
+              </h2>
+              <p className="text-white/50 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
+                Milhões de contratações temporárias acontecem de forma informal no Brasil — via WhatsApp, indicações manuais e processos descentralizados. O resultado é um mercado fragmentado, ineficiente e sem rastreabilidade.
+              </p>
+            </Rev>
 
-            <div className="grid sm:grid-cols-2 gap-5 mb-12">
-              {MARKET_PROBLEMS.map((side, i) => (
-                <ScrollReveal key={i} delay={i * 0.1}>
-                  <GlassCard className="p-6 h-full">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ background: `${side.color}18`, border: `1px solid ${side.color}30` }}>
-                      {i === 0 ? <Building2 size={18} style={{ color: side.color }} /> : <Users size={18} style={{ color: side.color }} />}
+            {/* Market stats — 3 big numbers */}
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 mb-16">
+              {[
+                { value: "74M", label: "Trabalhadores flexíveis no Brasil", color: "#7CFC00" },
+                { value: "R$30Bi+", label: "Mercado potencial endereçável", color: "#00E5FF" },
+                { value: "85%", label: "Das contratações ainda informais", color: "#f43f5e" },
+              ].map((s, i) => (
+                <Rev key={i} delay={i * 0.08}>
+                  <Glass className="p-5 sm:p-8 text-center h-full">
+                    <p className="text-3xl sm:text-5xl lg:text-6xl font-black mb-2" style={{ color: s.color }}>{s.value}</p>
+                    <p className="text-xs sm:text-sm text-white/45 leading-snug">{s.label}</p>
+                  </Glass>
+                </Rev>
+              ))}
+            </div>
+
+            {/* Problem split */}
+            <div className="grid sm:grid-cols-2 gap-5">
+              {[
+                {
+                  icon: <Building2 size={22} />, title: "Para Empresas", color: "#00E5FF",
+                  items: [
+                    "Dificuldade para encontrar profissionais qualificados rapidamente",
+                    "Ausência de histórico e reputação confiável",
+                    "Baixa previsibilidade operacional",
+                    "Processos manuais e lentos",
+                    "Custos elevados de recrutamento tradicional",
+                  ],
+                },
+                {
+                  icon: <Users size={22} />, title: "Para Profissionais", color: "#7CFC00",
+                  items: [
+                    "Falta de oportunidades recorrentes e previsíveis",
+                    "Baixa valorização e reconhecimento profissional",
+                    "Ausência de reputação validada digitalmente",
+                    "Pouca previsibilidade financeira",
+                    "Dificuldade de crescimento de carreira estruturado",
+                  ],
+                },
+              ].map((side, i) => (
+                <Rev key={i} delay={i * 0.1}>
+                  <Glass className="p-6 sm:p-8 h-full" accent={`linear-gradient(90deg, transparent, ${side.color}30, transparent)`}>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: `${side.color}15`, border: `1px solid ${side.color}28` }}>
+                        <span style={{ color: side.color }}>{side.icon}</span>
+                      </div>
+                      <h3 className="font-bold text-lg" style={{ color: side.color }}>{side.title}</h3>
                     </div>
-                    <h3 className="font-bold text-lg mb-3" style={{ color: side.color }}>{side.side}</h3>
-                    <ul className="space-y-2.5">
+                    <ul className="space-y-3">
                       {side.items.map((item, j) => (
-                        <li key={j} className="flex items-start gap-2.5 text-sm text-white/65">
+                        <li key={j} className="flex items-start gap-3 text-sm text-white/60">
                           <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: side.color }} />
                           {item}
                         </li>
                       ))}
                     </ul>
-                  </GlassCard>
-                </ScrollReveal>
+                  </Glass>
+                </Rev>
               ))}
             </div>
-
-            {/* Sectors */}
-            <ScrollReveal delay={0.15}>
-              <GlassCard className="p-6 sm:p-8">
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold mb-2">Mercados Atendidos</h3>
-                  <p className="text-white/45 text-sm">A extraGO opera nos setores de maior demanda por trabalho flexível no Brasil.</p>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {[
-                    { icon: "🍽️", label: "Gastronomia" },
-                    { icon: "🏨", label: "Hotelaria" },
-                    { icon: "🎉", label: "Eventos" },
-                    { icon: "✈️", label: "Turismo" },
-                    { icon: "🍸", label: "Bares & Baladas" },
-                    { icon: "🎭", label: "Entretenimento" },
-                    { icon: "🤝", label: "Serviços" },
-                    { icon: "💼", label: "Freelancers" },
-                  ].map((s, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.05 }}
-                      whileHover={{ y: -2 }}
-                      className="flex flex-col items-center gap-2 p-4 rounded-xl border border-white/7 bg-white/[0.025] hover:bg-white/[0.045] hover:border-primary/25 transition-all text-center"
-                    >
-                      <span className="text-2xl">{s.icon}</span>
-                      <span className="text-xs font-semibold text-white/75">{s.label}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </GlassCard>
-            </ScrollReveal>
-
-            {/* Inspiration bar */}
-            <ScrollReveal delay={0.2} className="mt-8">
-              <div className="relative rounded-2xl overflow-hidden p-6 sm:p-8 text-center" style={{ background: "rgba(124,252,0,0.04)", border: "1px solid rgba(124,252,0,0.12)" }}>
-                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.4), transparent)" }} />
-                <p className="text-white/50 text-sm mb-4 uppercase tracking-widest font-bold">A mesma transformação que ocorreu em outros mercados</p>
-                <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-8">
-                  {[
-                    { name: "Uber", desc: "transformou o transporte" },
-                    { name: "Airbnb", desc: "transformou a hospedagem" },
-                    { name: "LinkedIn", desc: "transformou o networking" },
-                    { name: "extraGO", desc: "está construindo a infraestrutura nacional de mão de obra", primary: true },
-                  ].map((item, i) => (
-                    <div key={i} className="text-center">
-                      <p className={`font-bold text-lg sm:text-xl ${item.primary ? "text-primary" : "text-white/80"}`}>{item.name}</p>
-                      <p className="text-xs text-white/40">{item.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </ScrollReveal>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
-            BUSINESS MODEL
+            SOLUÇÃO
         ══════════════════════════════════════════ */}
-        <section id="modelo" className="px-5 py-14 sm:py-20">
-          <div className="max-w-5xl mx-auto">
-            <ScrollReveal>
-              <div className="text-center mb-12">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-4" style={{ background: "rgba(124,252,0,0.1)", border: "1px solid rgba(124,252,0,0.2)", color: "#7CFC00" }}>
-                  <DollarSign size={11} /> Modelo de Monetização
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4">Receita recorrente por performance</h2>
-                <p className="text-white/55 max-w-xl mx-auto leading-relaxed">A principal fonte de receita é a taxa de intermediação aplicada sobre os extras concluídos. O sistema incentiva qualidade e retenção de longo prazo.</p>
-              </div>
-            </ScrollReveal>
+        <section id="solucao" className="relative overflow-hidden">
+          {/* Background slice with the investors image */}
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-cover bg-center opacity-12" style={{ backgroundImage: "url(/investors-bg.png)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #04080f 0%, rgba(4,8,15,0.7) 30%, rgba(4,8,15,0.7) 70%, #04080f 100%)" }} />
+          </div>
+          <div className="relative z-10 px-6 sm:px-10 py-20 sm:py-28">
+            <div className="max-w-6xl mx-auto">
+              <Rev className="text-center mb-16">
+                <SectionLabel color="#7CFC00"><Zap size={10} /> A Solução</SectionLabel>
+                <h2 className="text-3xl sm:text-5xl font-black mb-5 leading-tight">
+                  Uma Plataforma Completa.<br />
+                  <span style={{ background: "linear-gradient(90deg,#7CFC00,#00E5FF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                    Um Ecossistema Escalável.
+                  </span>
+                </h2>
+                <p className="text-white/50 max-w-2xl mx-auto text-base leading-relaxed">
+                  A extraGO centraliza todo o ecossistema de contratação temporária em uma única plataforma inteligente — eliminando a informalidade e criando previsibilidade para empresas e profissionais em todo o Brasil.
+                </p>
+              </Rev>
 
-            {/* Fee levels */}
-            <div className="grid sm:grid-cols-5 gap-3 mb-10">
-              {LEVELS.map((level, i) => (
-                <ScrollReveal key={i} delay={i * 0.08}>
-                  <motion.div
-                    whileHover={{ y: -6, scale: 1.04 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                    className="relative rounded-2xl p-5 text-center overflow-hidden cursor-default"
-                    style={{ background: level.bg, border: `1px solid ${level.border}`, boxShadow: i === 4 ? `0 0 32px ${level.color}22` : "none" }}
-                  >
-                    {i === 4 && (
-                      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${level.color}70, transparent)` }} />
-                    )}
-                    <div className="text-2xl font-black mb-1" style={{ color: level.color }}>{level.fee}%</div>
-                    <div className="text-xs font-bold text-white/70 mb-0.5">taxa</div>
-                    <div className="text-xs font-semibold mt-2" style={{ color: level.color }}>{level.name}</div>
-                    {i === 4 && (
-                      <div className="absolute -top-1 -right-1">
-                        <span className="text-[9px] font-black px-2 py-0.5 rounded-full" style={{ background: level.color, color: "#000" }}>ELITE</span>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {SOLUTION_FEATURES.map((f, i) => (
+                  <Rev key={i} delay={i * 0.07}>
+                    <motion.div whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                      className="p-5 rounded-2xl border border-white/8 h-full cursor-default group"
+                      style={{ background: "rgba(6,11,18,0.7)", backdropFilter: "blur(16px)" }}>
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 transition-all group-hover:scale-110"
+                        style={{ background: `${f.color}15`, border: `1px solid ${f.color}25` }}>
+                        <span style={{ color: f.color }}>{f.icon}</span>
                       </div>
-                    )}
-                  </motion.div>
-                </ScrollReveal>
-              ))}
-            </div>
-
-            {/* Arrow progression visual */}
-            <ScrollReveal delay={0.1}>
-              <GlassCard className="p-5 sm:p-6 mb-8">
-                <div className="flex items-center gap-2 mb-3">
-                  <TrendingUp size={16} className="text-primary" />
-                  <span className="text-sm font-bold text-white/80">Como funciona a progressão</span>
-                </div>
-                <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-1">
-                  {LEVELS.map((level, i) => (
-                    <React.Fragment key={i}>
-                      <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black" style={{ background: `${level.color}20`, border: `1.5px solid ${level.color}40`, color: level.color }}>{level.fee}%</div>
-                        <span className="text-[9px] text-white/45 text-center leading-tight whitespace-nowrap">{level.name}</span>
-                      </div>
-                      {i < LEVELS.length - 1 && (
-                        <div className="flex-1 h-px min-w-[16px]" style={{ background: `linear-gradient(90deg, ${level.color}40, ${LEVELS[i + 1].color}40)` }} />
-                      )}
-                    </React.Fragment>
-                  ))}
-                </div>
-                <p className="text-xs text-white/40 mt-3">Quanto mais o profissional cresce, menor a taxa e maiores os benefícios. Isso incentiva retenção e qualidade.</p>
-              </GlassCard>
-            </ScrollReveal>
-
-            {/* Referral system */}
-            <ScrollReveal delay={0.15}>
-              <GlassCard className="p-6 sm:p-8 mb-8" glow="0 0 60px rgba(124,252,0,0.07), 0 4px 32px rgba(0,0,0,0.35)">
-                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.4), transparent)" }} />
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                    <Users size={18} className="text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg">Sistema de Indicações</h3>
-                    <p className="text-xs text-white/45">Crescimento orgânico com comissões recorrentes</p>
-                  </div>
-                </div>
-                <div className="grid sm:grid-cols-3 gap-4">
-                  {REFERRAL_TIERS.map((tier, i) => (
-                    <motion.div
-                      key={i}
-                      whileHover={{ y: -4 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                      className="p-4 rounded-xl border text-center"
-                      style={{ background: `${tier.color}08`, borderColor: `${tier.color}25` }}
-                    >
-                      <div className="text-2xl font-black mb-1" style={{ color: tier.color }}>{tier.commission}</div>
-                      <div className="text-xs text-white/40 mb-2">de participação</div>
-                      <div className="text-sm font-bold" style={{ color: tier.color }}>{tier.tier}</div>
-                      <div className="text-[11px] text-white/40 mt-1 leading-snug">{tier.desc}</div>
+                      <h4 className="font-bold text-sm mb-2 text-white/90">{f.title}</h4>
+                      <p className="text-xs text-white/48 leading-relaxed">{f.desc}</p>
                     </motion.div>
-                  ))}
-                </div>
-                <div className="mt-5 pt-4 border-t border-white/6 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {[
-                    { icon: "💰", title: "Receita recorrente", desc: "Por cada extra do indicado" },
-                    { icon: "🔄", title: "Vitalício", desc: "Sem prazo de expiração" },
-                    { icon: "📉", title: "CAC reduzido", desc: "Aquisição orgânica" },
-                    { icon: "🌱", title: "Crescimento em rede", desc: "Efeito de rede composto" },
-                  ].map((b, i) => (
-                    <div key={i} className="p-3 rounded-xl border border-white/6 bg-white/[0.02] text-center">
-                      <span className="text-xl block mb-1.5">{b.icon}</span>
-                      <p className="text-[11px] font-bold text-primary mb-0.5">{b.title}</p>
-                      <p className="text-[10px] text-white/40">{b.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </GlassCard>
-            </ScrollReveal>
+                  </Rev>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
-            {/* Financial distribution */}
-            <ScrollReveal delay={0.2}>
-              <GlassCard className="p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
-                    <BarChart3 size={18} className="text-secondary" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg">Distribuição da Receita Operacional</h3>
-                    <p className="text-xs text-white/45">Modelo sustentável e escalável de alocação de recursos</p>
-                  </div>
+        {/* ══════════════════════════════════════════
+            MERCADO — TAM SAM SOM
+        ══════════════════════════════════════════ */}
+        <section className="px-6 sm:px-10 py-20 sm:py-28">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <Rev>
+                <SectionLabel color="#fbbf24"><Globe size={10} /> Mercado</SectionLabel>
+                <h2 className="text-3xl sm:text-4xl font-black mb-5 leading-tight">
+                  Um Oceano Azul<br />de Oportunidades
+                </h2>
+                <p className="text-white/50 text-base leading-relaxed mb-8">
+                  A extraGO atua em múltiplos setores com alta demanda por mão de obra flexível. O mercado de trabalho temporário no Brasil cresce consistentemente, impulsionado pela digitalização e pela economia sob demanda.
+                </p>
+                {/* Sectors */}
+                <div className="flex flex-wrap gap-2">
+                  {["🏨 Hotelaria", "🍽️ Gastronomia", "🎉 Eventos", "✈️ Turismo", "🍸 Bares", "🎭 Entretenimento", "🤝 Serviços", "💼 Freelancers"].map((s, i) => (
+                    <span key={i} className="text-xs px-3 py-1.5 rounded-full border border-white/8 bg-white/[0.03] text-white/55 font-medium">{s}</span>
+                  ))}
                 </div>
-                <div className="space-y-3">
-                  {FINANCIAL_DISTRIBUTION.map((item, i) => (
-                    <motion.div
-                      key={i}
+              </Rev>
+
+              <div className="space-y-4">
+                {[
+                  { label: "TAM", sub: "Trabalho flexível total no Brasil", value: "R$ 300 Bi", w: "100%", color: "#7CFC00" },
+                  { label: "SAM", sub: "Setores atendidos pela plataforma", value: "R$ 90 Bi", w: "65%", color: "#00E5FF" },
+                  { label: "SOM", sub: "Meta de captura em 5 anos", value: "R$ 9 Bi", w: "25%", color: "#fbbf24" },
+                ].map((item, i) => (
+                  <Rev key={i} delay={i * 0.1}>
+                    <Glass className="p-5 sm:p-6">
+                      <div className="flex items-start justify-between gap-4 mb-3">
+                        <div>
+                          <span className="text-xs font-black tracking-widest uppercase" style={{ color: item.color }}>{item.label}</span>
+                          <p className="text-xs text-white/40 mt-0.5">{item.sub}</p>
+                        </div>
+                        <span className="text-xl sm:text-2xl font-black text-white whitespace-nowrap">{item.value}</span>
+                      </div>
+                      <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: item.w }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.1 + 0.4, duration: 1, ease: [0.19, 1, 0.22, 1] }}
+                          className="h-full rounded-full"
+                          style={{ background: `linear-gradient(90deg, ${item.color}, ${item.color}88)` }}
+                        />
+                      </div>
+                    </Glass>
+                  </Rev>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            MODELO DE NEGÓCIO
+        ══════════════════════════════════════════ */}
+        <section id="modelo" className="px-6 sm:px-10 py-20 sm:py-28" style={{ background: "rgba(124,252,0,0.025)", borderTop: "1px solid rgba(124,252,0,0.07)", borderBottom: "1px solid rgba(124,252,0,0.07)" }}>
+          <div className="max-w-6xl mx-auto">
+            <Rev className="text-center mb-16">
+              <SectionLabel color="#7CFC00"><DollarSign size={10} /> Modelo de Negócio</SectionLabel>
+              <h2 className="text-3xl sm:text-5xl font-black mb-5">Receita Recorrente<br />com Incentivos de Qualidade</h2>
+              <p className="text-white/50 max-w-2xl mx-auto text-base leading-relaxed">
+                Taxa de intermediação sobre serviços concluídos, criando alinhamento de incentivos entre plataforma, empresas e profissionais. O modelo de níveis progressivos reduz a taxa conforme o profissional avança.
+              </p>
+            </Rev>
+
+            {/* Career levels — horizontal bars */}
+            <Rev delay={0.1} className="mb-14">
+              <Glass className="p-6 sm:p-8" accent="linear-gradient(90deg, transparent, rgba(124,252,0,0.35), transparent)">
+                <p className="text-xs font-black tracking-widest uppercase text-white/35 mb-6">Taxa de Intermediação por Nível</p>
+                <div className="space-y-4">
+                  {LEVELS.map((level, i) => (
+                    <motion.div key={i}
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: i * 0.07 }}
-                      className="flex items-center gap-3"
+                      transition={{ delay: i * 0.08, duration: 0.5 }}
+                      className="flex items-center gap-4"
                     >
-                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: item.color }} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 mb-1">
-                          <span className="text-sm text-white/80 font-medium truncate">{item.label}</span>
-                          <span className="text-sm font-black flex-shrink-0" style={{ color: item.color }}>{item.pct}%</span>
-                        </div>
-                        <div className="h-1.5 rounded-full bg-white/6 overflow-hidden">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${item.pct * 2.5}%` }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.07 + 0.3, duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-                            className="h-full rounded-full"
-                            style={{ background: item.color, maxWidth: "100%" }}
-                          />
-                        </div>
+                      <div className="w-28 sm:w-36 flex-shrink-0">
+                        <p className="text-sm font-bold leading-tight" style={{ color: level.color }}>{level.name}</p>
+                        <p className="text-[10px] text-white/30 leading-tight mt-0.5 hidden sm:block">{level.req}</p>
+                      </div>
+                      <div className="flex-1 h-8 rounded-xl bg-white/4 overflow-hidden relative">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: level.w }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.08 + 0.3, duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
+                          className="h-full rounded-xl flex items-center justify-end pr-3"
+                          style={{ background: `linear-gradient(90deg, ${level.color}40, ${level.color}80)`, borderRight: `2px solid ${level.color}` }}
+                        >
+                          <span className="text-xs font-black" style={{ color: level.color }}>{level.fee}%</span>
+                        </motion.div>
                       </div>
                     </motion.div>
                   ))}
                 </div>
-              </GlassCard>
-            </ScrollReveal>
-          </div>
-        </section>
+                <p className="text-[11px] text-white/30 mt-5">Quanto mais o profissional cresce → menor a taxa → maior a retenção → melhor qualidade para as empresas.</p>
+              </Glass>
+            </Rev>
 
-        {/* ══════════════════════════════════════════
-            NATIONAL EXPANSION
-        ══════════════════════════════════════════ */}
-        <section className="px-5 py-14 sm:py-20">
-          <div className="max-w-5xl mx-auto">
-            <ScrollReveal>
-              <div className="text-center mb-12">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-4" style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", color: "#f59e0b" }}>
-                  <Globe size={11} /> Expansão Nacional
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4">Um representante por estado</h2>
-                <p className="text-white/55 max-w-xl mx-auto leading-relaxed">A expansão da extraGO será conduzida por uma rede de 27 representantes estaduais, responsáveis pelo crescimento regional e fortalecimento da marca.</p>
-              </div>
-            </ScrollReveal>
-
-            <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
-              {[
-                { icon: <TrendingUp size={20} />, label: "Crescimento Regional", color: "#7CFC00" },
-                { icon: <Briefcase size={20} />, label: "Parcerias Estratégicas", color: "#00E5FF" },
-                { icon: <Target size={20} />, label: "Desenvolvimento Comercial", color: "#f59e0b" },
-                { icon: <Zap size={20} />, label: "Expansão Operacional", color: "#a855f7" },
-                { icon: <Star size={20} />, label: "Fortalecimento da Marca", color: "#f472b6" },
-              ].map((item, i) => (
-                <ScrollReveal key={i} delay={i * 0.08}>
-                  <motion.div
-                    whileHover={{ y: -4 }}
-                    className="p-4 rounded-2xl border border-white/8 bg-white/[0.025] text-center hover:border-white/15 hover:bg-white/[0.04] transition-all"
-                  >
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: `${item.color}15`, border: `1px solid ${item.color}25` }}>
-                      <span style={{ color: item.color }}>{item.icon}</span>
+            {/* Referral + Subscriptions side by side */}
+            <div className="grid sm:grid-cols-2 gap-5 mb-5">
+              {/* Referral */}
+              <Rev delay={0.05}>
+                <Glass className="p-6 sm:p-8 h-full" accent="linear-gradient(90deg, transparent, rgba(124,252,0,0.3), transparent)">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-xl bg-primary/12 border border-primary/22 flex items-center justify-center">
+                      <Network size={18} className="text-primary" />
                     </div>
-                    <p className="text-xs font-semibold text-white/70 leading-tight">{item.label}</p>
-                  </motion.div>
-                </ScrollReveal>
-              ))}
+                    <div>
+                      <h3 className="font-bold">Sistema de Indicações</h3>
+                      <p className="text-[11px] text-white/40">Crescimento orgânico recorrente</p>
+                    </div>
+                  </div>
+                  <div className="text-center py-5 mb-5 rounded-xl" style={{ background: "rgba(124,252,0,0.07)", border: "1px solid rgba(124,252,0,0.15)" }}>
+                    <p className="text-5xl font-black text-primary">3%</p>
+                    <p className="text-xs text-white/45 mt-1">de participação recorrente<br />sobre cada serviço do indicado</p>
+                  </div>
+                  <ul className="space-y-2.5">
+                    {["Crescimento viral orgânico", "CAC progressivamente reduzido", "Receita recorrente para usuários", "Efeito de rede acelerado"].map((item, i) => (
+                      <li key={i} className="flex items-center gap-2 text-xs text-white/55">
+                        <CheckCircle size={12} className="text-primary flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </Glass>
+              </Rev>
+
+              {/* Financial distribution */}
+              <Rev delay={0.1}>
+                <Glass className="p-6 sm:p-8 h-full" accent="linear-gradient(90deg, transparent, rgba(0,229,255,0.25), transparent)">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-10 h-10 rounded-xl bg-secondary/12 border border-secondary/22 flex items-center justify-center">
+                      <BarChart3 size={18} className="text-secondary" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold">Distribuição Operacional</h3>
+                      <p className="text-[11px] text-white/40">Alocação da receita gerada</p>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    {[
+                      { label: "Caixa e Reserva", pct: 35, color: "#7CFC00" },
+                      { label: "Marketing e Crescimento", pct: 20, color: "#00E5FF" },
+                      { label: "Representantes Estaduais", pct: 15, color: "#fbbf24" },
+                      { label: "Tecnologia e Infra", pct: 10, color: "#a855f7" },
+                      { label: "Equipe e Operações", pct: 10, color: "#f472b6" },
+                      { label: "Fundo de Expansão + Indicações", pct: 10, color: "#4ade80" },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: item.color }} />
+                        <span className="text-xs text-white/65 flex-1 truncate">{item.label}</span>
+                        <span className="text-xs font-black flex-shrink-0" style={{ color: item.color }}>{item.pct}%</span>
+                      </div>
+                    ))}
+                  </div>
+                </Glass>
+              </Rev>
             </div>
 
-            <ScrollReveal delay={0.2}>
-              <GlassCard className="p-6 sm:p-10" glow="0 0 60px rgba(245,158,11,0.07), 0 4px 32px rgba(0,0,0,0.4)">
-                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.4), transparent)" }} />
-                <div className="flex flex-col sm:flex-row items-center gap-8 text-center sm:text-left">
-                  <div>
-                    <p className="text-6xl sm:text-7xl font-black" style={{ background: "linear-gradient(135deg,#f59e0b,#fcd34d)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>27</p>
-                    <p className="text-sm text-white/50 mt-1">representantes estaduais</p>
-                  </div>
-                  <div className="w-px h-16 bg-white/10 hidden sm:block" />
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold mb-2">Cobertura Nacional Completa</h3>
-                    <p className="text-white/55 text-sm leading-relaxed">Cada representante conduz o crescimento regional com autonomia operacional, parcerias locais e desenvolvimento comercial — criando um ecossistema de mão de obra verdadeiramente nacional.</p>
-                  </div>
-                  <div className="text-5xl flex-shrink-0 hidden md:block">🗺️</div>
-                </div>
-              </GlassCard>
-            </ScrollReveal>
+            {/* Subscription plans */}
+            <Rev delay={0.15}>
+              <p className="text-xs font-black tracking-widest uppercase text-white/30 text-center mb-5">Planos de Assinatura (Receita Recorrente Adicional)</p>
+              <div className="grid sm:grid-cols-3 gap-4">
+                {SUBSCRIPTIONS.map((plan, i) => (
+                  <motion.div key={i}
+                    whileHover={{ y: -6 }}
+                    transition={{ type: "spring", stiffness: 280, damping: 22 }}
+                    className="relative rounded-2xl p-6 border cursor-default overflow-hidden"
+                    style={{ background: plan.bg, borderColor: plan.border, boxShadow: plan.featured ? `0 0 40px ${plan.color}20` : "none" }}
+                  >
+                    <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${plan.color}50, transparent)` }} />
+                    {plan.featured && (
+                      <div className="absolute top-3 right-3 text-[9px] font-black px-2 py-0.5 rounded-full text-black" style={{ background: plan.color }}>POPULAR</div>
+                    )}
+                    <p className="text-xs font-black tracking-widest uppercase mb-3" style={{ color: plan.color }}>{plan.name}</p>
+                    <p className="text-3xl font-black text-white mb-0.5">{plan.price}<span className="text-sm font-normal text-white/40">{plan.period}</span></p>
+                    <div className="h-px bg-white/6 my-4" />
+                    <ul className="space-y-2">
+                      {plan.items.map((item, j) => (
+                        <li key={j} className="flex items-start gap-2 text-xs text-white/55">
+                          <span className="w-1 h-1 rounded-full flex-shrink-0 mt-1.5" style={{ background: plan.color }} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                ))}
+              </div>
+            </Rev>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
-            TEAM
+            COMPETITIVE ADVANTAGE
         ══════════════════════════════════════════ */}
-        <section id="equipe" className="px-5 py-14 sm:py-20">
-          <div className="max-w-5xl mx-auto">
-            <ScrollReveal>
-              <div className="text-center mb-12">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-4" style={{ background: "rgba(168,85,247,0.1)", border: "1px solid rgba(168,85,247,0.2)", color: "#a855f7" }}>
-                  <Users size={11} /> Liderança
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4">Quem está construindo o futuro</h2>
-                <p className="text-white/55 max-w-xl mx-auto leading-relaxed">Uma equipe com experiência multidisciplinar, comprometida com a visão de longo prazo.</p>
-              </div>
-            </ScrollReveal>
+        <section className="px-6 sm:px-10 py-20 sm:py-28">
+          <div className="max-w-6xl mx-auto">
+            <Rev className="text-center mb-12">
+              <SectionLabel color="#00E5FF"><Shield size={10} /> Diferenciais</SectionLabel>
+              <h2 className="text-3xl sm:text-5xl font-black mb-5">Por Que a extraGO Vence</h2>
+              <p className="text-white/50 max-w-xl mx-auto text-base leading-relaxed">
+                Enquanto o mercado ainda opera de forma fragmentada, a extraGO oferece o primeiro ecossistema completo e integrado para contratação de mão de obra flexível no Brasil.
+              </p>
+            </Rev>
+            <Rev delay={0.1}>
+              <Glass className="overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[560px] text-xs">
+                    <thead>
+                      <tr className="border-b border-white/6">
+                        <th className="text-left px-5 py-4 text-white/40 font-semibold text-[11px] uppercase tracking-wider">Recurso</th>
+                        {["WhatsApp", "Agências", "Sites", "Genéricas", "extraGO"].map((col, i) => (
+                          <th key={i} className={`px-4 py-4 text-center font-bold text-[11px] uppercase tracking-wider ${col === "extraGO" ? "text-primary" : "text-white/30"}`}>{col}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {COMPETITIVE.map((row, i) => (
+                        <tr key={i} className="border-b border-white/4 hover:bg-white/[0.015] transition-colors">
+                          <td className="px-5 py-3.5 text-white/65 font-medium">{row.label}</td>
+                          {[row.wpp, row.agency, row.site, row.generic, row.extrag0].map((val, j) => (
+                            <td key={j} className="px-4 py-3.5 text-center">
+                              {val === true ? (
+                                <span className={j === 4 ? "text-primary font-black text-sm" : "text-green-400"}>✓</span>
+                              ) : val === "partial" ? (
+                                <span className="text-yellow-400/60 text-[10px]">Parcial</span>
+                              ) : (
+                                <span className="text-white/15">✕</span>
+                              )}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="px-5 py-3 border-t border-white/5">
+                  <p className="text-[11px] text-white/35">A extraGO é a única plataforma que combina todos esses recursos em um único ecossistema integrado.</p>
+                </div>
+              </Glass>
+            </Rev>
+          </div>
+        </section>
 
-            <div className="grid sm:grid-cols-3 gap-5">
+        {/* ══════════════════════════════════════════
+            EXPANSÃO NACIONAL — image background slice
+        ══════════════════════════════════════════ */}
+        <section className="relative overflow-hidden py-20 sm:py-28">
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-cover bg-center opacity-18" style={{ backgroundImage: "url(/investors-bg.png)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #04080f 0%, rgba(4,8,15,0.55) 30%, rgba(4,8,15,0.55) 70%, #04080f 100%)" }} />
+          </div>
+          <div className="relative z-10 px-6 sm:px-10">
+            <div className="max-w-6xl mx-auto">
+              <Rev className="text-center mb-16">
+                <SectionLabel color="#fbbf24"><MapPin size={10} /> Expansão Nacional</SectionLabel>
+                <h2 className="text-3xl sm:text-5xl font-black mb-5">
+                  Um Representante<br />
+                  <span className="text-white/40">por Estado</span>
+                </h2>
+                <p className="text-white/50 max-w-xl mx-auto text-base leading-relaxed">
+                  A expansão da extraGO será conduzida por uma rede de representantes estaduais responsáveis pelo crescimento regional, parcerias estratégicas e fortalecimento da marca.
+                </p>
+              </Rev>
+
+              <div className="grid sm:grid-cols-3 gap-5 mb-10">
+                <Rev>
+                  <Glass className="p-8 text-center" accent="linear-gradient(90deg,transparent,rgba(251,191,36,0.3),transparent)">
+                    <p className="text-7xl font-black mb-2" style={{ background: "linear-gradient(135deg,#fbbf24,#fcd34d)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>27</p>
+                    <p className="text-sm text-white/50">estados cobertos</p>
+                    <p className="text-xs text-white/30 mt-1">todo o território nacional</p>
+                  </Glass>
+                </Rev>
+                <Rev delay={0.08}>
+                  <Glass className="p-8 text-center">
+                    <p className="text-7xl font-black mb-2 text-primary">1</p>
+                    <p className="text-sm text-white/50">representante</p>
+                    <p className="text-xs text-white/30 mt-1">exclusivo por estado</p>
+                  </Glass>
+                </Rev>
+                <Rev delay={0.16}>
+                  <Glass className="p-8 text-center" accent="linear-gradient(90deg,transparent,rgba(0,229,255,0.25),transparent)">
+                    <p className="text-7xl font-black mb-2 text-secondary">15%</p>
+                    <p className="text-sm text-white/50">da receita operacional</p>
+                    <p className="text-xs text-white/30 mt-1">para representantes estaduais</p>
+                  </Glass>
+                </Rev>
+              </div>
+
+              <Rev delay={0.2}>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                  {[
+                    { icon: <TrendingUp size={18} />, label: "Crescimento Regional", color: "#7CFC00" },
+                    { icon: <Briefcase size={18} />, label: "Parcerias Estratégicas", color: "#00E5FF" },
+                    { icon: <Target size={18} />, label: "Desenvolvimento Comercial", color: "#fbbf24" },
+                    { icon: <Zap size={18} />, label: "Expansão Operacional", color: "#a855f7" },
+                    { icon: <Star size={18} />, label: "Fortalecimento da Marca", color: "#f472b6" },
+                  ].map((item, i) => (
+                    <div key={i} className="flex flex-col items-center gap-2 p-4 rounded-xl border border-white/7 bg-white/[0.02] text-center hover:border-white/14 transition-colors">
+                      <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: `${item.color}14`, border: `1px solid ${item.color}22` }}>
+                        <span style={{ color: item.color }}>{item.icon}</span>
+                      </div>
+                      <p className="text-[11px] font-semibold text-white/60 leading-tight">{item.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </Rev>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            ADMIN ECOSYSTEM
+        ══════════════════════════════════════════ */}
+        <section className="px-6 sm:px-10 py-20 sm:py-24">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <Rev>
+                <SectionLabel color="#a855f7"><Cpu size={10} /> Ecossistema Administrativo</SectionLabel>
+                <h2 className="text-3xl sm:text-4xl font-black mb-5">Governança Total.<br />Em Tempo Real.</h2>
+                <p className="text-white/50 text-base leading-relaxed mb-6">
+                  A plataforma possui uma estrutura completa de governança com controle total sobre cada região, usuário e métrica operacional — construída para escalar para milhões de usuários.
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { icon: <BarChart3 size={15} />, label: "Analytics em Tempo Real", color: "#7CFC00" },
+                    { icon: <Globe size={15} />, label: "Gestão Regional", color: "#00E5FF" },
+                    { icon: <DollarSign size={15} />, label: "Gestão Financeira", color: "#fbbf24" },
+                    { icon: <Users size={15} />, label: "Gestão de Usuários", color: "#a855f7" },
+                    { icon: <MapPin size={15} />, label: "Mapa Interativo Brasil", color: "#f472b6" },
+                    { icon: <Shield size={15} />, label: "Sistema de Auditoria", color: "#4ade80" },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2.5 p-3 rounded-xl border border-white/6 bg-white/[0.025]">
+                      <span style={{ color: item.color }}>{item.icon}</span>
+                      <span className="text-xs text-white/60 font-medium leading-tight">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </Rev>
+              <Rev delay={0.12}>
+                <Glass className="p-6 sm:p-8" accent="linear-gradient(90deg,transparent,rgba(168,85,247,0.3),transparent)">
+                  <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-5">Stack Tecnológico</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    {[
+                      { tech: "React + TypeScript", desc: "Frontend moderno e performático", color: "#00E5FF" },
+                      { tech: "PostgreSQL", desc: "Backend escalável com dados em tempo real", color: "#7CFC00" },
+                      { tech: "Cloud Nativo", desc: "Infraestrutura elástica e de alta disponibilidade", color: "#fbbf24" },
+                      { tech: "Mobile First", desc: "Experiência otimizada para dispositivos móveis", color: "#a855f7" },
+                    ].map((item, i) => (
+                      <div key={i} className="p-4 rounded-xl border border-white/6 bg-white/[0.02]">
+                        <p className="text-sm font-bold mb-1" style={{ color: item.color }}>{item.tech}</p>
+                        <p className="text-[11px] text-white/40 leading-snug">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </Glass>
+              </Rev>
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            LEADERSHIP
+        ══════════════════════════════════════════ */}
+        <section id="equipe" className="px-6 sm:px-10 py-20 sm:py-28" style={{ background: "rgba(255,255,255,0.01)", borderTop: "1px solid rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+          <div className="max-w-6xl mx-auto">
+            <Rev className="text-center mb-16">
+              <SectionLabel color="#a855f7"><Users size={10} /> Liderança</SectionLabel>
+              <h2 className="text-3xl sm:text-5xl font-black mb-5">Quem Está Construindo<br />o Futuro</h2>
+              <p className="text-white/45 max-w-lg mx-auto text-base leading-relaxed">Uma equipe com experiência multidisciplinar, comprometida com a visão de longo prazo da extraGO.</p>
+            </Rev>
+
+            <div className="grid sm:grid-cols-3 gap-6">
               {TEAM.map((member, i) => (
-                <ScrollReveal key={i} delay={i * 0.1}>
+                <Rev key={i} delay={i * 0.1}>
                   <motion.div
                     whileHover={{ y: -8 }}
-                    transition={{ type: "spring", stiffness: 280, damping: 22 }}
-                    className={`relative rounded-2xl overflow-hidden border ${member.border} group cursor-default`}
-                    style={{ background: "rgba(8,14,22,0.85)", boxShadow: member.glow }}
+                    transition={{ type: "spring", stiffness: 260, damping: 22 }}
+                    className="relative rounded-2xl overflow-hidden border border-white/8 group cursor-default"
+                    style={{ background: "rgba(6,11,18,0.9)" }}
                   >
-                    {/* Top gradient */}
-                    <div className={`h-1 w-full bg-gradient-to-r ${member.color}`} />
+                    {/* Top color line */}
+                    <div className="h-[2px] w-full" style={{ background: `linear-gradient(90deg, transparent, ${member.color}, transparent)` }} />
 
-                    <div className="p-6">
+                    <div className="p-6 sm:p-7">
                       {/* Photo */}
-                      <div className="relative w-24 h-24 mx-auto mb-4">
-                        <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${member.color} opacity-30 blur-md`} />
+                      <div className="relative w-20 h-20 mx-auto mb-5">
+                        <div className="absolute inset-0 rounded-full blur-lg opacity-25 scale-110" style={{ background: member.color }} />
                         <img
                           src={member.photo}
                           alt={member.name}
-                          className="relative w-24 h-24 rounded-full object-cover border-2"
-                          style={{ borderColor: member.border.replace("border-", "").replace("/25", "") }}
-                          onError={e => {
-                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0a1628&color=7CFC00&size=96`;
-                          }}
+                          className="relative w-20 h-20 rounded-full object-cover ring-2"
+                          style={{ ringColor: `${member.color}50` }}
+                          onError={e => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=0a1628&color=7CFC00&size=80`; }}
                         />
-                        {/* Equity badge */}
-                        <div className="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-[10px] font-black text-black" style={{ background: "linear-gradient(135deg,#7CFC00,#9aff1c)" }}>
+                        <div className="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded-full text-[9px] font-black text-black" style={{ background: `linear-gradient(135deg,${member.color},${member.color}aa)` }}>
                           {member.equity}
                         </div>
                       </div>
 
-                      {/* Info */}
                       <div className="text-center mb-4">
-                        <h3 className="font-bold text-base leading-tight mb-1">{member.name}</h3>
-                        <p className="text-xs font-bold tracking-wide" style={{ color: i === 0 ? "#7CFC00" : i === 1 ? "#00E5FF" : "#a855f7" }}>{member.role}</p>
+                        <h3 className="font-bold text-base mb-1 leading-tight">{member.name}</h3>
+                        <p className="text-xs font-bold tracking-wide" style={{ color: member.color }}>{member.role}</p>
                       </div>
 
-                      <p className="text-xs text-white/55 text-center leading-relaxed">{member.bio}</p>
+                      <p className="text-xs text-white/48 text-center leading-relaxed">{member.bio}</p>
 
                       {/* Equity bar */}
-                      <div className="mt-4 pt-4 border-t border-white/6">
-                        <div className="flex items-center justify-between text-xs mb-1.5">
-                          <span className="text-white/40">Participação societária</span>
-                          <span className="font-bold text-white/80">{member.equity}</span>
+                      <div className="mt-5 pt-4 border-t border-white/6">
+                        <div className="flex items-center justify-between text-[11px] mb-1.5">
+                          <span className="text-white/35">Participação</span>
+                          <span className="font-bold" style={{ color: member.color }}>{member.equity}</span>
                         </div>
-                        <div className="h-1 rounded-full bg-white/6 overflow-hidden">
+                        <div className="h-1 rounded-full bg-white/5 overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             whileInView={{ width: `${parseInt(member.equity) * 3.33}%` }}
                             viewport={{ once: true }}
-                            transition={{ delay: i * 0.1 + 0.5, duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+                            transition={{ delay: i * 0.1 + 0.5, duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
                             className="h-full rounded-full"
-                            style={{ background: i === 0 ? "#7CFC00" : i === 1 ? "#00E5FF" : "#a855f7" }}
+                            style={{ background: member.color }}
                           />
                         </div>
                       </div>
                     </div>
                   </motion.div>
-                </ScrollReveal>
+                </Rev>
               ))}
             </div>
           </div>
@@ -696,35 +872,30 @@ export default function InvestidoresParceirosPage() {
         {/* ══════════════════════════════════════════
             CAP TABLE
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-10 sm:py-14">
+        <section className="px-6 sm:px-10 py-20 sm:py-24">
           <div className="max-w-5xl mx-auto">
-            <ScrollReveal>
-              <GlassCard className="p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center">
-                    <Layers size={18} className="text-yellow-400" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-xl">Estrutura Societária</h3>
-                    <p className="text-xs text-white/45">Distribuição atual de participações da extraGO</p>
-                  </div>
-                </div>
-                <div className="space-y-4">
+            <Rev className="text-center mb-12">
+              <SectionLabel color="#fbbf24"><Layers size={10} /> Estrutura Societária</SectionLabel>
+              <h2 className="text-3xl sm:text-4xl font-black mb-4">Distribuição de Participações</h2>
+              <p className="text-white/45 max-w-lg mx-auto text-sm leading-relaxed">A extraGO reserva até 30% do capital para investidores estratégicos que desejam participar da construção da principal infraestrutura digital de trabalho flexível do Brasil.</p>
+            </Rev>
+            <Rev delay={0.1}>
+              <Glass className="p-6 sm:p-10">
+                <div className="space-y-5">
                   {CAP_TABLE.map((entry, i) => (
-                    <motion.div
-                      key={i}
+                    <motion.div key={i}
                       initial={{ opacity: 0, x: -16 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.07 }}
                       className="flex items-center gap-4"
                     >
-                      <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: entry.color, boxShadow: `0 0 8px ${entry.color}60` }} />
+                      <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: entry.color, boxShadow: `0 0 8px ${entry.color}55` }} />
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 mb-1">
+                        <div className="flex items-center justify-between gap-4 mb-1.5">
                           <div className="min-w-0">
                             <span className="text-sm font-semibold text-white/85 block truncate">{entry.name}</span>
-                            <span className="text-[11px] text-white/35">{entry.role}</span>
+                            <span className="text-[10px] text-white/30">{entry.role}</span>
                           </div>
                           <span className="text-base font-black flex-shrink-0" style={{ color: entry.color }}>{entry.pct}%</span>
                         </div>
@@ -733,7 +904,7 @@ export default function InvestidoresParceirosPage() {
                             initial={{ width: 0 }}
                             whileInView={{ width: `${entry.pct * 3.33}%` }}
                             viewport={{ once: true }}
-                            transition={{ delay: i * 0.07 + 0.3, duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+                            transition={{ delay: i * 0.07 + 0.3, duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
                             className="h-full rounded-full"
                             style={{ background: entry.color }}
                           />
@@ -743,151 +914,159 @@ export default function InvestidoresParceirosPage() {
                   ))}
                 </div>
 
-                {/* Investor opportunity highlight */}
-                <div className="mt-6 p-4 rounded-xl" style={{ background: "rgba(245,158,11,0.07)", border: "1px solid rgba(245,158,11,0.18)" }}>
+                {/* Investor callout */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5 }}
+                  className="mt-7 p-5 rounded-xl"
+                  style={{ background: "rgba(244,114,182,0.07)", border: "1px solid rgba(244,114,182,0.2)" }}
+                >
                   <div className="flex items-start gap-3">
-                    <Star size={16} className="text-yellow-400 flex-shrink-0 mt-0.5" />
+                    <Award size={16} className="text-pink-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-bold text-yellow-400 mb-1">20% reservado para investidores estratégicos</p>
-                      <p className="text-xs text-white/50 leading-relaxed">A extraGO possui espaço reservado para investidores que desejam participar da construção da principal infraestrutura digital de trabalho flexível do Brasil. Os recursos serão direcionados para expansão nacional, tecnologia, marketing e novos produtos financeiros.</p>
+                      <p className="text-sm font-bold text-pink-400 mb-1">Até 30% reservado para investidores estratégicos</p>
+                      <p className="text-xs text-white/45 leading-relaxed">Os recursos captados serão direcionados para expansão nacional, tecnologia e inovação, marketing e aquisição, estruturação operacional, rede de representantes, novos produtos financeiros e inteligência artificial para matching inteligente.</p>
                     </div>
                   </div>
-                </div>
-              </GlassCard>
-            </ScrollReveal>
+                </motion.div>
+              </Glass>
+            </Rev>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
             ROADMAP
         ══════════════════════════════════════════ */}
-        <section id="roadmap" className="px-5 py-14 sm:py-20">
+        <section id="roadmap" className="px-6 sm:px-10 py-20 sm:py-28" style={{ background: "rgba(0,229,255,0.018)", borderTop: "1px solid rgba(0,229,255,0.07)", borderBottom: "1px solid rgba(0,229,255,0.07)" }}>
           <div className="max-w-5xl mx-auto">
-            <ScrollReveal>
-              <div className="text-center mb-12">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-4" style={{ background: "rgba(0,229,255,0.1)", border: "1px solid rgba(0,229,255,0.2)", color: "#00E5FF" }}>
-                  <TrendingUp size={11} /> Roadmap
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-4">A jornada rumo à liderança nacional</h2>
-                <p className="text-white/55 max-w-xl mx-auto">Cada fase é projetada para consolidar o mercado e maximizar o valor entregue a profissionais, empresas e investidores.</p>
-              </div>
-            </ScrollReveal>
+            <Rev className="text-center mb-16">
+              <SectionLabel color="#00E5FF"><TrendingUp size={10} /> Roadmap</SectionLabel>
+              <h2 className="text-3xl sm:text-5xl font-black mb-5">A Jornada Rumo<br />à Liderança Nacional</h2>
+              <p className="text-white/45 max-w-xl mx-auto text-base leading-relaxed">Cada fase consolida o mercado e maximiza o valor entregue a profissionais, empresas e investidores.</p>
+            </Rev>
 
+            {/* Timeline — horizontal scroll on mobile */}
             <div className="relative">
-              {/* Vertical line */}
-              <div className="absolute left-5 sm:left-1/2 top-0 bottom-0 w-px" style={{ background: "linear-gradient(180deg, rgba(124,252,0,0.4), rgba(0,229,255,0.3), rgba(168,85,247,0.2))", transform: "translateX(-50%)" }} />
+              {/* Horizontal connector */}
+              <div className="absolute top-8 left-8 right-8 h-px hidden sm:block" style={{ background: "linear-gradient(90deg, rgba(124,252,0,0.4), rgba(0,229,255,0.3), rgba(168,85,247,0.2))" }} />
 
-              <div className="space-y-6">
-                {ROADMAP.map((item, i) => {
-                  const isLeft = i % 2 === 0;
-                  return (
-                    <ScrollReveal key={i} delay={i * 0.07}>
-                      <div className={`relative flex items-center gap-4 sm:gap-0 ${isLeft ? "sm:flex-row" : "sm:flex-row-reverse"} pl-14 sm:pl-0`}>
-                        {/* Content */}
-                        <div className={`sm:w-[calc(50%-32px)] ${isLeft ? "sm:pr-8 sm:text-right" : "sm:pl-8 sm:text-left"}`}>
-                          <motion.div
-                            whileHover={{ y: -2 }}
-                            className={`p-4 sm:p-5 rounded-2xl border cursor-default transition-all ${item.done ? "border-primary/25 bg-primary/5 hover:border-primary/40" : "border-white/8 bg-white/[0.025] hover:border-white/15"}`}
-                          >
-                            <div className={`flex items-center gap-2 mb-2 ${isLeft ? "sm:justify-end" : "sm:justify-start"}`}>
-                              <span className={`text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full ${item.done ? "bg-primary/15 text-primary" : "bg-white/6 text-white/40"}`}>{item.phase}</span>
-                              {item.done && <CheckCircle size={12} className="text-primary" />}
-                            </div>
-                            <h4 className="font-bold text-sm sm:text-base mb-1">{item.title}</h4>
-                            <p className="text-xs text-white/50 leading-relaxed">{item.desc}</p>
-                          </motion.div>
-                        </div>
-
-                        {/* Center dot */}
-                        <div className="absolute left-5 sm:left-1/2 w-8 h-8 rounded-full flex items-center justify-center z-10 -translate-x-1/2"
-                          style={{ background: item.done ? "rgba(124,252,0,0.2)" : "rgba(255,255,255,0.06)", border: `2px solid ${item.done ? "#7CFC00" : "rgba(255,255,255,0.15)"}`, boxShadow: item.done ? "0 0 16px rgba(124,252,0,0.35)" : "none" }}>
-                          <span style={{ color: item.done ? "#7CFC00" : "#ffffff55" }}>{item.icon}</span>
-                        </div>
-
-                        <div className="hidden sm:block sm:w-[calc(50%-32px)]" />
+              <div className="grid sm:grid-cols-7 gap-4">
+                {ROADMAP.map((item, i) => (
+                  <Rev key={i} delay={i * 0.06}>
+                    <div className="flex flex-col items-center text-center">
+                      {/* Phase dot */}
+                      <div className="relative z-10 w-16 h-16 rounded-2xl flex flex-col items-center justify-center mb-4 border transition-all"
+                        style={{
+                          background: item.done ? `${item.color}18` : "rgba(255,255,255,0.04)",
+                          borderColor: item.done ? `${item.color}50` : "rgba(255,255,255,0.1)",
+                          boxShadow: item.done ? `0 0 20px ${item.color}30` : "none",
+                        }}>
+                        <span className="text-[10px] font-black" style={{ color: item.done ? item.color : "#ffffff30" }}>{item.phase}</span>
+                        {item.done && <CheckCircle size={10} style={{ color: item.color }} className="mt-0.5" />}
                       </div>
-                    </ScrollReveal>
-                  );
-                })}
+                      <p className="text-[11px] font-bold text-white/75 leading-tight mb-1">{item.title}</p>
+                      <p className="text-[10px] text-white/35 leading-tight hidden sm:block">{item.desc}</p>
+                    </div>
+                  </Rev>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
+            VISION — full bleed background
+        ══════════════════════════════════════════ */}
+        <section className="relative overflow-hidden py-24 sm:py-32">
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-cover bg-center opacity-22" style={{ backgroundImage: "url(/investors-bg.png)", backgroundPosition: "center 30%" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, #04080f 0%, rgba(4,8,15,0.6) 30%, rgba(4,8,15,0.55) 70%, #04080f 100%)" }} />
+          </div>
+          <div className="relative z-10 max-w-4xl mx-auto px-6 sm:px-10 text-center">
+            <Rev>
+              <SectionLabel color="#7CFC00"><Sparkles size={10} /> Visão</SectionLabel>
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight">
+                Somos a infraestrutura<br />
+                <span style={{ background: "linear-gradient(90deg,#7CFC00,#9aff1c 40%,#00E5FF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  que o trabalho do futuro
+                </span><br />
+                está esperando.
+              </h2>
+              <p className="text-base sm:text-xl text-white/50 mb-10 max-w-2xl mx-auto leading-relaxed">
+                Uber transformou o transporte. Airbnb transformou a hospedagem. LinkedIn transformou o networking profissional. <strong className="text-white/80">A extraGO está construindo a infraestrutura nacional de mão de obra do Brasil.</strong>
+              </p>
+            </Rev>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
             INVESTOR CTA
         ══════════════════════════════════════════ */}
-        <section className="px-5 pb-20 sm:pb-28">
+        <section className="px-6 sm:px-10 pb-24 sm:pb-32">
           <div className="max-w-4xl mx-auto">
-            <ScrollReveal>
+            <Rev>
               <div className="relative rounded-3xl overflow-hidden p-8 sm:p-14 text-center">
-                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.08), rgba(8,14,22,0.97) 50%, rgba(0,229,255,0.06))" }} />
-                <div className="absolute inset-0 border border-primary/15 rounded-3xl" />
-                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.5), transparent)" }} />
-
-                {/* Ambient glow */}
-                <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(124,252,0,0.07) 0%, transparent 70%)", filter: "blur(40px)" }} />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,rgba(124,252,0,0.09),rgba(4,8,15,0.98) 55%,rgba(0,229,255,0.06))" }} />
+                <div className="absolute inset-0 border border-primary/14 rounded-3xl" />
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg,transparent,rgba(124,252,0,0.5),transparent)" }} />
+                <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle,rgba(124,252,0,0.07) 0%,transparent 70%)", filter: "blur(40px)" }} />
 
                 <div className="relative">
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-6" style={{ background: "rgba(124,252,0,0.1)", border: "1px solid rgba(124,252,0,0.25)", color: "#7CFC00" }}>
-                    <Sparkles size={11} /> Oportunidade de Investimento
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.14em] uppercase mb-6"
+                    style={{ background: "rgba(124,252,0,0.1)", border: "1px solid rgba(124,252,0,0.25)", color: "#7CFC00" }}>
+                    <Sparkles size={10} /> Oportunidade de Investimento · Série Seed
                   </div>
-                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-5 leading-tight">
+                  <h2 className="text-3xl sm:text-5xl font-black mb-5 leading-tight">
                     Faça parte da construção<br />
                     <span style={{ background: "linear-gradient(90deg,#7CFC00,#9aff1c,#00E5FF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                       da infraestrutura do Brasil.
                     </span>
                   </h2>
-                  <p className="text-white/55 mb-8 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+                  <p className="text-white/50 mb-10 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
                     Conecte-se com nossa equipe para conhecer a oportunidade de investimento, os termos e como participar da expansão nacional da extraGO.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap">
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center flex-wrap mb-10">
                     <a href="mailto:investidores@extrag0.com.br">
-                      <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                        <Button size="lg" className="rounded-full font-bold px-8 h-13 border-none text-black text-base" style={{ background: "linear-gradient(135deg,#7CFC00,#9aff1c)", boxShadow: "0 0 32px rgba(124,252,0,0.4)" }}>
-                          <Mail size={18} className="mr-2" /> Investir na extraGO
-                        </Button>
-                      </motion.div>
+                      <Button size="lg" className="rounded-full font-bold px-9 h-13 border-none text-black text-base"
+                        style={{ background: "linear-gradient(135deg,#7CFC00,#9aff1c)", boxShadow: "0 0 36px rgba(124,252,0,0.42)" }}>
+                        <Mail size={18} className="mr-2" /> Investir na extraGO
+                      </Button>
                     </a>
                     <a href="mailto:parcerias@extrag0.com.br">
-                      <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                        <Button size="lg" variant="outline" className="rounded-full font-bold px-8 h-13 text-base border-white/20 text-white hover:bg-white/6">
-                          <Briefcase size={18} className="mr-2" /> Tornar-se Parceiro
-                        </Button>
-                      </motion.div>
+                      <Button size="lg" variant="outline" className="rounded-full font-bold px-9 h-13 text-base border-white/18 text-white hover:bg-white/5">
+                        <Briefcase size={18} className="mr-2" /> Tornar-se Parceiro
+                      </Button>
                     </a>
                     <Link href="/register">
-                      <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                        <Button size="lg" variant="ghost" className="rounded-full font-bold px-8 h-13 text-base text-white/65 hover:text-white hover:bg-white/6">
-                          Conhecer a Plataforma <ExternalLink size={16} className="ml-2" />
-                        </Button>
-                      </motion.div>
+                      <Button size="lg" variant="ghost" className="rounded-full font-bold px-9 h-13 text-base text-white/50 hover:text-white hover:bg-white/5">
+                        Explorar a Plataforma <ArrowRight size={15} className="ml-1" />
+                      </Button>
                     </Link>
                   </div>
-
-                  {/* Contact info */}
-                  <div className="mt-8 pt-6 border-t border-white/6 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-white/40">
-                    <span className="flex items-center gap-1.5"><Mail size={12} /> investidores@extrag0.com.br</span>
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-xs text-white/30">
+                    <span className="flex items-center gap-1.5"><Mail size={11} /> investidores@extrag0.com.br</span>
                     <span className="hidden sm:block w-1 h-1 rounded-full bg-white/15" />
-                    <span className="flex items-center gap-1.5"><Globe size={12} /> extrag0.com.br</span>
+                    <span className="flex items-center gap-1.5"><Globe size={11} /> extrag0.com.br</span>
                   </div>
                 </div>
               </div>
-            </ScrollReveal>
+            </Rev>
           </div>
         </section>
       </main>
 
       {/* ── Footer ── */}
-      <footer className="relative z-10 border-t border-white/6 px-5 py-8">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <img src={logoMain} alt="extraGO" className="h-6 object-contain opacity-80" />
-          <div className="flex items-center gap-5 text-xs text-white/40">
-            <Link href="/" className="hover:text-white transition-colors">← Página Inicial</Link>
-            <Link href="/login" className="hover:text-white transition-colors">Entrar na Plataforma</Link>
-            <a href="mailto:contato@extrag0.com.br" className="hover:text-white transition-colors">Contato</a>
+      <footer className="border-t border-white/5 px-6 py-8">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <img src={logoMain} alt="extraGO" className="h-5 object-contain opacity-70" />
+          <div className="flex items-center gap-5 text-xs text-white/30">
+            <Link href="/" className="hover:text-white/60 transition-colors">← Página Inicial</Link>
+            <Link href="/login" className="hover:text-white/60 transition-colors">Entrar na Plataforma</Link>
+            <a href="mailto:contato@extrag0.com.br" className="hover:text-white/60 transition-colors">Contato</a>
           </div>
-          <p className="text-xs text-white/30">© 2026 extraGO · A Infraestrutura de Mão de Obra do Brasil</p>
+          <p className="text-[11px] text-white/20">© 2026 extraGO · A Infraestrutura de Mão de Obra do Brasil</p>
         </div>
       </footer>
     </div>
