@@ -8,7 +8,7 @@ import {
   Shield, UserCheck, CreditCard, BarChart3, Users, PanelLeftClose, PanelLeft,
   ChevronRight, TrendingUp, Bell, Rss, Globe, MessageCircle,
   Activity, MapPin, LineChart, MoreHorizontal, X, Search,
-  User as UserIcon, Mail, Star,
+  User as UserIcon, Mail, Star, Building,
 } from "lucide-react";
 import { useListNotifications } from "@workspace/api-client-react";
 import { NotificationBell } from "@/components/notifications-dropdown";
@@ -143,6 +143,7 @@ const BASE_MAIS_ITEMS: MaisItem[] = [
   { icon: <Bell size={19} />, label: "Notificações", href: "/app/notifications", color: "text-red-400", bg: "bg-red-400/10 border-red-400/20" },
   { icon: <Settings size={19} />, label: "Configurações", href: "/app/profile", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
   { icon: <Home size={19} />, label: "Landing Page", href: "/", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <TrendingUp size={19} />, label: "Investidores", href: "/investidores-parceiros", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20" },
   { icon: <Mail size={19} />, label: "Central de Ajuda", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
 ];
 
@@ -158,6 +159,7 @@ const ADMIN_MAIS_ITEMS: MaisItem[] = [
   { icon: <Bell size={19} />, label: "Notificações", href: "/app/notifications", color: "text-red-400", bg: "bg-red-400/10 border-red-400/20" },
   { icon: <Settings size={19} />, label: "Configurações", href: "/app/profile", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
   { icon: <Home size={19} />, label: "Landing Page", href: "/", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
+  { icon: <TrendingUp size={19} />, label: "Investidores", href: "/investidores-parceiros", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20" },
   { icon: <Mail size={19} />, label: "Central de Ajuda", action: "support", color: "text-muted-foreground", bg: "bg-white/6 border-white/10" },
 ];
 
@@ -328,6 +330,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { href: "/app/profile", icon: <Settings size={14} />, label: "Configurações" },
     { divider: true } as any,
     { href: "/", icon: <Home size={14} />, label: "Landing Page" },
+    { href: "/investidores-parceiros", icon: <TrendingUp size={14} />, label: "Investidores & Parceiros" },
     { action: "support", icon: <Mail size={14} />, label: "Central de Ajuda" },
   ] : user.role === "company" ? [
     { href: "/app/dashboard", icon: <LayoutDashboard size={14} />, label: "Dashboard" },
@@ -341,6 +344,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { href: "/app/profile", icon: <Settings size={14} />, label: "Configurações" },
     { divider: true } as any,
     { href: "/", icon: <Home size={14} />, label: "Landing Page" },
+    { href: "/investidores-parceiros", icon: <TrendingUp size={14} />, label: "Investidores & Parceiros" },
     { action: "support", icon: <Mail size={14} />, label: "Central de Ajuda" },
   ] : [
     { href: "/app/dashboard", icon: <LayoutDashboard size={14} />, label: "Dashboard" },
@@ -356,6 +360,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { href: "/app/profile", icon: <Settings size={14} />, label: "Configurações" },
     { divider: true } as any,
     { href: "/", icon: <Home size={14} />, label: "Landing Page" },
+    { href: "/investidores-parceiros", icon: <TrendingUp size={14} />, label: "Investidores & Parceiros" },
     { action: "support", icon: <Mail size={14} />, label: "Central de Ajuda" },
   ];
 

@@ -12,6 +12,7 @@ import LandingPage from "@/pages/landing";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import DashboardRedirect from "@/pages/dashboard-redirect";
+import InvestidoresParceirosPage from "@/pages/investidores-parceiros";
 import AppLayout from "@/components/app-layout";
 
 import DashboardPage from "@/pages/app/dashboard";
@@ -100,6 +101,7 @@ function Router() {
     <Switch>
       {/* Public */}
       <Route path="/" component={LandingPage} />
+      <Route path="/investidores-parceiros" component={InvestidoresParceirosPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/dashboard" component={() => <ProtectedRoute component={DashboardRedirect} layout="none" />} />

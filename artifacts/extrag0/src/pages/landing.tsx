@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight, Zap, Shield, Star, Users, CheckCircle, Briefcase, Award,
   TrendingUp, Lock, Sparkles, Globe, Clock, ChevronRight, Gift, Trophy,
-  ChevronDown, Home, Building2, UserCheck, Share2
+  ChevronDown, Home, Building2, UserCheck, Share2, BarChart3, MapPin, DollarSign
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLivePlatformStats } from "@/hooks/use-live-platform-stats";
@@ -421,6 +421,9 @@ export default function LandingPage() {
             <a href="#para-quem" className="text-muted-foreground hover:text-foreground transition-colors duration-200">
               Para quem
             </a>
+            <Link href="/investidores-parceiros" className="text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1">
+              <TrendingUp size={14} /> Investidores
+            </Link>
             {user ? (
               <Link href="/app/jobs" className="text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1">
                 <Briefcase size={14} /> Extras
@@ -1018,6 +1021,85 @@ export default function LandingPage() {
           </div>
         </section>
 
+
+        {/* ══════════════════════════════════════════
+            INVESTIDORES & PARCEIROS BANNER
+        ══════════════════════════════════════════ */}
+        <section className="px-5 py-8 sm:py-12">
+          <div className="max-w-5xl mx-auto">
+            <ScrollSection>
+              <Link href="/investidores-parceiros">
+                <motion.div
+                  whileHover={{ y: -4, scale: 1.005 }}
+                  transition={{ type: "spring", stiffness: 280, damping: 24 }}
+                  className="relative overflow-hidden rounded-3xl cursor-pointer group"
+                  style={{
+                    background: "rgba(4,7,12,0.0)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    boxShadow: "0 24px 80px rgba(0,0,0,0.55)",
+                  }}
+                >
+                  {/* Background image */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                    style={{ backgroundImage: "url(/investors-banner.png)" }}
+                  />
+                  {/* Dark overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#050810]/90 via-[#050810]/65 to-[#050810]/25" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050810]/60 via-transparent to-transparent" />
+                  {/* Top accent */}
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-primary/50 via-secondary/40 to-transparent" />
+
+                  <div className="relative z-10 p-7 sm:p-10 lg:py-12 lg:px-12">
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-5"
+                      style={{ background: "rgba(124,252,0,0.1)", border: "1px solid rgba(124,252,0,0.28)", color: "#7CFC00" }}>
+                      <TrendingUp size={11} /> Investidores & Parceiros
+                    </div>
+
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-3 max-w-lg">
+                      A infraestrutura de mão de obra<br />
+                      <span style={{ background: "linear-gradient(90deg,#7CFC00,#9aff1c 40%,#00E5FF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                        do Brasil.
+                      </span>
+                    </h2>
+
+                    <p className="text-white/55 text-sm sm:text-base mb-7 max-w-md leading-relaxed">
+                      Conectamos empresas e profissionais. Movimentamos negócios. Impulsionamos o Brasil.
+                    </p>
+
+                    {/* 5 key metrics */}
+                    <div className="flex flex-wrap gap-4 sm:gap-6 mb-8">
+                      {[
+                        { icon: <Users size={14} />, label: "Marketplace de Talentos" },
+                        { icon: <Globe size={14} />, label: "Presença nacional, conexão local" },
+                        { icon: <BarChart3 size={14} />, label: "Plataforma escalável" },
+                        { icon: <DollarSign size={14} />, label: "Parcerias que geram impacto" },
+                        { icon: <MapPin size={14} />, label: "27 estados cobertos" },
+                      ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-2 text-xs text-white/55 group-hover:text-white/75 transition-colors">
+                          <span className="text-primary/70 group-hover:text-primary transition-colors">{item.icon}</span>
+                          {item.label}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* CTA row */}
+                    <div className="flex items-center gap-4 flex-wrap">
+                      <div
+                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm text-black transition-all group-hover:shadow-[0_0_32px_rgba(124,252,0,0.45)]"
+                        style={{ background: "linear-gradient(135deg,#7CFC00,#9aff1c)" }}
+                      >
+                        Conheça a Oportunidade <ArrowRight size={14} />
+                      </div>
+                      <span className="text-xs text-white/35">Conectamos empresas e profissionais · Movimentamos negócios · Impulsionamos o Brasil</span>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </ScrollSection>
+          </div>
+        </section>
 
         {/* ══════════════════════════════════════════
             CTA FINAL
