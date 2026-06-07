@@ -69,115 +69,25 @@ function Divider({ color = "rgba(255,255,255,0.05)" }: { color?: string }) {
   return <div className="w-full h-px" style={{ background: color }} />;
 }
 
-/* ─── full-page background: layered CSS + SVG ─── */
+/* ─── full-page background: single image, no legacy layers ─── */
 function Background() {
   return (
     <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-      {/* Base petroleum blue */}
-      <div className="absolute inset-0"
-        style={{ background: "linear-gradient(155deg,#071e3d 0%,#0a2645 25%,#071f38 55%,#0a2240 100%)" }} />
-
-      {/* Page background illustration — light map/tech layer at very low opacity */}
-      <div className="absolute inset-0"
+      {/* New page background — sole image, rendered exactly once */}
+      <div
+        className="absolute inset-0"
         style={{
-          backgroundImage: "url(/investors-page-bg.png)",
+          backgroundImage: "url(/investors-page-bg-new.png)",
+          backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center top",
-          opacity: 0.055,
-        }} />
-
-      {/* Atmospheric radial glows */}
-      <div className="absolute inset-0" style={{
-        background: `
-          radial-gradient(ellipse 85% 55% at 12% 18%, rgba(14,165,233,0.16) 0%,transparent 55%),
-          radial-gradient(ellipse 55% 45% at 88% 12%, rgba(124,252,0,0.09) 0%,transparent 50%),
-          radial-gradient(ellipse 70% 40% at 50% 90%, rgba(6,182,212,0.11) 0%,transparent 55%),
-          radial-gradient(ellipse 45% 55% at 78% 62%, rgba(14,165,233,0.08) 0%,transparent 55%)
-        `,
-      }} />
-
-      {/* SVG Brazil network */}
-      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice"
-        viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="ng" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#00E5FF" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#00E5FF" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="gg" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#7CFC00" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#7CFC00" stopOpacity="0" />
-          </radialGradient>
-          <filter id="blur3"><feGaussianBlur stdDeviation="3" /></filter>
-          <filter id="blur5"><feGaussianBlur stdDeviation="5" /></filter>
-        </defs>
-
-        {/* Grid */}
-        {[0,160,320,480,640,800,960,1120,1280,1440].map(x => (
-          <line key={`v${x}`} x1={x} y1="0" x2={x} y2="900" stroke="rgba(14,165,233,0.04)" strokeWidth="1" />
-        ))}
-        {[0,100,200,300,400,500,600,700,800,900].map(y => (
-          <line key={`h${y}`} x1="0" y1={y} x2="1440" y2={y} stroke="rgba(14,165,233,0.04)" strokeWidth="1" />
-        ))}
-
-        {/* Brazil corridor lines */}
-        {([
-          [390,190,450,310],[450,310,480,425],[480,425,512,535],[512,535,530,645],
-          [450,310,605,278],[605,278,724,258],[724,258,845,292],
-          [480,425,642,402],[642,402,764,382],[764,382,882,342],
-          [512,535,682,512],[682,512,822,492],[822,492,962,462],
-          [530,645,622,682],[622,682,742,702],[742,702,862,682],
-          [845,292,1055,198],[882,342,1105,282],[962,462,1152,402],
-          [390,190,218,178],[450,310,198,322],[480,425,188,452],
-          [605,278,764,382],[642,402,822,492],[724,258,822,492],
-          [300,258,390,190],[330,398,450,310],[280,520,480,425],
-        ] as [number,number,number,number][]).map(([x1,y1,x2,y2],i) => (
-          <g key={`l${i}`}>
-            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(0,229,255,0.11)" strokeWidth="1.5" />
-            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(0,229,255,0.05)" strokeWidth="4" filter="url(#blur3)" />
-          </g>
-        ))}
-
-        {/* City nodes */}
-        {([
-          [390,190,5,"c"],[450,310,6,"c"],[480,425,5,"g"],[512,535,6,"c"],[530,645,4,"c"],
-          [605,278,4,"g"],[642,402,5,"c"],[682,512,4,"g"],[622,682,4,"c"],
-          [724,258,5,"g"],[764,382,4,"c"],[822,492,5,"c"],[742,702,4,"g"],
-          [845,292,4,"c"],[882,342,4,"g"],[962,462,5,"c"],[862,682,3,"c"],
-          [1055,198,4,"g"],[1105,282,4,"c"],[1152,402,3,"g"],
-          [218,178,4,"c"],[198,322,3,"g"],[188,452,3,"c"],
-          [560,348,3,"c"],[700,458,3,"g"],[580,598,3,"c"],
-          [300,258,3,"g"],[330,398,3,"c"],
-        ] as [number,number,number,string][]).map(([x,y,r,t],i) => {
-          const col = t === "g" ? "#7CFC00" : "#00E5FF";
-          const grad = t === "g" ? "gg" : "ng";
-          return (
-            <g key={`n${i}`}>
-              <circle cx={x} cy={y} r={Number(r)*3} fill={`url(#${grad})`} opacity="0.55" />
-              <circle cx={x} cy={y} r={r} fill={col} opacity="0.85" />
-              <circle cx={x} cy={y} r={Number(r)+2} fill="none" stroke={col} strokeWidth="0.8" opacity="0.35" />
-            </g>
-          );
-        })}
-
-        {/* Strategic route dashes */}
-        <line x1="0" y1="900" x2="500" y2="390" stroke="rgba(124,252,0,0.05)" strokeWidth="1" strokeDasharray="8 14" />
-        <line x1="1440" y1="0" x2="880" y2="510" stroke="rgba(0,229,255,0.05)" strokeWidth="1" strokeDasharray="8 14" />
-
-        {/* Glow halos */}
-        <ellipse cx="175" cy="158" rx="210" ry="165" fill="rgba(14,165,233,0.07)" filter="url(#blur5)" />
-        <ellipse cx="1270" cy="195" rx="185" ry="145" fill="rgba(124,252,0,0.05)" filter="url(#blur5)" />
-        <ellipse cx="720" cy="755" rx="310" ry="125" fill="rgba(6,182,212,0.06)" filter="url(#blur5)" />
-        <ellipse cx="450" cy="310" rx="85" ry="62" fill="rgba(0,229,255,0.05)" filter="url(#blur5)" />
-        <ellipse cx="720" cy="258" rx="72" ry="58" fill="rgba(124,252,0,0.06)" filter="url(#blur5)" />
-      </svg>
-
-      {/* Top glow sweep */}
-      <div className="absolute inset-x-0 top-0 h-60"
-        style={{ background: "linear-gradient(180deg,rgba(14,165,233,0.10) 0%,transparent 100%)" }} />
-      {/* Bottom fade */}
-      <div className="absolute inset-x-0 bottom-0 h-52"
-        style={{ background: "linear-gradient(0deg,rgba(4,10,20,0.96) 0%,transparent 100%)" }} />
+        }}
+      />
+      {/* Single dark overlay for text readability */}
+      <div
+        className="absolute inset-0"
+        style={{ background: "rgba(4,10,22,0.82)" }}
+      />
     </div>
   );
 }
