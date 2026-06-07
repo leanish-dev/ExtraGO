@@ -40,14 +40,16 @@ function GCard({ children, className = "", accent = "", glow = false }: {
   return (
     <div className={`relative rounded-2xl border overflow-hidden ${className}`}
       style={{
-        background: "rgba(7,16,32,0.80)",
-        backdropFilter: "blur(26px) saturate(150%)",
-        borderColor: accent ? `${accent}20` : "rgba(255,255,255,0.07)",
-        boxShadow: glow && accent ? `0 0 40px ${accent}12` : "none",
+        background: "rgba(8,18,36,0.72)",
+        backdropFilter: "blur(28px) saturate(160%)",
+        borderColor: accent ? `${accent}28` : "rgba(255,255,255,0.09)",
+        boxShadow: glow && accent
+          ? `0 0 0 1px ${accent}12, 0 0 32px ${accent}18, 0 8px 40px rgba(0,0,0,0.45)`
+          : "0 4px 24px rgba(0,0,0,0.35)",
       }}>
       {accent && (
         <div className="absolute inset-x-0 top-0 h-[1.5px]"
-          style={{ background: `linear-gradient(90deg,transparent,${accent}65,transparent)` }} />
+          style={{ background: `linear-gradient(90deg,transparent,${accent}80,transparent)` }} />
       )}
       {children}
     </div>
@@ -83,10 +85,10 @@ function Background() {
           backgroundPosition: "center top",
         }}
       />
-      {/* Single dark overlay for text readability */}
+      {/* Dark overlay — calibrated for dark-premium, not dark-heavy */}
       <div
         className="absolute inset-0"
-        style={{ background: "rgba(4,10,22,0.82)" }}
+        style={{ background: "rgba(4,10,22,0.60)" }}
       />
     </div>
   );
@@ -263,7 +265,7 @@ export default function InvestidoresParceirosPage() {
         <section className="relative overflow-hidden" style={{ minHeight: "clamp(380px,50vh,580px)" }}>
           {/* Photo layer */}
           <div className="absolute inset-0">
-            <div className="absolute inset-0 opacity-35"
+            <div className="absolute inset-0 opacity-60"
               style={{
                 backgroundImage: "url(/investors-bg.png)",
                 backgroundSize: "auto 100%",
@@ -271,7 +273,7 @@ export default function InvestidoresParceirosPage() {
                 backgroundPosition: "92% center",
               }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(108deg,rgba(5,12,26,0.99) 0%,rgba(5,12,26,0.96) 42%,rgba(5,12,26,0.78) 65%,rgba(5,12,26,0.38) 100%)" }} />
+              style={{ background: "linear-gradient(108deg,rgba(5,12,26,0.98) 0%,rgba(5,12,26,0.88) 38%,rgba(5,12,26,0.55) 62%,rgba(5,12,26,0.10) 100%)" }} />
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-10 flex items-center"
@@ -546,9 +548,9 @@ export default function InvestidoresParceirosPage() {
           {/* Background — network/ecosystem */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center right", opacity: 0.18 }} />
+              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center right", opacity: 0.38 }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.92) 0%,rgba(5,12,26,0.72) 55%,rgba(5,12,26,0.92) 100%)" }} />
+              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.88) 0%,rgba(5,12,26,0.52) 55%,rgba(5,12,26,0.88) 100%)" }} />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
@@ -628,10 +630,10 @@ export default function InvestidoresParceirosPage() {
         <section id="expansao" className="relative overflow-hidden py-12 sm:py-16">
           {/* map image accent */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0 bg-cover bg-center opacity-12"
+            <div className="absolute inset-0 bg-cover bg-center opacity-32"
               style={{ backgroundImage: "url(/investors-bg.png)", backgroundPosition: "50% 42%" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.97) 0%,rgba(5,12,26,0.58) 25%,rgba(5,12,26,0.58) 75%,rgba(5,12,26,0.97) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.92) 0%,rgba(5,12,26,0.38) 25%,rgba(5,12,26,0.38) 75%,rgba(5,12,26,0.92) 100%)" }} />
           </div>
 
           <div className="relative z-10 px-5 sm:px-10 max-w-6xl mx-auto">
@@ -826,9 +828,9 @@ export default function InvestidoresParceirosPage() {
           {/* Background — Brazil map network */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.28 }} />
+              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.46 }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.88) 0%,rgba(5,12,26,0.65) 50%,rgba(5,12,26,0.90) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.85) 0%,rgba(5,12,26,0.42) 50%,rgba(5,12,26,0.85) 100%)" }} />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
@@ -895,72 +897,103 @@ export default function InvestidoresParceirosPage() {
             09b · CAPITAL STRUCTURE — 30% investor block
         ═══════════════════════════════ */}
         <section className="relative overflow-hidden px-5 sm:px-10 py-16 sm:py-24">
-          {/* Background — governance/progression */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-governanca.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.20 }} />
-            <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.90) 0%,rgba(5,12,26,0.70) 50%,rgba(5,12,26,0.90) 100%)" }} />
-          </div>
           <div className="relative z-10 max-w-6xl mx-auto">
 
-            <Reveal className="mb-8">
+            <Reveal className="mb-10">
               <Pill label="Estrutura de Capital" color="#f43f5e" icon={<Layers size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Estrutura de Capital para<br />Crescimento de Longo Prazo.
               </h2>
-              <p className="text-white/48 text-[14px] leading-relaxed max-w-2xl">
+              <p className="text-white/55 text-[14px] leading-relaxed max-w-2xl">
                 A extraGO foi estruturada intencionalmente para suportar participação estratégica de investidores, parceiros institucionais e iniciativas de expansão — preservando a capacidade de crescimento e a solidez operacional de longo prazo.
               </p>
             </Reveal>
 
-            {/* 30% Highlight Block */}
-            <Reveal className="mb-5">
-              <div className="relative rounded-2xl overflow-hidden border"
+            {/* ── FLAGSHIP 30% Investor Block ── */}
+            <Reveal className="mb-6">
+              <div className="relative rounded-3xl overflow-hidden"
                 style={{
-                  background: "linear-gradient(135deg,rgba(244,63,94,0.08) 0%,rgba(7,16,32,0.92) 50%,rgba(124,252,0,0.06) 100%)",
-                  borderColor: "rgba(244,63,94,0.28)",
-                  boxShadow: "0 0 60px rgba(244,63,94,0.09), 0 0 120px rgba(124,252,0,0.04)",
+                  border: "1px solid rgba(244,63,94,0.50)",
+                  boxShadow: [
+                    "0 0 0 1px rgba(244,63,94,0.12)",
+                    "0 0 80px rgba(244,63,94,0.22)",
+                    "0 0 160px rgba(124,252,0,0.08)",
+                    "0 24px 80px rgba(0,0,0,0.60)",
+                  ].join(", "),
                 }}>
-                {/* Top accent line */}
-                <div className="absolute inset-x-0 top-0 h-[2px]"
-                  style={{ background: "linear-gradient(90deg,transparent,#f43f5e 30%,#7CFC00 70%,transparent)" }} />
-                {/* Glow orb */}
-                <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full pointer-events-none"
-                  style={{ background: "radial-gradient(circle,rgba(244,63,94,0.07) 0%,transparent 70%)", filter: "blur(32px)" }} />
 
-                <div className="relative z-10 p-8 sm:p-12 flex flex-col lg:flex-row items-center lg:items-start gap-8 text-center lg:text-left">
-                  {/* Big Number */}
+                {/* Card image background — sec-governanca embedded inside */}
+                <div className="absolute inset-0">
+                  <div className="absolute inset-0"
+                    style={{ backgroundImage: "url(/sec-governanca.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.22 }} />
+                  <div className="absolute inset-0"
+                    style={{ background: "linear-gradient(135deg,rgba(10,4,20,0.95) 0%,rgba(15,6,30,0.82) 40%,rgba(8,20,16,0.88) 100%)" }} />
+                  {/* Atmospheric color wash */}
+                  <div className="absolute inset-0"
+                    style={{ background: "radial-gradient(ellipse 120% 80% at 15% 30%,rgba(244,63,94,0.14) 0%,transparent 55%), radial-gradient(ellipse 80% 60% at 85% 75%,rgba(124,252,0,0.10) 0%,transparent 55%)" }} />
+                </div>
+
+                {/* Top premium accent line */}
+                <div className="absolute inset-x-0 top-0 h-[2px]"
+                  style={{ background: "linear-gradient(90deg,transparent,#f43f5e 25%,#fb7185 50%,#7CFC00 75%,transparent)" }} />
+                {/* Bottom subtle accent */}
+                <div className="absolute inset-x-0 bottom-0 h-px"
+                  style={{ background: "linear-gradient(90deg,transparent,rgba(244,63,94,0.25),transparent)" }} />
+
+                {/* Glow halo top */}
+                <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full pointer-events-none"
+                  style={{ background: "radial-gradient(ellipse,rgba(244,63,94,0.18) 0%,transparent 65%)", filter: "blur(40px)" }} />
+                {/* Glow halo bottom-right */}
+                <div className="absolute -bottom-20 right-0 w-80 h-80 rounded-full pointer-events-none"
+                  style={{ background: "radial-gradient(circle,rgba(124,252,0,0.12) 0%,transparent 65%)", filter: "blur(40px)" }} />
+
+                <div className="relative z-10 p-8 sm:p-14 flex flex-col lg:flex-row items-center lg:items-start gap-10 text-center lg:text-left">
+
+                  {/* Big Number — flagship scale */}
                   <div className="flex-shrink-0 flex flex-col items-center lg:items-start">
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.7 }} whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.19,1,0.22,1] }}
-                      className="font-black leading-none mb-1"
-                      style={{
-                        fontSize: "clamp(72px,10vw,120px)",
-                        background: "linear-gradient(135deg,#f43f5e 0%,#fb7185 50%,#7CFC00 100%)",
-                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                      }}>
-                      30%
-                    </motion.div>
-                    <p className="text-[11px] font-black tracking-[0.14em] uppercase text-white/30">da Estrutura</p>
+                    {/* Outer ring decoration */}
+                    <div className="relative mb-2">
+                      <div className="absolute inset-0 rounded-full blur-2xl opacity-40 scale-125"
+                        style={{ background: "radial-gradient(circle,#f43f5e,transparent)" }} />
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.6 }} whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }} transition={{ duration: 0.85, ease: [0.19,1,0.22,1] }}
+                        className="relative font-black leading-none"
+                        style={{
+                          fontSize: "clamp(80px,11vw,136px)",
+                          background: "linear-gradient(135deg,#f43f5e 0%,#ff6b84 45%,#fbbf24 75%,#7CFC00 100%)",
+                          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                          filter: "drop-shadow(0 0 32px rgba(244,63,94,0.45))",
+                        }}>
+                        30%
+                      </motion.div>
+                    </div>
+                    <p className="text-[11px] font-black tracking-[0.18em] uppercase"
+                      style={{ color: "rgba(244,63,94,0.65)" }}>da Estrutura</p>
+
+                    {/* Exclusivity badge */}
+                    <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+                      style={{ background: "rgba(244,63,94,0.12)", border: "1px solid rgba(244,63,94,0.30)" }}>
+                      <Crown size={10} style={{ color: "#f43f5e" }} />
+                      <span className="text-[9px] font-black tracking-[0.15em] uppercase text-white/55">Acesso Exclusivo</span>
+                    </div>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1">
-                    <h3 className="font-black text-white leading-tight mb-3"
-                      style={{ fontSize: "clamp(18px,2.8vw,32px)" }}>
+                    <h3 className="font-black text-white leading-tight mb-4"
+                      style={{ fontSize: "clamp(20px,3vw,36px)" }}>
                       Reservado para{" "}
                       <span style={{
-                        background: "linear-gradient(90deg,#f43f5e,#fb7185 50%,#7CFC00)",
+                        background: "linear-gradient(90deg,#f43f5e,#ff6b84 40%,#fbbf24 70%,#7CFC00)",
                         WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                       }}>Investidores Estratégicos</span>
                     </h3>
-                    <p className="text-white/52 text-[14px] leading-relaxed mb-6 max-w-xl">
+                    <p className="text-white/62 text-[14px] leading-relaxed mb-8 max-w-xl">
                       A extraGO mantém uma alocação dedicada reservada para investidores estratégicos, parceiros institucionais e iniciativas futuras de expansão — permitindo participação de capital enquanto preserva a capacidade de crescimento de longo prazo.
                     </p>
 
-                    {/* Three pillars */}
+                    {/* Three pillars — upgraded */}
                     <div className="grid sm:grid-cols-3 gap-3">
                       {[
                         {
@@ -976,17 +1009,25 @@ export default function InvestidoresParceirosPage() {
                           desc: "Capacidade de rounds de crescimento sem comprometer a operação",
                         },
                       ].map((p, i) => (
-                        <div key={i} className="rounded-xl border p-3.5"
-                          style={{ borderColor: `${p.color}15`, background: `${p.color}06` }}>
-                          <div className="flex items-center gap-2 mb-2">
-                            <div className="w-6 h-6 rounded-lg flex items-center justify-center"
-                              style={{ background: `${p.color}15` }}>
+                        <motion.div key={i}
+                          initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                          className="rounded-2xl p-4"
+                          style={{
+                            background: `linear-gradient(135deg,${p.color}10 0%,${p.color}04 100%)`,
+                            border: `1px solid ${p.color}28`,
+                            backdropFilter: "blur(12px)",
+                            boxShadow: `0 0 20px ${p.color}08`,
+                          }}>
+                          <div className="flex items-center gap-2 mb-2.5">
+                            <div className="w-7 h-7 rounded-xl flex items-center justify-center"
+                              style={{ background: `${p.color}18`, border: `1px solid ${p.color}30` }}>
                               <span style={{ color: p.color }}>{p.icon}</span>
                             </div>
-                            <span className="text-[11px] font-bold text-white/75">{p.label}</span>
+                            <span className="text-[11px] font-bold text-white/80">{p.label}</span>
                           </div>
-                          <p className="text-[10px] text-white/35 leading-snug">{p.desc}</p>
-                        </div>
+                          <p className="text-[10px] text-white/45 leading-relaxed">{p.desc}</p>
+                        </motion.div>
                       ))}
                     </div>
                   </div>
@@ -996,19 +1037,19 @@ export default function InvestidoresParceirosPage() {
 
             {/* Structure overview — 3 pillars in horizontal editorial strip */}
             <Reveal delay={0.1}>
-              <div className="grid sm:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-white/7 border border-white/7 rounded-2xl overflow-hidden"
-                style={{ background: "rgba(7,16,32,0.65)", backdropFilter: "blur(20px)" }}>
+              <div className="grid sm:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-white/8 border border-white/10 rounded-2xl overflow-hidden"
+                style={{ background: "rgba(8,18,36,0.55)", backdropFilter: "blur(24px)" }}>
                 {[
                   { label: "Pool Executivo",            desc: "Liderança fundadora e time estratégico",                                color: G        },
                   { label: "Reserva Estratégica",        desc: "Estrutura de incentivo, retenção e proteção operacional",              color: C        },
                   { label: "Alocação para Investidores", desc: "Até 30% reservado para parceiros e investidores estratégicos",         color: "#f43f5e" },
                 ].map((s, i) => (
-                  <div key={i} className="px-5 py-5"
-                    style={{ background: i === 2 ? "rgba(244,63,94,0.04)" : "transparent" }}>
-                    <div className="w-2 h-2 rounded-full mb-3" style={{ background: s.color }} />
-                    <p className="text-[13px] font-bold text-white/82 mb-1 leading-tight"
-                      style={{ color: i === 2 ? s.color : undefined }}>{s.label}</p>
-                    <p className="text-[11px] text-white/40 leading-snug">{s.desc}</p>
+                  <div key={i} className="px-6 py-6"
+                    style={{ background: i === 2 ? "rgba(244,63,94,0.06)" : "transparent" }}>
+                    <div className="w-2.5 h-2.5 rounded-full mb-3" style={{ background: s.color, boxShadow: `0 0 8px ${s.color}60` }} />
+                    <p className="text-[13px] font-bold mb-1 leading-tight"
+                      style={{ color: i === 2 ? s.color : "rgba(255,255,255,0.85)" }}>{s.label}</p>
+                    <p className="text-[11px] text-white/42 leading-snug">{s.desc}</p>
                   </div>
                 ))}
               </div>
@@ -1206,10 +1247,10 @@ export default function InvestidoresParceirosPage() {
         ═══════════════════════════════ */}
         <section className="relative overflow-hidden py-14 sm:py-20">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0 bg-cover bg-center opacity-16"
+            <div className="absolute inset-0 bg-cover bg-center opacity-40"
               style={{ backgroundImage: "url(/investors-bg.png)", backgroundPosition: "50% 50%" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.97) 0%,rgba(5,12,26,0.52) 22%,rgba(5,12,26,0.52) 78%,rgba(5,12,26,0.97) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.90) 0%,rgba(5,12,26,0.28) 22%,rgba(5,12,26,0.28) 78%,rgba(5,12,26,0.90) 100%)" }} />
           </div>
 
           <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-10 text-center">
@@ -1268,9 +1309,9 @@ export default function InvestidoresParceirosPage() {
                 {/* City skyline background */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.42 }} />
+                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.62 }} />
                   <div className="absolute inset-0"
-                    style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.10) 0%,rgba(5,12,26,0.85) 35%,rgba(124,252,0,0.07) 100%)" }} />
+                    style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.12) 0%,rgba(5,12,26,0.72) 35%,rgba(124,252,0,0.08) 100%)" }} />
                 </div>
                 {/* Top accent */}
                 <div className="absolute inset-x-0 top-0 h-[2px]"
@@ -1326,27 +1367,30 @@ export default function InvestidoresParceirosPage() {
             13 · FINAL CTA
         ═══════════════════════════════ */}
         <section className="relative overflow-hidden px-5 sm:px-10 py-14 sm:py-20">
-          {/* Workers/city night background */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.45 }} />
-            <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.80) 0%,rgba(5,12,26,0.58) 50%,rgba(5,12,26,0.88) 100%)" }} />
-          </div>
           <div className="relative z-10 max-w-4xl mx-auto">
             <Reveal>
               <div className="relative rounded-2xl border overflow-hidden"
                 style={{
-                  background: "rgba(5,12,26,0.62)",
-                  backdropFilter: "blur(28px) saturate(150%)",
-                  borderColor: `${G}22`,
-                  boxShadow: `0 0 40px ${G}10`,
+                  borderColor: `${G}32`,
+                  boxShadow: `0 0 0 1px ${G}10, 0 0 60px ${G}14, 0 20px 60px rgba(0,0,0,0.55)`,
                 }}>
-                <div className="absolute inset-x-0 top-0 h-[1.5px]"
-                  style={{ background: `linear-gradient(90deg,transparent,${G}65,transparent)` }} />
+
+                {/* sec-faca-parte image embedded inside the card */}
+                <div className="absolute inset-0">
+                  <div className="absolute inset-0"
+                    style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.55 }} />
+                  <div className="absolute inset-0"
+                    style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.88) 0%,rgba(5,12,26,0.60) 40%,rgba(5,12,26,0.75) 100%)" }} />
+                  {/* Green atmosphere wash */}
+                  <div className="absolute inset-0"
+                    style={{ background: `radial-gradient(ellipse 100% 60% at 50% 0%,${G}08 0%,transparent 60%)` }} />
+                </div>
+
+                <div className="absolute inset-x-0 top-0 h-[2px]"
+                  style={{ background: `linear-gradient(90deg,transparent,${G}85,${C}55,transparent)` }} />
                 {/* Glow orb */}
-                <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-60 h-60 rounded-full pointer-events-none"
-                  style={{ background: `radial-gradient(circle,${G}08 0%,transparent 70%)`, filter: "blur(28px)" }} />
+                <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full pointer-events-none"
+                  style={{ background: `radial-gradient(circle,${G}12 0%,transparent 65%)`, filter: "blur(32px)" }} />
 
                 <div className="relative p-8 sm:p-12 text-center">
                   <Pill label="Oportunidade de Investimento" color={G} icon={<Award size={10} />} />
