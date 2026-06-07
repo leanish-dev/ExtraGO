@@ -256,43 +256,116 @@ export default function InvestidoresParceirosPage() {
       <Background />
 
       {/* ── NAV ── */}
-      <header className="sticky top-0 z-50 w-full transition-all duration-300"
+      <header className="sticky top-0 z-50 w-full"
         style={{
-          background: scrolled ? "rgba(5,12,26,0.94)" : "rgba(5,12,26,0.72)",
-          borderBottom: `1px solid ${scrolled ? "rgba(14,165,233,0.15)" : "rgba(255,255,255,0.05)"}`,
-          backdropFilter: "blur(26px)",
+          background: scrolled ? "rgba(4,9,20,0.94)" : "rgba(6,12,24,0.75)",
+          backdropFilter: scrolled ? "blur(24px) saturate(180%)" : "blur(16px) saturate(160%)",
+          WebkitBackdropFilter: scrolled ? "blur(24px) saturate(180%)" : "blur(16px) saturate(160%)",
+          borderBottom: `1px solid ${scrolled ? "rgba(0,229,255,0.12)" : "rgba(124,252,0,0.07)"}`,
+          transition: "background 0.45s ease, border-color 0.45s ease, backdrop-filter 0.45s ease",
         }}>
-        {/* Institutional banner — identity element inside header */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+
+        {/* Subtle brand texture — right-anchored, fades on scroll */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
           <img
-            src="/investors-banner-header.png"
+            src="/investors-logo-banner.png"
             alt="" aria-hidden
-            className="w-full h-full object-cover object-center"
+            className="absolute right-0 top-0 h-full object-cover object-right"
             style={{
-              opacity: scrolled ? 0.10 : 0.20,
-              filter: "saturate(0.70) brightness(0.80)",
-              transition: "opacity 0.35s ease",
+              opacity: scrolled ? 0.05 : 0.09,
+              filter: "saturate(0.55) brightness(0.75)",
+              transition: "opacity 0.45s ease",
+              maskImage: "linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.45) 45%,rgba(0,0,0,0.85) 100%)",
+              WebkitMaskImage: "linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.45) 45%,rgba(0,0,0,0.85) 100%)",
+              width: "60%",
             }}
           />
-          <div className="absolute inset-0"
-            style={{ background: "linear-gradient(90deg,rgba(5,12,26,0.65) 0%,rgba(5,12,26,0.20) 40%,rgba(5,12,26,0.20) 60%,rgba(5,12,26,0.65) 100%)" }} />
+          {/* Accent line — bottom */}
+          <div className="absolute inset-x-0 bottom-0 h-px"
+            style={{ background: `linear-gradient(90deg,transparent,${G}22 30%,${C}18 70%,transparent)` }} />
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-10 h-11 sm:h-14">
-          <Link href="/"><img src={logoMain} alt="extraGO" className="h-5 object-contain" /></Link>
-          <nav className="hidden lg:flex items-center gap-6 text-[12px]">
+
+        <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-10"
+          style={{ height: "clamp(62px, 7.5vw, 86px)" }}>
+
+          {/* Logo */}
+          <Link href="/" className="flex items-center flex-shrink-0 group">
+            <img
+              src={logoMain}
+              alt="extraGO"
+              style={{
+                height: "clamp(28px, 3.2vw, 42px)",
+                objectFit: "contain",
+                objectPosition: "left center",
+                transition: "opacity 0.2s ease",
+              }}
+              className="group-hover:opacity-85"
+            />
+          </Link>
+
+          {/* Desktop navigation */}
+          <nav className="hidden lg:flex items-center gap-7">
             {[
-              ["#mercado","O Mercado"],["#solucao","Solução"],["#expansao","Expansão"],
-              ["#modelo","Modelo"],["#equipe","Equipe"],["#roadmap","Roadmap"],
-            ].map(([href,label]) => (
-              <a key={href} href={href} className="text-white/40 hover:text-white/85 transition-colors">{label}</a>
+              ["#modelo",   "Investidores"],
+              ["#expansao", "Parceiros"],
+            ].map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                className="text-[13px] font-medium transition-all duration-200 relative group"
+                style={{ color: "rgba(255,255,255,0.45)" }}
+                onMouseEnter={e => (e.currentTarget.style.color = G)}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
+              >
+                {label}
+                <span className="absolute -bottom-0.5 left-0 right-0 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"
+                  style={{ background: `linear-gradient(90deg,${G}90,${C}60)` }} />
+              </a>
             ))}
-            <Link href="/" className="text-white/25 hover:text-white/55 transition-colors text-[11px]">← Voltar</Link>
-          </nav>
-          <a href={`mailto:${CONTACT}`}>
-            <Button className="rounded-full px-5 h-9 text-[13px] font-bold text-black border-none"
-              style={{ background: `linear-gradient(135deg,${G},#9aff1c 55%,${C})`, boxShadow: "0 0 18px rgba(124,252,0,0.30)" }}>
+            <a
+              href={`mailto:${CONTACT}`}
+              className="text-[13px] font-medium transition-colors duration-200"
+              style={{ color: "rgba(255,255,255,0.38)" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.72)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.38)")}
+            >
               Contato
-            </Button>
+            </a>
+            <Link
+              href="/"
+              className="text-[11px] transition-colors duration-200"
+              style={{ color: "rgba(255,255,255,0.20)" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.20)")}
+            >
+              ← Voltar
+            </Link>
+          </nav>
+
+          {/* Primary CTA */}
+          <a href={`mailto:${CONTACT}`}>
+            <button
+              className="rounded-full font-bold text-black border-none cursor-pointer flex-shrink-0"
+              style={{
+                background: `linear-gradient(135deg,${G} 0%,#9aff1c 48%,${C} 100%)`,
+                boxShadow: `0 0 18px rgba(124,252,0,0.26), 0 2px 8px rgba(0,0,0,0.25)`,
+                height: "clamp(36px, 3.8vw, 44px)",
+                padding: "0 clamp(14px, 1.8vw, 26px)",
+                fontSize: "clamp(11px, 1.1vw, 13px)",
+                letterSpacing: "0.01em",
+                transition: "box-shadow 0.2s ease, transform 0.15s ease",
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 28px rgba(124,252,0,0.44), 0 4px 14px rgba(0,0,0,0.30)`;
+                (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 18px rgba(124,252,0,0.26), 0 2px 8px rgba(0,0,0,0.25)`;
+                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+              }}
+            >
+              Investir na extraGO
+            </button>
           </a>
         </div>
       </header>
