@@ -189,13 +189,14 @@ const REFERRAL = [
 ];
 
 const FINANCIAL = [
-  { label: "Caixa e Reserva Estratégica", pct: 35, color: G },
-  { label: "Marketing e Crescimento", pct: 20, color: C },
-  { label: "Representantes Estaduais", pct: 15, color: "#fbbf24" },
-  { label: "Tecnologia e Infraestrutura", pct: 10, color: "#a855f7" },
-  { label: "Equipe e Operações", pct: 10, color: "#f472b6" },
-  { label: "Fundo de Expansão", pct: 5, color: "#4ade80" },
-  { label: "Programa de Indicações", pct: 5, color: "#22d3ee" },
+  { label: "Caixa e Reserva Estratégica",   pct: 25, color: G,         purpose: "Solidez operacional e proteção a longo prazo" },
+  { label: "Marketing e Crescimento",        pct: 20, color: C,         purpose: "Aquisição de usuários e expansão da marca" },
+  { label: "Tecnologia e Infraestrutura",    pct: 15, color: "#a855f7", purpose: "Evolução da plataforma e inovação contínua" },
+  { label: "Distribuição de Lucro — Parceiros", pct: 15, color: "#f472b6", purpose: "Retorno para parceiros e investidores ativos" },
+  { label: "Equipe e Operações",             pct: 10, color: "#fbbf24", purpose: "Estrutura operacional e talentos estratégicos" },
+  { label: "Representantes Estaduais",       pct:  5, color: "#4ade80", purpose: "Comissão da rede de representantes nacionais" },
+  { label: "Programa de Indicações",         pct:  5, color: "#22d3ee", purpose: "Recompensas do sistema de referral multinível" },
+  { label: "Fundo de Expansão",              pct:  5, color: "#fb923c", purpose: "Novos mercados, produtos e iniciativas estratégicas" },
 ];
 
 const TEAM = [
@@ -720,7 +721,7 @@ export default function InvestidoresParceirosPage() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               {[
                 { num: "27", label: "Estados cobertos", sub: "1 representante por estado", color: "#fbbf24" },
-                { num: "15%", label: "da Receita Alocada", sub: "para a rede de representantes", color: G },
+                { num: "5%", label: "da Receita Alocada", sub: "para a rede de representantes", color: G },
                 { num: "5", label: "Pilares Regionais", sub: "por representante estadual", color: C },
                 { num: "100%", label: "Território Nacional", sub: "cobertura ao completar a rede", color: "#a855f7" },
               ].map((s, i) => (
@@ -797,8 +798,8 @@ export default function InvestidoresParceirosPage() {
               <Reveal delay={0.08}>
                 <GCard className="p-5 sm:p-6 h-full" accent={C}>
                   <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Camada 2 — Sistema de Indicações Multinível</p>
-                  <p className="text-[12px] text-white/50 leading-relaxed mb-4">
-                    Receita recorrente gerada por rede. Cada usuário tem um código exclusivo — quando um indicado trabalha, o indicador recebe participação contínua sobre a receita gerada.
+                  <p className="text-[12px] text-white/50 leading-relaxed mb-3">
+                    Cada usuário recebe um <span className="text-white/70 font-semibold">código exclusivo</span> e um <span className="text-white/70 font-semibold">link exclusivo</span>. Quando um indicado realiza extras, o indicador recebe <span className="text-white/70 font-semibold">5% das taxas de intermediação</span> geradas — de forma contínua e recorrente.
                   </p>
                   <div className="space-y-2.5 mb-4">
                     {REFERRAL.map((t, i) => (
@@ -808,9 +809,12 @@ export default function InvestidoresParceirosPage() {
                       </div>
                     ))}
                   </div>
-                  <p className="text-[11px] text-white/35 leading-snug">
-                    Crescimento orgânico com redução contínua do custo de aquisição de usuários.
-                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Crescimento orgânico","Expansão viral","Retenção ativa","Renda recorrente","Efeitos de rede nacionais"].map((tag, i) => (
+                      <span key={i} className="text-[10px] px-2 py-0.5 rounded-full border border-white/7 text-white/38"
+                        style={{ background: "rgba(0,229,255,0.05)" }}>{tag}</span>
+                    ))}
+                  </div>
                 </GCard>
               </Reveal>
             </div>
@@ -864,33 +868,46 @@ export default function InvestidoresParceirosPage() {
             {/* Financial distribution */}
             <Reveal delay={0.18}>
               <GCard className="p-5 sm:p-6" accent="#fbbf24">
-                <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Estrutura Financeira da Plataforma</p>
-                <div className="flex h-8 rounded-xl overflow-hidden w-full mb-4 gap-px">
+                <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Estrutura Financeira da Plataforma — Alocação da Receita Operacional</p>
+                {/* Stacked bar */}
+                <div className="flex h-8 rounded-xl overflow-hidden w-full mb-5 gap-px">
                   {FINANCIAL.map((item, i) => (
                     <motion.div key={i}
                       initial={{ width: 0 }} whileInView={{ width: `${item.pct}%` }}
-                      viewport={{ once: true }} transition={{ delay: i * 0.07 + 0.2, duration: 0.85, ease: [0.19,1,0.22,1] }}
-                      className="h-full flex items-center justify-center"
-                      style={{ background: `${item.color}28`, borderRight: `2px solid ${item.color}45` }}
+                      viewport={{ once: true }} transition={{ delay: i * 0.06 + 0.2, duration: 0.85, ease: [0.19,1,0.22,1] }}
+                      className="h-full flex items-center justify-center relative group"
+                      style={{ background: `${item.color}30`, borderRight: `2px solid ${item.color}50` }}
                       title={`${item.label}: ${item.pct}%`}>
-                      {item.pct >= 10 && <span className="text-[9px] font-black" style={{ color: item.color }}>{item.pct}%</span>}
+                      {item.pct >= 15 && <span className="text-[9px] font-black" style={{ color: item.color }}>{item.pct}%</span>}
                     </motion.div>
                   ))}
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {/* Legend — each item shows label + purpose + pct */}
+                <div className="grid sm:grid-cols-2 gap-2.5">
                   {FINANCIAL.map((item, i) => (
-                    <div key={i} className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: item.color }} />
-                      <span className="text-[10px] text-white/50 leading-tight truncate">{item.label}</span>
-                      <span className="text-[10px] font-black flex-shrink-0 ml-auto" style={{ color: item.color }}>{item.pct}%</span>
-                    </div>
+                    <motion.div key={i}
+                      initial={{ opacity: 0, x: -6 }} whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                      className="flex items-start gap-2.5 p-2.5 rounded-xl border border-white/5 bg-white/[0.02]">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center mt-0.5"
+                        style={{ background: `${item.color}12`, border: `1px solid ${item.color}20` }}>
+                        <span className="text-[10px] font-black" style={{ color: item.color }}>{item.pct}%</span>
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: item.color }} />
+                          <span className="text-[11px] font-semibold text-white/75 leading-tight">{item.label}</span>
+                        </div>
+                        <p className="text-[10px] text-white/35 leading-snug">{item.purpose}</p>
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
                 <div className="mt-4 pt-3 border-t border-white/5 flex items-start gap-2.5">
                   <Shield size={12} style={{ color: G, flexShrink: 0, marginTop: 2 }} />
                   <p className="text-[11px] text-white/40 leading-relaxed">
-                    <span style={{ color: G }} className="font-semibold">35% em caixa e reserva estratégica</span>{" "}
-                    garante solidez operacional, suporta crescimento acelerado e protege a operação em cenários adversos.
+                    <span style={{ color: G }} className="font-semibold">25% em caixa e reserva estratégica</span>{" "}
+                    garante solidez operacional, suporta crescimento acelerado e protege a operação em cenários adversos — enquanto 15% é distribuído diretamente a parceiros e investidores ativos.
                   </p>
                 </div>
               </GCard>
@@ -962,6 +979,253 @@ export default function InvestidoresParceirosPage() {
                 </Reveal>
               ))}
             </div>
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* ═══════════════════════════════
+            09b · CAPITAL STRUCTURE — 30% investor block
+        ═══════════════════════════════ */}
+        <section className="px-5 sm:px-10 py-12 sm:py-16">
+          <div className="max-w-6xl mx-auto">
+
+            <Reveal className="mb-8">
+              <Pill label="Estrutura de Capital" color="#f43f5e" icon={<Layers size={10} />} />
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
+                Estrutura de Capital para<br />Crescimento de Longo Prazo.
+              </h2>
+              <p className="text-white/48 text-[14px] leading-relaxed max-w-2xl">
+                A extraGO foi estruturada intencionalmente para suportar participação estratégica de investidores, parceiros institucionais e iniciativas de expansão — preservando a capacidade de crescimento e a solidez operacional de longo prazo.
+              </p>
+            </Reveal>
+
+            {/* 30% Highlight Block */}
+            <Reveal className="mb-5">
+              <div className="relative rounded-2xl overflow-hidden border"
+                style={{
+                  background: "linear-gradient(135deg,rgba(244,63,94,0.08) 0%,rgba(7,16,32,0.92) 50%,rgba(124,252,0,0.06) 100%)",
+                  borderColor: "rgba(244,63,94,0.28)",
+                  boxShadow: "0 0 60px rgba(244,63,94,0.09), 0 0 120px rgba(124,252,0,0.04)",
+                }}>
+                {/* Top accent line */}
+                <div className="absolute inset-x-0 top-0 h-[2px]"
+                  style={{ background: "linear-gradient(90deg,transparent,#f43f5e 30%,#7CFC00 70%,transparent)" }} />
+                {/* Glow orb */}
+                <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full pointer-events-none"
+                  style={{ background: "radial-gradient(circle,rgba(244,63,94,0.07) 0%,transparent 70%)", filter: "blur(32px)" }} />
+
+                <div className="relative z-10 p-8 sm:p-12 flex flex-col lg:flex-row items-center lg:items-start gap-8 text-center lg:text-left">
+                  {/* Big Number */}
+                  <div className="flex-shrink-0 flex flex-col items-center lg:items-start">
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.7 }} whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.19,1,0.22,1] }}
+                      className="font-black leading-none mb-1"
+                      style={{
+                        fontSize: "clamp(72px,10vw,120px)",
+                        background: "linear-gradient(135deg,#f43f5e 0%,#fb7185 50%,#7CFC00 100%)",
+                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                      }}>
+                      30%
+                    </motion.div>
+                    <p className="text-[11px] font-black tracking-[0.14em] uppercase text-white/30">da Estrutura</p>
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1">
+                    <h3 className="font-black text-white leading-tight mb-3"
+                      style={{ fontSize: "clamp(18px,2.8vw,32px)" }}>
+                      Reservado para{" "}
+                      <span style={{
+                        background: "linear-gradient(90deg,#f43f5e,#fb7185 50%,#7CFC00)",
+                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                      }}>Investidores Estratégicos</span>
+                    </h3>
+                    <p className="text-white/52 text-[14px] leading-relaxed mb-6 max-w-xl">
+                      A extraGO mantém uma alocação dedicada reservada para investidores estratégicos, parceiros institucionais e iniciativas futuras de expansão — permitindo participação de capital enquanto preserva a capacidade de crescimento de longo prazo.
+                    </p>
+
+                    {/* Three pillars */}
+                    <div className="grid sm:grid-cols-3 gap-3">
+                      {[
+                        {
+                          icon: <Crown size={15} />, color: "#f43f5e", label: "Investidores Estratégicos",
+                          desc: "Participação direta na estrutura e no crescimento da plataforma",
+                        },
+                        {
+                          icon: <Building2 size={15} />, color: C, label: "Parceiros Institucionais",
+                          desc: "Estrutura preparada para acordos com fundos e parceiros corporativos",
+                        },
+                        {
+                          icon: <Rocket size={15} />, color: G, label: "Expansão Futura",
+                          desc: "Capacidade de rounds de crescimento sem comprometer a operação",
+                        },
+                      ].map((p, i) => (
+                        <div key={i} className="rounded-xl border p-3.5"
+                          style={{ borderColor: `${p.color}15`, background: `${p.color}06` }}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-6 h-6 rounded-lg flex items-center justify-center"
+                              style={{ background: `${p.color}15` }}>
+                              <span style={{ color: p.color }}>{p.icon}</span>
+                            </div>
+                            <span className="text-[11px] font-bold text-white/75">{p.label}</span>
+                          </div>
+                          <p className="text-[10px] text-white/35 leading-snug">{p.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Leadership + Strategic Structure */}
+            <div className="grid lg:grid-cols-2 gap-4">
+              <Reveal>
+                <GCard className="p-5 sm:p-6 h-full" accent={C}>
+                  <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Time de Liderança</p>
+                  <div className="space-y-3">
+                    {[
+                      { name: "Leonardo Scheffel da Rosa", role: "CEO & Fundador",     color: G  },
+                      { name: "Jean Carlos Dick",          role: "Co-Fundador & CMO",  color: C  },
+                      { name: "Qaialla Pereira",           role: "Co-Fundadora & CCO", color: "#a855f7" },
+                    ].map((m, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-white/5 bg-white/[0.02]">
+                        <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-[12px] font-black text-black"
+                          style={{ background: m.color }}>{m.name[0]}</div>
+                        <div>
+                          <p className="text-[12px] font-bold text-white/82 leading-tight">{m.name}</p>
+                          <p className="text-[10px] font-semibold" style={{ color: m.color }}>{m.role}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </GCard>
+              </Reveal>
+
+              <Reveal delay={0.08}>
+                <GCard className="p-5 sm:p-6 h-full" accent="#f43f5e">
+                  <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Estrutura Estratégica</p>
+                  <div className="space-y-3">
+                    {[
+                      { label: "Pool Executivo",          desc: "Liderança fundadora e time estratégico",       color: G        },
+                      { label: "Reserva Estratégica",     desc: "Estrutura de incentivo e retenção de talentos", color: C        },
+                      { label: "Alocação para Investidores", desc: "Até 30% reservado para parceiros e investidores estratégicos", color: "#f43f5e", highlight: true },
+                    ].map((s, i) => (
+                      <div key={i} className="flex items-start gap-3 p-3.5 rounded-xl border"
+                        style={{
+                          borderColor: s.highlight ? `${s.color}35` : "rgba(255,255,255,0.06)",
+                          background: s.highlight ? `${s.color}07` : "rgba(255,255,255,0.02)",
+                          boxShadow: s.highlight ? `0 0 20px ${s.color}10` : "none",
+                        }}>
+                        <div className="w-2 h-2 rounded-full flex-shrink-0 mt-1.5" style={{ background: s.color }} />
+                        <div>
+                          <p className="text-[12px] font-bold leading-tight mb-0.5"
+                            style={{ color: s.highlight ? s.color : "rgba(255,255,255,0.78)" }}>{s.label}</p>
+                          <p className="text-[10px] text-white/38 leading-snug">{s.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-white/5">
+                    <p className="text-[11px] text-white/35 leading-relaxed">
+                      O foco é oportunidade e capacidade de crescimento — não detalhes internos do cap table.
+                    </p>
+                  </div>
+                </GCard>
+              </Reveal>
+            </div>
+
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* ═══════════════════════════════
+            09c · WHY THE STRUCTURE SCALES
+        ═══════════════════════════════ */}
+        <section className="px-5 sm:px-10 py-12 sm:py-16" style={{ background: "rgba(124,252,0,0.015)" }}>
+          <div className="max-w-6xl mx-auto">
+
+            <Reveal className="mb-8">
+              <Pill label="Por Que a Estrutura Escala" color={G} icon={<BarChart3 size={10} />} />
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
+                Um modelo desenhado para<br />crescimento sustentável nacional.
+              </h2>
+              <p className="text-white/48 text-[14px] leading-relaxed max-w-2xl">
+                A receita da extraGO é distribuída intencionalmente para financiar cada pilar do crescimento — garantindo que expansão, tecnologia, operação e retorno para parceiros coexistam de forma equilibrada.
+              </p>
+            </Reveal>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+              {[
+                {
+                  icon: <Globe size={18} />, color: C, pct: "20%", label: "Expansão e Marketing",
+                  desc: "Crescimento acelerado da base de usuários com aquisição orgânica e paga, sem comprometer a reserva operacional.",
+                },
+                {
+                  icon: <Cpu size={18} />, color: "#a855f7", pct: "15%", label: "Tecnologia Contínua",
+                  desc: "Inovação de produto, infraestrutura escalável e IA para matching — a plataforma se torna mais inteligente a cada ciclo.",
+                },
+                {
+                  icon: <MapPin size={18} />, color: "#4ade80", pct: "5%", label: "Rede de Representantes",
+                  desc: "27 representantes estaduais financiados pela própria receita — expansão descentralizada sem necessidade de capital externo.",
+                },
+                {
+                  icon: <Repeat size={18} />, color: "#22d3ee", pct: "5%", label: "Motor de Indicações",
+                  desc: "O programa de referral é autossustentado: cresce proporcionalmente à receita, criando um flywheel de expansão orgânica.",
+                },
+                {
+                  icon: <Shield size={18} />, color: G, pct: "25%", label: "Reserva Estratégica",
+                  desc: "Proteção operacional robusta que suporta crescimento acelerado e mantém a empresa sólida em qualquer cenário.",
+                },
+                {
+                  icon: <Users size={18} />, color: "#fbbf24", pct: "10%", label: "Equipe e Operações",
+                  desc: "Estrutura operacional enxuta e eficiente, com talentos estratégicos financiados pela própria operação da plataforma.",
+                },
+                {
+                  icon: <DollarSign size={18} />, color: "#f472b6", pct: "15%", label: "Retorno para Parceiros",
+                  desc: "Distribuição direta de lucro para parceiros e investidores ativos — retorno tangível proporcional ao crescimento da plataforma.",
+                },
+                {
+                  icon: <Rocket size={18} />, color: "#fb923c", pct: "5%", label: "Fundo de Expansão",
+                  desc: "Reserva dedicada para novos mercados, produtos e iniciativas estratégicas — capacidade de pivotar e escalar com agilidade.",
+                },
+              ].map((item, i) => (
+                <Reveal key={i} delay={i * 0.05}>
+                  <GCard className="p-4 sm:p-5 h-full" accent={item.color}>
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
+                        style={{ background: `${item.color}14`, border: `1px solid ${item.color}22` }}>
+                        <span style={{ color: item.color }}>{item.icon}</span>
+                      </div>
+                      <div>
+                        <span className="text-[20px] font-black leading-none block" style={{ color: item.color }}>{item.pct}</span>
+                        <span className="text-[10px] font-bold text-white/55 leading-tight">{item.label}</span>
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-white/42 leading-relaxed">{item.desc}</p>
+                  </GCard>
+                </Reveal>
+              ))}
+            </div>
+
+            <Reveal delay={0.2}>
+              <GCard className="p-5 sm:p-6" accent={G}>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: "rgba(124,252,0,0.12)", border: "1px solid rgba(124,252,0,0.22)" }}>
+                    <Lightbulb size={18} style={{ color: G }} />
+                  </div>
+                  <p className="text-[13px] text-white/60 leading-relaxed">
+                    <span className="text-white/85 font-semibold">A estrutura é o produto.</span>{" "}
+                    Cada percentual foi projetado para que a extraGO cresça sem depender de capital externo contínuo — criando um modelo que se autofinancia, escala e distribui valor a cada ciclo de crescimento.
+                  </p>
+                </div>
+              </GCard>
+            </Reveal>
+
           </div>
         </section>
 
@@ -1115,6 +1379,93 @@ export default function InvestidoresParceirosPage() {
                 className="text-white/45 text-[14px] leading-relaxed max-w-2xl mx-auto">
                 Uma camada de tecnologia que conecta profissionais, empresas, parceiros e investidores — criando valor crescente para cada novo participante da rede e tornando o ecossistema mais robusto a cada dia.
               </motion.p>
+            </Reveal>
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* ═══════════════════════════════
+            12b · BUILT FOR NATIONAL SCALE
+        ═══════════════════════════════ */}
+        <section className="px-5 sm:px-10 py-12 sm:py-16">
+          <div className="max-w-6xl mx-auto">
+            <Reveal>
+              <div className="relative rounded-2xl overflow-hidden border"
+                style={{
+                  background: "linear-gradient(145deg,rgba(0,229,255,0.06) 0%,rgba(7,16,32,0.95) 40%,rgba(124,252,0,0.05) 100%)",
+                  borderColor: "rgba(0,229,255,0.20)",
+                  boxShadow: "0 0 80px rgba(0,229,255,0.07)",
+                }}>
+                {/* Top accent */}
+                <div className="absolute inset-x-0 top-0 h-[2px]"
+                  style={{ background: "linear-gradient(90deg,transparent,#00E5FF 35%,#7CFC00 65%,transparent)" }} />
+
+                <div className="relative z-10 p-8 sm:p-12">
+                  <div className="max-w-3xl mx-auto text-center">
+                    <Pill label="Oportunidade de Investimento" color={C} icon={<Globe size={10} />} />
+
+                    <h2 className="font-black leading-tight mb-4" style={{ fontSize: "clamp(24px,4vw,48px)" }}>
+                      <span style={{
+                        background: `linear-gradient(90deg,${C},#9aff1c 50%,${G})`,
+                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                      }}>Construída para Escala Nacional.</span>
+                    </h2>
+
+                    <p className="text-white/50 text-[14px] leading-relaxed mb-8 max-w-2xl mx-auto">
+                      A extraGO foi estruturada desde o primeiro dia para suportar expansão nacional, parcerias estratégicas e participação de investidores de longo prazo.
+                    </p>
+
+                    {/* 30% block — highlighted */}
+                    <div className="inline-flex flex-col items-center px-8 py-6 rounded-2xl border mb-8"
+                      style={{
+                        background: "linear-gradient(135deg,rgba(244,63,94,0.10),rgba(7,16,32,0.90))",
+                        borderColor: "rgba(244,63,94,0.35)",
+                        boxShadow: "0 0 40px rgba(244,63,94,0.10)",
+                      }}>
+                      <motion.p
+                        initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }} transition={{ duration: 0.65, ease: [0.19,1,0.22,1] }}
+                        className="font-black leading-none mb-1"
+                        style={{
+                          fontSize: "clamp(48px,8vw,80px)",
+                          background: "linear-gradient(135deg,#f43f5e,#fb7185 50%,#7CFC00)",
+                          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                        }}>
+                        30%
+                      </motion.p>
+                      <p className="text-[13px] font-black text-white/75 mb-1">Reservado para Investidores Estratégicos</p>
+                      <p className="text-[11px] text-white/38 max-w-xs leading-snug">
+                        Desenhado para suportar rounds de crescimento, parcerias institucionais e iniciativas de expansão nacional.
+                      </p>
+                    </div>
+
+                    {/* Three proof points */}
+                    <div className="grid sm:grid-cols-3 gap-3">
+                      {[
+                        { icon: <Shield size={16} />, color: G,        label: "Governança Sólida",         desc: "Estrutura operacional completa com analytics nacionais em tempo real" },
+                        { icon: <TrendingUp size={16} />, color: C,    label: "Planejamento Sustentável",  desc: "Receita distribuída para suportar cada pilar do crescimento nacional" },
+                        { icon: <Globe size={16} />, color: "#a855f7", label: "Escalabilidade Nacional",   desc: "27 estados, rede de representantes e infraestrutura preparada para o Brasil" },
+                      ].map((p, i) => (
+                        <motion.div key={i}
+                          initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                          className="rounded-xl border p-4 text-left"
+                          style={{ borderColor: `${p.color}18`, background: `${p.color}06` }}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                              style={{ background: `${p.color}15` }}>
+                              <span style={{ color: p.color }}>{p.icon}</span>
+                            </div>
+                            <span className="text-[12px] font-bold text-white/78">{p.label}</span>
+                          </div>
+                          <p className="text-[10px] text-white/38 leading-snug">{p.desc}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </Reveal>
           </div>
         </section>
