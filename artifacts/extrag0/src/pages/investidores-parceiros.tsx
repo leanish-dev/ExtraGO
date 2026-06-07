@@ -302,48 +302,61 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             01 · HERO
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden" style={{ minHeight: "clamp(460px, 74vh, 800px)" }}>
 
-            {/* ── Dark photo composite — right side, desktop ── */}
-          <div className="absolute inset-0 pointer-events-none hidden md:block">
-            <div className="absolute inset-0"
-              style={{
-                backgroundImage: "url(/investors-bg.png)",
-                backgroundSize: "auto 90%",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "96% center",
-                opacity: 0.58,
-                filter: "saturate(1.30)",
-              }} />
-            <div className="absolute inset-0"
-              style={{ background: "linear-gradient(108deg, rgba(5,12,26,1) 0%, rgba(5,12,26,0.92) 32%, rgba(5,12,26,0.45) 62%, rgba(5,12,26,0.05) 100%)" }} />
-          </div>
+          {/* ── Hero image — single element, no tiling, responsive position ── */}
+          <style>{`
+            .investors-hero-bg {
+              background-image: url(/investors-hero-new.png);
+              background-repeat: no-repeat;
+              background-size: cover;
+              background-position: center center;
+            }
+            @media (max-width: 767px) {
+              .investors-hero-bg {
+                background-position: 68% center;
+              }
+            }
+          `}</style>
+          <div className="investors-hero-bg absolute inset-0 pointer-events-none" />
 
-          {/* ── Text content — hero primary visual ── */}
-          <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-10 pt-10 sm:pt-16 pb-10 sm:pb-16">
-            <div style={{ maxWidth: 560 }}>
+          {/* ── Readability gradient — left content area stronger, right transparent ── */}
+          <div className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(105deg, rgba(241,248,255,0.92) 0%, rgba(241,248,255,0.82) 22%, rgba(241,248,255,0.58) 42%, rgba(241,248,255,0.18) 65%, rgba(241,248,255,0.00) 100%)",
+            }} />
+
+          {/* ── Text content ── */}
+          <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-10 flex items-center"
+            style={{ minHeight: "clamp(460px, 74vh, 800px)" }}>
+            <div className="py-10 sm:py-14" style={{ maxWidth: 560 }}>
 
               <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
                 className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full mb-3 sm:mb-5 text-[9px] sm:text-[10px] font-black tracking-[0.14em] uppercase"
-                style={{ background: "rgba(124,252,0,0.10)", border: "1px solid rgba(124,252,0,0.28)", color: G }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: G }} />
+                style={{ background: "rgba(60,200,0,0.12)", border: "1px solid rgba(60,200,0,0.32)", color: "#2d8a00" }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#3dbb00" }} />
                 Investidores &amp; Parceiros Estratégicos
               </motion.span>
 
               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.30, duration: 0.80, ease: [0.19,1,0.22,1] }}
                 className="font-black leading-[1.04] mb-3 sm:mb-5"
-                style={{ fontSize: "clamp(26px,5vw,58px)", textShadow: "0 2px 18px rgba(0,0,0,0.65)" }}>
+                style={{
+                  fontSize: "clamp(26px,5vw,58px)",
+                  color: "#0F172A",
+                  textShadow: "0 1px 4px rgba(255,255,255,0.60)",
+                }}>
                 A Infraestrutura de<br />Mão de Obra
                 <span className="block" style={{
-                  background: `linear-gradient(90deg,${G} 0%,#9aff1c 40%,${C} 100%)`,
+                  background: `linear-gradient(90deg,#3cb900 0%,${G} 45%,#00c96e 100%)`,
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                  textShadow: "none",
                 }}>do Brasil.</span>
               </motion.h1>
 
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.48 }}
-                className="text-white/65 text-[13px] sm:text-[15px] leading-relaxed mb-4 sm:mb-7"
-                style={{ maxWidth: 480, textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
+                className="text-[13px] sm:text-[15px] leading-relaxed mb-4 sm:mb-7"
+                style={{ maxWidth: 480, color: "#334155", textShadow: "0 1px 3px rgba(255,255,255,0.70)" }}>
                 Uma plataforma tecnológica que digitaliza o ecossistema de mão de obra flexível, conectando profissionais, empresas, parceiros e representantes em escala nacional.
               </motion.p>
 
@@ -356,19 +369,20 @@ export default function InvestidoresParceirosPage() {
                   </Button>
                 </a>
                 <a href={`mailto:${CONTACT}`}>
-                  <Button variant="outline" className="rounded-full font-bold px-5 sm:px-7 h-9 sm:h-11 text-[13px] sm:text-[14px] text-white hover:bg-white/5"
-                    style={{ borderColor: "rgba(255,255,255,0.22)" }}>
+                  <Button variant="outline" className="rounded-full font-bold px-5 sm:px-7 h-9 sm:h-11 text-[13px] sm:text-[14px]"
+                    style={{ borderColor: "rgba(15,23,42,0.30)", color: "#0F172A", background: "rgba(255,255,255,0.45)" }}>
                     Tornar-se Parceiro
                   </Button>
                 </a>
               </motion.div>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.78 }}
-                className="flex items-center flex-wrap gap-x-5 sm:gap-x-6 gap-y-2 pt-4 sm:pt-5 border-t border-white/10 text-[10px] sm:text-[11px] text-white/40">
+                className="flex items-center flex-wrap gap-x-5 sm:gap-x-6 gap-y-2 pt-4 sm:pt-5 border-t text-[10px] sm:text-[11px]"
+                style={{ borderColor: "rgba(15,23,42,0.14)", color: "#475569" }}>
                 {[
-                  { dot: G, label: "Infraestrutura Digital" },
-                  { dot: C, label: "Expansão Nacional" },
-                  { dot: "#a855f7", label: "Receita Recorrente" },
+                  { dot: "#3cb900", label: "Infraestrutura Digital" },
+                  { dot: T,         label: "Expansão Nacional" },
+                  { dot: "#7c3aed", label: "Receita Recorrente" },
                 ].map((item, i) => (
                   <span key={i} className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full" style={{ background: item.dot }} />
@@ -382,7 +396,7 @@ export default function InvestidoresParceirosPage() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}
             className="absolute bottom-5 left-1/2 -translate-x-1/2 flex-col items-center gap-1 hidden md:flex">
             <motion.div animate={{ y: [0,5,0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}>
-              <ChevronDown size={15} className="text-white/18" />
+              <ChevronDown size={15} style={{ color: "rgba(15,23,42,0.28)" }} />
             </motion.div>
           </motion.div>
         </section>
