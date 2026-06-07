@@ -71,6 +71,31 @@ function Divider({ color = "rgba(255,255,255,0.05)" }: { color?: string }) {
   return <div className="w-full h-px" style={{ background: color }} />;
 }
 
+/* ─── animated counter 0 → target ─── */
+function CountUp({ target, suffix = "", duration = 1800 }: {
+  target: number; suffix?: string; duration?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const [count, setCount] = useState(0);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (!inView || started.current) return;
+    started.current = true;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t); // easeOutExpo
+      setCount(Math.round(eased * target));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [inView]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
 /* ─── full-page background: single image, no legacy layers ─── */
 function Background() {
   return (
@@ -237,7 +262,22 @@ export default function InvestidoresParceirosPage() {
           borderBottom: `1px solid ${scrolled ? "rgba(14,165,233,0.15)" : "rgba(255,255,255,0.05)"}`,
           backdropFilter: "blur(26px)",
         }}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-10 h-14">
+        {/* Institutional banner — identity element inside header */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <img
+            src="/investors-banner-header.png"
+            alt="" aria-hidden
+            className="w-full h-full object-cover object-center"
+            style={{
+              opacity: scrolled ? 0.10 : 0.20,
+              filter: "saturate(0.70) brightness(0.80)",
+              transition: "opacity 0.35s ease",
+            }}
+          />
+          <div className="absolute inset-0"
+            style={{ background: "linear-gradient(90deg,rgba(5,12,26,0.65) 0%,rgba(5,12,26,0.20) 40%,rgba(5,12,26,0.20) 60%,rgba(5,12,26,0.65) 100%)" }} />
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-10 h-14">
           <Link href="/"><img src={logoMain} alt="extraGO" className="h-5 object-contain" /></Link>
           <nav className="hidden lg:flex items-center gap-6 text-[12px]">
             {[
@@ -264,31 +304,7 @@ export default function InvestidoresParceirosPage() {
         ═══════════════════════════════ */}
         <section className="relative overflow-hidden">
 
-          {/* ── Institutional header banner — new branded image ── */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.95, ease: "easeOut" }}
-            className="relative w-full overflow-hidden"
-          >
-            <img
-              src="/investors-banner-header.png"
-              alt="extraGO — Investidores, Parceiros e Equipe"
-              className="w-full block object-cover"
-              style={{
-                height: "clamp(120px, 19vw, 230px)",
-                objectPosition: "center center",
-              }}
-            />
-            {/* Bottom vignette — blends into dark hero text area */}
-            <div className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(180deg, rgba(5,12,26,0.08) 0%, rgba(5,12,26,0.50) 60%, rgba(5,12,26,0.98) 100%)" }} />
-            {/* Edge vignette */}
-            <div className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(90deg, rgba(5,12,26,0.52) 0%, transparent 20%, transparent 80%, rgba(5,12,26,0.52) 100%)" }} />
-          </motion.div>
-
-          {/* ── Dark photo composite — right side, desktop ── */}
+            {/* ── Dark photo composite — right side, desktop ── */}
           <div className="absolute inset-0 pointer-events-none hidden md:block">
             <div className="absolute inset-0"
               style={{
@@ -303,12 +319,12 @@ export default function InvestidoresParceirosPage() {
               style={{ background: "linear-gradient(108deg, rgba(5,12,26,1) 0%, rgba(5,12,26,0.92) 32%, rgba(5,12,26,0.45) 62%, rgba(5,12,26,0.05) 100%)" }} />
           </div>
 
-          {/* ── Text content — overlaps banner bottom ── */}
-          <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-10 -mt-8 sm:-mt-14 pb-12 sm:pb-18">
-            <div className="py-6 sm:py-10" style={{ maxWidth: 560 }}>
+          {/* ── Text content — hero primary visual ── */}
+          <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-10 pt-10 sm:pt-16 pb-10 sm:pb-16">
+            <div style={{ maxWidth: 560 }}>
 
               <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-5 text-[10px] font-black tracking-[0.15em] uppercase"
+                className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full mb-3 sm:mb-5 text-[9px] sm:text-[10px] font-black tracking-[0.14em] uppercase"
                 style={{ background: "rgba(124,252,0,0.10)", border: "1px solid rgba(124,252,0,0.28)", color: G }}>
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: G }} />
                 Investidores &amp; Parceiros Estratégicos
@@ -316,8 +332,8 @@ export default function InvestidoresParceirosPage() {
 
               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.30, duration: 0.80, ease: [0.19,1,0.22,1] }}
-                className="font-black leading-[1.04] mb-5"
-                style={{ fontSize: "clamp(32px,5vw,58px)", textShadow: "0 2px 18px rgba(0,0,0,0.65)" }}>
+                className="font-black leading-[1.04] mb-3 sm:mb-5"
+                style={{ fontSize: "clamp(26px,5vw,58px)", textShadow: "0 2px 18px rgba(0,0,0,0.65)" }}>
                 A Infraestrutura de<br />Mão de Obra
                 <span className="block" style={{
                   background: `linear-gradient(90deg,${G} 0%,#9aff1c 40%,${C} 100%)`,
@@ -326,21 +342,21 @@ export default function InvestidoresParceirosPage() {
               </motion.h1>
 
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.48 }}
-                className="text-white/65 text-[15px] leading-relaxed mb-7"
+                className="text-white/65 text-[13px] sm:text-[15px] leading-relaxed mb-4 sm:mb-7"
                 style={{ maxWidth: 480, textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 Uma plataforma tecnológica que digitaliza o ecossistema de mão de obra flexível, conectando profissionais, empresas, parceiros e representantes em escala nacional.
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.60 }}
-                className="flex flex-wrap gap-3 mb-8">
+                className="flex flex-wrap gap-2.5 sm:gap-3 mb-5 sm:mb-8">
                 <a href={`mailto:${CONTACT}`}>
-                  <Button size="lg" className="rounded-full font-bold px-7 h-11 text-black border-none"
+                  <Button className="rounded-full font-bold px-5 sm:px-7 h-9 sm:h-11 text-[13px] sm:text-[14px] text-black border-none"
                     style={{ background: `linear-gradient(135deg,${G},#9aff1c)`, boxShadow: "0 0 28px rgba(124,252,0,0.38)" }}>
-                    Investir na extraGO <ArrowRight size={14} className="ml-1.5" />
+                    Investir na extraGO <ArrowRight size={13} className="ml-1.5" />
                   </Button>
                 </a>
                 <a href={`mailto:${CONTACT}`}>
-                  <Button size="lg" variant="outline" className="rounded-full font-bold px-7 h-11 text-white hover:bg-white/5"
+                  <Button variant="outline" className="rounded-full font-bold px-5 sm:px-7 h-9 sm:h-11 text-[13px] sm:text-[14px] text-white hover:bg-white/5"
                     style={{ borderColor: "rgba(255,255,255,0.22)" }}>
                     Tornar-se Parceiro
                   </Button>
@@ -348,7 +364,7 @@ export default function InvestidoresParceirosPage() {
               </motion.div>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.78 }}
-                className="flex items-center flex-wrap gap-x-6 gap-y-2 pt-5 border-t border-white/10 text-[11px] text-white/40">
+                className="flex items-center flex-wrap gap-x-5 sm:gap-x-6 gap-y-2 pt-4 sm:pt-5 border-t border-white/10 text-[10px] sm:text-[11px] text-white/40">
                 {[
                   { dot: G, label: "Infraestrutura Digital" },
                   { dot: C, label: "Expansão Nacional" },
@@ -993,7 +1009,7 @@ export default function InvestidoresParceirosPage() {
                           WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                           filter: "drop-shadow(0 0 32px rgba(244,63,94,0.45))",
                         }}>
-                        30%
+                        <CountUp target={30} suffix="%" duration={1800} />
                       </motion.div>
                     </div>
                     <p className="text-[11px] font-black tracking-[0.18em] uppercase"
