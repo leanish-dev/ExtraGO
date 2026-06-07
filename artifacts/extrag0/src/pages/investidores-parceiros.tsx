@@ -262,27 +262,54 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             01 · HERO
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden" style={{ minHeight: "clamp(380px,50vh,580px)" }}>
-          {/* Photo layer */}
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 opacity-60"
+        <section className="relative overflow-hidden">
+
+          {/* ── Institutional header banner — new branded image ── */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.95, ease: "easeOut" }}
+            className="relative w-full overflow-hidden"
+          >
+            <img
+              src="/investors-banner-header.png"
+              alt="extraGO — Investidores, Parceiros e Equipe"
+              className="w-full block object-cover"
+              style={{
+                height: "clamp(120px, 19vw, 230px)",
+                objectPosition: "center center",
+              }}
+            />
+            {/* Bottom vignette — blends into dark hero text area */}
+            <div className="absolute inset-0 pointer-events-none"
+              style={{ background: "linear-gradient(180deg, rgba(5,12,26,0.08) 0%, rgba(5,12,26,0.50) 60%, rgba(5,12,26,0.98) 100%)" }} />
+            {/* Edge vignette */}
+            <div className="absolute inset-0 pointer-events-none"
+              style={{ background: "linear-gradient(90deg, rgba(5,12,26,0.52) 0%, transparent 20%, transparent 80%, rgba(5,12,26,0.52) 100%)" }} />
+          </motion.div>
+
+          {/* ── Dark photo composite — right side, desktop ── */}
+          <div className="absolute inset-0 pointer-events-none hidden md:block">
+            <div className="absolute inset-0"
               style={{
                 backgroundImage: "url(/investors-bg.png)",
-                backgroundSize: "auto 100%",
+                backgroundSize: "auto 90%",
                 backgroundRepeat: "no-repeat",
-                backgroundPosition: "92% center",
+                backgroundPosition: "96% center",
+                opacity: 0.58,
+                filter: "saturate(1.30)",
               }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(108deg,rgba(5,12,26,0.98) 0%,rgba(5,12,26,0.88) 38%,rgba(5,12,26,0.55) 62%,rgba(5,12,26,0.10) 100%)" }} />
+              style={{ background: "linear-gradient(108deg, rgba(5,12,26,1) 0%, rgba(5,12,26,0.92) 32%, rgba(5,12,26,0.45) 62%, rgba(5,12,26,0.05) 100%)" }} />
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-10 flex items-center"
-            style={{ minHeight: "clamp(380px,50vh,580px)" }}>
-            <div className="py-14 sm:py-20" style={{ maxWidth: 560 }}>
+          {/* ── Text content — overlaps banner bottom ── */}
+          <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-10 -mt-8 sm:-mt-14 pb-12 sm:pb-18">
+            <div className="py-6 sm:py-10" style={{ maxWidth: 560 }}>
 
               <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
                 className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-5 text-[10px] font-black tracking-[0.15em] uppercase"
-                style={{ background: "rgba(124,252,0,0.10)", border: "1px solid rgba(124,252,0,0.26)", color: G }}>
+                style={{ background: "rgba(124,252,0,0.10)", border: "1px solid rgba(124,252,0,0.28)", color: G }}>
                 <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: G }} />
                 Investidores &amp; Parceiros Estratégicos
               </motion.span>
@@ -290,7 +317,7 @@ export default function InvestidoresParceirosPage() {
               <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.30, duration: 0.80, ease: [0.19,1,0.22,1] }}
                 className="font-black leading-[1.04] mb-5"
-                style={{ fontSize: "clamp(32px,5vw,58px)" }}>
+                style={{ fontSize: "clamp(32px,5vw,58px)", textShadow: "0 2px 18px rgba(0,0,0,0.65)" }}>
                 A Infraestrutura de<br />Mão de Obra
                 <span className="block" style={{
                   background: `linear-gradient(90deg,${G} 0%,#9aff1c 40%,${C} 100%)`,
@@ -299,7 +326,8 @@ export default function InvestidoresParceirosPage() {
               </motion.h1>
 
               <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.48 }}
-                className="text-white/55 text-[15px] leading-relaxed mb-7" style={{ maxWidth: 480 }}>
+                className="text-white/65 text-[15px] leading-relaxed mb-7"
+                style={{ maxWidth: 480, textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 Uma plataforma tecnológica que digitaliza o ecossistema de mão de obra flexível, conectando profissionais, empresas, parceiros e representantes em escala nacional.
               </motion.p>
 
@@ -307,20 +335,20 @@ export default function InvestidoresParceirosPage() {
                 className="flex flex-wrap gap-3 mb-8">
                 <a href={`mailto:${CONTACT}`}>
                   <Button size="lg" className="rounded-full font-bold px-7 h-11 text-black border-none"
-                    style={{ background: `linear-gradient(135deg,${G},#9aff1c)`, boxShadow: "0 0 28px rgba(124,252,0,0.35)" }}>
+                    style={{ background: `linear-gradient(135deg,${G},#9aff1c)`, boxShadow: "0 0 28px rgba(124,252,0,0.38)" }}>
                     Investir na extraGO <ArrowRight size={14} className="ml-1.5" />
                   </Button>
                 </a>
                 <a href={`mailto:${CONTACT}`}>
                   <Button size="lg" variant="outline" className="rounded-full font-bold px-7 h-11 text-white hover:bg-white/5"
-                    style={{ borderColor: "rgba(255,255,255,0.18)" }}>
+                    style={{ borderColor: "rgba(255,255,255,0.22)" }}>
                     Tornar-se Parceiro
                   </Button>
                 </a>
               </motion.div>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.78 }}
-                className="flex items-center flex-wrap gap-x-6 gap-y-2 pt-5 border-t border-white/7 text-[11px] text-white/30">
+                className="flex items-center flex-wrap gap-x-6 gap-y-2 pt-5 border-t border-white/10 text-[11px] text-white/40">
                 {[
                   { dot: G, label: "Infraestrutura Digital" },
                   { dot: C, label: "Expansão Nacional" },
@@ -548,17 +576,17 @@ export default function InvestidoresParceirosPage() {
           {/* Background — network/ecosystem */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center right", opacity: 0.38 }} />
+              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.48, filter: "saturate(1.45) contrast(1.10)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.88) 0%,rgba(5,12,26,0.52) 55%,rgba(5,12,26,0.88) 100%)" }} />
+              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.82) 0%,rgba(5,12,26,0.38) 50%,rgba(5,12,26,0.82) 100%)" }} />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="A Solução" color={G} icon={<Zap size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 16px rgba(0,0,0,0.70)" }}>
                 Quatro pilares.<br />Um ecossistema completo.
               </h2>
-              <p className="text-white/48 text-[14px] leading-relaxed max-w-xl">
+              <p className="text-white/65 text-[14px] leading-relaxed max-w-xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 A extraGO não é um app de contratação — é a camada de infraestrutura que conecta todos os participantes do mercado de trabalho flexível em uma única plataforma integrada.
               </p>
             </Reveal>
@@ -630,20 +658,20 @@ export default function InvestidoresParceirosPage() {
         <section id="expansao" className="relative overflow-hidden py-12 sm:py-16">
           {/* map image accent */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0 bg-cover bg-center opacity-32"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundPosition: "50% 42%" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.92) 0%,rgba(5,12,26,0.38) 25%,rgba(5,12,26,0.38) 75%,rgba(5,12,26,0.92) 100%)" }} />
+              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 0.48, filter: "saturate(1.35) contrast(1.06)" }} />
+            <div className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.88) 0%,rgba(5,12,26,0.28) 25%,rgba(5,12,26,0.28) 75%,rgba(5,12,26,0.88) 100%)" }} />
           </div>
 
           <div className="relative z-10 px-5 sm:px-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="Modelo de Expansão Nacional" color="#fbbf24" icon={<MapPin size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 16px rgba(0,0,0,0.70)" }}>
                 Um representante por estado.<br />
-                <span className="text-white/38">27 estados. Todo o Brasil.</span>
+                <span className="text-white/50">27 estados. Todo o Brasil.</span>
               </h2>
-              <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl">
+              <p className="text-white/65 text-[14px] leading-relaxed max-w-2xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 A estratégia de expansão da extraGO é ancorada em representantes estaduais com profundo conhecimento regional. Cada representante é responsável pelo desenvolvimento comercial, parcerias locais, relacionamento com empresas e crescimento da rede profissional em seu estado.
               </p>
             </Reveal>
@@ -828,17 +856,17 @@ export default function InvestidoresParceirosPage() {
           {/* Background — Brazil map network */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.46 }} />
+              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.58, filter: "saturate(1.40) contrast(1.08)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.85) 0%,rgba(5,12,26,0.42) 50%,rgba(5,12,26,0.85) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.82) 0%,rgba(5,12,26,0.32) 50%,rgba(5,12,26,0.82) 100%)" }} />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="Governança & Estrutura Operacional" color="#a855f7" icon={<Cpu size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 16px rgba(0,0,0,0.70)" }}>
                 Infraestrutura de gestão<br />para escala nacional.
               </h2>
-              <p className="text-white/48 text-[14px] leading-relaxed max-w-xl">
+              <p className="text-white/65 text-[14px] leading-relaxed max-w-xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 A extraGO possui uma arquitetura operacional completa, com visibilidade em tempo real sobre cada estado, usuário e métrica — preparada para governar uma rede nacional de profissionais e empresas.
               </p>
             </Reveal>
@@ -925,9 +953,9 @@ export default function InvestidoresParceirosPage() {
                 {/* Card image background — sec-governanca embedded inside */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-governanca.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.22 }} />
+                    style={{ backgroundImage: "url(/sec-governanca.png)", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.32, filter: "saturate(1.50) contrast(1.10)" }} />
                   <div className="absolute inset-0"
-                    style={{ background: "linear-gradient(135deg,rgba(10,4,20,0.95) 0%,rgba(15,6,30,0.82) 40%,rgba(8,20,16,0.88) 100%)" }} />
+                    style={{ background: "linear-gradient(135deg,rgba(10,4,20,0.92) 0%,rgba(15,6,30,0.72) 40%,rgba(8,20,16,0.82) 100%)" }} />
                   {/* Atmospheric color wash */}
                   <div className="absolute inset-0"
                     style={{ background: "radial-gradient(ellipse 120% 80% at 15% 30%,rgba(244,63,94,0.14) 0%,transparent 55%), radial-gradient(ellipse 80% 60% at 85% 75%,rgba(124,252,0,0.10) 0%,transparent 55%)" }} />
@@ -1247,10 +1275,10 @@ export default function InvestidoresParceirosPage() {
         ═══════════════════════════════ */}
         <section className="relative overflow-hidden py-14 sm:py-20">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0 bg-cover bg-center opacity-40"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundPosition: "50% 50%" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.90) 0%,rgba(5,12,26,0.28) 22%,rgba(5,12,26,0.28) 78%,rgba(5,12,26,0.90) 100%)" }} />
+              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.52, filter: "saturate(1.30) contrast(1.05)" }} />
+            <div className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.85) 0%,rgba(5,12,26,0.20) 22%,rgba(5,12,26,0.20) 78%,rgba(5,12,26,0.85) 100%)" }} />
           </div>
 
           <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-10 text-center">
@@ -1279,6 +1307,7 @@ export default function InvestidoresParceirosPage() {
                   fontSize: "clamp(20px,3.8vw,44px)",
                   background: `linear-gradient(90deg,${G},#9aff1c 45%,${C})`,
                   WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                  filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.70))",
                 }}>
                 A extraGO está construindo a infraestrutura<br className="hidden sm:block" />
                 digital de mão de obra do Brasil.
@@ -1286,7 +1315,8 @@ export default function InvestidoresParceirosPage() {
               <motion.p
                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
                 viewport={{ once: true }} transition={{ delay: 0.62 }}
-                className="text-white/45 text-[14px] leading-relaxed max-w-2xl mx-auto">
+                className="text-white/62 text-[14px] leading-relaxed max-w-2xl mx-auto"
+                style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 Uma camada de tecnologia que conecta profissionais, empresas, parceiros e investidores — criando valor crescente para cada novo participante da rede e tornando o ecossistema mais robusto a cada dia.
               </motion.p>
             </Reveal>
@@ -1309,9 +1339,9 @@ export default function InvestidoresParceirosPage() {
                 {/* City skyline background */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.62 }} />
+                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.72, filter: "saturate(1.40) contrast(1.08)" }} />
                   <div className="absolute inset-0"
-                    style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.12) 0%,rgba(5,12,26,0.72) 35%,rgba(124,252,0,0.08) 100%)" }} />
+                    style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.10) 0%,rgba(5,12,26,0.58) 35%,rgba(124,252,0,0.06) 100%)" }} />
                 </div>
                 {/* Top accent */}
                 <div className="absolute inset-x-0 top-0 h-[2px]"
@@ -1378,9 +1408,9 @@ export default function InvestidoresParceirosPage() {
                 {/* sec-faca-parte image embedded inside the card */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.55 }} />
+                    style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.68, filter: "saturate(1.35) contrast(1.06)" }} />
                   <div className="absolute inset-0"
-                    style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.88) 0%,rgba(5,12,26,0.60) 40%,rgba(5,12,26,0.75) 100%)" }} />
+                    style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.82) 0%,rgba(5,12,26,0.50) 40%,rgba(5,12,26,0.65) 100%)" }} />
                   {/* Green atmosphere wash */}
                   <div className="absolute inset-0"
                     style={{ background: `radial-gradient(ellipse 100% 60% at 50% 0%,${G}08 0%,transparent 60%)` }} />

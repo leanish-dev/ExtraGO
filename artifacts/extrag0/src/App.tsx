@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { useEffect } from "react";
 import { Toaster as SonnerToaster } from "sonner";
+
 import { ErrorBoundary } from "@/components/error-boundary";
 
 import NotFound from "@/pages/not-found";
@@ -44,6 +45,14 @@ const queryClient = new QueryClient({
     queries: { retry: 1, staleTime: 30_000 },
   },
 });
+
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+  }, [location]);
+  return null;
+}
 
 function Spinner() {
   return (
@@ -144,6 +153,7 @@ function App() {
         <ErrorBoundary>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <AuthProvider>
+            <ScrollToTop />
             <div className="dark min-h-[100dvh] text-foreground overflow-x-hidden">
               <Router />
             </div>

@@ -434,6 +434,13 @@ export default function LandingPage() {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Mobile-only investor page link — desktop nav already has it */}
+            <Link href="/investidores-parceiros"
+              className="md:hidden flex items-center gap-1 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-colors"
+              style={{ color: "#7CFC00", borderColor: "rgba(124,252,0,0.25)", background: "rgba(124,252,0,0.06)" }}>
+              <TrendingUp size={11} />
+              <span>Investidores</span>
+            </Link>
             {user ? (
               <Link href="/app/dashboard">
                 <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
