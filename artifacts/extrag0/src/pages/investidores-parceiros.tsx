@@ -277,8 +277,8 @@ export default function InvestidoresParceirosPage() {
         <div className="absolute inset-x-0 bottom-0 h-px pointer-events-none"
           style={{ background: `linear-gradient(90deg,transparent,${G}40 35%,${C}28 65%,transparent)` }} />
 
-        {/* Nav row — 78px mobile / 94px desktop */}
-        <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-10 h-[78px] lg:h-[94px]">
+        {/* Nav row — 74px mobile / 94px desktop */}
+        <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-10 h-[74px] lg:h-[94px]">
 
           {/* Logo */}
           <Link href="/" className="flex items-center flex-shrink-0">
@@ -286,7 +286,7 @@ export default function InvestidoresParceirosPage() {
               src={logoMain}
               alt="extraGO"
               style={{
-                height: "44px",
+                height: "46px",
                 objectFit: "contain",
                 objectPosition: "left center",
                 filter: "drop-shadow(0 1px 6px rgba(0,0,0,0.50))",
@@ -340,9 +340,9 @@ export default function InvestidoresParceirosPage() {
               style={{
                 background: `linear-gradient(135deg,${G} 0%,#9bff14 50%,${C} 100%)`,
                 boxShadow: `0 0 22px rgba(124,252,0,0.35), 0 2px 10px rgba(0,0,0,0.35)`,
-                height: "44px",
-                padding: "0 clamp(16px, 2vw, 26px)",
-                fontSize: "clamp(12px, 1.1vw, 14px)",
+                height: "40px",
+                padding: "0 16px",
+                fontSize: "13px",
                 letterSpacing: "0.01em",
                 transition: "box-shadow 0.2s ease, transform 0.15s ease",
               }}
@@ -355,7 +355,9 @@ export default function InvestidoresParceirosPage() {
                 (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
               }}
             >
-              Investir na extraGO
+              {/* Shorter label on mobile, full label on desktop */}
+              <span className="sm:hidden">Investir</span>
+              <span className="hidden sm:inline">Investir na extraGO</span>
             </button>
           </a>
         </div>
@@ -378,13 +380,13 @@ export default function InvestidoresParceirosPage() {
             }
             @media (max-width: 767px) {
               .investors-hero-bg {
-                background-position: 74% 15%;
+                background-position: right center;
               }
               .investors-hero-section {
-                min-height: clamp(300px, 58vh, 500px) !important;
+                min-height: clamp(260px, 50vh, 430px) !important;
               }
               .investors-hero-content {
-                min-height: clamp(300px, 58vh, 500px) !important;
+                min-height: clamp(260px, 50vh, 430px) !important;
               }
             }
           `}</style>
@@ -399,7 +401,7 @@ export default function InvestidoresParceirosPage() {
           {/* ── Text content ── */}
           <div className="investors-hero-content relative z-10 max-w-7xl mx-auto px-5 sm:px-10 flex items-center"
             style={{ minHeight: "clamp(460px, 74vh, 800px)" }}>
-            <div className="py-6 sm:py-14" style={{ maxWidth: 560 }}>
+            <div className="py-4 sm:py-14" style={{ maxWidth: 560 }}>
 
               <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
                 className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full mb-3 sm:mb-5 text-[9px] sm:text-[10px] font-black tracking-[0.14em] uppercase"
@@ -412,7 +414,7 @@ export default function InvestidoresParceirosPage() {
                 transition={{ delay: 0.30, duration: 0.80, ease: [0.19,1,0.22,1] }}
                 className="font-black leading-[1.04] mb-3 sm:mb-5"
                 style={{
-                  fontSize: "clamp(26px,5vw,58px)",
+                  fontSize: "clamp(22px,5vw,58px)",
                   color: "#0F172A",
                   textShadow: "0 1px 4px rgba(255,255,255,0.60)",
                 }}>
@@ -431,7 +433,7 @@ export default function InvestidoresParceirosPage() {
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.60 }}
-                className="flex flex-wrap gap-2.5 sm:gap-3 mb-5 sm:mb-8">
+                className="flex flex-wrap gap-3 sm:gap-3 mb-4 sm:mb-8">
                 <a href={`mailto:${CONTACT}`}>
                   <Button className="rounded-full font-bold px-5 sm:px-7 h-9 sm:h-11 text-[13px] sm:text-[14px] text-black border-none"
                     style={{ background: `linear-gradient(135deg,${G},#9aff1c)`, boxShadow: "0 0 28px rgba(124,252,0,0.38)" }}>
