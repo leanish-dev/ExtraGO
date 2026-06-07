@@ -258,53 +258,38 @@ export default function InvestidoresParceirosPage() {
       {/* ── NAV ── */}
       <header className="sticky top-0 z-50 w-full"
         style={{
-          background: scrolled ? "rgba(4,9,20,0.94)" : "rgba(6,12,24,0.75)",
-          backdropFilter: scrolled ? "blur(24px) saturate(180%)" : "blur(16px) saturate(160%)",
-          WebkitBackdropFilter: scrolled ? "blur(24px) saturate(180%)" : "blur(16px) saturate(160%)",
-          borderBottom: `1px solid ${scrolled ? "rgba(0,229,255,0.12)" : "rgba(124,252,0,0.07)"}`,
-          transition: "background 0.45s ease, border-color 0.45s ease, backdrop-filter 0.45s ease",
+          background: scrolled
+            ? "rgba(6,10,20,0.97)"
+            : "linear-gradient(180deg,rgba(8,12,24,0.95) 0%,rgba(12,18,32,0.90) 100%)",
+          backdropFilter: scrolled ? "blur(20px) saturate(200%)" : "blur(12px) saturate(180%)",
+          WebkitBackdropFilter: scrolled ? "blur(20px) saturate(200%)" : "blur(12px) saturate(180%)",
+          borderBottom: `1px solid ${scrolled ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.04)"}`,
+          transition: "background 0.4s ease, border-color 0.4s ease",
         }}>
 
-        {/* Subtle brand texture — right-anchored, fades on scroll */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-          <img
-            src="/investors-logo-banner.png"
-            alt="" aria-hidden
-            className="absolute right-0 top-0 h-full object-cover object-right"
-            style={{
-              opacity: scrolled ? 0.05 : 0.09,
-              filter: "saturate(0.55) brightness(0.75)",
-              transition: "opacity 0.45s ease",
-              maskImage: "linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.45) 45%,rgba(0,0,0,0.85) 100%)",
-              WebkitMaskImage: "linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.45) 45%,rgba(0,0,0,0.85) 100%)",
-              width: "60%",
-            }}
-          />
-          {/* Accent line — bottom */}
-          <div className="absolute inset-x-0 bottom-0 h-px"
-            style={{ background: `linear-gradient(90deg,transparent,${G}22 30%,${C}18 70%,transparent)` }} />
-        </div>
+        {/* Single-pixel bottom accent — institutional touch */}
+        <div className="absolute inset-x-0 bottom-0 h-px pointer-events-none"
+          style={{ background: `linear-gradient(90deg,transparent,${G}18 35%,${C}12 65%,transparent)` }} />
 
-        <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between px-5 sm:px-10"
-          style={{ height: "clamp(62px, 7.5vw, 86px)" }}>
+        {/* Nav row */}
+        <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-10"
+          style={{ height: "60px" }}>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center flex-shrink-0 group">
+          <Link href="/" className="flex items-center flex-shrink-0">
             <img
               src={logoMain}
               alt="extraGO"
               style={{
-                height: "clamp(28px, 3.2vw, 42px)",
+                height: "34px",
                 objectFit: "contain",
                 objectPosition: "left center",
-                transition: "opacity 0.2s ease",
               }}
-              className="group-hover:opacity-85"
             />
           </Link>
 
-          {/* Desktop navigation */}
-          <nav className="hidden lg:flex items-center gap-7">
+          {/* Desktop navigation — hidden on mobile */}
+          <nav className="hidden lg:flex items-center gap-8">
             {[
               ["#modelo",   "Investidores"],
               ["#expansao", "Parceiros"],
@@ -312,59 +297,59 @@ export default function InvestidoresParceirosPage() {
               <a
                 key={href}
                 href={href}
-                className="text-[13px] font-medium transition-all duration-200 relative group"
-                style={{ color: "rgba(255,255,255,0.45)" }}
+                className="text-[13px] font-medium relative group"
+                style={{ color: "rgba(255,255,255,0.42)", transition: "color 0.18s ease" }}
                 onMouseEnter={e => (e.currentTarget.style.color = G)}
-                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
+                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.42)")}
               >
                 {label}
                 <span className="absolute -bottom-0.5 left-0 right-0 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"
-                  style={{ background: `linear-gradient(90deg,${G}90,${C}60)` }} />
+                  style={{ background: `${G}80` }} />
               </a>
             ))}
             <a
               href={`mailto:${CONTACT}`}
-              className="text-[13px] font-medium transition-colors duration-200"
-              style={{ color: "rgba(255,255,255,0.38)" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.72)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.38)")}
+              className="text-[13px] font-medium"
+              style={{ color: "rgba(255,255,255,0.36)", transition: "color 0.18s ease" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.70)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.36)")}
             >
               Contato
             </a>
             <Link
               href="/"
-              className="text-[11px] transition-colors duration-200"
-              style={{ color: "rgba(255,255,255,0.20)" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.20)")}
+              className="text-[11px]"
+              style={{ color: "rgba(255,255,255,0.18)", transition: "color 0.18s ease" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.42)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.18)")}
             >
               ← Voltar
             </Link>
           </nav>
 
-          {/* Primary CTA */}
+          {/* CTA */}
           <a href={`mailto:${CONTACT}`}>
             <button
-              className="rounded-full font-bold text-black border-none cursor-pointer flex-shrink-0"
+              className="rounded-full font-semibold text-black border-none cursor-pointer flex-shrink-0"
               style={{
-                background: `linear-gradient(135deg,${G} 0%,#9aff1c 48%,${C} 100%)`,
-                boxShadow: `0 0 18px rgba(124,252,0,0.26), 0 2px 8px rgba(0,0,0,0.25)`,
-                height: "clamp(36px, 3.8vw, 44px)",
-                padding: "0 clamp(14px, 1.8vw, 26px)",
-                fontSize: "clamp(11px, 1.1vw, 13px)",
+                background: `linear-gradient(135deg,${G} 0%,#8fff10 50%,${C} 100%)`,
+                boxShadow: `0 0 14px rgba(124,252,0,0.20)`,
+                height: "40px",
+                padding: "0 18px",
+                fontSize: "13px",
                 letterSpacing: "0.01em",
                 transition: "box-shadow 0.2s ease, transform 0.15s ease",
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 28px rgba(124,252,0,0.44), 0 4px 14px rgba(0,0,0,0.30)`;
+                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 22px rgba(124,252,0,0.36)`;
                 (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
               }}
               onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 18px rgba(124,252,0,0.26), 0 2px 8px rgba(0,0,0,0.25)`;
+                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 14px rgba(124,252,0,0.20)`;
                 (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
               }}
             >
-              Investir na extraGO
+              Investir
             </button>
           </a>
         </div>
