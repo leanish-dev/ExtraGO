@@ -77,6 +77,15 @@ function Background() {
       <div className="absolute inset-0"
         style={{ background: "linear-gradient(155deg,#071e3d 0%,#0a2645 25%,#071f38 55%,#0a2240 100%)" }} />
 
+      {/* Page background illustration — light map/tech layer at very low opacity */}
+      <div className="absolute inset-0"
+        style={{
+          backgroundImage: "url(/investors-page-bg.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          opacity: 0.055,
+        }} />
+
       {/* Atmospheric radial glows */}
       <div className="absolute inset-0" style={{
         background: `
@@ -341,17 +350,22 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             01 · HERO
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden" style={{ minHeight: "clamp(520px,70vh,780px)" }}>
+        <section className="relative overflow-hidden" style={{ minHeight: "clamp(380px,50vh,580px)" }}>
           {/* Photo layer */}
           <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-cover bg-right opacity-28"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundPosition: "62% center" }} />
+            <div className="absolute inset-0 opacity-35"
+              style={{
+                backgroundImage: "url(/investors-bg.png)",
+                backgroundSize: "auto 100%",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "92% center",
+              }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(108deg,rgba(5,12,26,0.99) 0%,rgba(5,12,26,0.95) 38%,rgba(5,12,26,0.72) 62%,rgba(5,12,26,0.32) 100%)" }} />
+              style={{ background: "linear-gradient(108deg,rgba(5,12,26,0.99) 0%,rgba(5,12,26,0.96) 42%,rgba(5,12,26,0.78) 65%,rgba(5,12,26,0.38) 100%)" }} />
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-10 flex items-center"
-            style={{ minHeight: "clamp(520px,70vh,780px)" }}>
+            style={{ minHeight: "clamp(380px,50vh,580px)" }}>
             <div className="py-14 sm:py-20" style={{ maxWidth: 560 }}>
 
               <motion.span initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
@@ -618,8 +632,15 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             05 · SOLUTION — 4 pillars
         ═══════════════════════════════ */}
-        <section id="solucao" className="px-5 sm:px-10 py-12 sm:py-16">
-          <div className="max-w-6xl mx-auto">
+        <section id="solucao" className="relative overflow-hidden px-5 sm:px-10 py-16 sm:py-24">
+          {/* Background — network/ecosystem */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0"
+              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center right", opacity: 0.18 }} />
+            <div className="absolute inset-0"
+              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.92) 0%,rgba(5,12,26,0.72) 55%,rgba(5,12,26,0.92) 100%)" }} />
+          </div>
+          <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="A Solução" color={G} icon={<Zap size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
@@ -891,8 +912,15 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             09 · GOVERNANCE & OPS
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-12 sm:py-16" style={{ background: "rgba(14,165,233,0.02)" }}>
-          <div className="max-w-6xl mx-auto">
+        <section className="relative overflow-hidden px-5 sm:px-10 py-16 sm:py-24">
+          {/* Background — Brazil map network */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0"
+              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.28 }} />
+            <div className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.88) 0%,rgba(5,12,26,0.65) 50%,rgba(5,12,26,0.90) 100%)" }} />
+          </div>
+          <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="Governança & Estrutura Operacional" color="#a855f7" icon={<Cpu size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
@@ -956,8 +984,15 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             09b · CAPITAL STRUCTURE — 30% investor block
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-12 sm:py-16">
-          <div className="max-w-6xl mx-auto">
+        <section className="relative overflow-hidden px-5 sm:px-10 py-16 sm:py-24">
+          {/* Background — governance/progression */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0"
+              style={{ backgroundImage: "url(/sec-governanca.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.20 }} />
+            <div className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.90) 0%,rgba(5,12,26,0.70) 50%,rgba(5,12,26,0.90) 100%)" }} />
+          </div>
+          <div className="relative z-10 max-w-6xl mx-auto">
 
             <Reveal className="mb-8">
               <Pill label="Estrutura de Capital" color="#f43f5e" icon={<Layers size={10} />} />
@@ -1317,10 +1352,16 @@ export default function InvestidoresParceirosPage() {
             <Reveal>
               <div className="relative rounded-2xl overflow-hidden border"
                 style={{
-                  background: "linear-gradient(145deg,rgba(0,229,255,0.06) 0%,rgba(7,16,32,0.95) 40%,rgba(124,252,0,0.05) 100%)",
-                  borderColor: "rgba(0,229,255,0.20)",
-                  boxShadow: "0 0 80px rgba(0,229,255,0.07)",
+                  borderColor: "rgba(0,229,255,0.22)",
+                  boxShadow: "0 0 80px rgba(0,229,255,0.08), inset 0 0 60px rgba(0,0,0,0.3)",
                 }}>
+                {/* City skyline background */}
+                <div className="absolute inset-0">
+                  <div className="absolute inset-0"
+                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.42 }} />
+                  <div className="absolute inset-0"
+                    style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.10) 0%,rgba(5,12,26,0.85) 35%,rgba(124,252,0,0.07) 100%)" }} />
+                </div>
                 {/* Top accent */}
                 <div className="absolute inset-x-0 top-0 h-[2px]"
                   style={{ background: "linear-gradient(90deg,transparent,#00E5FF 35%,#7CFC00 65%,transparent)" }} />
@@ -1374,15 +1415,30 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             13 · FINAL CTA
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-14 sm:py-20">
-          <div className="max-w-4xl mx-auto">
+        <section className="relative overflow-hidden px-5 sm:px-10 py-14 sm:py-20">
+          {/* Workers/city night background */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0"
+              style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.45 }} />
+            <div className="absolute inset-0"
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.80) 0%,rgba(5,12,26,0.58) 50%,rgba(5,12,26,0.88) 100%)" }} />
+          </div>
+          <div className="relative z-10 max-w-4xl mx-auto">
             <Reveal>
-              <GCard className="p-8 sm:p-12 text-center" accent={G} glow>
+              <div className="relative rounded-2xl border overflow-hidden"
+                style={{
+                  background: "rgba(5,12,26,0.62)",
+                  backdropFilter: "blur(28px) saturate(150%)",
+                  borderColor: `${G}22`,
+                  boxShadow: `0 0 40px ${G}10`,
+                }}>
+                <div className="absolute inset-x-0 top-0 h-[1.5px]"
+                  style={{ background: `linear-gradient(90deg,transparent,${G}65,transparent)` }} />
                 {/* Glow orb */}
                 <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-60 h-60 rounded-full pointer-events-none"
                   style={{ background: `radial-gradient(circle,${G}08 0%,transparent 70%)`, filter: "blur(28px)" }} />
 
-                <div className="relative">
+                <div className="relative p-8 sm:p-12 text-center">
                   <Pill label="Oportunidade de Investimento" color={G} icon={<Award size={10} />} />
 
                   <h2 className="font-black leading-tight mb-4"
@@ -1439,7 +1495,7 @@ export default function InvestidoresParceirosPage() {
                     <a href={`mailto:${CONTACT}`} className="hover:text-white/55 transition-colors">{CONTACT}</a>
                   </p>
                 </div>
-              </GCard>
+              </div>
             </Reveal>
           </div>
         </section>
