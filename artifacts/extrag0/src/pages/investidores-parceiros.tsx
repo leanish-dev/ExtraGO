@@ -475,9 +475,9 @@ export default function InvestidoresParceirosPage() {
         {/* Inspiration strip */}
         <div style={{ background: "rgba(14,165,233,0.04)", borderTop: "1px solid rgba(14,165,233,0.10)", borderBottom: "1px solid rgba(14,165,233,0.10)" }}>
           <div className="max-w-4xl mx-auto px-5 py-4 text-center">
-            <p className="text-[12px] text-white/40 leading-relaxed">
+            <p className="text-[12px] text-white/62 leading-relaxed">
               Inspirada em{" "}
-              <span className="text-white/68 font-semibold">Uber, Airbnb, LinkedIn, Stripe e Nubank</span>
+              <span className="text-white/85 font-semibold">Uber, Airbnb, LinkedIn, Stripe e Nubank</span>
               {" "}— a extraGO une marketplace, reputação, geolocalização, pagamentos, gamificação e crescimento em rede em um único ecossistema.
             </p>
           </div>
@@ -677,7 +677,7 @@ export default function InvestidoresParceirosPage() {
           {/* Background — network/ecosystem */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 1, filter: "saturate(1.80) contrast(1.15)" }} />
+              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.90, filter: "saturate(1.80) contrast(1.15)" }} />
             <div className="absolute inset-0"
               style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.52) 0%,rgba(5,12,26,0.08) 50%,rgba(5,12,26,0.52) 100%)" }} />
           </div>
@@ -760,7 +760,7 @@ export default function InvestidoresParceirosPage() {
           {/* map image accent */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 1, filter: "saturate(1.70) contrast(1.12)" }} />
+              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 0.88, filter: "saturate(1.70) contrast(1.12)" }} />
             <div className="absolute inset-0"
               style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.55) 0%,rgba(5,12,26,0.06) 25%,rgba(5,12,26,0.06) 75%,rgba(5,12,26,0.55) 100%)" }} />
           </div>
@@ -1075,7 +1075,7 @@ export default function InvestidoresParceirosPage() {
           {/* Background — Brazil map network */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 1, filter: "saturate(1.75) contrast(1.12)" }} />
+              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.88, filter: "saturate(1.75) contrast(1.12)" }} />
             <div className="absolute inset-0"
               style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.52) 0%,rgba(5,12,26,0.08) 50%,rgba(5,12,26,0.52) 100%)" }} />
           </div>
@@ -1167,7 +1167,27 @@ export default function InvestidoresParceirosPage() {
                     "0 0 160px rgba(124,252,0,0.08)",
                     "0 24px 80px rgba(0,0,0,0.60)",
                   ].join(", "),
-                }}>
+                  transition: "box-shadow 0.35s ease, transform 0.35s ease",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = [
+                    "0 0 0 1px rgba(244,63,94,0.22)",
+                    "0 0 120px rgba(244,63,94,0.40)",
+                    "0 0 200px rgba(124,252,0,0.18)",
+                    "0 32px 100px rgba(0,0,0,0.70)",
+                  ].join(", ");
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-6px)";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = [
+                    "0 0 0 1px rgba(244,63,94,0.12)",
+                    "0 0 80px rgba(244,63,94,0.22)",
+                    "0 0 160px rgba(124,252,0,0.08)",
+                    "0 24px 80px rgba(0,0,0,0.60)",
+                  ].join(", ");
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                }}
+              >
 
                 {/* Card image background — sec-governanca embedded inside */}
                 <div className="absolute inset-0">
@@ -1554,7 +1574,7 @@ export default function InvestidoresParceirosPage() {
                 {/* City skyline background */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 1, filter: "saturate(1.70) contrast(1.12)" }} />
+                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.90, filter: "saturate(1.70) contrast(1.12)" }} />
                   <div className="absolute inset-0"
                     style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.08) 0%,rgba(5,12,26,0.38) 35%,rgba(124,252,0,0.05) 100%)" }} />
                 </div>
@@ -1616,14 +1636,24 @@ export default function InvestidoresParceirosPage() {
             <Reveal>
               <div className="relative rounded-2xl border overflow-hidden"
                 style={{
-                  borderColor: `${G}32`,
-                  boxShadow: `0 0 0 1px ${G}10, 0 0 60px ${G}14, 0 20px 60px rgba(0,0,0,0.55)`,
-                }}>
+                  borderColor: `${G}45`,
+                  boxShadow: `0 0 0 1px ${G}14, 0 0 80px ${G}22, 0 0 160px rgba(0,229,255,0.10), 0 24px 80px rgba(0,0,0,0.60)`,
+                  transition: "box-shadow 0.35s ease, transform 0.35s ease",
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 1px ${G}28, 0 0 120px ${G}40, 0 0 220px rgba(0,229,255,0.20), 0 32px 100px rgba(0,0,0,0.70)`;
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-6px)";
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 1px ${G}14, 0 0 80px ${G}22, 0 0 160px rgba(0,229,255,0.10), 0 24px 80px rgba(0,0,0,0.60)`;
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                }}
+              >
 
                 {/* sec-faca-parte image embedded inside the card */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 1, filter: "saturate(1.70) contrast(1.10)" }} />
+                    style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.88, filter: "saturate(1.70) contrast(1.10)" }} />
                   <div className="absolute inset-0"
                     style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.68) 0%,rgba(5,12,26,0.32) 40%,rgba(5,12,26,0.50) 100%)" }} />
                   {/* Green atmosphere wash */}
