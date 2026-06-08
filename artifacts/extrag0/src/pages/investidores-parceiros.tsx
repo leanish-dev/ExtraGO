@@ -96,11 +96,10 @@ function CountUp({ target, suffix = "", duration = 1800 }: {
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
-/* ─── full-page background: single image, no legacy layers ─── */
+/* ─── full-page background ─── */
 function Background() {
   return (
     <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-      {/* New page background — sole image, rendered exactly once */}
       <div
         className="absolute inset-0"
         style={{
@@ -108,41 +107,41 @@ function Background() {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center top",
+          filter: "saturate(1.55) contrast(1.08)",
         }}
       />
-      {/* Dark overlay — calibrated for dark-premium, not dark-heavy */}
+      {/* Minimal dark overlay — keep brand colors vivid */}
       <div
         className="absolute inset-0"
-        style={{ background: "rgba(4,10,22,0.60)" }}
+        style={{ background: "rgba(4,10,22,0.28)" }}
       />
     </div>
   );
 }
 
-/* ─── data (PDF-exact) ─── */
+/* ─── data (official) ─── */
 const FEES = [
-  { name: "Iniciante", fee: 18, color: "#94a3b8", w: "90%" },
-  { name: "Júnior",    fee: 16, color: "#fbbf24", w: "80%" },
-  { name: "Intermediário", fee: 14, color: G, w: "70%" },
-  { name: "Sênior",   fee: 12, color: C, w: "60%" },
-  { name: "Elite",    fee: 10, color: "#a855f7", w: "50%" },
+  { name: "Iniciante",     fee: 20, color: "#94a3b8", w: "100%" },
+  { name: "Júnior",        fee: 18, color: "#60a5fa", w: "86%"  },
+  { name: "Intermediário", fee: 15, color: "#a855f7", w: "70%"  },
+  { name: "Sênior",        fee: 12, color: C,         w: "55%"  },
+  { name: "Elite",         fee: 10, color: G,         w: "45%"  },
 ];
 
 const REFERRAL = [
-  { label: "Indicador", pct: "5%", color: G },
-  { label: "Embaixador Regional", pct: "7%", color: C },
-  { label: "Embaixador Nacional", pct: "10%", color: "#a855f7" },
+  { label: "Indicador",           pct: "2%", color: C        },
+  { label: "Agente de Captação",  pct: "3%", color: "#a855f7" },
+  { label: "Embaixador Regional", pct: "5%", color: G        },
 ];
 
 const FINANCIAL = [
-  { label: "Caixa e Reserva Estratégica",   pct: 25, color: G,         purpose: "Solidez operacional e proteção a longo prazo" },
-  { label: "Marketing e Crescimento",        pct: 20, color: C,         purpose: "Aquisição de usuários e expansão da marca" },
-  { label: "Tecnologia e Infraestrutura",    pct: 15, color: "#a855f7", purpose: "Evolução da plataforma e inovação contínua" },
-  { label: "Distribuição de Lucro — Parceiros", pct: 15, color: "#f472b6", purpose: "Retorno para parceiros e investidores ativos" },
-  { label: "Equipe e Operações",             pct: 10, color: "#fbbf24", purpose: "Estrutura operacional e talentos estratégicos" },
-  { label: "Representantes Estaduais",       pct:  5, color: "#4ade80", purpose: "Comissão da rede de representantes nacionais" },
-  { label: "Programa de Indicações",         pct:  5, color: "#22d3ee", purpose: "Recompensas do sistema de referral multinível" },
-  { label: "Fundo de Expansão",              pct:  5, color: "#fb923c", purpose: "Novos mercados, produtos e iniciativas estratégicas" },
+  { label: "Caixa e Reserva Estratégica",        pct: 25, color: G,         purpose: "Solidez operacional e proteção de longo prazo" },
+  { label: "Fundadores e Investidores",           pct: 20, color: "#f59e0b", purpose: "Retorno direto proporcional ao crescimento" },
+  { label: "Marketing e Expansão",               pct: 20, color: C,         purpose: "Aquisição de usuários e expansão da marca" },
+  { label: "Tecnologia e Inovação",              pct: 10, color: "#a855f7", purpose: "Evolução contínua da plataforma" },
+  { label: "Operações",                          pct: 10, color: "#60a5fa", purpose: "Estrutura operacional e talentos estratégicos" },
+  { label: "Fundo de Crescimento Estratégico",   pct: 10, color: "#f43f5e", purpose: "Novos mercados, produtos e iniciativas" },
+  { label: "Representantes Estaduais",           pct:  5, color: "#fb923c", purpose: "Comissão da rede de representantes nacionais" },
 ];
 
 const TEAM = [
@@ -678,9 +677,9 @@ export default function InvestidoresParceirosPage() {
           {/* Background — network/ecosystem */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.48, filter: "saturate(1.45) contrast(1.10)" }} />
+              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.78, filter: "saturate(1.65) contrast(1.12)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.82) 0%,rgba(5,12,26,0.38) 50%,rgba(5,12,26,0.82) 100%)" }} />
+              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.68) 0%,rgba(5,12,26,0.18) 50%,rgba(5,12,26,0.68) 100%)" }} />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
@@ -761,9 +760,9 @@ export default function InvestidoresParceirosPage() {
           {/* map image accent */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 0.48, filter: "saturate(1.35) contrast(1.06)" }} />
+              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 0.80, filter: "saturate(1.55) contrast(1.10)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.88) 0%,rgba(5,12,26,0.28) 25%,rgba(5,12,26,0.28) 75%,rgba(5,12,26,0.88) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.72) 0%,rgba(5,12,26,0.12) 25%,rgba(5,12,26,0.12) 75%,rgba(5,12,26,0.72) 100%)" }} />
           </div>
 
           <div className="relative z-10 px-5 sm:px-10 max-w-6xl mx-auto">
@@ -780,10 +779,10 @@ export default function InvestidoresParceirosPage() {
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               {[
-                { num: "27", label: "Estados cobertos", sub: "1 representante por estado", color: "#fbbf24" },
-                { num: "5%", label: "da Receita Alocada", sub: "para a rede de representantes", color: G },
-                { num: "5", label: "Pilares Regionais", sub: "por representante estadual", color: C },
-                { num: "100%", label: "Território Nacional", sub: "cobertura ao completar a rede", color: "#a855f7" },
+                { num: "27",  label: "Representantes Estaduais",  sub: "1 representante por estado",     color: "#fbbf24" },
+                { num: "108", label: "Líderes Regionais",          sub: "até 108 líderes por rede",       color: G        },
+                { num: "4",   label: "Fontes de Receita",          sub: "todos recorrentes",               color: C        },
+                { num: "10%", label: "Menor Taxa Operacional",     sub: "nível Elite da plataforma",      color: "#a855f7" },
               ].map((s, i) => (
                 <Reveal key={i} delay={i * 0.07}>
                   <GCard className="p-4 sm:p-5 text-center" accent={s.color}>
@@ -849,7 +848,7 @@ export default function InvestidoresParceirosPage() {
                 <GCard className="p-5 sm:p-6 h-full" accent={C}>
                   <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Camada 2 — Sistema de Indicações Multinível</p>
                   <p className="text-[12px] text-white/50 leading-relaxed mb-3">
-                    Cada usuário recebe um <span className="text-white/70 font-semibold">código exclusivo</span> e um <span className="text-white/70 font-semibold">link exclusivo</span>. Quando um indicado realiza extras, o indicador recebe <span className="text-white/70 font-semibold">5% das taxas de intermediação</span> geradas — de forma contínua e recorrente.
+                    Cada usuário recebe um <span className="text-white/70 font-semibold">código exclusivo</span>. Quando um indicado realiza extras, o indicador recebe uma <span className="text-white/70 font-semibold">comissão sobre o valor bruto</span> — de forma contínua e recorrente, com até 3 níveis de progressão.
                   </p>
                   <div className="space-y-2.5 mb-4">
                     {REFERRAL.map((t, i) => (
@@ -952,18 +951,18 @@ export default function InvestidoresParceirosPage() {
         <Divider />
 
         {/* ═══════════════════════════════
-            08b · 4 CAMADAS DE RECEITA
+            08b · 4 MOTORES DE RECEITA
         ═══════════════════════════════ */}
         <section id="camadas" className="px-5 sm:px-10 py-10 sm:py-20">
           <div className="max-w-6xl mx-auto">
 
             <Reveal className="mb-10 text-center">
-              <Pill label="Modelo de Receita" color={G} icon={<Layers size={10} />} />
+              <Pill label="Motores de Receita" color={G} icon={<Layers size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(24px,3.8vw,44px)" }}>
-                4 Camadas de Receita
+                Os 4 Motores de Receita da extraGO
               </h2>
               <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl mx-auto">
-                Múltiplas fontes de receita trabalhando juntas para construir a infraestrutura de mão de obra do Brasil.
+                Quatro fontes independentes gerando crescimento recorrente e escalável.
               </p>
             </Reveal>
 
@@ -974,25 +973,25 @@ export default function InvestidoresParceirosPage() {
                   num: "01", color: G, icon: <Zap size={15} />,
                   title: "Intermediação por Performance",
                   value: "10% a 20%",
-                  desc: "Taxas geradas sobre serviços concluídos.",
+                  desc: "Taxa aplicada sobre extras concluídos.",
                 },
                 {
                   num: "02", color: C, icon: <Network size={15} />,
                   title: "Indicações Multinível",
                   value: "2% a 5%",
-                  desc: "Crescimento baseado em rede e distribuição.",
+                  desc: "Rede de crescimento baseada em usuários.",
                 },
                 {
                   num: "03", color: "#a855f7", icon: <BadgeCheck size={15} />,
                   title: "Assinaturas Profissionais",
                   value: "R$ 19,90 a R$ 99,90",
-                  desc: "Receita recorrente proveniente dos profissionais.",
+                  desc: "Receita recorrente B2C.",
                 },
                 {
                   num: "04", color: "#f59e0b", icon: <Building2 size={15} />,
                   title: "Assinaturas Empresariais",
-                  value: "R$ 99,90 até Enterprise",
-                  desc: "Soluções SaaS para empresas.",
+                  value: "R$ 99,90 a Enterprise",
+                  desc: "Receita recorrente B2B.",
                 },
               ].map((item, i) => (
                 <Reveal key={i} delay={i * 0.08}>
@@ -1059,7 +1058,7 @@ export default function InvestidoresParceirosPage() {
                     (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                   }}
                 >
-                  Explorar o Modelo Completo <ArrowRight size={15} />
+                  Ver Arquitetura Completa <ArrowRight size={15} />
                 </button>
               </Link>
             </Reveal>
@@ -1076,9 +1075,9 @@ export default function InvestidoresParceirosPage() {
           {/* Background — Brazil map network */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.58, filter: "saturate(1.40) contrast(1.08)" }} />
+              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.80, filter: "saturate(1.55) contrast(1.10)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.82) 0%,rgba(5,12,26,0.32) 50%,rgba(5,12,26,0.82) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.68) 0%,rgba(5,12,26,0.18) 50%,rgba(5,12,26,0.68) 100%)" }} />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
@@ -1087,35 +1086,35 @@ export default function InvestidoresParceirosPage() {
                 Infraestrutura de gestão<br />para escala nacional.
               </h2>
               <p className="text-white/65 text-[14px] leading-relaxed max-w-xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
-                A extraGO possui uma arquitetura operacional completa, com visibilidade em tempo real sobre cada estado, usuário e métrica — preparada para governar uma rede nacional de profissionais e empresas.
+                A extraGO possui uma arquitetura operacional completa, coordenada por cinco pilares que garantem execução nacional, regional e local.
               </p>
             </Reveal>
 
             <div className="grid sm:grid-cols-2 gap-0">
               {[
                 {
-                  icon: <LayoutGrid size={17} />, color: "#a855f7", title: "Centro Administrativo Nacional",
-                  items: ["Painel executivo centralizado","Analytics em tempo real","KPIs nacionais e regionais","Mapa interativo do Brasil"],
+                  icon: <Cpu size={17} />, color: G, title: "Plataforma Nacional",
+                  items: ["Tecnologia","Produto","Compliance","Estratégia Nacional"],
                 },
                 {
-                  icon: <MapPin size={17} />, color: "#fbbf24", title: "Gestão Regional Descentralizada",
-                  items: ["Visão por estado","Performance de representantes","Crescimento regional","Parcerias locais rastreadas"],
+                  icon: <MapPin size={17} />, color: "#fbbf24", title: "Representantes Estaduais",
+                  items: ["Expansão regional","Comunidade","Parcerias","Operação estadual"],
                 },
                 {
-                  icon: <Shield size={17} />, color: C, title: "Controles de Plataforma",
-                  items: ["Gestão de usuários","Moderação de conteúdo","Sistema de auditoria","Controle financeiro integrado"],
+                  icon: <Users size={17} />, color: C, title: "Equipes Regionais",
+                  items: ["Comercial","Marketing","Expansão","Operações e Pessoas"],
                 },
                 {
-                  icon: <DollarSign size={17} />, color: G, title: "Estrutura Financeira",
-                  items: ["Carteira digital por usuário","Processamento de saques PIX","Alocação estratégica de receita","Reserva operacional protegida"],
+                  icon: <Building2 size={17} />, color: "#a855f7", title: "Empresas",
+                  items: ["Contratações validadas","Analytics corporativo","Gestão operacional","SaaS integrado"],
                 },
                 {
-                  icon: <GitBranch size={17} />, color: "#f472b6", title: "Arquitetura de Dados",
-                  items: ["Histórico profissional imutável","Reputação verificável","Métricas de performance","Inteligência de mercado local"],
+                  icon: <BadgeCheck size={17} />, color: "#f43f5e", title: "Profissionais",
+                  items: ["Reputação acumulada","Progressão de carreira","Renda recorrente","Indicações ativas"],
                 },
                 {
                   icon: <Network size={17} />, color: "#22d3ee", title: "Ecossistema de Crescimento",
-                  items: ["Motor de indicações multinível","Sistema de progressão de carreira","Notificações e engajamento","Analytics de crescimento de rede"],
+                  items: ["Motor de indicações multinível","Sistema de progressão de carreira","Analytics de crescimento de rede","Expansão autossustentável"],
                 },
               ].map((block, i) => (
                 <Reveal key={i} delay={i * 0.04}>
@@ -1327,36 +1326,32 @@ export default function InvestidoresParceirosPage() {
             <div className="grid sm:grid-cols-2 gap-0 divide-y divide-white/5 sm:gap-x-10 sm:divide-y-0">
               {[
                 {
-                  icon: <Shield size={16} />, color: G, pct: "25%", label: "Reserva Estratégica",
+                  icon: <Shield size={16} />, color: G, pct: "25%", label: "Caixa e Reserva Estratégica",
                   desc: "Proteção operacional robusta — a empresa permanece sólida em qualquer cenário enquanto financia crescimento acelerado.",
                 },
                 {
-                  icon: <Globe size={16} />, color: C, pct: "20%", label: "Expansão e Marketing",
+                  icon: <DollarSign size={16} />, color: "#f59e0b", pct: "20%", label: "Fundadores e Investidores",
+                  desc: "Retorno direto e proporcional ao crescimento da plataforma — alinhando os interesses de quem constrói com quem investe.",
+                },
+                {
+                  icon: <Globe size={16} />, color: C, pct: "20%", label: "Marketing e Expansão",
                   desc: "Aquisição orgânica e paga de usuários — cresce a rede sem comprometer a reserva de caixa.",
                 },
                 {
-                  icon: <DollarSign size={16} />, color: "#f472b6", pct: "15%", label: "Retorno para Parceiros",
-                  desc: "Distribuição direta de lucro para parceiros e investidores ativos — retorno tangível e proporcional ao crescimento.",
-                },
-                {
-                  icon: <Cpu size={16} />, color: "#a855f7", pct: "15%", label: "Tecnologia Contínua",
+                  icon: <Cpu size={16} />, color: "#a855f7", pct: "10%", label: "Tecnologia e Inovação",
                   desc: "Inovação de produto e infraestrutura escalável — a plataforma se torna mais inteligente a cada ciclo.",
                 },
                 {
-                  icon: <Users size={16} />, color: "#fbbf24", pct: "10%", label: "Equipe e Operações",
+                  icon: <Users size={16} />, color: "#60a5fa", pct: "10%", label: "Operações",
                   desc: "Estrutura operacional enxuta e eficiente, financiada pela própria operação da plataforma.",
                 },
                 {
-                  icon: <MapPin size={16} />, color: "#4ade80", pct: "5%", label: "Representantes Estaduais",
-                  desc: "27 representantes financiados pela receita — expansão descentralizada sem capital externo.",
-                },
-                {
-                  icon: <Repeat size={16} />, color: "#22d3ee", pct: "5%", label: "Motor de Indicações",
-                  desc: "O referral é autossustentado — cresce proporcionalmente à receita, ampliando o flywheel orgânico.",
-                },
-                {
-                  icon: <Rocket size={16} />, color: "#fb923c", pct: "5%", label: "Fundo de Expansão",
+                  icon: <Rocket size={16} />, color: "#f43f5e", pct: "10%", label: "Fundo de Crescimento Estratégico",
                   desc: "Reserva para novos mercados, produtos e iniciativas estratégicas — capacidade de escalar com agilidade.",
+                },
+                {
+                  icon: <MapPin size={16} />, color: "#fb923c", pct: "5%", label: "Representantes Estaduais",
+                  desc: "27 representantes financiados pela receita — expansão descentralizada sem capital externo.",
                 },
               ].map((item, i) => (
                 <Reveal key={i} delay={i * 0.04}>
@@ -1496,9 +1491,9 @@ export default function InvestidoresParceirosPage() {
         <section className="relative overflow-hidden py-9 sm:py-20">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.52, filter: "saturate(1.30) contrast(1.05)" }} />
+              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.82, filter: "saturate(1.50) contrast(1.08)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.85) 0%,rgba(5,12,26,0.20) 22%,rgba(5,12,26,0.20) 78%,rgba(5,12,26,0.85) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.70) 0%,rgba(5,12,26,0.10) 22%,rgba(5,12,26,0.10) 78%,rgba(5,12,26,0.70) 100%)" }} />
           </div>
 
           <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-10 text-center">
@@ -1647,15 +1642,15 @@ export default function InvestidoresParceirosPage() {
 
                   <h2 className="font-black leading-tight mb-4"
                     style={{ fontSize: "clamp(22px,3.8vw,44px)" }}>
-                    Faça parte da construção
+                    Pronto para participar da construção
                     <span className="block" style={{
                       background: `linear-gradient(90deg,${G},#9aff1c,${C})`,
                       WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                    }}>da infraestrutura do Brasil.</span>
+                    }}>da infraestrutura de mão de obra do Brasil?</span>
                   </h2>
 
                   <p className="text-white/45 text-[14px] max-w-lg mx-auto leading-relaxed mb-6">
-                    Conecte-se com nossa equipe para conhecer a oportunidade de investimento, os termos e como participar estrategicamente da expansão nacional da extraGO.
+                    A extraGO está estruturando uma rede nacional baseada em tecnologia, reputação, geolocalização e crescimento recorrente.
                   </p>
 
                   {/* Audience tags */}
@@ -1677,7 +1672,7 @@ export default function InvestidoresParceirosPage() {
                     <a href={`mailto:${CONTACT}`}>
                       <Button size="lg" className="rounded-full font-bold px-8 h-11 text-black border-none w-full sm:w-auto"
                         style={{ background: `linear-gradient(135deg,${G},#9aff1c)`, boxShadow: `0 0 28px rgba(124,252,0,0.34)` }}>
-                        <Mail size={15} className="mr-2" /> Investir na extraGO
+                        <Mail size={15} className="mr-2" /> Quero Investir
                       </Button>
                     </a>
                     <a href={`mailto:${CONTACT}`}>
@@ -1686,12 +1681,6 @@ export default function InvestidoresParceirosPage() {
                         <Briefcase size={15} className="mr-2" /> Tornar-se Parceiro
                       </Button>
                     </a>
-                    <Link href="/register">
-                      <Button size="lg" variant="ghost"
-                        className="rounded-full font-bold px-8 h-11 text-white/35 hover:text-white hover:bg-white/5 w-full sm:w-auto">
-                        Explorar a Plataforma <ArrowRight size={13} className="ml-1" />
-                      </Button>
-                    </Link>
                   </div>
 
                   <p className="text-[11px] text-white/28 flex items-center justify-center gap-2">

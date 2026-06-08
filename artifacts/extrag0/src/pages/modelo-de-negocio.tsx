@@ -76,9 +76,18 @@ function Divider() {
 /* ─── Background ─── */
 function Background() {
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none"
-      style={{ background: "linear-gradient(160deg,#040c1c 0%,#060f22 35%,#04101e 65%,#030b18 100%)" }}>
-      <div className="absolute inset-0 opacity-[0.022]"
+    <div className="fixed inset-0 z-0 pointer-events-none">
+      <div className="absolute inset-0"
+        style={{
+          backgroundImage: "url(/finance-bg.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+        }} />
+      {/* Preserve existing card/text contrast — same transparency as before */}
+      <div className="absolute inset-0"
+        style={{ background: "rgba(4,10,22,0.62)" }} />
+      <div className="absolute inset-0 opacity-[0.018]"
         style={{ backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.9) 1px,transparent 1px)", backgroundSize: "32px 32px" }} />
     </div>
   );
