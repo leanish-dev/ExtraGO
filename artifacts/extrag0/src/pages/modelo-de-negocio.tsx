@@ -3,18 +3,16 @@ import { Link } from "wouter";
 import { motion, useInView } from "framer-motion";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import {
-  ArrowRight, ArrowLeft, Zap, Network, BadgeCheck, Building2,
+  ArrowLeft, Zap, Network, BadgeCheck, Building2,
   DollarSign, Layers, MapPin, TrendingUp, Shield, Users,
-  BarChart3, Repeat, Globe, Cpu, Lock,
-  CheckCircle, Wallet, Star, Award, ChevronRight,
-  Mail, Rocket,
+  BarChart3, Globe, Cpu, CheckCircle, Award, ChevronRight,
+  Mail, Rocket, Star, Crown,
 } from "lucide-react";
 
 /* ─── constants ─── */
 const CONTACT = "extrago.contato@gmail.com";
 const G = "#7CFC00";
 const C = "#00E5FF";
-const T = "#0ea5e9";
 
 /* ─── Reveal ─── */
 function Reveal({ children, delay = 0, className = "" }: {
@@ -79,9 +77,7 @@ function Divider() {
 function Background() {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none"
-      style={{
-        background: "linear-gradient(160deg,#040c1c 0%,#060f22 35%,#04101e 65%,#030b18 100%)",
-      }}>
+      style={{ background: "linear-gradient(160deg,#040c1c 0%,#060f22 35%,#04101e 65%,#030b18 100%)" }}>
       <div className="absolute inset-0 opacity-[0.022]"
         style={{ backgroundImage: "radial-gradient(circle,rgba(255,255,255,0.9) 1px,transparent 1px)", backgroundSize: "32px 32px" }} />
     </div>
@@ -111,14 +107,11 @@ export default function ModeloDeNegocioPage() {
           transition: "box-shadow 0.4s ease",
         }}>
         <div className="absolute inset-0 pointer-events-none"
-          style={{
-            background: scrolled ? "rgba(0,0,0,0.60)" : "rgba(0,0,0,0.40)",
-            transition: "background 0.4s ease",
-          }} />
+          style={{ background: scrolled ? "rgba(0,0,0,0.60)" : "rgba(0,0,0,0.40)", transition: "background 0.4s ease" }} />
         <div className="absolute inset-x-0 bottom-0 h-px pointer-events-none"
           style={{ background: `linear-gradient(90deg,transparent,${G}40 35%,${C}28 65%,transparent)` }} />
         <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-10 h-[74px] lg:h-[94px]">
-          <Link href="/investidores-parceiros" className="flex items-center gap-2.5 flex-shrink-0 group">
+          <Link href="/investidores-parceiros" className="flex items-center flex-shrink-0">
             <img src={logoMain} alt="extraGO"
               style={{ height: "46px", objectFit: "contain", filter: "drop-shadow(0 1px 6px rgba(0,0,0,0.50))" }} />
           </Link>
@@ -126,12 +119,13 @@ export default function ModeloDeNegocioPage() {
             {[
               ["#camada-1", "Intermediação"],
               ["#camada-2", "Indicações"],
-              ["#camada-3", "Assinaturas"],
-              ["#camada-4", "SaaS"],
+              ["#camada-3", "Profissionais"],
+              ["#camada-4", "Empresas"],
               ["#financeiro", "Financeiro"],
+              ["#expansao", "Expansão"],
             ].map(([href, label]) => (
               <a key={href} href={href}
-                className="text-[13px] font-medium relative group"
+                className="text-[13px] font-medium"
                 style={{ color: "rgba(255,255,255,0.60)", transition: "color 0.18s ease" }}
                 onMouseEnter={e => (e.currentTarget.style.color = G)}
                 onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.60)")}>
@@ -142,11 +136,8 @@ export default function ModeloDeNegocioPage() {
           <Link href="/investidores-parceiros">
             <button className="flex items-center gap-2 rounded-full font-semibold border cursor-pointer text-[13px] flex-shrink-0"
               style={{
-                background: "rgba(255,255,255,0.06)",
-                borderColor: "rgba(255,255,255,0.12)",
-                color: "rgba(255,255,255,0.75)",
-                height: "38px",
-                padding: "0 16px",
+                background: "rgba(255,255,255,0.06)", borderColor: "rgba(255,255,255,0.12)",
+                color: "rgba(255,255,255,0.75)", height: "38px", padding: "0 16px",
                 transition: "background 0.2s, border-color 0.2s",
               }}
               onMouseEnter={e => {
@@ -167,41 +158,41 @@ export default function ModeloDeNegocioPage() {
 
       <main className="relative z-10 flex-1">
 
-        {/* ── HERO ── */}
+        {/* ══════════════════════════════════════
+            HERO
+        ══════════════════════════════════════ */}
         <section className="relative overflow-hidden px-5 sm:px-10 py-14 sm:py-28">
           <div className="absolute inset-0 pointer-events-none"
             style={{ background: "radial-gradient(ellipse 70% 50% at 50% 0%,rgba(124,252,0,0.07) 0%,transparent 70%)" }} />
           <div className="relative z-10 max-w-6xl mx-auto text-center">
-            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-              <Pill label="Modelo de Negócio Completo" color={G} icon={<Layers size={10} />} />
+            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.10 }}>
+              <Pill label="Arquitetura Financeira Oficial" color={G} icon={<Layers size={10} />} />
             </motion.div>
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.22, duration: 0.80, ease: [0.19,1,0.22,1] }}
               className="font-black leading-[1.04] mb-5"
-              style={{ fontSize: "clamp(28px,5vw,64px)" }}>
+              style={{ fontSize: "clamp(26px,5vw,62px)" }}>
               A Arquitetura Financeira<br />
-              <span style={{
-                background: `linear-gradient(90deg,${G} 0%,${C} 100%)`,
-                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              }}>da extraGO.</span>
+              <span style={{ background: `linear-gradient(90deg,${G} 0%,${C} 100%)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                da extraGO.
+              </span>
             </motion.h1>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.40 }}
-              className="text-white/50 text-[14px] sm:text-[16px] leading-relaxed max-w-2xl mx-auto mb-8">
-              Um modelo de receita com quatro camadas independentes, projetado para crescimento
-              nacional sustentável, resiliência financeira e retorno escalável para investidores.
+              className="text-white/50 text-[14px] sm:text-[16px] leading-relaxed max-w-2xl mx-auto mb-10">
+              Quatro fontes independentes de receita formando a infraestrutura de mão de obra do Brasil.
             </motion.p>
-            {/* Summary metric strip */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.54 }}
-              className="flex flex-wrap justify-center gap-4 sm:gap-8">
+              className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
               {[
-                { label: "Camadas de receita", value: "4" },
-                { label: "Fontes recorrentes", value: "3 de 4" },
-                { label: "Modelo de distribuição", value: "Multinível" },
-              ].map((item, i) => (
-                <div key={i} className="text-center">
-                  <p className="font-black text-[24px] sm:text-[30px] leading-none" style={{ color: G }}>{item.value}</p>
-                  <p className="text-white/38 text-[11px] mt-1">{item.label}</p>
-                </div>
+                { value: "10%", label: "Menor taxa operacional", color: G },
+                { value: "20%", label: "Maior taxa operacional", color: C },
+                { value: "4",   label: "Fontes de receita",      color: "#a855f7" },
+                { value: "27",  label: "Representantes estaduais", color: "#f59e0b" },
+              ].map((m, i) => (
+                <GCard key={i} className="p-4 text-center" accent={m.color}>
+                  <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(24px,3vw,36px)", color: m.color }}>{m.value}</p>
+                  <p className="text-[11px] text-white/45 leading-snug">{m.label}</p>
+                </GCard>
               ))}
             </motion.div>
           </div>
@@ -220,59 +211,81 @@ export default function ModeloDeNegocioPage() {
                 Intermediação por Performance
               </h2>
               <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl">
-                Taxa progressiva cobrada sobre cada extra concluído. Quanto maior a reputação e nível do profissional, menor a taxa — incentivando qualidade, retenção e crescimento de longo prazo.
+                A taxa da plataforma diminui conforme o profissional constrói reputação, histórico e confiabilidade dentro do ecossistema.
               </p>
             </Reveal>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <Reveal>
-                <GCard className="p-5 sm:p-6 h-full" accent={G} glow>
-                  <p className="text-[11px] font-black tracking-widest uppercase text-white/30 mb-5">Tabela de Taxas por Nível</p>
-                  {[
-                    { name: "Iniciante (Bronze)", fee: 18, color: "#cd7f32", w: "90%" },
-                    { name: "Júnior (Silver)", fee: 16, color: "#94a3b8", w: "80%" },
-                    { name: "Intermediário (Gold)", fee: 14, color: "#f59e0b", w: "70%" },
-                    { name: "Sênior (Elite)", fee: 10, color: G, w: "50%" },
-                  ].map((f, i) => (
-                    <motion.div key={i}
-                      initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }} transition={{ delay: i * 0.07 }}
-                      className="flex items-center gap-3 mb-2.5">
-                      <span className="w-[155px] text-[12px] font-medium text-white/60 flex-shrink-0">{f.name}</span>
-                      <div className="flex-1 h-5 rounded-lg overflow-hidden" style={{ background: "rgba(255,255,255,0.04)" }}>
-                        <motion.div
-                          initial={{ width: 0 }} whileInView={{ width: f.w }}
-                          viewport={{ once: true }} transition={{ delay: i * 0.07 + 0.3, duration: 0.8, ease: [0.19,1,0.22,1] }}
-                          className="h-full rounded-lg flex items-center justify-end pr-2"
-                          style={{ background: `linear-gradient(90deg,${f.color}28,${f.color}62)`, borderRight: `2px solid ${f.color}` }}>
-                          <span className="text-[10px] font-black" style={{ color: f.color }}>{f.fee}%</span>
-                        </motion.div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </GCard>
-              </Reveal>
-              <Reveal delay={0.08}>
-                <div className="space-y-4 h-full flex flex-col">
-                  {[
-                    { icon: <TrendingUp size={16} />, color: G, title: "Incentivo à Progressão", desc: "Taxa reduzida ao subir de nível cria um incentivo natural para que profissionais busquem qualidade e volume." },
-                    { icon: <Repeat size={16} />, color: C, title: "Receita Recorrente por Serviço", desc: "Cada extra concluído gera receita imediata, proporcional ao valor do serviço e ao nível do profissional." },
-                    { icon: <Shield size={16} />, color: "#a855f7", title: "Modelo Comprovado", desc: "Inspirado em marketplaces globais como Uber, iFood e AirBnB — intermediação por performance com fee decrescente." },
-                  ].map((item, i) => (
-                    <GCard key={i} className="p-4 flex-1" accent={item.color}>
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                          style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
-                          <span style={{ color: item.color }}>{item.icon}</span>
-                        </div>
+
+            <div className="space-y-3">
+              {[
+                {
+                  level: "Iniciante", fee: 20, color: "#94a3b8", bar: "100%",
+                  reqs: [],
+                },
+                {
+                  level: "Júnior", fee: 18, color: "#60a5fa", bar: "86%",
+                  reqs: ["20 extras concluídos", "Avaliação mínima 4,5"],
+                },
+                {
+                  level: "Intermediário", fee: 15, color: "#a855f7", bar: "70%",
+                  reqs: ["100 extras concluídos", "6 meses de atividade", "Avaliação mínima 4,7"],
+                },
+                {
+                  level: "Sênior", fee: 12, color: C, bar: "55%",
+                  reqs: ["300 extras concluídos", "12 meses de atividade", "Avaliação mínima 4,8", "Comparecimento superior a 98%"],
+                },
+                {
+                  level: "Elite", fee: 10, color: G, bar: "45%",
+                  reqs: ["1.000 extras concluídos", "24 meses de atividade", "Avaliação mínima 4,9", "Comparecimento superior a 99%", "Perfil totalmente validado", "Selo Elite extraGO"],
+                },
+              ].map((item, i) => (
+                <Reveal key={i} delay={i * 0.07}>
+                  <GCard className="p-5 sm:p-6" accent={item.color}>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                      {/* Level + fee */}
+                      <div className="flex items-center gap-4 sm:w-48 flex-shrink-0">
                         <div>
-                          <p className="text-[13px] font-bold text-white/85 mb-1">{item.title}</p>
-                          <p className="text-[12px] text-white/48 leading-relaxed">{item.desc}</p>
+                          <p className="text-[11px] font-black tracking-widest uppercase mb-0.5" style={{ color: item.color }}>{item.level}</p>
+                          <p className="font-black leading-none" style={{ fontSize: "clamp(28px,3.5vw,40px)", color: item.color }}>{item.fee}%</p>
+                        </div>
+                        {/* Bar */}
+                        <div className="hidden sm:block flex-1 h-6 rounded-lg overflow-hidden ml-2" style={{ background: "rgba(255,255,255,0.04)", minWidth: 60 }}>
+                          <motion.div
+                            initial={{ width: 0 }} whileInView={{ width: item.bar }}
+                            viewport={{ once: true }} transition={{ delay: i * 0.07 + 0.3, duration: 0.9, ease: [0.19,1,0.22,1] }}
+                            className="h-full rounded-lg"
+                            style={{ background: `linear-gradient(90deg,${item.color}30,${item.color}70)`, borderRight: `2px solid ${item.color}` }} />
                         </div>
                       </div>
-                    </GCard>
-                  ))}
-                </div>
-              </Reveal>
+                      {/* Requirements */}
+                      {item.reqs.length > 0 ? (
+                        <div className="flex-1">
+                          <p className="text-[10px] font-black tracking-widest uppercase text-white/28 mb-2">Requisitos para este nível</p>
+                          <div className="flex flex-wrap gap-x-5 gap-y-1">
+                            {item.reqs.map((r, j) => (
+                              <div key={j} className="flex items-center gap-1.5">
+                                <CheckCircle size={10} style={{ color: item.color, flexShrink: 0 }} />
+                                <span className="text-[12px] text-white/60">{r}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex-1">
+                          <p className="text-[12px] text-white/38 italic">Nível de entrada — sem requisitos prévios.</p>
+                        </div>
+                      )}
+                    </div>
+                    {/* Mobile bar */}
+                    <div className="mt-3 h-2 rounded-full sm:hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
+                      <motion.div
+                        initial={{ width: 0 }} whileInView={{ width: item.bar }}
+                        viewport={{ once: true }} transition={{ delay: 0.3, duration: 0.9, ease: [0.19,1,0.22,1] }}
+                        className="h-full rounded-full"
+                        style={{ background: `linear-gradient(90deg,${item.color}40,${item.color})` }} />
+                    </div>
+                  </GCard>
+                </Reveal>
+              ))}
             </div>
           </div>
         </section>
@@ -290,62 +303,69 @@ export default function ModeloDeNegocioPage() {
                 Indicações Multinível
               </h2>
               <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl">
-                Cada usuário recebe um código e link exclusivos. A rede cresce organicamente enquanto
-                os indicadores ganham comissão recorrente sobre cada extra gerado pelos seus indicados.
+                Cada usuário recebe um código exclusivo e participa diretamente da expansão da plataforma.
               </p>
             </Reveal>
-            <div className="grid sm:grid-cols-3 gap-4 mb-5">
+
+            <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { label: "Comissão base do indicador", pct: "3%", desc: "Sobre cada extra concluído pelo indicado.", color: C },
-                { label: "Alcance viral estimado", pct: "2–5×", desc: "Crescimento de base por efeito de rede.", color: G },
-                { label: "Recorrência", pct: "∞", desc: "A comissão é contínua, não tem prazo.", color: "#a855f7" },
+                {
+                  tier: "Indicador", pct: "2%", color: C, icon: <Users size={16} />,
+                  desc: "do valor bruto dos extras realizados pelos indicados.",
+                  reqs: [],
+                },
+                {
+                  tier: "Agente de Captação", pct: "3%", color: "#a855f7", icon: <Network size={16} />,
+                  desc: "do valor bruto dos extras realizados pelos indicados.",
+                  reqs: ["25 indicados ativos", "100 extras concluídos pela rede"],
+                },
+                {
+                  tier: "Embaixador Regional", pct: "5%", color: G, icon: <Crown size={16} />,
+                  desc: "do valor bruto dos extras realizados pelos indicados.",
+                  reqs: [
+                    "100 indicados ativos",
+                    "1.000 extras concluídos pela rede",
+                    "Aprovação da plataforma",
+                    "Atuação comprovada na região",
+                    "Brasão exclusivo no perfil",
+                  ],
+                },
               ].map((item, i) => (
-                <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-5 text-center h-full" accent={item.color} glow>
-                    <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-3">{item.label}</p>
-                    <p className="font-black mb-2" style={{ fontSize: "clamp(32px,4vw,48px)", color: item.color }}>{item.pct}</p>
-                    <p className="text-[12px] text-white/45">{item.desc}</p>
+                <Reveal key={i} delay={i * 0.09}>
+                  <GCard className="p-5 sm:p-6 h-full" accent={item.color} glow={i === 2}>
+                    {i === 2 && (
+                      <span className="absolute top-3 right-3 text-[9px] font-black px-2 py-0.5 rounded-full"
+                        style={{ background: `${item.color}18`, border: `1px solid ${item.color}30`, color: item.color }}>
+                        NÍVEL MÁXIMO
+                      </span>
+                    )}
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4"
+                      style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
+                      <span style={{ color: item.color }}>{item.icon}</span>
+                    </div>
+                    <p className="text-[11px] font-black tracking-widest uppercase mb-1" style={{ color: item.color }}>{item.tier}</p>
+                    <p className="font-black mb-1 leading-none" style={{ fontSize: "clamp(32px,4vw,48px)", color: item.color }}>{item.pct}</p>
+                    <p className="text-[12px] text-white/48 mb-4 leading-relaxed">{item.desc}</p>
+                    {item.reqs.length > 0 && (
+                      <>
+                        <p className="text-[10px] font-black tracking-widest uppercase text-white/28 mb-2">Requisitos</p>
+                        <div className="space-y-1.5">
+                          {item.reqs.map((r, j) => (
+                            <div key={j} className="flex items-start gap-1.5">
+                              <CheckCircle size={10} style={{ color: item.color, flexShrink: 0, marginTop: 2 }} />
+                              <span className="text-[12px] text-white/58 leading-snug">{r}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                    {item.reqs.length === 0 && (
+                      <p className="text-[12px] text-white/38 italic">Disponível para todos os usuários.</p>
+                    )}
                   </GCard>
                 </Reveal>
               ))}
             </div>
-            <Reveal delay={0.18}>
-              <GCard className="p-5 sm:p-6" accent={C}>
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <div>
-                    <p className="text-[11px] font-black tracking-widest uppercase text-white/30 mb-4">Como Funciona</p>
-                    {[
-                      "Usuário recebe código exclusivo ao criar conta",
-                      "Indica amigos, colegas ou empresas",
-                      "Cada extra gerado pelo indicado gera comissão automática",
-                      "Comissão cai direto na carteira do indicador",
-                      "Sem limite de indicados ou de período",
-                    ].map((step, i) => (
-                      <div key={i} className="flex items-start gap-2.5 mb-2.5">
-                        <span className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-black"
-                          style={{ background: `${C}18`, border: `1px solid ${C}28`, color: C }}>{i + 1}</span>
-                        <p className="text-[12px] text-white/60 leading-relaxed">{step}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-black tracking-widest uppercase text-white/30 mb-4">Benefícios Estratégicos</p>
-                    {[
-                      { icon: <Globe size={13} />, label: "Crescimento orgânico nacional" },
-                      { icon: <TrendingUp size={13} />, label: "CAC próximo de zero" },
-                      { icon: <Repeat size={13} />, label: "Retenção ativa de usuários" },
-                      { icon: <Network size={13} />, label: "Efeito de rede composto" },
-                      { icon: <DollarSign size={13} />, label: "Renda recorrente para usuários" },
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-2.5 mb-2.5">
-                        <span style={{ color: C }}>{item.icon}</span>
-                        <p className="text-[12px] text-white/60">{item.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </GCard>
-            </Reveal>
           </div>
         </section>
 
@@ -362,45 +382,46 @@ export default function ModeloDeNegocioPage() {
                 Assinaturas Profissionais
               </h2>
               <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl">
-                Planos mensais opcionais para freelancers que desejam acelerar sua progressão,
-                aumentar visibilidade e acessar recursos premium — gerando MRR previsível.
+                Planos voltados para crescimento profissional, visibilidade e ferramentas avançadas.
               </p>
             </Reveal>
-            <div className="grid sm:grid-cols-3 gap-4">
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               {[
                 {
-                  name: "Básico", price: "R$ 19,90", color: "#94a3b8", flagship: false,
-                  features: ["Perfil verificado", "Candidatura prioritária", "Histórico detalhado"],
+                  name: "Free", price: "R$ 0,00", sub: "gratuito", color: "#94a3b8", flagship: false,
+                  features: ["Perfil básico", "Candidatura padrão", "Acesso ao marketplace"],
                 },
                 {
-                  name: "Pro", price: "R$ 49,90", color: "#a855f7", flagship: true,
-                  features: ["Tudo do Básico", "Destaque no feed", "Análise de performance", "Suporte dedicado"],
+                  name: "Pro", price: "R$ 19,90", sub: "/mês", color: "#a855f7", flagship: false,
+                  features: ["Perfil verificado", "Candidatura prioritária", "Histórico detalhado", "Suporte por chat"],
                 },
                 {
-                  name: "Elite", price: "R$ 99,90", color: G, flagship: false,
-                  features: ["Tudo do Pro", "Badge Elite", "Acesso antecipado a extras", "Mentoria de crescimento"],
+                  name: "Premium", price: "R$ 49,90", sub: "/mês", color: C, flagship: true,
+                  features: ["Tudo do Pro", "Destaque no feed", "Análise de performance", "Suporte dedicado"],
+                },
+                {
+                  name: "Elite", price: "R$ 99,90", sub: "/mês", color: G, flagship: false,
+                  features: ["Tudo do Premium", "Badge Elite", "Acesso antecipado", "Mentoria de crescimento"],
                 },
               ].map((plan, i) => (
-                <Reveal key={i} delay={i * 0.08}>
-                  <GCard className={`p-5 sm:p-6 h-full ${plan.flagship ? "ring-1" : ""}`}
-                    accent={plan.color} glow={plan.flagship}
-                    style={plan.flagship ? { ringColor: plan.color } as React.CSSProperties : undefined}>
+                <Reveal key={i} delay={i * 0.07}>
+                  <GCard className="p-5 h-full" accent={plan.color} glow={plan.flagship}>
                     {plan.flagship && (
-                      <div className="absolute top-3 right-3">
-                        <span className="text-[9px] font-black px-2 py-0.5 rounded-full"
-                          style={{ background: `${plan.color}20`, border: `1px solid ${plan.color}35`, color: plan.color }}>
-                          MAIS POPULAR
-                        </span>
-                      </div>
+                      <span className="absolute top-3 right-3 text-[9px] font-black px-2 py-0.5 rounded-full"
+                        style={{ background: `${plan.color}18`, border: `1px solid ${plan.color}30`, color: plan.color }}>
+                        POPULAR
+                      </span>
                     )}
-                    <p className="text-[11px] font-black tracking-widest uppercase mb-2" style={{ color: plan.color }}>{plan.name}</p>
-                    <p className="font-black mb-1 leading-none" style={{ fontSize: "clamp(26px,3vw,34px)", color: plan.color }}>{plan.price}</p>
-                    <p className="text-[11px] text-white/30 mb-5">/mês</p>
-                    <div className="space-y-2">
+                    <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: plan.color }}>{plan.name}</p>
+                    <p className="font-black leading-none mb-0.5"
+                      style={{ fontSize: "clamp(18px,2.5vw,28px)", color: plan.color }}>{plan.price}</p>
+                    <p className="text-[11px] text-white/30 mb-4">{plan.sub}</p>
+                    <div className="space-y-1.5">
                       {plan.features.map((f, j) => (
-                        <div key={j} className="flex items-center gap-2">
-                          <CheckCircle size={12} style={{ color: plan.color, flexShrink: 0 }} />
-                          <span className="text-[12px] text-white/65">{f}</span>
+                        <div key={j} className="flex items-start gap-1.5">
+                          <CheckCircle size={10} style={{ color: plan.color, flexShrink: 0, marginTop: 2 }} />
+                          <span className="text-[11px] text-white/60 leading-snug">{f}</span>
                         </div>
                       ))}
                     </div>
@@ -424,38 +445,41 @@ export default function ModeloDeNegocioPage() {
                 Assinaturas Empresariais
               </h2>
               <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl">
-                Soluções SaaS para empresas de todos os portes, desde pequenos negócios até grandes
-                corporações — com funcionalidades de gestão, compliance e escala operacional.
+                Soluções SaaS para empresas com dashboards, analytics, gestão operacional e ferramentas corporativas.
               </p>
             </Reveal>
+
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {[
                 {
-                  tier: "Starter", price: "R$ 99,90", color: "#94a3b8",
+                  tier: "Starter", price: "R$ 99,90", sub: "/mês", color: "#94a3b8",
                   features: ["Até 5 vagas/mês", "Painel básico", "Suporte por email"],
                 },
                 {
-                  tier: "Business", price: "R$ 299,90", color: "#f59e0b",
+                  tier: "Business", price: "R$ 299,90", sub: "/mês", color: "#f59e0b",
                   features: ["Vagas ilimitadas", "Dashboard analítico", "Gestão de equipe", "Suporte prioritário"],
                 },
                 {
-                  tier: "Corporate", price: "R$ 799,90", color: C,
-                  features: ["Multi-unidade", "API integração", "SLA garantido", "Gerente de conta"],
+                  tier: "Corporate", price: "R$ 799,90", sub: "/mês", color: C,
+                  features: ["Multi-unidade", "API de integração", "SLA garantido", "Gerente de conta"],
                 },
                 {
-                  tier: "Enterprise", price: "Sob consulta", color: G,
+                  tier: "Enterprise", price: "Sob consulta", sub: "", color: G,
                   features: ["Personalizado", "Integração total", "Compliance nacional", "Equipe dedicada"],
                 },
               ].map((plan, i) => (
                 <Reveal key={i} delay={i * 0.08}>
                   <GCard className="p-5 h-full" accent={plan.color}>
                     <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: plan.color }}>{plan.tier}</p>
-                    <p className="font-black mb-4 leading-snug" style={{ fontSize: "clamp(16px,2vw,20px)", color: plan.color }}>{plan.price}</p>
-                    <div className="space-y-2">
+                    <p className="font-black leading-none mb-0.5"
+                      style={{ fontSize: "clamp(16px,2vw,22px)", color: plan.color }}>{plan.price}</p>
+                    {plan.sub && <p className="text-[11px] text-white/30 mb-4">{plan.sub}</p>}
+                    {!plan.sub && <div className="mb-4" />}
+                    <div className="space-y-1.5">
                       {plan.features.map((f, j) => (
-                        <div key={j} className="flex items-center gap-2">
-                          <ChevronRight size={11} style={{ color: plan.color, flexShrink: 0 }} />
-                          <span className="text-[12px] text-white/60">{f}</span>
+                        <div key={j} className="flex items-start gap-1.5">
+                          <ChevronRight size={11} style={{ color: plan.color, flexShrink: 0, marginTop: 2 }} />
+                          <span className="text-[12px] text-white/60 leading-snug">{f}</span>
                         </div>
                       ))}
                     </div>
@@ -469,53 +493,76 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ══════════════════════════════════════
-            ESTRUTURA FINANCEIRA
+            DISTRIBUIÇÃO DA RECEITA
         ══════════════════════════════════════ */}
         <section id="financeiro" className="px-5 sm:px-10 py-10 sm:py-20"
           style={{ background: "rgba(124,252,0,0.018)" }}>
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-8">
-              <Pill label="Estrutura Financeira" color={G} icon={<BarChart3 size={10} />} />
+              <Pill label="Distribuição da Receita" color={G} icon={<BarChart3 size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
-                Distribuição de Receita
+                Para onde vai cada real gerado
               </h2>
               <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl">
-                Cada real gerado pela plataforma é distribuído de forma estratégica, equilibrando
-                crescimento, solidez operacional e retorno para parceiros e investidores.
+                Distribuição estratégica que equilibra crescimento, solidez operacional e retorno para fundadores, parceiros e investidores.
               </p>
             </Reveal>
-            <div className="grid sm:grid-cols-2 gap-4 mb-5">
+
+            <div className="grid sm:grid-cols-2 gap-5">
+              {/* Bar chart */}
               <Reveal>
                 <GCard className="p-5 sm:p-6 h-full" accent={G} glow>
                   <p className="text-[11px] font-black tracking-widest uppercase text-white/30 mb-5">Distribuição por Destino</p>
                   {[
-                    { label: "Operação & Infraestrutura", pct: 45, color: T },
-                    { label: "Marketing & Crescimento", pct: 15, color: C },
-                    { label: "Caixa & Reserva Estratégica", pct: 25, color: G },
-                    { label: "Parceiros & Investidores", pct: 15, color: "#f59e0b" },
+                    { label: "Caixa e Reserva Estratégica",      pct: 25, color: G },
+                    { label: "Fundadores e Investidores",         pct: 20, color: "#f59e0b" },
+                    { label: "Marketing e Expansão",              pct: 20, color: C },
+                    { label: "Tecnologia e Inovação",             pct: 10, color: "#a855f7" },
+                    { label: "Operações",                         pct: 10, color: "#60a5fa" },
+                    { label: "Fundo de Crescimento Estratégico",  pct: 10, color: "#f43f5e" },
+                    { label: "Representantes Estaduais",          pct:  5, color: "#fb923c" },
                   ].map((item, i) => (
                     <div key={i} className="mb-3">
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[12px] text-white/65">{item.label}</span>
-                        <span className="text-[12px] font-bold" style={{ color: item.color }}>{item.pct}%</span>
+                        <span className="text-[12px] text-white/65 leading-snug">{item.label}</span>
+                        <span className="text-[13px] font-black ml-3 flex-shrink-0" style={{ color: item.color }}>{item.pct}%</span>
                       </div>
                       <div className="h-2 rounded-full" style={{ background: "rgba(255,255,255,0.05)" }}>
                         <motion.div
-                          initial={{ width: 0 }} whileInView={{ width: `${item.pct}%` }}
-                          viewport={{ once: true }} transition={{ delay: i * 0.1 + 0.3, duration: 0.9, ease: [0.19,1,0.22,1] }}
+                          initial={{ width: 0 }} whileInView={{ width: `${item.pct * 4}%` }}
+                          viewport={{ once: true }} transition={{ delay: i * 0.08 + 0.3, duration: 0.9, ease: [0.19,1,0.22,1] }}
                           className="h-full rounded-full"
                           style={{ background: `linear-gradient(90deg,${item.color}50,${item.color})` }} />
                       </div>
                     </div>
                   ))}
+                  <div className="mt-4 pt-3 border-t border-white/6 flex items-center justify-between">
+                    <span className="text-[11px] text-white/35">Total</span>
+                    <span className="text-[14px] font-black" style={{ color: G }}>100%</span>
+                  </div>
                 </GCard>
               </Reveal>
+
+              {/* Key highlights */}
               <Reveal delay={0.1}>
                 <div className="space-y-3 h-full flex flex-col">
                   {[
-                    { icon: <Shield size={16} />, color: G, title: "25% em Caixa", desc: "Reserva estratégica que garante solidez operacional e suporta crescimento acelerado em cenários adversos." },
-                    { icon: <DollarSign size={16} />, color: "#f59e0b", title: "15% para Investidores", desc: "Distribuição direta para parceiros e investidores ativos — retorno proporcional ao crescimento da plataforma." },
-                    { icon: <TrendingUp size={16} />, color: C, title: "Modelo Escalável", desc: "Com 4 fontes de receita operando simultaneamente, a receita total cresce de forma não-linear." },
+                    {
+                      icon: <Shield size={16} />, color: G, title: "25% em Caixa",
+                      desc: "Reserva estratégica que garante solidez operacional e suporta crescimento acelerado mesmo em cenários adversos.",
+                    },
+                    {
+                      icon: <DollarSign size={16} />, color: "#f59e0b", title: "20% para Fundadores e Investidores",
+                      desc: "Retorno direto e proporcional ao crescimento da plataforma — alinhando os interesses de quem constrói com quem investe.",
+                    },
+                    {
+                      icon: <TrendingUp size={16} />, color: C, title: "20% em Marketing e Expansão",
+                      desc: "Combustível para crescimento nacional: aquisição de usuários, representantes estaduais e novos mercados.",
+                    },
+                    {
+                      icon: <MapPin size={16} />, color: "#fb923c", title: "5% para Representantes",
+                      desc: "Remuneração direta dos representantes estaduais, incentivando expansão regional descentralizada.",
+                    },
                   ].map((item, i) => (
                     <GCard key={i} className="p-4 flex-1" accent={item.color}>
                       <div className="flex items-start gap-3">
@@ -549,41 +596,44 @@ export default function ModeloDeNegocioPage() {
                 Rede de Representantes por Estado
               </h2>
               <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl">
-                Cada estado tem um representante oficial responsável por expandir a base local,
-                apoiar empresas e profissionais, e receber comissão sobre toda a movimentação da região.
+                Cada estado tem um representante oficial responsável pela expansão local, apoiado por até 4 líderes regionais.
               </p>
             </Reveal>
-            <div className="grid sm:grid-cols-3 gap-4 mb-5">
+
+            {/* Key metrics */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
               {[
-                { icon: <MapPin size={18} />, color: "#f59e0b", title: "Presença Estadual", desc: "Um representante por estado, responsável pelo crescimento local e onboarding de empresas e profissionais." },
-                { icon: <DollarSign size={18} />, color: G, title: "Comissão Regional", desc: "O representante recebe comissão sobre cada extra e assinatura gerada dentro do seu território de atuação." },
-                { icon: <Users size={18} />, color: C, title: "Suporte à Rede", desc: "Apoio presencial para empresas que precisam de operação urgente e profissionais em início de carreira na plataforma." },
-              ].map((item, i) => (
+                { value: "1", label: "Representante Oficial por Estado", color: "#f59e0b" },
+                { value: "27", label: "Representantes Estaduais", color: G },
+                { value: "108", label: "Líderes Regionais de Apoio (máx.)", color: C },
+              ].map((m, i) => (
                 <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-5 h-full" accent={item.color}>
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4"
-                      style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
-                      <span style={{ color: item.color }}>{item.icon}</span>
-                    </div>
-                    <h3 className="text-[14px] font-bold mb-2 text-white/88">{item.title}</h3>
-                    <p className="text-[12px] text-white/50 leading-relaxed">{item.desc}</p>
+                  <GCard className="p-4 sm:p-6 text-center" accent={m.color} glow>
+                    <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(28px,4vw,52px)", color: m.color }}>{m.value}</p>
+                    <p className="text-[11px] sm:text-[12px] text-white/48 leading-snug">{m.label}</p>
                   </GCard>
                 </Reveal>
               ))}
             </div>
+
+            {/* Benefits */}
             <Reveal delay={0.2}>
-              <GCard className="p-5 sm:p-6" accent="#f59e0b">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: "rgba(245,158,11,0.10)", border: "1px solid rgba(245,158,11,0.20)" }}>
-                    <Award size={18} style={{ color: "#f59e0b" }} />
-                  </div>
-                  <p className="text-[13px] text-white/58 leading-relaxed">
-                    <span className="text-white/85 font-semibold">A rede de representantes estaduais</span>{" "}
-                    é a espinha dorsal da expansão nacional. Ao transformar representantes em parceiros de negócio
-                    com participação financeira direta, a extraGO cria um exército de co-fundadores regionais
-                    incentivados a crescer.
-                  </p>
+              <GCard className="p-5 sm:p-6" accent="#f59e0b" glow>
+                <p className="text-[11px] font-black tracking-widest uppercase text-white/30 mb-4">Benefícios do Representante</p>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {[
+                    { icon: <BadgeCheck size={14} />, label: "Perfil verificado", color: "#f59e0b" },
+                    { icon: <Award size={14} />, label: "Brasão oficial", color: G },
+                    { icon: <BarChart3 size={14} />, label: "Painel regional", color: C },
+                    { icon: <Star size={14} />, label: "Participação estratégica", color: "#a855f7" },
+                    { icon: <DollarSign size={14} />, label: "Participação no Fundo Nacional", color: "#f43f5e" },
+                  ].map((b, i) => (
+                    <div key={i} className="flex items-center gap-2.5 py-2.5 px-3 rounded-xl border border-white/6"
+                      style={{ background: "rgba(255,255,255,0.025)" }}>
+                      <span style={{ color: b.color }}>{b.icon}</span>
+                      <span className="text-[13px] text-white/72 font-medium">{b.label}</span>
+                    </div>
+                  ))}
                 </div>
               </GCard>
             </Reveal>
@@ -597,62 +647,114 @@ export default function ModeloDeNegocioPage() {
         ══════════════════════════════════════ */}
         <section id="expansao" className="relative overflow-hidden px-5 sm:px-10 py-10 sm:py-20">
           <div className="absolute inset-0 pointer-events-none"
-            style={{ background: "radial-gradient(ellipse 60% 50% at 80% 50%,rgba(0,229,255,0.06) 0%,transparent 65%)" }} />
+            style={{ background: "radial-gradient(ellipse 60% 50% at 80% 50%,rgba(0,229,255,0.05) 0%,transparent 65%)" }} />
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
-              <Pill label="Expansão Nacional" color={C} icon={<Globe size={10} />} />
+              <Pill label="Modelo de Expansão" color={C} icon={<Globe size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
-                Plano de Expansão por Fase
+                Expansão Nacional por Fase
+              </h2>
+              <div className="flex flex-wrap gap-x-6 gap-y-2 mt-4">
+                {["Crescimento baseado em rede","Operação escalável","Gestão regional descentralizada","Expansão nacional progressiva"].map((tag, i) => (
+                  <div key={i} className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: C }} />
+                    <span className="text-[12px] text-white/50">{tag}</span>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
+            <div className="relative">
+              {/* Vertical line — desktop */}
+              <div className="absolute left-6 top-0 bottom-0 w-px hidden sm:block"
+                style={{ background: "linear-gradient(180deg,transparent,rgba(255,255,255,0.08) 10%,rgba(255,255,255,0.08) 90%,transparent)" }} />
+
+              <div className="space-y-4">
+                {[
+                  { phase: "Fase 1", region: "Rio Grande do Sul", color: G, icon: <MapPin size={14} /> },
+                  { phase: "Fase 2", region: "Região Sul", color: C, icon: <Globe size={14} /> },
+                  { phase: "Fase 3", region: "Sudeste", color: "#a855f7", icon: <TrendingUp size={14} /> },
+                  { phase: "Fase 4", region: "Capitais Estratégicas", color: "#f59e0b", icon: <Star size={14} /> },
+                  { phase: "Fase 5", region: "Cobertura Nacional", color: "#f43f5e", icon: <Rocket size={14} /> },
+                ].map((item, i) => (
+                  <Reveal key={i} delay={i * 0.08}>
+                    <div className="flex items-center gap-4 sm:gap-6">
+                      {/* Node */}
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 z-10"
+                        style={{ background: `${item.color}14`, border: `2px solid ${item.color}40` }}>
+                        <span style={{ color: item.color }}>{item.icon}</span>
+                      </div>
+                      {/* Card */}
+                      <GCard className="flex-1 px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6" accent={item.color}>
+                        <span className="text-[10px] font-black tracking-widest uppercase flex-shrink-0"
+                          style={{ color: item.color }}>{item.phase}</span>
+                        <p className="text-[15px] sm:text-[17px] font-black text-white/88">{item.region}</p>
+                        {i === 4 && (
+                          <span className="text-[9px] font-black px-2 py-0.5 rounded-full ml-auto"
+                            style={{ background: `${item.color}14`, border: `1px solid ${item.color}25`, color: item.color }}>
+                            OBJETIVO FINAL
+                          </span>
+                        )}
+                      </GCard>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* ══════════════════════════════════════
+            GOVERNANÇA
+        ══════════════════════════════════════ */}
+        <section id="governanca" className="px-5 sm:px-10 py-10 sm:py-20">
+          <div className="max-w-6xl mx-auto">
+            <Reveal className="mb-8">
+              <Pill label="Governança e Crescimento" color="#a855f7" icon={<Cpu size={10} />} />
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
+                Estrutura de Governança
               </h2>
               <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl">
-                Crescimento estruturado em fases, priorizando consolidação de mercado antes de expansão geográfica.
+                Três pilares de governança que garantem coordenação nacional, execução regional e crescimento sustentável.
               </p>
             </Reveal>
-            <div className="space-y-3">
+
+            <div className="grid sm:grid-cols-3 gap-5">
               {[
                 {
-                  phase: "Fase 1", period: "2024–2025", color: G, status: "Em andamento",
-                  title: "Fundação & MVP",
-                  items: ["Lançamento em Goiânia e Brasília", "Primeiros 500 profissionais", "Onboarding de 50 empresas parceiras", "Sistema de reputação ativo"],
+                  entity: "Plataforma", color: G, icon: <Cpu size={20} />,
+                  label: "Responsável por",
+                  items: ["Tecnologia", "Produto", "Compliance", "Estratégia Nacional"],
                 },
                 {
-                  phase: "Fase 2", period: "2025–2026", color: C, status: "Planejado",
-                  title: "Expansão Centro-Oeste",
-                  items: ["Representantes em todos os estados do CO", "10.000 profissionais ativos", "Integração com sistemas de RH", "Lançamento de planos Enterprise"],
+                  entity: "Representantes Estaduais", color: "#f59e0b", icon: <MapPin size={20} />,
+                  label: "Responsáveis por",
+                  items: ["Expansão regional", "Comunidade", "Parcerias", "Operação estadual"],
                 },
                 {
-                  phase: "Fase 3", period: "2026–2027", color: "#a855f7", status: "Projetado",
-                  title: "Escala Nacional",
-                  items: ["Presença nas 27 unidades federativas", "100.000 profissionais cadastrados", "Parceria com grandes corporações", "Series A e internacionalização"],
+                  entity: "Equipes Regionais", color: C, icon: <Users size={20} />,
+                  label: "Responsáveis por",
+                  items: ["Comercial", "Marketing", "Expansão", "Operações e Pessoas"],
                 },
-                {
-                  phase: "Fase 4", period: "2027+", color: "#f59e0b", status: "Visão",
-                  title: "Liderança de Mercado",
-                  items: ["Referência nacional em workforce flex", "Expansão para América Latina", "Produto financeiro próprio (extraPay)", "IPO ou M&A estratégico"],
-                },
-              ].map((phase, i) => (
-                <Reveal key={i} delay={i * 0.07}>
-                  <GCard className="p-5 sm:p-6" accent={phase.color}>
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                      <div className="flex-shrink-0">
-                        <span className="text-[10px] font-black tracking-widest uppercase" style={{ color: phase.color }}>{phase.phase}</span>
-                        <p className="text-[12px] text-white/38 mt-0.5">{phase.period}</p>
-                        <span className="inline-block mt-1.5 text-[9px] font-black px-2 py-0.5 rounded-full"
-                          style={{ background: `${phase.color}14`, border: `1px solid ${phase.color}25`, color: phase.color }}>
-                          {phase.status}
-                        </span>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-[14px] font-bold text-white/85 mb-3">{phase.title}</p>
-                        <div className="grid sm:grid-cols-2 gap-1.5">
-                          {phase.items.map((item, j) => (
-                            <div key={j} className="flex items-start gap-2">
-                              <CheckCircle size={11} style={{ color: phase.color, flexShrink: 0, marginTop: 2 }} />
-                              <span className="text-[12px] text-white/55">{item}</span>
-                            </div>
-                          ))}
+              ].map((pillar, i) => (
+                <Reveal key={i} delay={i * 0.10}>
+                  <GCard className="p-6 h-full" accent={pillar.color} glow>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                      style={{ background: `${pillar.color}12`, border: `1px solid ${pillar.color}22` }}>
+                      <span style={{ color: pillar.color }}>{pillar.icon}</span>
+                    </div>
+                    <h3 className="text-[16px] font-black text-white/90 mb-1">{pillar.entity}</h3>
+                    <p className="text-[10px] font-black tracking-widest uppercase mb-4" style={{ color: pillar.color }}>{pillar.label}</p>
+                    <div className="space-y-2">
+                      {pillar.items.map((item, j) => (
+                        <div key={j} className="flex items-center gap-2.5 py-2 px-3 rounded-xl border border-white/5"
+                          style={{ background: "rgba(255,255,255,0.025)" }}>
+                          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: pillar.color }} />
+                          <span className="text-[13px] text-white/70 font-medium">{item}</span>
                         </div>
-                      </div>
+                      ))}
                     </div>
                   </GCard>
                 </Reveal>
@@ -664,83 +766,61 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ══════════════════════════════════════
-            GOVERNANÇA E CRESCIMENTO
+            CTA FINAL
         ══════════════════════════════════════ */}
-        <section id="governanca" className="px-5 sm:px-10 py-10 sm:py-20">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-8">
-              <Pill label="Governança e Crescimento" color="#a855f7" icon={<Cpu size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
-                Estrutura de Governança
-              </h2>
-              <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl">
-                A extraGO opera com controles centralizados, visibilidade em tempo real e
-                processos automatizados — preparados para escalar com segurança.
-              </p>
-            </Reveal>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
-              {[
-                { icon: <BarChart3 size={18} />, color: "#a855f7", title: "Dashboard Nacional", desc: "Visibilidade em tempo real de todos os estados, usuários, extras e receita." },
-                { icon: <Shield size={18} />, color: G, title: "Compliance Operacional", desc: "Conformidade trabalhista, tributária e de proteção de dados (LGPD)." },
-                { icon: <Lock size={18} />, color: C, title: "Controles de Risco", desc: "Sistemas de detecção de fraude, avaliação de reputação e bloqueio automático." },
-                { icon: <Wallet size={18} />, color: "#f59e0b", title: "Gestão Financeira", desc: "Carteira digital integrada com PIX, histórico auditável e relatórios automatizados." },
-                { icon: <Users size={18} />, color: "#f43f5e", title: "Gestão de Equipe", desc: "Painel admin com controle por representante, estado e segmento de mercado." },
-                { icon: <Star size={18} />, color: T, title: "Reputação & Qualidade", desc: "Sistema de avaliação bidirecional que governa acesso, visibilidade e taxas." },
-              ].map((item, i) => (
-                <Reveal key={i} delay={i * 0.06}>
-                  <GCard className="p-5 h-full" accent={item.color}>
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-4"
-                      style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
-                      <span style={{ color: item.color }}>{item.icon}</span>
-                    </div>
-                    <h3 className="text-[13px] font-bold mb-2 text-white/88">{item.title}</h3>
-                    <p className="text-[12px] text-white/48 leading-relaxed">{item.desc}</p>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <Divider />
-
-        {/* ── FINAL CTA ── */}
         <section className="relative overflow-hidden px-5 sm:px-10 py-14 sm:py-24">
           <div className="absolute inset-0 pointer-events-none"
-            style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%,rgba(124,252,0,0.07) 0%,transparent 70%)" }} />
+            style={{ background: "radial-gradient(ellipse 60% 55% at 50% 50%,rgba(124,252,0,0.08) 0%,transparent 70%)" }} />
           <div className="relative z-10 max-w-2xl mx-auto text-center">
             <Reveal>
               <Pill label="Próximo Passo" color={G} icon={<Rocket size={10} />} />
-              <h2 className="font-black leading-tight mb-4" style={{ fontSize: "clamp(24px,4vw,48px)" }}>
-                Pronto para investir<br />
+              <h2 className="font-black leading-tight mb-4" style={{ fontSize: "clamp(22px,4vw,46px)" }}>
+                Pronto para investir na infraestrutura<br />
                 <span style={{ background: `linear-gradient(90deg,${G},${C})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                  na infraestrutura do Brasil?
+                  de mão de obra do Brasil?
                 </span>
               </h2>
-              <p className="text-white/50 text-[14px] leading-relaxed mb-8">
-                Converse com nossa equipe para entender as oportunidades de investimento,
-                parceria estratégica ou representação estadual.
+              <p className="text-white/50 text-[14px] leading-relaxed mb-8 max-w-xl mx-auto">
+                A extraGO está construindo a camada operacional que conecta empresas, profissionais e representantes em escala nacional.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <a href={`mailto:${CONTACT}`}>
                   <button className="flex items-center gap-2.5 rounded-full font-bold text-black border-none cursor-pointer"
                     style={{
                       background: `linear-gradient(135deg,${G} 0%,#9bff14 50%,${C} 100%)`,
-                      boxShadow: `0 0 28px rgba(124,252,0,0.30)`,
+                      boxShadow: `0 0 28px rgba(124,252,0,0.30), 0 4px 14px rgba(0,0,0,0.30)`,
                       height: "48px", padding: "0 28px", fontSize: "14px",
+                      transition: "box-shadow 0.2s ease, transform 0.15s ease",
+                    }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 0 42px rgba(124,252,0,0.50), 0 6px 20px rgba(0,0,0,0.36)`;
+                      (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 0 28px rgba(124,252,0,0.30), 0 4px 14px rgba(0,0,0,0.30)`;
+                      (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                     }}>
-                    <Mail size={15} /> Falar com a Equipe
+                    <Mail size={15} /> Quero investir
                   </button>
                 </a>
-                <Link href="/investidores-parceiros">
+                <a href={`mailto:${CONTACT}`}>
                   <button className="flex items-center gap-2 rounded-full font-semibold border cursor-pointer text-[13px]"
                     style={{
-                      background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.12)",
-                      color: "rgba(255,255,255,0.65)", height: "48px", padding: "0 24px",
+                      background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.14)",
+                      color: "rgba(255,255,255,0.72)", height: "48px", padding: "0 24px",
+                      transition: "background 0.2s, border-color 0.2s",
+                    }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.09)";
+                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.24)";
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.05)";
+                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.14)";
                     }}>
-                    <ArrowLeft size={13} /> Página de Investidores
+                    Tornar-se parceiro
                   </button>
-                </Link>
+                </a>
               </div>
             </Reveal>
           </div>
