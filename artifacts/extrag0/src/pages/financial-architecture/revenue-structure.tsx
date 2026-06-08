@@ -114,7 +114,7 @@ export default function RevenueStructurePage() {
                   boxShadow: `0 0 0 1px ${GA}18, 0 4px 32px ${GA}14`,
                 }}
               >
-                {/* Revenue background art */}
+                {/* Revenue background art — clearly visible */}
                 <div
                   className="absolute inset-0"
                   style={{
@@ -122,12 +122,12 @@ export default function RevenueStructurePage() {
                     backgroundSize: "cover",
                     backgroundPosition: "center right",
                     backgroundRepeat: "no-repeat",
-                    opacity: 0.18,
                   }}
                 />
+                {/* Light overlay — preserves readability, image still clearly perceived */}
                 <div
                   className="absolute inset-0 pointer-events-none"
-                  style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(0px)" }}
+                  style={{ background: "rgba(255,255,255,0.78)" }}
                 />
               <div className="relative p-6 sm:p-8">
                 <div className="space-y-5">

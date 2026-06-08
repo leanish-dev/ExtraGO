@@ -111,10 +111,10 @@ function Background() {
           filter: "saturate(1.55) contrast(1.08)",
         }}
       />
-      {/* Minimal dark overlay — keep brand colors vivid */}
+      {/* Overlay — dark enough for white text WCAG AA, image still clearly perceived */}
       <div
         className="absolute inset-0"
-        style={{ background: "rgba(4,10,22,0.28)" }}
+        style={{ background: "rgba(4,10,22,0.72)" }}
       />
     </div>
   );
@@ -361,11 +361,11 @@ export default function InvestidoresParceirosPage() {
         </section>
 
         {/* Inspiration strip */}
-        <div style={{ background: "rgba(14,165,233,0.04)", borderTop: "1px solid rgba(14,165,233,0.10)", borderBottom: "1px solid rgba(14,165,233,0.10)" }}>
+        <div style={{ background: "rgba(14,165,233,0.06)", borderTop: "1px solid rgba(14,165,233,0.14)", borderBottom: "1px solid rgba(14,165,233,0.14)" }}>
           <div className="max-w-4xl mx-auto px-5 py-4 text-center">
-            <p className="text-[12px] text-white/62 leading-relaxed">
+            <p className="text-[12px] leading-relaxed" style={{ color: "#475569" }}>
               Inspirada em{" "}
-              <span className="text-white/85 font-semibold">Uber, Airbnb, LinkedIn, Stripe e Nubank</span>
+              <span className="font-semibold" style={{ color: "#0f172a" }}>Uber, Airbnb, LinkedIn, Stripe e Nubank</span>
               {" "}— a extraGO une marketplace, reputação, geolocalização, pagamentos, gamificação e crescimento em rede em um único ecossistema.
             </p>
           </div>
@@ -381,7 +381,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Um mercado imenso operando<br />de forma fragmentada.
               </h2>
-              <p className="text-white/48 text-[14px] leading-relaxed max-w-2xl">
+              <p className="text-white/88 text-[14px] leading-relaxed max-w-2xl">
                 O mercado de trabalho flexível no Brasil ainda opera majoritariamente através de grupos de WhatsApp, indicações informais e processos manuais descentralizados. A digitalização desse ecossistema representa uma das maiores oportunidades de infraestrutura da próxima década.
               </p>
             </Reveal>
@@ -507,7 +507,7 @@ export default function InvestidoresParceirosPage() {
                 <h2 className="font-black leading-tight mb-4" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                   O momento certo<br />para construir isso.
                 </h2>
-                <p className="text-white/50 text-[14px] leading-relaxed">
+                <p className="text-white/90 text-[14px] leading-relaxed">
                   Múltiplas forças convergem simultaneamente criando uma janela estratégica única para a digitalização do mercado de trabalho flexível no Brasil.
                 </p>
               </Reveal>
@@ -545,8 +545,8 @@ export default function InvestidoresParceirosPage() {
                         <span style={{ color: item.color }}>{item.icon}</span>
                       </div>
                       <div>
-                        <p className="text-[13px] font-semibold text-white/82 mb-0.5">{item.title}</p>
-                        <p className="text-[12px] text-white/42 leading-relaxed">{item.desc}</p>
+                        <p className="text-[13px] font-semibold text-white/95 mb-0.5">{item.title}</p>
+                        <p className="text-[12px] text-white/75 leading-relaxed">{item.desc}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -612,7 +612,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Defensabilidade estrutural.<br />Não apenas funcionalidades.
               </h2>
-              <p className="text-white/48 text-[14px] leading-relaxed max-w-xl">
+              <p className="text-white/88 text-[14px] leading-relaxed max-w-xl">
                 As vantagens da extraGO não são features que podem ser copiadas — são efeitos de rede e estruturas operacionais que se fortalecem com o tempo e com a escala.
               </p>
             </Reveal>
@@ -621,7 +621,7 @@ export default function InvestidoresParceirosPage() {
               {ADVANTAGES.map((adv, i) => (
                 <Reveal key={i} delay={i * 0.04}>
                   <div className="flex items-start gap-5 py-5">
-                    <span className="text-[10px] font-black tracking-widest text-white/18 flex-shrink-0 w-5 pt-1 hidden sm:block">
+                    <span className="text-[10px] font-black tracking-widest text-white/38 flex-shrink-0 w-5 pt-1 hidden sm:block">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
@@ -629,8 +629,8 @@ export default function InvestidoresParceirosPage() {
                       <span style={{ color: adv.color }}>{adv.icon}</span>
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-[14px] font-bold text-white/88 mb-1.5 leading-tight">{adv.title}</h3>
-                      <p className="text-[13px] text-white/48 leading-relaxed">{adv.desc}</p>
+                      <h3 className="text-[14px] font-bold text-white/98 mb-1.5 leading-tight">{adv.title}</h3>
+                      <p className="text-[13px] text-white/85 leading-relaxed">{adv.desc}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -697,7 +697,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Múltiplas camadas de receita.<br />Todas recorrentes.
               </h2>
-              <p className="text-white/48 text-[14px] leading-relaxed max-w-xl">
+              <p className="text-white/88 text-[14px] leading-relaxed max-w-xl">
                 O modelo financeiro da extraGO combina intermediação por performance, assinaturas mensais e receita de rede — criando previsibilidade e escalabilidade.
               </p>
             </Reveal>
@@ -849,7 +849,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(24px,3.8vw,44px)" }}>
                 Os 4 Motores de Receita da extraGO
               </h2>
-              <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl mx-auto">
+              <p className="text-white/88 text-[14px] leading-relaxed max-w-2xl mx-auto">
                 Quatro fontes independentes gerando crescimento recorrente e escalável.
               </p>
             </Reveal>
@@ -1039,7 +1039,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 20px rgba(0,0,0,0.80)" }}>
                 Estrutura de Capital para<br />Crescimento de Longo Prazo.
               </h2>
-              <p className="text-white/55 text-[14px] leading-relaxed max-w-2xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.60)" }}>
+              <p className="text-white/90 text-[14px] leading-relaxed max-w-2xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.60)" }}>
                 A extraGO foi estruturada intencionalmente para suportar participação estratégica de investidores, parceiros institucionais e iniciativas de expansão — preservando a capacidade de crescimento e a solidez operacional de longo prazo.
               </p>
             </Reveal>
@@ -1226,7 +1226,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Um modelo desenhado para<br />crescimento sustentável nacional.
               </h2>
-              <p className="text-white/48 text-[14px] leading-relaxed max-w-2xl">
+              <p className="text-white/88 text-[14px] leading-relaxed max-w-2xl">
                 A receita da extraGO é distribuída intencionalmente para financiar cada pilar do crescimento — garantindo que expansão, tecnologia, operação e retorno para parceiros coexistam de forma equilibrada.
               </p>
             </Reveal>
@@ -1268,9 +1268,9 @@ export default function InvestidoresParceirosPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-1.5 mb-1">
                         <span style={{ color: item.color }}>{item.icon}</span>
-                        <p className="text-[12px] font-bold text-white/80 leading-tight">{item.label}</p>
+                        <p className="text-[12px] font-bold text-white/95 leading-tight">{item.label}</p>
                       </div>
-                      <p className="text-[11px] text-white/42 leading-relaxed">{item.desc}</p>
+                      <p className="text-[11px] text-white/78 leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -1280,8 +1280,8 @@ export default function InvestidoresParceirosPage() {
             <Reveal delay={0.2} className="mt-5">
               <div className="flex items-start gap-3 p-4 rounded-xl border border-white/6" style={{ background: "rgba(124,252,0,0.04)" }}>
                 <Lightbulb size={15} style={{ color: G, flexShrink: 0, marginTop: 2 }} />
-                <p className="text-[12px] text-white/55 leading-relaxed">
-                  <span className="text-white/82 font-semibold">A estrutura é o produto.</span>{" "}
+                <p className="text-[12px] text-white/88 leading-relaxed">
+                  <span className="text-white/98 font-semibold">A estrutura é o produto.</span>{" "}
                   Cada percentual foi projetado para que a extraGO cresça sem depender de capital externo contínuo — criando um modelo que se autofinancia, escala e distribui valor a cada ciclo.
                 </p>
               </div>
@@ -1302,7 +1302,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 As pessoas que estão construindo isso.
               </h2>
-              <p className="text-white/45 text-[14px] max-w-lg mx-auto">
+              <p className="text-white/88 text-[14px] max-w-lg mx-auto">
                 Uma equipe de fundadores com experiência complementar em tecnologia, marketing, operações e expansão comercial.
               </p>
             </Reveal>
@@ -1356,7 +1356,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 A jornada rumo à liderança nacional.
               </h2>
-              <p className="text-white/45 text-[14px] max-w-lg mx-auto">
+              <p className="text-white/88 text-[14px] max-w-lg mx-auto">
                 Sete fases estruturadas de validação ao domínio nacional do mercado de trabalho flexível.
               </p>
             </Reveal>
@@ -1382,7 +1382,7 @@ export default function InvestidoresParceirosPage() {
                         </span>
                         {phase.done && <div className="w-1 h-1 rounded-full mt-0.5" style={{ background: phase.color }} />}
                       </div>
-                      <p className="text-[10px] text-white/52 leading-tight font-medium">{phase.title}</p>
+                      <p className="text-[10px] text-white/88 leading-tight font-medium">{phase.title}</p>
                     </div>
                   </Reveal>
                 ))}
