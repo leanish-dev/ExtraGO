@@ -677,9 +677,9 @@ export default function InvestidoresParceirosPage() {
           {/* Background — network/ecosystem */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.78, filter: "saturate(1.65) contrast(1.12)" }} />
+              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 1, filter: "saturate(1.80) contrast(1.15)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.68) 0%,rgba(5,12,26,0.18) 50%,rgba(5,12,26,0.68) 100%)" }} />
+              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.52) 0%,rgba(5,12,26,0.08) 50%,rgba(5,12,26,0.52) 100%)" }} />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
@@ -760,9 +760,9 @@ export default function InvestidoresParceirosPage() {
           {/* map image accent */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 0.80, filter: "saturate(1.55) contrast(1.10)" }} />
+              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 1, filter: "saturate(1.70) contrast(1.12)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.72) 0%,rgba(5,12,26,0.12) 25%,rgba(5,12,26,0.12) 75%,rgba(5,12,26,0.72) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.55) 0%,rgba(5,12,26,0.06) 25%,rgba(5,12,26,0.06) 75%,rgba(5,12,26,0.55) 100%)" }} />
           </div>
 
           <div className="relative z-10 px-5 sm:px-10 max-w-6xl mx-auto">
@@ -786,7 +786,7 @@ export default function InvestidoresParceirosPage() {
               ].map((s, i) => (
                 <Reveal key={i} delay={i * 0.07}>
                   <GCard className="p-4 sm:p-5 text-center" accent={s.color}>
-                    <p className="text-[36px] sm:text-[42px] font-black leading-none mb-1" style={{ color: s.color }}>{s.num}</p>
+                    <p className="text-[36px] sm:text-[42px] font-black leading-none mb-1" style={{ color: s.color, textShadow: `0 2px 18px rgba(0,0,0,0.75)` }}>{s.num}</p>
                     <p className="text-[12px] font-semibold text-white/70 mb-0.5">{s.label}</p>
                     <p className="text-[10px] text-white/30 leading-snug">{s.sub}</p>
                   </GCard>
@@ -1075,9 +1075,9 @@ export default function InvestidoresParceirosPage() {
           {/* Background — Brazil map network */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.80, filter: "saturate(1.55) contrast(1.10)" }} />
+              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 1, filter: "saturate(1.75) contrast(1.12)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.68) 0%,rgba(5,12,26,0.18) 50%,rgba(5,12,26,0.68) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.52) 0%,rgba(5,12,26,0.08) 50%,rgba(5,12,26,0.52) 100%)" }} />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
@@ -1148,10 +1148,10 @@ export default function InvestidoresParceirosPage() {
 
             <Reveal className="mb-6 sm:mb-10">
               <Pill label="Estrutura de Capital" color="#f43f5e" icon={<Layers size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 20px rgba(0,0,0,0.80)" }}>
                 Estrutura de Capital para<br />Crescimento de Longo Prazo.
               </h2>
-              <p className="text-white/55 text-[14px] leading-relaxed max-w-2xl">
+              <p className="text-white/55 text-[14px] leading-relaxed max-w-2xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.60)" }}>
                 A extraGO foi estruturada intencionalmente para suportar participação estratégica de investidores, parceiros institucionais e iniciativas de expansão — preservando a capacidade de crescimento e a solidez operacional de longo prazo.
               </p>
             </Reveal>
@@ -1172,9 +1172,9 @@ export default function InvestidoresParceirosPage() {
                 {/* Card image background — sec-governanca embedded inside */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-governanca.png)", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.32, filter: "saturate(1.50) contrast(1.10)" }} />
+                    style={{ backgroundImage: "url(/sec-governanca.png)", backgroundSize: "cover", backgroundPosition: "center 40%", opacity: 0.60, filter: "saturate(1.70) contrast(1.12)" }} />
                   <div className="absolute inset-0"
-                    style={{ background: "linear-gradient(135deg,rgba(10,4,20,0.92) 0%,rgba(15,6,30,0.72) 40%,rgba(8,20,16,0.82) 100%)" }} />
+                    style={{ background: "linear-gradient(135deg,rgba(10,4,20,0.78) 0%,rgba(15,6,30,0.52) 40%,rgba(8,20,16,0.68) 100%)" }} />
                   {/* Atmospheric color wash */}
                   <div className="absolute inset-0"
                     style={{ background: "radial-gradient(ellipse 120% 80% at 15% 30%,rgba(244,63,94,0.14) 0%,transparent 55%), radial-gradient(ellipse 80% 60% at 85% 75%,rgba(124,252,0,0.10) 0%,transparent 55%)" }} />
@@ -1491,9 +1491,9 @@ export default function InvestidoresParceirosPage() {
         <section className="relative overflow-hidden py-9 sm:py-20">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.82, filter: "saturate(1.50) contrast(1.08)" }} />
+              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 1, filter: "saturate(1.70) contrast(1.10)" }} />
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.70) 0%,rgba(5,12,26,0.10) 22%,rgba(5,12,26,0.10) 78%,rgba(5,12,26,0.70) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.55) 0%,rgba(5,12,26,0.04) 22%,rgba(5,12,26,0.04) 78%,rgba(5,12,26,0.55) 100%)" }} />
           </div>
 
           <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-10 text-center">
@@ -1554,9 +1554,9 @@ export default function InvestidoresParceirosPage() {
                 {/* City skyline background */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.72, filter: "saturate(1.40) contrast(1.08)" }} />
+                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 1, filter: "saturate(1.70) contrast(1.12)" }} />
                   <div className="absolute inset-0"
-                    style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.10) 0%,rgba(5,12,26,0.58) 35%,rgba(124,252,0,0.06) 100%)" }} />
+                    style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.08) 0%,rgba(5,12,26,0.38) 35%,rgba(124,252,0,0.05) 100%)" }} />
                 </div>
                 {/* Top accent */}
                 <div className="absolute inset-x-0 top-0 h-[2px]"
@@ -1566,14 +1566,14 @@ export default function InvestidoresParceirosPage() {
                   <div className="max-w-3xl mx-auto text-center">
                     <Pill label="Oportunidade de Investimento" color={C} icon={<Globe size={10} />} />
 
-                    <h2 className="font-black leading-tight mb-4" style={{ fontSize: "clamp(24px,4vw,48px)" }}>
+                    <h2 className="font-black leading-tight mb-4" style={{ fontSize: "clamp(24px,4vw,48px)", filter: "drop-shadow(0 2px 18px rgba(0,0,0,0.80))" }}>
                       <span style={{
                         background: `linear-gradient(90deg,${C},#9aff1c 50%,${G})`,
                         WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                       }}>Construída para Escala Nacional.</span>
                     </h2>
 
-                    <p className="text-white/50 text-[14px] leading-relaxed mb-8 max-w-2xl mx-auto">
+                    <p className="text-white/50 text-[14px] leading-relaxed mb-8 max-w-2xl mx-auto" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.65)" }}>
                       A extraGO foi estruturada desde o primeiro dia para suportar expansão nacional, parcerias estratégicas e participação de investidores de longo prazo.
                     </p>
 
@@ -1623,9 +1623,9 @@ export default function InvestidoresParceirosPage() {
                 {/* sec-faca-parte image embedded inside the card */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.68, filter: "saturate(1.35) contrast(1.06)" }} />
+                    style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 1, filter: "saturate(1.70) contrast(1.10)" }} />
                   <div className="absolute inset-0"
-                    style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.82) 0%,rgba(5,12,26,0.50) 40%,rgba(5,12,26,0.65) 100%)" }} />
+                    style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.68) 0%,rgba(5,12,26,0.32) 40%,rgba(5,12,26,0.50) 100%)" }} />
                   {/* Green atmosphere wash */}
                   <div className="absolute inset-0"
                     style={{ background: `radial-gradient(ellipse 100% 60% at 50% 0%,${G}08 0%,transparent 60%)` }} />
@@ -1641,15 +1641,16 @@ export default function InvestidoresParceirosPage() {
                   <Pill label="Oportunidade de Investimento" color={G} icon={<Award size={10} />} />
 
                   <h2 className="font-black leading-tight mb-4"
-                    style={{ fontSize: "clamp(22px,3.8vw,44px)" }}>
+                    style={{ fontSize: "clamp(22px,3.8vw,44px)", textShadow: "0 2px 20px rgba(0,0,0,0.80)" }}>
                     Pronto para participar da construção
                     <span className="block" style={{
                       background: `linear-gradient(90deg,${G},#9aff1c,${C})`,
                       WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                      filter: "drop-shadow(0 2px 14px rgba(0,0,0,0.70))",
                     }}>da infraestrutura de mão de obra do Brasil?</span>
                   </h2>
 
-                  <p className="text-white/45 text-[14px] max-w-lg mx-auto leading-relaxed mb-6">
+                  <p className="text-white/45 text-[14px] max-w-lg mx-auto leading-relaxed mb-6" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.60)" }}>
                     A extraGO está estruturando uma rede nacional baseada em tecnologia, reputação, geolocalização e crescimento recorrente.
                   </p>
 
