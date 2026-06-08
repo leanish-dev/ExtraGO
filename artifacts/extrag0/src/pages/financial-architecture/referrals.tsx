@@ -1,0 +1,244 @@
+import React, { useEffect } from "react";
+import { Network, Users, Crown, Target, TrendingUp, Globe, Building2, Shield, BarChart3, Layers, Award, Zap } from "lucide-react";
+import {
+  FABackground, FAHeader, FANavBar, GCard, Pill, Reveal, Divider,
+  CheckItem, GA, GC, PageHero,
+} from "./_shared";
+
+const PURPLE = "#7c3aed";
+const AMBER = "#d97706";
+const ROSE = "#e11d48";
+
+export default function ReferralsPage() {
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  return (
+    <div className="relative min-h-screen flex flex-col overflow-x-hidden" style={{ background: "#f0fdf4", color: "#0f172a" }}>
+      <FABackground />
+      <FANavBar />
+      <div className="relative z-10"><FAHeader /></div>
+
+      <main className="relative z-10 flex-1">
+        <PageHero
+          pill="Camada 2 — Programa de Indicações Multinível"
+          pillColor={GC}
+          pillIcon={<Network size={10} />}
+          title="Como funciona o"
+          titleAccent="Programa de Indicações Multinível."
+          subtitle="Todos os usuários da extraGO recebem um código e link exclusivo de indicação. Quando um indicado realiza extras através da plataforma, o indicador recebe comissões recorrentes sobre o valor bruto das transações — criando uma rede de renda passiva."
+        />
+
+        <Divider />
+
+        {/* Como funciona */}
+        <section className="px-5 sm:px-10 py-10 sm:py-16">
+          <div className="max-w-6xl mx-auto">
+            <Reveal className="mb-6">
+              <Pill label="Como funciona" color={GC} icon={<Layers size={10} />} />
+              <h2 className="font-black text-slate-900 mb-3" style={{ fontSize: "clamp(20px,3vw,34px)" }}>
+                Estrutura Operacional do Programa
+              </h2>
+              <p className="text-slate-500 text-[14px] leading-relaxed max-w-2xl mb-6">
+                O programa de indicações funciona de forma automática. Ao se cadastrar, cada usuário recebe seu código e link exclusivos.
+                Toda vez que um indicado realiza um extra pago na plataforma, o indicador recebe automaticamente sua comissão proporcional.
+              </p>
+            </Reveal>
+
+            <div className="grid sm:grid-cols-3 gap-5 mb-8">
+              {[
+                {
+                  tier: "Indicador",
+                  pct: "2%",
+                  color: GC,
+                  icon: <Users size={20} />,
+                  req: "Conta ativa",
+                  desc: "Disponível para todos os usuários da plataforma com conta ativa. Não há requisitos mínimos além do cadastro.",
+                  top: false,
+                },
+                {
+                  tier: "Agente de Captação",
+                  pct: "3%",
+                  color: PURPLE,
+                  icon: <Network size={20} />,
+                  req: "25 indicados ativos · 100 extras concluídos pela rede",
+                  desc: "Usuário que demonstrou capacidade de construir e gerir uma rede ativa de indicados na plataforma.",
+                  top: false,
+                },
+                {
+                  tier: "Embaixador Regional",
+                  pct: "5%",
+                  color: GA,
+                  icon: <Crown size={20} />,
+                  req: "100 indicados ativos · 1.000 extras concluídos pela rede · Aprovação da plataforma · Atuação comprovada na região",
+                  desc: "O mais alto nível do programa. Profissional reconhecido pela plataforma como líder regional com impacto comprovado.",
+                  top: true,
+                },
+              ].map((item, i) => (
+                <Reveal key={i} delay={i * 0.09}>
+                  <GCard className="p-5 sm:p-6 h-full" accent={item.color} glow={item.top}>
+                    {item.top && (
+                      <span className="absolute top-3 right-3 text-[9px] font-black px-2 py-0.5 rounded-full"
+                        style={{ background: `${item.color}12`, border: `1px solid ${item.color}25`, color: item.color }}>
+                        NÍVEL MÁXIMO
+                      </span>
+                    )}
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                      style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
+                      <span style={{ color: item.color }}>{item.icon}</span>
+                    </div>
+                    <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: item.color }}>{item.tier}</p>
+                    <p className="font-black leading-none mb-2" style={{ fontSize: "clamp(36px,5vw,52px)", color: item.color }}>{item.pct}</p>
+                    <p className="text-[12px] text-slate-400 italic mb-4">do valor bruto dos extras realizados pelos indicados</p>
+                    <p className="text-[13px] text-slate-600 leading-relaxed mb-4">{item.desc}</p>
+                    <div className="pt-3 border-t border-slate-100">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">Requisitos</p>
+                      <p className="text-[12px] text-slate-500 leading-relaxed">{item.req}</p>
+                    </div>
+                  </GCard>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* Benefícios do embaixador */}
+        <section className="px-5 sm:px-10 py-10 sm:py-16">
+          <div className="max-w-6xl mx-auto">
+            <Reveal className="mb-6">
+              <Pill label="Benefícios Exclusivos — Embaixador Regional" color={GA} icon={<Crown size={10} />} />
+              <h2 className="font-black text-slate-900 mb-3" style={{ fontSize: "clamp(20px,3vw,34px)" }}>
+                Reconhecimento e Benefícios do Embaixador
+              </h2>
+            </Reveal>
+
+            <div className="grid sm:grid-cols-3 gap-4 mb-8">
+              {[
+                { icon: <Award size={16} />, color: GA, title: "Brasão Exclusivo", desc: "Brasão oficial de Embaixador Regional visível no perfil público, sinalizando liderança e reconhecimento da plataforma." },
+                { icon: <Globe size={16} />, color: GC, title: "Destaque no Perfil", desc: "Perfil destacado nos resultados de busca regionais, aumentando visibilidade dentro da comunidade local." },
+                { icon: <BarChart3 size={16} />, color: PURPLE, title: "Reconhecimento Regional", desc: "Posição oficial reconhecida pela extraGO como referência e liderança dentro de sua região de atuação." },
+              ].map((item, i) => (
+                <Reveal key={i} delay={i * 0.09}>
+                  <GCard className="p-5" accent={item.color}>
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
+                      style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
+                      <span style={{ color: item.color }}>{item.icon}</span>
+                    </div>
+                    <p className="font-bold text-slate-800 text-[14px] mb-2">{item.title}</p>
+                    <p className="text-[12px] text-slate-500 leading-relaxed">{item.desc}</p>
+                  </GCard>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* Objetivos do programa */}
+        <section className="px-5 sm:px-10 py-10 sm:py-16">
+          <div className="max-w-6xl mx-auto">
+            <Reveal className="mb-6">
+              <Pill label="Objetivos do Programa" color={PURPLE} icon={<Target size={10} />} />
+              <h2 className="font-black text-slate-900 mb-3" style={{ fontSize: "clamp(20px,3vw,34px)" }}>
+                Impacto Estratégico do Programa de Indicações
+              </h2>
+            </Reveal>
+
+            <div className="grid sm:grid-cols-2 gap-5 mb-8">
+              <Reveal>
+                <GCard className="p-5 sm:p-7 h-full" accent={GA}>
+                  <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Objetivos Principais</p>
+                  <div className="space-y-3">
+                    {[
+                      { title: "Crescimento Orgânico", desc: "Redução significativa do custo de aquisição de usuários ao transformar cada membro em um canal de distribuição ativo." },
+                      { title: "Expansão Nacional", desc: "A rede de indicações acelera a penetração em novos mercados e regiões sem necessidade de custo de marketing direto." },
+                      { title: "Redução do CAC", desc: "Usuários indicados por pessoas de confiança têm taxas de conversão e retenção superiores aos adquiridos por canais pagos." },
+                      { title: "Formação de Lideranças", desc: "Os Embaixadores Regionais se tornam naturalmente líderes comunitários que representam a extraGO em suas regiões." },
+                      { title: "Renda Recorrente", desc: "A comissão sobre extras realizados pela rede cria uma fonte de renda passiva recorrente para todos os participantes ativos." },
+                    ].map((item, i) => (
+                      <div key={i} className="border-b border-slate-100 pb-3 last:border-0 last:pb-0">
+                        <p className="font-semibold text-slate-700 text-[13px] mb-1">{item.title}</p>
+                        <p className="text-[12px] text-slate-500 leading-relaxed">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </GCard>
+              </Reveal>
+
+              <Reveal delay={0.1}>
+                <div className="space-y-4">
+                  <GCard className="p-5 sm:p-6" accent={GC}>
+                    <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Para Usuários</p>
+                    <div className="space-y-2">
+                      {[
+                        "Renda passiva recorrente proporcional ao crescimento da rede",
+                        "Sem necessidade de vendas ativas — a plataforma converte automaticamente",
+                        "Comissões automáticas a cada extra realizado pelos indicados",
+                        "Progressão de nível que aumenta o percentual de comissão",
+                      ].map((p, i) => <CheckItem key={i} text={p} color={GC} />)}
+                    </div>
+                  </GCard>
+
+                  <GCard className="p-5 sm:p-6" accent={AMBER}>
+                    <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Para Investidores</p>
+                    <div className="space-y-2">
+                      {[
+                        "Crescimento viral com custo de aquisição próximo de zero",
+                        "Rede auto-expansível sem investimento proporcional em marketing",
+                        "Dados de rede proprietários com alto valor estratégico",
+                        "Efeito de rede exponencial conforme a base cresce",
+                      ].map((p, i) => <CheckItem key={i} text={p} color={AMBER} />)}
+                    </div>
+                  </GCard>
+
+                  <GCard className="p-5 sm:p-6" accent={ROSE}>
+                    <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Escalabilidade</p>
+                    <p className="text-[13px] text-slate-600 leading-relaxed">
+                      Com 10.000 profissionais ativos realizando em média 10 extras por mês de R$200,00,
+                      a rede gera R$20.000.000,00 em volume bruto. Um Embaixador com 100 indicados ativos
+                      nessa rede recebe <strong className="text-rose-600">R$1.000/mês de renda passiva</strong> sem realizar nenhum extra diretamente.
+                    </p>
+                  </GCard>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* Papel no ecossistema */}
+        <section className="px-5 sm:px-10 py-10 sm:py-16">
+          <div className="max-w-6xl mx-auto">
+            <Reveal className="mb-5">
+              <Pill label="Papel no Ecossistema" color={GA} icon={<Globe size={10} />} />
+              <h2 className="font-black text-slate-900 mb-3" style={{ fontSize: "clamp(20px,3vw,34px)" }}>
+                A Camada 2 dentro da Arquitetura extraGO
+              </h2>
+            </Reveal>
+            <Reveal>
+              <GCard className="p-5 sm:p-7" accent={GA}>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {[
+                    "Complementa a Camada 1 criando incentivos além da taxa",
+                    "Alimenta a Camada 5 de Representantes Estaduais com líderes naturais",
+                    "Gera dados de redes sociais profissionais com valor proprietário",
+                    "Reduz dependência de publicidade paga para crescimento",
+                    "Cria comunidades regionais orgânicas em torno da extraGO",
+                    "Transforma usuários em stakeholders do crescimento da plataforma",
+                  ].map((point, i) => (
+                    <CheckItem key={i} text={point} color={GA} />
+                  ))}
+                </div>
+              </GCard>
+            </Reveal>
+          </div>
+        </section>
+
+        <div className="h-12" />
+      </main>
+    </div>
+  );
+}

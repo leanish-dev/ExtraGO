@@ -15,6 +15,13 @@ import RegisterPage from "@/pages/register";
 import DashboardRedirect from "@/pages/dashboard-redirect";
 import InvestidoresParceirosPage from "@/pages/investidores-parceiros";
 import ModeloDeNegocioPage from "@/pages/modelo-de-negocio";
+import FAPerformancePage from "@/pages/financial-architecture/performance";
+import FAReferralsPage from "@/pages/financial-architecture/referrals";
+import FAProfessionalPlansPage from "@/pages/financial-architecture/professional-plans";
+import FABusinessPlansPage from "@/pages/financial-architecture/business-plans";
+import FARevenueStructurePage from "@/pages/financial-architecture/revenue-structure";
+import FAExpansionModelPage from "@/pages/financial-architecture/expansion-model";
+import FAStateRepresentativesPage from "@/pages/financial-architecture/state-representatives";
 import AppLayout from "@/components/app-layout";
 
 import DashboardPage from "@/pages/app/dashboard";
@@ -113,6 +120,14 @@ function Router() {
       <Route path="/" component={LandingPage} />
       <Route path="/investidores-parceiros" component={InvestidoresParceirosPage} />
       <Route path="/modelo-de-negocio" component={ModeloDeNegocioPage} />
+      <Route path="/financial-architecture/performance" component={FAPerformancePage} />
+      <Route path="/financial-architecture/referrals" component={FAReferralsPage} />
+      <Route path="/financial-architecture/professional-plans" component={FAProfessionalPlansPage} />
+      <Route path="/financial-architecture/business-plans" component={FABusinessPlansPage} />
+      <Route path="/financial-architecture/revenue-structure" component={FARevenueStructurePage} />
+      <Route path="/financial-architecture/expansion-model" component={FAExpansionModelPage} />
+      <Route path="/financial-architecture/state-representatives" component={FAStateRepresentativesPage} />
+      <Route path="/financial-architecture" component={ModeloDeNegocioPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/dashboard" component={() => <ProtectedRoute component={DashboardRedirect} layout="none" />} />
