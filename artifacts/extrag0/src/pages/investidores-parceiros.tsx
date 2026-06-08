@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logoMain from "@assets/1779451173221_1779452671733.png";
-import PublicNavbar from "@/components/public-navbar";
+import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import {
   ArrowRight, TrendingUp, Users, Globe, Zap, Building2,
   CheckCircle, BarChart3, Layers, DollarSign, MapPin, Award,
@@ -248,7 +248,7 @@ export default function InvestidoresParceirosPage() {
     <div className="relative min-h-screen flex flex-col overflow-x-hidden" style={{ color: "#fff" }}>
       <Background />
 
-      <PublicNavbar />
+      <InstitutionalNavbar />
 
       <main className="relative z-10 flex-1">
 

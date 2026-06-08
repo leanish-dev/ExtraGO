@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import heroBanner from "@assets/1779463788546_1779532320944.png";
 import logoMain from "@assets/1779451173221_1779452671733.png";
-import PublicNavbar from "@/components/public-navbar";
+import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import referralArt from "@assets/file_00000000f534720e8e4eab1278948eb7_1780142932397.png";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -318,7 +318,7 @@ export default function LandingPage() {
       <FloatingParticles />
 
       {/* ── Unified navbar ── */}
-      <PublicNavbar />
+      <InstitutionalNavbar />
 
       <main className="flex-1 relative z-10">
 

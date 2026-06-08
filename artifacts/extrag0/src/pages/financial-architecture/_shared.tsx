@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Link } from "wouter";
 import { motion, useInView } from "framer-motion";
 import { ArrowLeft, ChevronRight } from "lucide-react";
-import PublicNavbar from "@/components/public-navbar";
+import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 
 export const GA = "#16a34a";
 export const GB = "#22c55e";
@@ -42,7 +42,7 @@ export function FAHeader() {
 }
 
 export function FANavBar({ back = "/modelo-de-negocio", backLabel = "← Arquitetura Financeira" }: { back?: string; backLabel?: string }) {
-  return <PublicNavbar />;
+  return <InstitutionalNavbar />;
 }
 
 export function GCard({ children, className = "", accent = "", glow = false }: {
