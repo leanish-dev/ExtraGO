@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logoMain from "@assets/1779451173221_1779452671733.png";
+import PublicNavbar from "@/components/public-navbar";
 import {
   ArrowRight, TrendingUp, Users, Globe, Zap, Building2,
   CheckCircle, BarChart3, Layers, DollarSign, MapPin, Award,
@@ -243,124 +244,11 @@ const ADVANTAGES = [
 
 /* ─── main page ─── */
 export default function InvestidoresParceirosPage() {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
   return (
     <div className="relative min-h-screen flex flex-col overflow-x-hidden" style={{ color: "#fff" }}>
       <Background />
 
-      {/* ── NAV ── */}
-      <header className="sticky top-0 z-50 w-full overflow-hidden"
-        style={{
-          backgroundImage: "url('/investors-logo-banner.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          backgroundRepeat: "no-repeat",
-          boxShadow: scrolled ? "0 4px 32px rgba(0,0,0,0.55)" : "0 2px 12px rgba(0,0,0,0.30)",
-          transition: "box-shadow 0.4s ease",
-        }}>
-
-        {/* Dark overlay — lightens slightly on scroll to preserve contrast */}
-        <div className="absolute inset-0 pointer-events-none"
-          style={{
-            background: scrolled ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.35)",
-            transition: "background 0.4s ease",
-          }} />
-
-        {/* Bottom accent line */}
-        <div className="absolute inset-x-0 bottom-0 h-px pointer-events-none"
-          style={{ background: `linear-gradient(90deg,transparent,${G}40 35%,${C}28 65%,transparent)` }} />
-
-        {/* Nav row — 74px mobile / 94px desktop */}
-        <div className="relative z-10 max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-10 h-[74px] lg:h-[94px]">
-
-          {/* Logo */}
-          <Link href="/" className="flex items-center flex-shrink-0">
-            <img
-              src={logoMain}
-              alt="extraGO"
-              style={{
-                height: "46px",
-                objectFit: "contain",
-                objectPosition: "left center",
-                filter: "drop-shadow(0 1px 6px rgba(0,0,0,0.50))",
-              }}
-            />
-          </Link>
-
-          {/* Desktop navigation — hidden on mobile */}
-          <nav className="hidden lg:flex items-center gap-8">
-            {[
-              ["#modelo",   "Investidores"],
-              ["#expansao", "Parceiros"],
-            ].map(([href, label]) => (
-              <a
-                key={href}
-                href={href}
-                className="text-[13px] font-medium relative group"
-                style={{ color: "rgba(255,255,255,0.75)", transition: "color 0.18s ease" }}
-                onMouseEnter={e => (e.currentTarget.style.color = G)}
-                onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
-              >
-                {label}
-                <span className="absolute -bottom-0.5 left-0 right-0 h-px scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"
-                  style={{ background: `${G}90` }} />
-              </a>
-            ))}
-            <a
-              href={`mailto:${CONTACT}`}
-              className="text-[13px] font-medium"
-              style={{ color: "rgba(255,255,255,0.60)", transition: "color 0.18s ease" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.90)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.60)")}
-            >
-              Contato
-            </a>
-            <Link
-              href="/"
-              className="text-[11px]"
-              style={{ color: "rgba(255,255,255,0.38)", transition: "color 0.18s ease" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.65)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.38)")}
-            >
-              ← Voltar
-            </Link>
-          </nav>
-
-          {/* CTA */}
-          <a href={`mailto:${CONTACT}`}>
-            <button
-              className="rounded-full font-bold text-black border-none cursor-pointer flex-shrink-0 whitespace-nowrap"
-              style={{
-                background: `linear-gradient(135deg,${G} 0%,#9bff14 50%,${C} 100%)`,
-                boxShadow: `0 0 22px rgba(124,252,0,0.35), 0 2px 10px rgba(0,0,0,0.35)`,
-                height: "40px",
-                padding: "0 16px",
-                fontSize: "13px",
-                letterSpacing: "0.01em",
-                transition: "box-shadow 0.2s ease, transform 0.15s ease",
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 34px rgba(124,252,0,0.55), 0 4px 16px rgba(0,0,0,0.40)`;
-                (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = `0 0 22px rgba(124,252,0,0.35), 0 2px 10px rgba(0,0,0,0.35)`;
-                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-              }}
-            >
-              {/* Shorter label on mobile, full label on desktop */}
-              <span className="sm:hidden">Investir</span>
-              <span className="hidden sm:inline">Investir na extraGO</span>
-            </button>
-          </a>
-        </div>
-      </header>
+      <PublicNavbar />
 
       <main className="relative z-10 flex-1">
 

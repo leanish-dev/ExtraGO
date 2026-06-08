@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import heroBanner from "@assets/1779463788546_1779532320944.png";
 import logoMain from "@assets/1779451173221_1779452671733.png";
-import navbarBg from "@assets/file_00000000a5a0720e9612b56b01bfe4f0~2_1780139707862.png";
+import PublicNavbar from "@/components/public-navbar";
 import referralArt from "@assets/file_00000000f534720e8e4eab1278948eb7_1780142932397.png";
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight, Zap, Shield, Star, Users, CheckCircle, Briefcase, Award,
-  TrendingUp, Lock, Sparkles, Globe, Clock, ChevronRight, Gift, Trophy,
-  ChevronDown, Home, Building2, UserCheck, Share2, BarChart3, MapPin, DollarSign
+  TrendingUp, Sparkles, Globe, Clock, ChevronRight, Gift, Trophy,
+  Home, Building2, UserCheck, Share2, BarChart3, MapPin, DollarSign
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLivePlatformStats } from "@/hooks/use-live-platform-stats";
@@ -253,37 +253,8 @@ const TESTIMONIALS = [
   { name: "Felipe S.", role: "Barman · Nível Elite", text: "O sistema de gamificação me motiva a sempre buscar mais. Já subi para Elite e as ofertas melhoraram muito.", stars: 5 },
 ];
 
-/* ─────────── Locked nav item ─────────── */
-function LockedNavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  const [, setLocation] = useLocation();
-  return (
-    <motion.button
-      whileHover={{ scale: 1.04 }}
-      whileTap={{ scale: 0.96 }}
-      onClick={() => setLocation("/login")}
-      className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground/50 cursor-pointer hover:text-muted-foreground transition-colors group relative"
-    >
-      {children}
-      <Lock size={11} className="opacity-60 group-hover:opacity-90 transition-opacity" />
-    </motion.button>
-  );
-}
-
-const EXPLORAR_ITEMS = [
-  { icon: <Home size={15} />, label: "Início", desc: "Página principal", href: "/" },
-  { icon: <Building2 size={15} />, label: "Para Empresas", desc: "Contrate profissionais", href: "/register?role=company" },
-  { icon: <Users size={15} />, label: "Para Freelancers", desc: "Encontre vagas extras", href: "/register?role=freelancer" },
-  { icon: <Briefcase size={15} />, label: "Extras Abertos", desc: "Explore oportunidades", href: "/login" },
-  { icon: <Zap size={15} />, label: "Como Funciona", desc: "Entenda a plataforma", href: "#como-funciona" },
-  { icon: <Globe size={15} />, label: "Setores", desc: "Gastronomia, Hotelaria e +", href: "#para-quem" },
-  { icon: <Trophy size={15} />, label: "Indicações", desc: "Ganhe comissões", href: "/register" },
-  { icon: <Gift size={15} />, label: "Quero Contratar", desc: "Publique uma vaga agora", href: "/register?role=company" },
-  { icon: <Share2 size={15} />, label: "Quero Trabalhar", desc: "Cadastre-se como freelancer", href: "/register?role=freelancer" },
-];
 
 export default function LandingPage() {
-  const [scrolled, setScrolled] = useState(false);
-  const [explorarOpen, setExplorarOpen] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll();
   const bannerY = useTransform(scrollY, [0, 400], [0, -50]);
@@ -327,151 +298,27 @@ export default function LandingPage() {
     },
   ];
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
-      {/* ── Background orbs ── */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        <AnimatedOrb color="#7CFC00" size={580} left="-8%" top="-12%" duration={22} />
-        <AnimatedOrb color="#00E5FF" size={420} left="66%" top="14%" duration={18} delay={4} />
-        <AnimatedOrb color="#7CFC00" size={260} left="8%" top="62%" duration={16} delay={8} />
+      {/* ── New page background ── */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "url(/mainpage-new-bg.png)",
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+            backgroundRepeat: "no-repeat",
+          }}
+        />
       </div>
 
-      {/* ── Background deep particles (slower, larger) ── */}
-      <BackgroundParticlesDeep />
-
-      {/* ── Floating particles ── */}
+      {/* ── Floating particles (for visual life) ── */}
       <FloatingParticles />
 
-      {/* ── Sticky top navbar ── */}
-      <motion.header
-        initial={false}
-        animate={scrolled ? { backdropFilter: "blur(28px)" } : { backdropFilter: "blur(18px)" }}
-        style={{ backgroundImage: `url(${navbarBg})`, backgroundSize: "cover", backgroundPosition: "center" }}
-        className={`sticky top-0 z-30 w-full transition-all duration-300 ${
-          scrolled
-            ? "border-b border-white/8 shadow-[0_4px_32px_rgba(0,0,0,0.5)]"
-            : "border-b border-white/[0.055] shadow-[0_1px_0_rgba(255,255,255,0.03)]"
-        }`}
-      >
-        <div className="flex items-center justify-between px-5 sm:px-8 py-2.5 sm:py-2 max-w-7xl mx-auto">
-
-          <Link href="/" className="flex-shrink-0 mr-2">
-            <img src={logoMain} alt="extraGO" className="h-6 object-contain" />
-          </Link>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            {/* Explorar mega dropdown */}
-            <div className="relative">
-              <motion.button
-                onClick={() => setExplorarOpen(o => !o)}
-                onBlur={() => setTimeout(() => setExplorarOpen(false), 150)}
-                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-200 py-1"
-              >
-                Explorar
-                <motion.span animate={{ rotate: explorarOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                  <ChevronDown size={13} />
-                </motion.span>
-              </motion.button>
-              <AnimatePresence>
-                {explorarOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 6, scale: 0.97 }}
-                    transition={{ duration: 0.18, ease: [0.19, 1, 0.22, 1] }}
-                    className="absolute left-0 top-full mt-2 w-[480px] rounded-2xl border border-white/10 overflow-hidden z-50"
-                    style={{ background: "rgba(8,14,20,0.96)", backdropFilter: "blur(24px)", boxShadow: "0 24px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04)" }}
-                  >
-                    <div className="p-3">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-2 pb-2">Explorar a plataforma</p>
-                      <div className="grid grid-cols-3 gap-1">
-                        {EXPLORAR_ITEMS.map((item, i) => (
-                          <Link
-                            key={i}
-                            href={item.href}
-                            onClick={() => setExplorarOpen(false)}
-                            className="flex flex-col gap-1 p-2.5 rounded-xl hover:bg-white/6 transition-all group cursor-pointer"
-                          >
-                            <span className="text-primary/70 group-hover:text-primary transition-colors">{item.icon}</span>
-                            <span className="text-xs font-semibold text-foreground/85 group-hover:text-foreground transition-colors leading-tight">{item.label}</span>
-                            <span className="text-[10px] text-muted-foreground/60 leading-tight">{item.desc}</span>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="border-t border-white/6 px-4 py-2.5 flex items-center justify-between bg-white/2">
-                      <span className="text-[10px] text-muted-foreground">extraGO · Workforce Marketplace</span>
-                      <Link href="/register" className="text-[10px] font-bold text-primary hover:text-primary/80 flex items-center gap-1" onClick={() => setExplorarOpen(false)}>
-                        Começar grátis <ChevronRight size={10} />
-                      </Link>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <a href="#como-funciona" className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-              Como funciona
-            </a>
-            <a href="#para-quem" className="text-muted-foreground hover:text-foreground transition-colors duration-200">
-              Para quem
-            </a>
-            <Link href="/investidores-parceiros" className="text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1">
-              <TrendingUp size={14} /> Investidores
-            </Link>
-            {user ? (
-              <Link href="/app/jobs" className="text-muted-foreground hover:text-foreground transition-colors duration-200 flex items-center gap-1">
-                <Briefcase size={14} /> Extras
-              </Link>
-            ) : (
-              <LockedNavLink href="/login">Extras</LockedNavLink>
-            )}
-          </nav>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Mobile-only investor page link — desktop nav already has it */}
-            <Link href="/investidores-parceiros"
-              className="md:hidden flex items-center gap-1 text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-colors"
-              style={{ color: "#7CFC00", borderColor: "rgba(124,252,0,0.25)", background: "rgba(124,252,0,0.06)" }}>
-              <TrendingUp size={11} />
-              <span>Investidores</span>
-            </Link>
-            {user ? (
-              <Link href="/app/dashboard">
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                  <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none rounded-full px-5 h-9 text-sm font-bold">
-                    Meu Painel <ChevronRight size={14} className="ml-1" />
-                  </Button>
-                </motion.div>
-              </Link>
-            ) : (
-              <>
-                <Link href="/login" className="hidden sm:block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-3 py-2">
-                  Entrar
-                </Link>
-                <Link href="/register">
-                  <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                    <Button
-                      className="border-none rounded-full px-5 h-9 text-sm font-bold text-black"
-                      style={{
-                        background: "linear-gradient(135deg, #7CFC00 0%, #9aff1c 50%, #00E5FF 100%)",
-                        boxShadow: "0 0 20px rgba(124,252,0,0.35), 0 0 40px rgba(124,252,0,0.1)",
-                      }}
-                    >
-                      Criar Conta
-                    </Button>
-                  </motion.div>
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </motion.header>
+      {/* ── Unified navbar ── */}
+      <PublicNavbar />
 
       <main className="flex-1 relative z-10">
 

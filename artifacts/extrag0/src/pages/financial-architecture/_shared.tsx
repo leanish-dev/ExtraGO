@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { Link } from "wouter";
 import { motion, useInView } from "framer-motion";
 import { ArrowLeft, ChevronRight } from "lucide-react";
+import PublicNavbar from "@/components/public-navbar";
 
 export const GA = "#16a34a";
 export const GB = "#22c55e";
@@ -41,41 +42,7 @@ export function FAHeader() {
 }
 
 export function FANavBar({ back = "/modelo-de-negocio", backLabel = "← Arquitetura Financeira" }: { back?: string; backLabel?: string }) {
-  return (
-    <div
-      className="sticky top-0 z-50 w-full"
-      style={{
-        background: "rgba(255,255,255,0.82)",
-        backdropFilter: "blur(18px)",
-        borderBottom: "1px solid rgba(22,163,74,0.12)",
-        boxShadow: "0 1px 12px rgba(0,0,0,0.06)",
-      }}
-    >
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-8 h-[56px]">
-        <Link href={back}>
-          <button
-            className="flex items-center gap-2 text-[13px] font-semibold rounded-full px-4 h-[34px] cursor-pointer transition-all"
-            style={{
-              color: GA,
-              background: "rgba(22,163,74,0.07)",
-              border: "1px solid rgba(22,163,74,0.20)",
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(22,163,74,0.13)"; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(22,163,74,0.07)"; }}
-          >
-            <ArrowLeft size={13} />
-            <span>{backLabel}</span>
-          </button>
-        </Link>
-        <div className="hidden sm:flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full" style={{ background: GA }} />
-          <span className="text-[11px] font-black tracking-[0.14em] uppercase" style={{ color: GA }}>
-            extraGO · Centro de Documentação Estratégica
-          </span>
-        </div>
-      </div>
-    </div>
-  );
+  return <PublicNavbar />;
 }
 
 export function GCard({ children, className = "", accent = "", glow = false }: {
