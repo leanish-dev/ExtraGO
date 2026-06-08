@@ -952,6 +952,124 @@ export default function InvestidoresParceirosPage() {
         <Divider />
 
         {/* ═══════════════════════════════
+            08b · 4 CAMADAS DE RECEITA
+        ═══════════════════════════════ */}
+        <section id="camadas" className="px-5 sm:px-10 py-10 sm:py-20">
+          <div className="max-w-6xl mx-auto">
+
+            <Reveal className="mb-10 text-center">
+              <Pill label="Modelo de Receita" color={G} icon={<Layers size={10} />} />
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(24px,3.8vw,44px)" }}>
+                4 Camadas de Receita
+              </h2>
+              <p className="text-white/50 text-[14px] leading-relaxed max-w-2xl mx-auto">
+                Múltiplas fontes de receita trabalhando juntas para construir a infraestrutura de mão de obra do Brasil.
+              </p>
+            </Reveal>
+
+            {/* 4 cards */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              {[
+                {
+                  num: "01", color: G, icon: <Zap size={15} />,
+                  title: "Intermediação por Performance",
+                  value: "10% a 20%",
+                  desc: "Taxas geradas sobre serviços concluídos.",
+                },
+                {
+                  num: "02", color: C, icon: <Network size={15} />,
+                  title: "Indicações Multinível",
+                  value: "2% a 5%",
+                  desc: "Crescimento baseado em rede e distribuição.",
+                },
+                {
+                  num: "03", color: "#a855f7", icon: <BadgeCheck size={15} />,
+                  title: "Assinaturas Profissionais",
+                  value: "R$ 19,90 a R$ 99,90",
+                  desc: "Receita recorrente proveniente dos profissionais.",
+                },
+                {
+                  num: "04", color: "#f59e0b", icon: <Building2 size={15} />,
+                  title: "Assinaturas Empresariais",
+                  value: "R$ 99,90 até Enterprise",
+                  desc: "Soluções SaaS para empresas.",
+                },
+              ].map((item, i) => (
+                <Reveal key={i} delay={i * 0.08}>
+                  <GCard className="p-5 sm:p-6 h-full" accent={item.color} glow>
+                    <div className="flex items-start justify-between mb-5">
+                      <span className="text-[10px] font-black tracking-[0.18em] uppercase"
+                        style={{ color: `${item.color}70` }}>Camada {item.num}</span>
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                        style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
+                        <span style={{ color: item.color }}>{item.icon}</span>
+                      </div>
+                    </div>
+                    <p className="text-[13px] font-bold text-white/80 mb-2.5 leading-snug">{item.title}</p>
+                    <p className="font-black mb-3 leading-none"
+                      style={{ fontSize: "clamp(17px,2vw,22px)", color: item.color }}>
+                      {item.value}
+                    </p>
+                    <p className="text-[12px] text-white/45 leading-relaxed">{item.desc}</p>
+                  </GCard>
+                </Reveal>
+              ))}
+            </div>
+
+            {/* Summary highlighted block */}
+            <Reveal delay={0.22} className="mb-8">
+              <GCard className="p-5 sm:p-8" accent={G} glow>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: "rgba(124,252,0,0.10)", border: "1px solid rgba(124,252,0,0.20)" }}>
+                    <Layers size={20} style={{ color: G }} />
+                  </div>
+                  <div>
+                    <h3 className="text-[16px] font-black text-white/90 mb-1.5">
+                      4 Fontes Independentes de Receita
+                    </h3>
+                    <p className="text-[13px] text-white/55 leading-relaxed max-w-2xl">
+                      A combinação dessas quatro camadas cria um modelo escalável, resiliente e preparado para crescimento nacional de longo prazo.
+                    </p>
+                  </div>
+                </div>
+              </GCard>
+            </Reveal>
+
+            {/* CTA → dedicated model page */}
+            <Reveal delay={0.30} className="flex justify-center">
+              <Link href="/modelo-de-negocio">
+                <button
+                  className="flex items-center gap-2.5 rounded-full font-bold text-black border-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(135deg,${G} 0%,#9bff14 50%,${C} 100%)`,
+                    boxShadow: `0 0 26px rgba(124,252,0,0.28), 0 4px 14px rgba(0,0,0,0.28)`,
+                    height: "48px",
+                    padding: "0 28px",
+                    fontSize: "14px",
+                    letterSpacing: "0.01em",
+                    transition: "box-shadow 0.2s ease, transform 0.15s ease",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = `0 0 40px rgba(124,252,0,0.48), 0 6px 20px rgba(0,0,0,0.36)`;
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = `0 0 26px rgba(124,252,0,0.28), 0 4px 14px rgba(0,0,0,0.28)`;
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                  }}
+                >
+                  Explorar o Modelo Completo <ArrowRight size={15} />
+                </button>
+              </Link>
+            </Reveal>
+
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* ═══════════════════════════════
             09 · GOVERNANCE & OPS
         ═══════════════════════════════ */}
         <section className="relative overflow-hidden px-5 sm:px-10 py-10 sm:py-24">
