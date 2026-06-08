@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import heroBanner from "@assets/1779463788546_1779532320944.png";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import referralArt from "@assets/file_00000000f534720e8e4eab1278948eb7_1780142932397.png";
@@ -326,23 +325,24 @@ export default function LandingPage() {
             HERO — Banner + Premium Headline
         ══════════════════════════════════════════ */}
         <section ref={heroRef} className="relative flex flex-col items-center justify-center overflow-hidden">
+          {/* Hero background image */}
           <motion.div
             style={{ y: bannerY, opacity: bannerOpacity }}
-            className="w-full relative"
+            className="absolute inset-0 z-0 pointer-events-none"
           >
-            <motion.img
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.1, ease: [0.19, 1, 0.22, 1] }}
-              src={heroBanner}
-              alt="extraGO Platform"
-              className="w-full object-cover hero-banner-glow"
-              style={{ maxHeight: "340px", objectPosition: "center" }}
+            <div
+              className="w-full h-full"
+              style={{
+                backgroundImage: "url(/hero-bg.png)",
+                backgroundSize: "cover",
+                backgroundPosition: "center top",
+                backgroundRepeat: "no-repeat",
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#08111a]/25 to-[#08111a]" />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,17,26,0.18) 0%, rgba(8,17,26,0.12) 50%, rgba(8,17,26,0.72) 100%)" }} />
           </motion.div>
 
-          <div className="w-full max-w-5xl mx-auto px-5 text-center -mt-10 sm:-mt-20 relative z-10 pb-8 sm:pb-14">
+          <div className="w-full max-w-5xl mx-auto px-5 text-center relative z-10 pt-16 sm:pt-24 pb-16 sm:pb-24">
             {/* Live badge */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -626,16 +626,24 @@ export default function LandingPage() {
                   transition={{ type: "spring", stiffness: 300, damping: 24 }}
                   className="relative overflow-hidden rounded-3xl cursor-pointer group"
                   style={{
-                    background: "linear-gradient(135deg, rgba(5,8,12,0.97) 0%, rgba(8,18,10,0.97) 100%)",
                     border: "1px solid rgba(124,252,0,0.18)",
                     boxShadow: "0 0 60px rgba(124,252,0,0.07), 0 24px 80px rgba(0,0,0,0.55)",
                   }}
                 >
+                  {/* Indicações background image */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage: "url(/card-indicacoes-bg.png)",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center right",
+                      backgroundRepeat: "no-repeat",
+                    }}
+                  />
+                  {/* Dark overlay — 70% max so image stays visible */}
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(4,8,14,0.80) 0%, rgba(6,16,10,0.72) 100%)" }} />
                   {/* Top accent line */}
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/55 to-transparent" />
-                  {/* Ambient glow */}
-                  <div className="absolute -top-20 -left-20 w-60 h-60 rounded-full pointer-events-none"
-                    style={{ background: "radial-gradient(circle, rgba(124,252,0,0.07) 0%, transparent 70%)", filter: "blur(40px)" }} />
 
                   <div className="flex flex-col lg:flex-row items-stretch">
                     {/* Left: text content */}

@@ -107,7 +107,29 @@ export default function RevenueStructurePage() {
             </Reveal>
 
             <Reveal>
-              <GCard className="p-6 sm:p-8 mb-8" accent={GA} glow>
+              <div
+                className="relative rounded-2xl overflow-hidden mb-8"
+                style={{
+                  border: `1px solid ${GA}30`,
+                  boxShadow: `0 0 0 1px ${GA}18, 0 4px 32px ${GA}14`,
+                }}
+              >
+                {/* Revenue background art */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: "url(/receita-operacional-bg.jpg)",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center right",
+                    backgroundRepeat: "no-repeat",
+                    opacity: 0.18,
+                  }}
+                />
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(0px)" }}
+                />
+              <div className="relative p-6 sm:p-8">
                 <div className="space-y-5">
                   {DISTRIBUTION.map((item, i) => (
                     <div key={i}>
@@ -141,7 +163,8 @@ export default function RevenueStructurePage() {
                     <span className="font-black text-[20px]" style={{ color: GA }}>100%</span>
                   </div>
                 </div>
-              </GCard>
+              </div>{/* /relative p-6 */}
+              </div>{/* /outer bg wrapper */}
             </Reveal>
           </div>
         </section>

@@ -15,6 +15,8 @@ import RegisterPage from "@/pages/register";
 import DashboardRedirect from "@/pages/dashboard-redirect";
 import InvestidoresParceirosPage from "@/pages/investidores-parceiros";
 import ModeloDeNegocioPage from "@/pages/modelo-de-negocio";
+import BlogPage from "@/pages/blog";
+import SegurancaPage from "@/pages/seguranca";
 import FAPerformancePage from "@/pages/financial-architecture/performance";
 import FAReferralsPage from "@/pages/financial-architecture/referrals";
 import FAProfessionalPlansPage from "@/pages/financial-architecture/professional-plans";
@@ -128,6 +130,8 @@ function Router() {
       <Route path="/financial-architecture/expansion-model" component={FAExpansionModelPage} />
       <Route path="/financial-architecture/state-representatives" component={FAStateRepresentativesPage} />
       <Route path="/financial-architecture" component={ModeloDeNegocioPage} />
+      <Route path="/blog" component={BlogPage} />
+      <Route path="/seguranca" component={SegurancaPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
       <Route path="/dashboard" component={() => <ProtectedRoute component={DashboardRedirect} layout="none" />} />
