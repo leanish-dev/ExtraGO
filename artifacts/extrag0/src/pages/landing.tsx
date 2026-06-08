@@ -339,7 +339,7 @@ export default function LandingPage() {
                 backgroundRepeat: "no-repeat",
               }}
             />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,17,26,0.18) 0%, rgba(8,17,26,0.12) 50%, rgba(8,17,26,0.72) 100%)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,17,26,0.08) 0%, rgba(8,17,26,0.10) 50%, rgba(8,17,26,0.42) 100%)" }} />
           </motion.div>
 
           <div className="w-full max-w-5xl mx-auto px-5 text-center relative z-10 pt-16 sm:pt-24 pb-16 sm:pb-24">
@@ -640,8 +640,8 @@ export default function LandingPage() {
                       backgroundRepeat: "no-repeat",
                     }}
                   />
-                  {/* Dark overlay — 70% max so image stays visible */}
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(4,8,14,0.80) 0%, rgba(6,16,10,0.72) 100%)" }} />
+                  {/* Dark overlay — light enough so art is clearly visible */}
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(4,8,14,0.52) 0%, rgba(6,16,10,0.44) 100%)" }} />
                   {/* Top accent line */}
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/55 to-transparent" />
 

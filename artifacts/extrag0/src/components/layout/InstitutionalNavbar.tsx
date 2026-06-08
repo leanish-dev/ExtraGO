@@ -6,22 +6,26 @@ import {
   Menu, X, ChevronDown, ChevronRight,
   Home, TrendingUp, Zap, Network, BadgeCheck, Building2,
   BarChart3, Globe, MapPin, ArrowRight, Sparkles, Mail, Layers,
-  Shield, BookOpen,
+  Shield, BookOpen, Briefcase, Users,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
+/* ─── Dropdown pages ─── */
 const FA_PAGES = [
-  { label: "Intermediação por Performance", href: "/financial-architecture/performance",          icon: <Zap size={13} />,       color: "#16a34a" },
-  { label: "Indicações Multinível",          href: "/financial-architecture/referrals",           icon: <Network size={13} />,   color: "#3b82f6" },
-  { label: "Assinaturas Profissionais",      href: "/financial-architecture/professional-plans",  icon: <BadgeCheck size={13} />, color: "#7c3aed" },
-  { label: "Assinaturas Empresariais",       href: "/financial-architecture/business-plans",      icon: <Building2 size={13} />, color: "#d97706" },
-  { label: "Estrutura Financeira",           href: "/financial-architecture/revenue-structure",   icon: <BarChart3 size={13} />, color: "#16a34a" },
-  { label: "Modelo de Expansão",             href: "/financial-architecture/expansion-model",     icon: <Globe size={13} />,     color: "#3b82f6" },
-  { label: "Representantes Estaduais",       href: "/financial-architecture/state-representatives", icon: <MapPin size={13} />,  color: "#d97706" },
+  { label: "Intermediação por Performance", href: "/financial-architecture/performance",           icon: <Zap size={13} />,       color: "#16a34a" },
+  { label: "Indicações Multinível",          href: "/financial-architecture/referrals",            icon: <Network size={13} />,   color: "#3b82f6" },
+  { label: "Assinaturas Profissionais",      href: "/financial-architecture/professional-plans",   icon: <BadgeCheck size={13} />, color: "#7c3aed" },
+  { label: "Assinaturas Empresariais",       href: "/financial-architecture/business-plans",       icon: <Building2 size={13} />, color: "#d97706" },
+  { label: "Estrutura Financeira",           href: "/financial-architecture/revenue-structure",    icon: <BarChart3 size={13} />, color: "#16a34a" },
+  { label: "Modelo de Expansão",             href: "/financial-architecture/expansion-model",      icon: <Globe size={13} />,     color: "#3b82f6" },
+  { label: "Representantes Estaduais",       href: "/financial-architecture/state-representatives",icon: <MapPin size={13} />,    color: "#d97706" },
 ];
 
-const NAV_LINKS = [
+/* ─── Main nav items (desktop) ─── */
+const DESKTOP_LINKS = [
   { label: "Início",        href: "/" },
+  { label: "Empresas",      href: "/register?role=company" },
+  { label: "Freelancers",   href: "/register?role=freelancer" },
   { label: "Investidores",  href: "/investidores-parceiros" },
   { label: "Roadmap",       href: "/modelo-de-negocio" },
   { label: "Segurança",     href: "/seguranca" },
@@ -33,12 +37,14 @@ const DRAWER_SECTIONS = [
   {
     title: "INSTITUCIONAL",
     items: [
-      { label: "Home",                   href: "/",                               icon: <Home size={15} /> },
-      { label: "Investidores",           href: "/investidores-parceiros",         icon: <TrendingUp size={15} /> },
-      { label: "Arquitetura Financeira", href: "/modelo-de-negocio",             icon: <Layers size={15} /> },
-      { label: "Roadmap",                href: "/modelo-de-negocio",             icon: <BarChart3 size={15} /> },
-      { label: "Segurança",              href: "/seguranca",                     icon: <Shield size={15} /> },
-      { label: "Blog",                   href: "/blog",                          icon: <BookOpen size={15} /> },
+      { label: "Home",                   href: "/",                                icon: <Home size={15} /> },
+      { label: "Empresas",               href: "/register?role=company",           icon: <Briefcase size={15} /> },
+      { label: "Freelancers",            href: "/register?role=freelancer",        icon: <Users size={15} /> },
+      { label: "Investidores",           href: "/investidores-parceiros",          icon: <TrendingUp size={15} /> },
+      { label: "Arquitetura Financeira", href: "/modelo-de-negocio",              icon: <Layers size={15} /> },
+      { label: "Roadmap",                href: "/modelo-de-negocio",              icon: <BarChart3 size={15} /> },
+      { label: "Segurança",              href: "/seguranca",                      icon: <Shield size={15} /> },
+      { label: "Blog",                   href: "/blog",                           icon: <BookOpen size={15} /> },
       { label: "Contato",                href: "mailto:extrago.contato@gmail.com", icon: <Mail size={15} />, isExternal: true },
     ],
   },
@@ -48,11 +54,23 @@ const DRAWER_SECTIONS = [
   },
 ];
 
+const GREEN  = "#16a34a";
+const CYAN   = "#00c9a7";
+const TEXT   = "#1e293b";
+const MUTED  = "#64748b";
+
 export default function InstitutionalNavbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [faOpen, setFaOpen]         = useState(false);
+  const [scrolled, setScrolled]     = useState(false);
   const [location]                  = useLocation();
   const { user }                    = useAuth();
+
+  useEffect(() => {
+    const fn = () => setScrolled(window.scrollY > 12);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
 
   useEffect(() => {
     const fn = (e: MouseEvent) => {
@@ -64,78 +82,71 @@ export default function InstitutionalNavbar() {
 
   useEffect(() => { setDrawerOpen(false); setFaOpen(false); }, [location]);
 
-  const active = (href: string) => location === href;
-  const CYAN = "#00c9a7";
-  const GREEN = "#16a34a";
+  const isActive = (href: string) =>
+    href.startsWith("mailto") ? false : location === href || (href !== "/" && location.startsWith(href));
+
+  /* ── Visual state ── */
+  const headerBg = scrolled
+    ? "rgba(255,255,255,0.98)"
+    : "rgba(255,255,255,0.96)";
+  const headerShadow = scrolled
+    ? "0 2px 24px rgba(0,0,0,0.09), 0 1px 0 rgba(22,163,74,0.10)"
+    : "0 1px 0 rgba(22,163,74,0.10)";
 
   return (
     <>
-      {/* ── Navbar ── */}
+      {/* ═══════════ NAVBAR ═══════════ */}
       <header
-        className="sticky top-0 z-50 w-full overflow-hidden"
+        className="sticky top-0 z-50 w-full"
         style={{
-          height: "92px",
-          backgroundImage: "url(/institutional-navbar.png)",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          backgroundRepeat: "no-repeat",
+          background: headerBg,
+          boxShadow: headerShadow,
+          backdropFilter: "blur(20px) saturate(180%)",
+          transition: "background 0.3s ease, box-shadow 0.3s ease",
         }}
       >
-        {/* Invisible logo hit-zone (left ~20% matches the logo in the artwork) */}
-        <Link href="/">
-          <span
-            style={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: "clamp(140px, 19%, 220px)",
-              display: "block",
-              cursor: "pointer",
-            }}
-            aria-label="extraGO Home"
-          />
-        </Link>
+        <div className="max-w-[1280px] mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8" style={{ height: 64 }}>
 
-        {/* Nav overlay layer */}
-        <div
-          className="relative h-full flex items-center justify-between"
-          style={{
-            paddingLeft: "clamp(165px, 20%, 235px)",
-            paddingRight: "clamp(8px, 2%, 16px)",
-          }}
-        >
-          {/* Desktop links */}
-          <nav className="hidden lg:flex items-center gap-0.5 flex-1">
-            {NAV_LINKS.map((link, i) => {
+          {/* ── Logo ── */}
+          <Link href="/" className="flex-shrink-0 mr-6">
+            <img
+              src={logoMain}
+              alt="extraGO"
+              style={{ height: 36, objectFit: "contain", display: "block" }}
+            />
+          </Link>
+
+          {/* ── Desktop nav ── */}
+          <nav className="hidden xl:flex items-center gap-0 flex-1 min-w-0">
+            {DESKTOP_LINKS.map((link, i) => {
+              const active = isActive(link.href);
               if (link.external) {
                 return (
                   <a
                     key={i}
                     href={link.href}
-                    className="px-3 py-1.5 rounded-xl text-[13px] font-semibold transition-colors duration-150"
-                    style={{ color: "#1e293b" }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = CYAN; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = "#1e293b"; }}
+                    className="relative px-2.5 py-1.5 text-[12.5px] font-semibold rounded-lg transition-colors duration-150 whitespace-nowrap"
+                    style={{ color: MUTED }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = GREEN; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = MUTED; }}
                   >
                     {link.label}
                   </a>
                 );
               }
-              const isActive = active(link.href);
               return (
                 <Link key={i} href={link.href}>
                   <span
-                    className="px-3 py-1.5 rounded-xl text-[13px] font-semibold cursor-pointer transition-all duration-150 block relative"
-                    style={{ color: isActive ? CYAN : "#1e293b" }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = CYAN; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = isActive ? CYAN : "#1e293b"; }}
+                    className="relative px-2.5 py-1.5 text-[12.5px] font-semibold rounded-lg transition-colors duration-150 whitespace-nowrap cursor-pointer block"
+                    style={{ color: active ? GREEN : TEXT }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = GREEN; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active ? GREEN : TEXT; }}
                   >
                     {link.label}
-                    {isActive && (
+                    {active && (
                       <span
-                        className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full"
-                        style={{ background: `linear-gradient(90deg,${CYAN},${GREEN})` }}
+                        className="absolute inset-x-2.5 bottom-0 h-[2px] rounded-full"
+                        style={{ background: `linear-gradient(90deg,${GREEN},${CYAN})` }}
                       />
                     )}
                   </span>
@@ -146,11 +157,11 @@ export default function InstitutionalNavbar() {
             {/* Arquitetura dropdown */}
             <div className="relative fa-dd-root">
               <button
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-[13px] font-semibold transition-colors duration-150"
-                style={{ color: location.startsWith("/financial-architecture") || active("/modelo-de-negocio") ? CYAN : "#1e293b" }}
+                className="flex items-center gap-1 px-2.5 py-1.5 text-[12.5px] font-semibold rounded-lg transition-colors duration-150 whitespace-nowrap"
+                style={{ color: location.startsWith("/financial-architecture") ? GREEN : TEXT, background: "none", border: "none", cursor: "pointer" }}
                 onClick={() => setFaOpen(o => !o)}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = CYAN; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = location.startsWith("/financial-architecture") ? CYAN : "#1e293b"; }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = GREEN; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = location.startsWith("/financial-architecture") ? GREEN : TEXT; }}
               >
                 Arquitetura
                 <motion.span animate={{ rotate: faOpen ? 180 : 0 }} transition={{ duration: 0.18 }}>
@@ -161,26 +172,25 @@ export default function InstitutionalNavbar() {
               <AnimatePresence>
                 {faOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                    initial={{ opacity: 0, y: 8, scale: 0.97 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 4, scale: 0.97 }}
+                    exit={{ opacity: 0, y: 6, scale: 0.97 }}
                     transition={{ duration: 0.16 }}
                     className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[420px] rounded-2xl overflow-hidden z-50"
                     style={{
-                      background: "rgba(255,255,255,0.99)",
-                      backdropFilter: "blur(24px)",
-                      border: "1px solid rgba(0,201,167,0.18)",
-                      boxShadow: "0 20px 60px rgba(0,0,0,0.14)",
+                      background: "#fff",
+                      border: "1px solid rgba(22,163,74,0.14)",
+                      boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)",
                     }}
                   >
-                    <div className="px-4 pt-3 pb-1.5 border-b" style={{ borderColor: "rgba(0,201,167,0.12)" }}>
+                    <div className="px-4 pt-3 pb-2 border-b" style={{ borderColor: "rgba(22,163,74,0.10)" }}>
                       <Link href="/modelo-de-negocio" onClick={() => setFaOpen(false)}>
                         <div className="flex items-center gap-2 group cursor-pointer">
-                          <Layers size={14} style={{ color: CYAN }} />
-                          <span className="text-[11px] font-black tracking-[0.13em] uppercase text-slate-400 group-hover:text-slate-600 transition-colors">
+                          <Layers size={13} style={{ color: GREEN }} />
+                          <span className="text-[11px] font-black tracking-[0.12em] uppercase" style={{ color: "#94a3b8" }}>
                             Ver documentação completa
                           </span>
-                          <ChevronRight size={10} className="text-slate-300 group-hover:text-slate-500 transition-colors" />
+                          <ChevronRight size={10} style={{ color: "#cbd5e1" }} />
                         </div>
                       </Link>
                     </div>
@@ -189,11 +199,11 @@ export default function InstitutionalNavbar() {
                         <Link key={i} href={page.href} onClick={() => setFaOpen(false)}>
                           <div
                             className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl cursor-pointer transition-all group"
-                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = `${page.color}0d`; }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = `${page.color}0c`; }}
                             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
                           >
                             <span style={{ color: page.color }}>{page.icon}</span>
-                            <span className="text-[12px] font-medium text-slate-600 group-hover:text-slate-900 transition-colors leading-tight">
+                            <span className="text-[12.5px] font-medium leading-tight" style={{ color: "#334155" }}>
                               {page.label}
                             </span>
                           </div>
@@ -206,102 +216,94 @@ export default function InstitutionalNavbar() {
             </div>
           </nav>
 
-          {/* Right side — CTA + hamburger */}
-          <div className="flex items-center gap-2">
-            {/* CTA desktop */}
+          {/* ── Right side ── */}
+          <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+            {/* CTA — sm and up */}
             <div className="hidden sm:block">
-              {user ? (
-                <Link href="/app/dashboard">
-                  <button
-                    style={{
-                      background: "linear-gradient(135deg,#16c47f 0%,#00c9a7 100%)",
-                      boxShadow: "0 0 18px rgba(0,201,167,0.38)",
-                      height: "38px",
-                      padding: "0 20px",
-                      fontSize: "13px",
-                      fontWeight: 700,
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: "999px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      transition: "box-shadow 0.2s ease, transform 0.15s ease",
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = "0 0 30px rgba(0,201,167,0.58)";
-                      (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(0,201,167,0.38)";
-                      (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                    }}
-                  >
-                    Meu Painel <ArrowRight size={13} />
-                  </button>
-                </Link>
-              ) : (
-                <Link href="/login">
-                  <button
-                    style={{
-                      background: "linear-gradient(135deg,#16c47f 0%,#00c9a7 100%)",
-                      boxShadow: "0 0 18px rgba(0,201,167,0.38)",
-                      height: "38px",
-                      padding: "0 20px",
-                      fontSize: "13px",
-                      fontWeight: 700,
-                      color: "#fff",
-                      border: "none",
-                      borderRadius: "999px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      transition: "box-shadow 0.2s ease, transform 0.15s ease",
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = "0 0 30px rgba(0,201,167,0.58)";
-                      (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(0,201,167,0.38)";
-                      (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                    }}
-                  >
-                    <Sparkles size={12} /> Entrar <ArrowRight size={12} />
-                  </button>
-                </Link>
-              )}
+              <Link href={user ? "/app/dashboard" : "/login"}>
+                <button
+                  style={{
+                    height: 36,
+                    padding: "0 18px",
+                    borderRadius: 999,
+                    background: `linear-gradient(135deg,${GREEN} 0%,${CYAN} 100%)`,
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: 13,
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    boxShadow: `0 0 18px rgba(0,201,167,0.30)`,
+                    transition: "box-shadow 0.2s ease, transform 0.15s ease",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 28px rgba(0,201,167,0.52)";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(0,201,167,0.30)";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                  }}
+                >
+                  {user ? "Meu Painel" : "Entrar"} <ArrowRight size={13} />
+                </button>
+              </Link>
             </div>
 
-            {/* Hamburger — integrated with cyan zone on right */}
+            {/* Mobile Entrar pill */}
+            <div className="flex sm:hidden">
+              <Link href={user ? "/app/dashboard" : "/login"}>
+                <button
+                  style={{
+                    height: 32,
+                    padding: "0 14px",
+                    borderRadius: 999,
+                    background: `linear-gradient(135deg,${GREEN},${CYAN})`,
+                    color: "#fff",
+                    fontWeight: 700,
+                    fontSize: 12,
+                    border: "none",
+                    cursor: "pointer",
+                  }}
+                >
+                  {user ? "App" : "Entrar"}
+                </button>
+              </Link>
+            </div>
+
+            {/* Hamburger */}
             <button
               onClick={() => setDrawerOpen(true)}
               aria-label="Menu"
               style={{
-                width: "38px",
-                height: "38px",
-                borderRadius: "10px",
-                background: "rgba(0,201,167,0.14)",
-                border: "1px solid rgba(0,201,167,0.30)",
-                color: "#0f766e",
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                background: "rgba(22,163,74,0.07)",
+                border: "1px solid rgba(22,163,74,0.16)",
+                color: "#16a34a",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 transition: "background 0.18s ease",
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(0,201,167,0.24)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(0,201,167,0.14)"; }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(22,163,74,0.14)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(22,163,74,0.07)"; }}
             >
-              <Menu size={18} />
+              <Menu size={17} />
             </button>
           </div>
         </div>
+
+        {/* ── Green accent line ── */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1.5px]"
+          style={{ background: `linear-gradient(90deg,transparent,${GREEN}28,${CYAN}22,transparent)` }} />
       </header>
 
-      {/* ── Drawer ── */}
+      {/* ═══════════ DRAWER ═══════════ */}
       <AnimatePresence>
         {drawerOpen && (
           <>
@@ -312,7 +314,7 @@ export default function InstitutionalNavbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.22 }}
               className="fixed inset-0 z-[60]"
-              style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(4px)" }}
+              style={{ background: "rgba(0,0,0,0.32)", backdropFilter: "blur(4px)" }}
               onClick={() => setDrawerOpen(false)}
             />
             <motion.div
@@ -323,49 +325,57 @@ export default function InstitutionalNavbar() {
               transition={{ duration: 0.28, ease: [0.19, 1, 0.22, 1] }}
               className="fixed left-0 top-0 bottom-0 z-[70] flex flex-col"
               style={{
-                width: "min(300px, 85vw)",
-                background: "rgba(255,255,255,0.99)",
-                backdropFilter: "blur(28px)",
-                borderRight: "1px solid rgba(0,201,167,0.14)",
-                boxShadow: "4px 0 40px rgba(0,0,0,0.14)",
+                width: "min(300px, 88vw)",
+                background: "#fff",
+                borderRight: "1px solid rgba(22,163,74,0.10)",
+                boxShadow: "4px 0 40px rgba(0,0,0,0.12)",
               }}
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
-                style={{ borderColor: "rgba(0,201,167,0.12)" }}>
+              <div
+                className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
+                style={{ borderColor: "rgba(22,163,74,0.10)" }}
+              >
                 <Link href="/" onClick={() => setDrawerOpen(false)}>
-                  <img src={logoMain} alt="extraGO" style={{ height: "34px", objectFit: "contain" }} />
+                  <img src={logoMain} alt="extraGO" style={{ height: 32, objectFit: "contain" }} />
                 </Link>
                 <button
                   onClick={() => setDrawerOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-xl cursor-pointer"
-                  style={{ background: "rgba(0,0,0,0.05)", color: "#475569", border: "none" }}
+                  style={{
+                    width: 32, height: 32, borderRadius: 8,
+                    background: "rgba(0,0,0,0.05)",
+                    border: "none", color: "#64748b", cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}
                   aria-label="Fechar"
                 >
                   <X size={16} />
                 </button>
               </div>
 
-              {/* Nav */}
+              {/* Nav list */}
               <div className="flex-1 overflow-y-auto py-3 px-3">
                 {DRAWER_SECTIONS.map((section, si) => (
-                  <div key={si} className="mb-4">
-                    <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "#94a3b8" }}>
+                  <div key={si} className="mb-5">
+                    <p
+                      className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase"
+                      style={{ color: "#94a3b8" }}
+                    >
                       {section.title}
                     </p>
                     <div className="space-y-0.5">
                       {section.items.map((item, ii) => {
-                        const isActive = location === item.href;
+                        const active = location === item.href;
                         if ("isExternal" in item && item.isExternal) {
                           return (
-                            <a key={ii} href={item.href} className="block">
+                            <a key={ii} href={item.href} className="block" onClick={() => setDrawerOpen(false)}>
                               <DrawerItem icon={item.icon} label={item.label} isActive={false} />
                             </a>
                           );
                         }
                         return (
                           <Link key={ii} href={item.href} onClick={() => setDrawerOpen(false)}>
-                            <DrawerItem icon={item.icon} label={item.label} isActive={isActive} />
+                            <DrawerItem icon={item.icon} label={item.label} isActive={active} />
                           </Link>
                         );
                       })}
@@ -374,26 +384,35 @@ export default function InstitutionalNavbar() {
                 ))}
               </div>
 
-              {/* Footer */}
-              <div className="flex-shrink-0 p-4 border-t" style={{ borderColor: "rgba(0,201,167,0.10)" }}>
+              {/* Footer CTA */}
+              <div
+                className="flex-shrink-0 p-4 border-t"
+                style={{ borderColor: "rgba(22,163,74,0.10)" }}
+              >
                 {user ? (
                   <Link href="/app/dashboard" onClick={() => setDrawerOpen(false)}>
-                    <button className="w-full rounded-full font-bold text-white border-none cursor-pointer h-11 text-[13px]"
-                      style={{ background: "linear-gradient(135deg,#16c47f,#00c9a7)" }}>
+                    <button
+                      className="w-full h-11 rounded-full font-bold text-white text-[13px] border-none cursor-pointer"
+                      style={{ background: `linear-gradient(135deg,${GREEN},${CYAN})` }}
+                    >
                       Meu Painel <ArrowRight size={13} className="inline ml-1" />
                     </button>
                   </Link>
                 ) : (
                   <div className="space-y-2">
                     <Link href="/login" onClick={() => setDrawerOpen(false)}>
-                      <button className="w-full rounded-full font-bold text-white border-none cursor-pointer h-10 text-[13px]"
-                        style={{ background: "linear-gradient(135deg,#16c47f,#00c9a7)" }}>
+                      <button
+                        className="w-full h-10 rounded-full font-bold text-white text-[13px] border-none cursor-pointer"
+                        style={{ background: `linear-gradient(135deg,${GREEN},${CYAN})` }}
+                      >
                         Entrar <ArrowRight size={12} className="inline ml-1" />
                       </button>
                     </Link>
                     <Link href="/register" onClick={() => setDrawerOpen(false)}>
-                      <button className="w-full rounded-full font-bold cursor-pointer h-10 text-[13px] border"
-                        style={{ color: "#0d9488", borderColor: "rgba(0,201,167,0.35)", background: "rgba(0,201,167,0.07)" }}>
+                      <button
+                        className="w-full h-10 rounded-full font-bold text-[13px] cursor-pointer border"
+                        style={{ color: GREEN, borderColor: "rgba(22,163,74,0.30)", background: "rgba(22,163,74,0.05)" }}
+                      >
                         Criar Conta
                       </button>
                     </Link>
@@ -411,20 +430,22 @@ export default function InstitutionalNavbar() {
   );
 }
 
+/* ─── Drawer list item ─── */
 function DrawerItem({ icon, label, isActive }: { icon: React.ReactNode; label: string; isActive: boolean }) {
   return (
     <div
       className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all"
       style={{
-        background: isActive ? "rgba(0,201,167,0.10)" : "transparent",
-        color: isActive ? "#0d9488" : "#334155",
+        background: isActive ? "rgba(22,163,74,0.09)" : "transparent",
+        color: isActive ? GREEN : "#334155",
       }}
       onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)"; }}
       onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
     >
-      <span style={{ color: isActive ? "#0d9488" : "#64748b" }}>{icon}</span>
+      <span style={{ color: isActive ? GREEN : "#64748b" }}>{icon}</span>
       <span className="text-[13px] font-medium leading-snug">{label}</span>
-      {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#00c9a7" }} />}
+      {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: GREEN }} />}
     </div>
   );
 }
+
