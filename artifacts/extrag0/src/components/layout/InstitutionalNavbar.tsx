@@ -6,7 +6,7 @@ import {
   Menu, X, ChevronDown, ChevronRight,
   Home, TrendingUp, Zap, Network, BadgeCheck, Building2,
   BarChart3, Globe, MapPin, ArrowRight, Layers,
-  LogIn, UserPlus,
+  LogIn, UserPlus, BookOpen, Shield,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -39,6 +39,13 @@ const DRAWER_SECTIONS = [
   {
     title: "ARQUITETURA",
     items: FA_PAGES.map(p => ({ label: p.label, href: p.href, icon: p.icon })),
+  },
+  {
+    title: "CONTEÚDO",
+    items: [
+      { label: "Blog",      href: "/blog",      icon: <BookOpen size={15} /> },
+      { label: "Segurança", href: "/seguranca", icon: <Shield size={15} /> },
+    ],
   },
   {
     title: "PLATAFORMA",
@@ -92,7 +99,7 @@ export default function InstitutionalNavbar() {
     <>
       {/* ═══════════ NAVBAR ═══════════ */}
       <header
-        className="sticky top-0 z-50 w-full"
+        className="sticky top-0 z-50 w-full relative"
         style={{
           background: headerBg,
           boxShadow: headerShadow,
@@ -100,6 +107,29 @@ export default function InstitutionalNavbar() {
           transition: "background 0.3s ease, box-shadow 0.3s ease",
         }}
       >
+        {/* Decorative world map + chart bg — matches reference image */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
+          <img
+            src="/institutional-navbar.png"
+            alt=""
+            style={{
+              position: "absolute",
+              right: 0,
+              top: 0,
+              height: "100%",
+              width: "60%",
+              objectFit: "cover",
+              objectPosition: "left center",
+              opacity: 0.14,
+            }}
+          />
+          <div style={{
+            position: "absolute",
+            top: 0, left: 0, bottom: 0,
+            width: "38%",
+            background: "linear-gradient(to right, rgba(255,255,255,1) 0%, transparent 100%)",
+          }} />
+        </div>
         <div className="max-w-[1280px] mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8" style={{ height: 64 }}>
 
           {/* ── Logo ── */}
@@ -112,7 +142,7 @@ export default function InstitutionalNavbar() {
           </Link>
 
           {/* ── Desktop nav ── */}
-          <nav className="hidden xl:flex items-center gap-0 flex-1 min-w-0">
+          <nav className="hidden lg:flex items-center gap-0 flex-1 min-w-0">
             {DESKTOP_LINKS.map((link, i) => {
               const active = isActive(link.href);
               if (link.external) {
@@ -218,9 +248,9 @@ export default function InstitutionalNavbar() {
               <Link href={user ? "/app/dashboard" : "/login"}>
                 <button
                   style={{
-                    height: 36,
-                    padding: "0 18px",
-                    borderRadius: 999,
+                    height: 38,
+                    padding: "0 20px",
+                    borderRadius: 10,
                     background: `linear-gradient(135deg,${GREEN} 0%,${CYAN} 100%)`,
                     color: "#fff",
                     fontWeight: 700,
@@ -230,7 +260,7 @@ export default function InstitutionalNavbar() {
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
-                    boxShadow: `0 0 18px rgba(0,201,167,0.30)`,
+                    boxShadow: `0 4px 16px rgba(0,201,167,0.32)`,
                     transition: "box-shadow 0.2s ease, transform 0.15s ease",
                   }}
                   onMouseEnter={e => {
@@ -254,7 +284,7 @@ export default function InstitutionalNavbar() {
                   style={{
                     height: 32,
                     padding: "0 14px",
-                    borderRadius: 999,
+                    borderRadius: 8,
                     background: `linear-gradient(135deg,${GREEN},${CYAN})`,
                     color: "#fff",
                     fontWeight: 700,

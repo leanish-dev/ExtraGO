@@ -4,6 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
+import { Reveal, GCardDark as GCard, Pill, Divider } from "@/lib/institutional-components";
 import {
   ArrowRight, TrendingUp, Users, Globe, Zap, Building2,
   CheckCircle, BarChart3, Layers, DollarSign, MapPin, Award,
@@ -18,59 +19,6 @@ const G = "#7CFC00";   // extraGO green
 const C = "#00E5FF";   // cyan
 const T = "#0ea5e9";   // teal
 
-/* ─── scroll-reveal wrapper ─── */
-function Reveal({ children, delay = 0, className = "" }: {
-  children: React.ReactNode; delay?: number; className?: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: 22 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, delay, ease: [0.19, 1, 0.22, 1] }}>
-      {children}
-    </motion.div>
-  );
-}
-
-/* ─── glass card ─── */
-function GCard({ children, className = "", accent = "", glow = false }: {
-  children: React.ReactNode; className?: string; accent?: string; glow?: boolean;
-}) {
-  return (
-    <div className={`relative rounded-2xl border overflow-hidden ${className}`}
-      style={{
-        background: "rgba(8,18,36,0.72)",
-        backdropFilter: "blur(28px) saturate(160%)",
-        borderColor: accent ? `${accent}28` : "rgba(255,255,255,0.09)",
-        boxShadow: glow && accent
-          ? `0 0 0 1px ${accent}12, 0 0 32px ${accent}18, 0 8px 40px rgba(0,0,0,0.45)`
-          : "0 4px 24px rgba(0,0,0,0.35)",
-      }}>
-      {accent && (
-        <div className="absolute inset-x-0 top-0 h-[1.5px]"
-          style={{ background: `linear-gradient(90deg,transparent,${accent}80,transparent)` }} />
-      )}
-      {children}
-    </div>
-  );
-}
-
-/* ─── section label pill ─── */
-function Pill({ label, color, icon }: { label: string; color: string; icon?: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-4 text-[10px] font-black tracking-[0.15em] uppercase"
-      style={{ background: `${color}10`, border: `1px solid ${color}28`, color }}>
-      {icon}{label}
-    </span>
-  );
-}
-
-/* ─── section divider ─── */
-function Divider({ color = "rgba(255,255,255,0.05)" }: { color?: string }) {
-  return <div className="w-full h-px" style={{ background: color }} />;
-}
 
 /* ─── premium metric strip ─── */
 const KEY_METRICS = [
@@ -109,7 +57,7 @@ function MetricStrip() {
                 >
                   {m.value}
                 </span>
-                <span className="text-[10px] sm:text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.42)" }}>
+                <span className="text-[10px] sm:text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.62)" }}>
                   {m.label}
                 </span>
               </motion.div>
@@ -393,7 +341,7 @@ export default function InvestidoresParceirosPage() {
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.78 }}
                 className="flex items-center flex-wrap gap-x-5 sm:gap-x-6 gap-y-2 pt-4 sm:pt-5 border-t text-[10px] sm:text-[11px]"
-                style={{ borderColor: "rgba(15,23,42,0.14)", color: "#475569" }}>
+                style={{ borderColor: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.70)" }}>
                 {[
                   { dot: "#3cb900", label: "Infraestrutura Digital" },
                   { dot: T,         label: "Expansão Nacional" },
@@ -419,9 +367,9 @@ export default function InvestidoresParceirosPage() {
         {/* Inspiration strip */}
         <div style={{ background: "rgba(14,165,233,0.06)", borderTop: "1px solid rgba(14,165,233,0.14)", borderBottom: "1px solid rgba(14,165,233,0.14)" }}>
           <div className="max-w-4xl mx-auto px-5 py-4 text-center">
-            <p className="text-[12px] leading-relaxed" style={{ color: "#475569" }}>
+            <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.65)" }}>
               Inspirada em{" "}
-              <span className="font-semibold" style={{ color: "#0f172a" }}>Uber, Airbnb, LinkedIn, Stripe e Nubank</span>
+              <span className="font-semibold" style={{ color: "rgba(255,255,255,0.92)" }}>Uber, Airbnb, LinkedIn, Stripe e Nubank</span>
               {" "}— a extraGO une marketplace, reputação, geolocalização, pagamentos, gamificação e crescimento em rede em um único ecossistema.
             </p>
           </div>

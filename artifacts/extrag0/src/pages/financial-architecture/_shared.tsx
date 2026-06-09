@@ -41,8 +41,32 @@ export function FAHeader() {
   );
 }
 
-export function FANavBar({ back = "/modelo-de-negocio", backLabel = "← Arquitetura Financeira" }: { back?: string; backLabel?: string }) {
-  return <InstitutionalNavbar />;
+export function FANavBar({ back = "/modelo-de-negocio", backLabel = "Arquitetura Financeira" }: { back?: string; backLabel?: string }) {
+  return (
+    <>
+      <InstitutionalNavbar />
+      <div
+        className="relative z-10"
+        style={{
+          background: "rgba(240,253,244,0.85)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid rgba(22,163,74,0.12)",
+        }}
+      >
+        <div className="max-w-6xl mx-auto px-5 sm:px-10 py-2">
+          <Link href={back}>
+            <span
+              className="inline-flex items-center gap-1.5 text-[12px] font-semibold cursor-pointer transition-opacity hover:opacity-70"
+              style={{ color: "#15803d" }}
+            >
+              <ArrowLeft size={12} />
+              {backLabel}
+            </span>
+          </Link>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export function GCard({ children, className = "", accent = "", glow = false }: {

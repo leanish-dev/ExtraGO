@@ -125,7 +125,7 @@ function TrustTicker() {
 
 /* ─────────── Floating particles ─────────── */
 function FloatingParticles() {
-  const particles = Array.from({ length: 14 }, (_, i) => ({
+  const particles = Array.from({ length: 8 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,

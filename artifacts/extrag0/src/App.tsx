@@ -129,7 +129,6 @@ function Router() {
       <Route path="/financial-architecture/revenue-structure" component={FARevenueStructurePage} />
       <Route path="/financial-architecture/expansion-model" component={FAExpansionModelPage} />
       <Route path="/financial-architecture/state-representatives" component={FAStateRepresentativesPage} />
-      <Route path="/financial-architecture" component={ModeloDeNegocioPage} />
       <Route path="/blog" component={BlogPage} />
       <Route path="/seguranca" component={SegurancaPage} />
       <Route path="/login" component={LoginPage} />
