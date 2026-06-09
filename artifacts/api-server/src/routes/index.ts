@@ -17,6 +17,10 @@ import seedRouter from "./seed";
 
 const router: IRouter = Router();
 
+router.get("/", (_req, res) => {
+  res.status(200).json({ status: "ok", service: "extraGO API" });
+});
+
 router.use(healthRouter);
 router.use(authRouter);
 router.use(usersRouter);
