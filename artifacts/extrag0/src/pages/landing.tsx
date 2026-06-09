@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import referralArt from "@assets/file_00000000f534720e8e4eab1278948eb7_1780142932397.png";
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight, Zap, Shield, Star, Users, CheckCircle, Briefcase, Award,
@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useLivePlatformStats } from "@/hooks/use-live-platform-stats";
+import { CountUp, ScrollSection } from "@/lib/institutional-components";
 
 /* ─────────── Typewriter word swap ─────────── */
 const TYPEWRITER_WORDS = ["gastronomia", "hotelaria", "eventos"];
@@ -49,48 +50,6 @@ function TypewriterWord() {
       </AnimatePresence>
       <span className="typewriter-cursor" />
     </span>
-  );
-}
-
-/* ─────────── Deep background particles (slower, larger) ─────────── */
-function BackgroundParticlesDeep() {
-  const particles = Array.from({ length: 8 }, (_, i) => ({
-    id: i,
-    x: [10, 25, 45, 60, 72, 82, 90, 35][i],
-    y: [15, 55, 25, 75, 40, 10, 65, 85][i],
-    size: 4 + (i % 3) * 2.5,
-    duration: 28 + i * 5,
-    delay: i * 3,
-    color: i % 2 === 0 ? "rgba(124,252,0,0.12)" : "rgba(0,229,255,0.1)",
-  }));
-
-  return (
-    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-      {particles.map(p => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full"
-          style={{
-            left: `${p.x}%`, top: `${p.y}%`,
-            width: p.size, height: p.size,
-            background: p.color,
-            boxShadow: `0 0 ${p.size * 4}px ${p.color}`,
-            filter: "blur(1px)",
-          }}
-          animate={{
-            y: [-30, 30, -30],
-            x: [0, 20, -10, 0],
-            opacity: [0.4, 0.8, 0.3, 0.8, 0.4],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </div>
   );
 }
 
@@ -165,66 +124,6 @@ function FloatingParticles() {
         />
       ))}
     </div>
-  );
-}
-
-/* ─────────── Animated orb ─────────── */
-function AnimatedOrb({ color, size, left, top, duration, delay = 0 }: {
-  color: string; size: number; left: string; top: string; duration: number; delay?: number;
-}) {
-  return (
-    <motion.div
-      className="absolute rounded-full pointer-events-none"
-      style={{
-        width: size, height: size, left, top,
-        background: color,
-        filter: `blur(${size / 2.2}px)`,
-        opacity: 0.065,
-      }}
-      animate={{ x: ["0%", "6%", "-4%", "5%", "0%"], y: ["0%", "8%", "4%", "-5%", "0%"], scale: [1, 1.12, 0.94, 1.08, 1] }}
-      transition={{ duration, delay, repeat: Infinity, ease: "easeInOut" }}
-    />
-  );
-}
-
-/* ─────────── Live count-up with real data ─────────── */
-function CountUp({ target, prefix = "", suffix = "", duration = 2200, fallback = 0 }: {
-  target?: number; prefix?: string; suffix?: string; duration?: number; fallback?: number;
-}) {
-  const value = target ?? fallback;
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-
-  useEffect(() => {
-    if (!inView) return;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * value));
-      if (progress < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [inView, value, duration]);
-
-  return <span ref={ref}>{prefix}{count.toLocaleString("pt-BR")}{suffix}</span>;
-}
-
-function ScrollSection({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 36 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.19, 1, 0.22, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
   );
 }
 
@@ -459,7 +358,7 @@ export default function LandingPage() {
                           {statsLoading ? (
                             <span className="inline-block w-12 h-8 rounded-lg skeleton" />
                           ) : (
-                            <CountUp target={stat.value} suffix={stat.suffix} fallback={stat.fallback} />
+                            <CountUp target={stat.value ?? stat.fallback} suffix={stat.suffix} />
                           )}
                         </p>
                         <p className="text-xs sm:text-sm text-muted-foreground mt-2 font-medium">{stat.label}</p>

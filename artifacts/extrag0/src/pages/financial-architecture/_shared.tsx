@@ -1,8 +1,10 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Link } from "wouter";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
+import { Reveal, Pill, GCard } from "@/lib/institutional-components";
+export { Reveal, Pill, GCard };
 
 export const GA = "#16a34a";
 export const GB = "#22c55e";
@@ -66,62 +68,6 @@ export function FANavBar({ back = "/modelo-de-negocio", backLabel = "Arquitetura
         </div>
       </div>
     </>
-  );
-}
-
-export function GCard({ children, className = "", accent = "", glow = false }: {
-  children: React.ReactNode; className?: string; accent?: string; glow?: boolean;
-}) {
-  return (
-    <div
-      className={`relative rounded-2xl border overflow-hidden ${className}`}
-      style={{
-        background: "rgba(255,255,255,0.88)",
-        backdropFilter: "blur(20px) saturate(150%)",
-        borderColor: accent ? `${accent}30` : "rgba(0,0,0,0.08)",
-        boxShadow: glow && accent
-          ? `0 0 0 1px ${accent}18, 0 4px 32px ${accent}14, 0 2px 12px rgba(0,0,0,0.07)`
-          : "0 2px 16px rgba(0,0,0,0.07)",
-      }}
-    >
-      {accent && (
-        <div
-          className="absolute inset-x-0 top-0 h-[2px]"
-          style={{ background: `linear-gradient(90deg,transparent,${accent}90,transparent)` }}
-        />
-      )}
-      {children}
-    </div>
-  );
-}
-
-export function Pill({ label, color, icon }: { label: string; color: string; icon?: React.ReactNode }) {
-  return (
-    <div
-      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-3 text-[10px] font-black tracking-[0.14em] uppercase"
-      style={{ background: `${color}10`, border: `1px solid ${color}30`, color }}
-    >
-      {icon}
-      {label}
-    </div>
-  );
-}
-
-export function Reveal({ children, delay = 0, className = "" }: {
-  children: React.ReactNode; delay?: number; className?: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.60, delay, ease: [0.19, 1, 0.22, 1] }}
-    >
-      {children}
-    </motion.div>
   );
 }
 

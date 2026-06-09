@@ -166,6 +166,32 @@ function Router() {
   );
 }
 
+const INSTITUTIONAL_PREFIXES = [
+  "/investidores-parceiros",
+  "/modelo-de-negocio",
+  "/financial-architecture",
+  "/blog",
+  "/seguranca",
+  "/login",
+  "/register",
+];
+
+function InstitutionalPageEffect() {
+  const [location] = useLocation();
+  useEffect(() => {
+    const isInstitutional =
+      location === "/" ||
+      INSTITUTIONAL_PREFIXES.some(p => location.startsWith(p));
+    if (isInstitutional) {
+      document.body.classList.add("institutional-page");
+    } else {
+      document.body.classList.remove("institutional-page");
+    }
+    return () => document.body.classList.remove("institutional-page");
+  }, [location]);
+  return null;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -174,7 +200,8 @@ function App() {
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <AuthProvider>
             <ScrollToTop />
-            <div className="dark min-h-[100dvh] text-foreground overflow-x-hidden">
+            <div className="min-h-[100dvh] text-foreground overflow-x-hidden">
+              <InstitutionalPageEffect />
               <Router />
             </div>
           </AuthProvider>

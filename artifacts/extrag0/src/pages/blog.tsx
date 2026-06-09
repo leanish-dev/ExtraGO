@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import { ArrowRight, BookOpen, Clock, Tag } from "lucide-react";
 import logoMain from "@assets/1779451173221_1779452671733.png";
+import { Reveal } from "@/lib/institutional-components";
 
 const POSTS = [
   {
@@ -61,19 +62,6 @@ const POSTS = [
     img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
   },
 ];
-
-function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.55, delay, ease: [0.19, 1, 0.22, 1] }}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 export default function BlogPage() {
   return (

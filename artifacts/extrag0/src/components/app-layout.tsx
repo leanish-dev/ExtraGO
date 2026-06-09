@@ -392,7 +392,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     "extraGO";
 
   return (
-    <div className="flex h-screen overflow-hidden relative">
+    <div className="dark flex h-screen overflow-hidden relative">
       {/* New premium background */}
       <AppBackground />
 

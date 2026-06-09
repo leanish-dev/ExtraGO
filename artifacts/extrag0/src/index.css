@@ -226,6 +226,29 @@
     }
   }
 
+  /* ── Suppress background effects on institutional (light) pages ── */
+  body.institutional-page::before,
+  body.institutional-page::after {
+    animation-play-state: paused;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease;
+  }
+
+  /* ── Respect reduced-motion preference ── */
+  @media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+      animation: none;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   /* ── Premium glass card ── */
   .glass-card {
     background: rgba(255, 255, 255, 0.036);

@@ -7,6 +7,7 @@ import {
   Home, TrendingUp, Zap, Network, BadgeCheck, Building2,
   BarChart3, Globe, MapPin, ArrowRight, Layers,
   LogIn, UserPlus, BookOpen, Shield,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -22,7 +23,7 @@ const FA_PAGES = [
 ];
 
 /* ─── Main nav items (desktop) ─── */
-const DESKTOP_LINKS = [
+const DESKTOP_LINKS: { label: string; href: string; external?: boolean }[] = [
   { label: "Início",        href: "/" },
   { label: "Investidores",  href: "/investidores-parceiros" },
 ];
@@ -241,84 +242,39 @@ export default function InstitutionalNavbar() {
             </div>
           </nav>
 
-          {/* ── Right side ── */}
-          <div className="flex items-center gap-2 flex-shrink-0 ml-3">
-            {/* CTA — sm and up */}
-            <div className="hidden sm:block">
-              <Link href={user ? "/app/dashboard" : "/login"}>
-                <button
-                  style={{
-                    height: 38,
-                    padding: "0 20px",
-                    borderRadius: 10,
-                    background: `linear-gradient(135deg,${GREEN} 0%,${CYAN} 100%)`,
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 13,
-                    border: "none",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    boxShadow: `0 4px 16px rgba(0,201,167,0.32)`,
-                    transition: "box-shadow 0.2s ease, transform 0.15s ease",
-                  }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 28px rgba(0,201,167,0.52)";
-                    (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(0,201,167,0.30)";
-                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                  }}
-                >
-                  {user ? "Meu Painel" : "Entrar"} <ArrowRight size={13} />
-                </button>
-              </Link>
-            </div>
-
-            {/* Mobile Entrar pill */}
-            <div className="flex sm:hidden">
-              <Link href={user ? "/app/dashboard" : "/login"}>
-                <button
-                  style={{
-                    height: 32,
-                    padding: "0 14px",
-                    borderRadius: 8,
-                    background: `linear-gradient(135deg,${GREEN},${CYAN})`,
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 12,
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  {user ? "App" : "Entrar"}
-                </button>
-              </Link>
-            </div>
-
-            {/* Hamburger */}
+          {/* ── Right block — gradient card ── */}
+          <div className="flex items-center flex-shrink-0 ml-3">
             <button
               onClick={() => setDrawerOpen(true)}
-              aria-label="Menu"
+              aria-label="Abrir menu"
               style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                background: "rgba(22,163,74,0.07)",
-                border: "1px solid rgba(22,163,74,0.16)",
-                color: "#16a34a",
+                width: 56,
+                height: 56,
+                borderRadius: 14,
+                background: `linear-gradient(145deg,${GREEN} 0%,${CYAN} 100%)`,
+                border: "none",
                 cursor: "pointer",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                transition: "background 0.18s ease",
+                gap: 5,
+                color: "#fff",
+                boxShadow: "0 4px 18px rgba(0,201,167,0.38), inset 0 1px 0 rgba(255,255,255,0.2)",
+                transition: "transform 0.15s ease, box-shadow 0.18s ease",
+                flexShrink: 0,
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(22,163,74,0.14)"; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(22,163,74,0.07)"; }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.transform = "scale(1.04)";
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 6px 28px rgba(0,201,167,0.55), inset 0 1px 0 rgba(255,255,255,0.2)";
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 18px rgba(0,201,167,0.38), inset 0 1px 0 rgba(255,255,255,0.2)";
+              }}
             >
-              <Menu size={17} />
+              <ArrowRight size={17} />
+              <Sparkles size={13} />
             </button>
           </div>
         </div>

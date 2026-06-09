@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "wouter";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
-import { Reveal, GCardDark as GCard, Pill, Divider } from "@/lib/institutional-components";
+import { Reveal, GCardDark as GCard, Pill, Divider, CountUp } from "@/lib/institutional-components";
 import {
   ArrowRight, TrendingUp, Users, Globe, Zap, Building2,
   CheckCircle, BarChart3, Layers, DollarSign, MapPin, Award,
@@ -74,31 +74,6 @@ function MetricStrip() {
       <div className="absolute inset-x-0 bottom-0 h-[1px]" style={{ background: "linear-gradient(90deg,transparent,rgba(124,252,0,0.18),rgba(0,229,255,0.12),transparent)" }} />
     </div>
   );
-}
-
-/* ─── animated counter 0 → target ─── */
-function CountUp({ target, suffix = "", duration = 1800 }: {
-  target: number; suffix?: string; duration?: number;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-  const [count, setCount] = useState(0);
-  const started = useRef(false);
-
-  useEffect(() => {
-    if (!inView || started.current) return;
-    started.current = true;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min((now - start) / duration, 1);
-      const eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t); // easeOutExpo
-      setCount(Math.round(eased * target));
-      if (t < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [inView]);
-
-  return <span ref={ref}>{count}{suffix}</span>;
 }
 
 /* ─── full-page background ─── */

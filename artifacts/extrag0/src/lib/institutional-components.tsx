@@ -133,3 +133,67 @@ export function Pill({
 export function Divider({ color = "rgba(255,255,255,0.05)" }: { color?: string }) {
   return <div className="w-full h-px" style={{ background: color }} />;
 }
+
+/** Light glass card — for use on light-background pages (e.g. financial-architecture). */
+export function GCard({
+  children,
+  className = "",
+  accent = "",
+  glow = false,
+}: {
+  children: ReactNode;
+  className?: string;
+  accent?: string;
+  glow?: boolean;
+}) {
+  return (
+    <div
+      className={`relative rounded-2xl border overflow-hidden ${className}`}
+      style={{
+        background: "rgba(255,255,255,0.88)",
+        backdropFilter: "blur(20px) saturate(150%)",
+        borderColor: accent ? `${accent}30` : "rgba(0,0,0,0.08)",
+        boxShadow:
+          glow && accent
+            ? `0 0 0 1px ${accent}18, 0 4px 32px ${accent}14, 0 2px 12px rgba(0,0,0,0.07)`
+            : "0 2px 16px rgba(0,0,0,0.07)",
+      }}
+    >
+      {accent && (
+        <div
+          className="absolute inset-x-0 top-0 h-[2px]"
+          style={{ background: `linear-gradient(90deg,transparent,${accent}90,transparent)` }}
+        />
+      )}
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Scroll-reveal + slide-up — uses y:36 for a more pronounced entrance.
+ * Alias of Reveal with a larger initial y offset, used in dense content pages.
+ */
+export function ScrollSection({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px" });
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, y: 36 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay, ease: [0.19, 1, 0.22, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
