@@ -142,15 +142,15 @@ function ReferralSimulator() {
     v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 2 });
 
   const SliderField = ({
-    label, value, min, max, step, onChange, suffix,
+    label, value, min, max, step, onChange, prefix,
   }: {
     label: string; value: number; min: number; max: number; step: number;
-    onChange: (v: number) => void; suffix?: string;
+    onChange: (v: number) => void; prefix?: string;
   }) => (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: "rgba(0,229,255,0.8)" }}>{label}</span>
-        <span className="text-sm font-bold" style={{ color: "#7CFC00" }}>{value}{suffix}</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "rgba(0,229,255,0.75)" }}>{label}</span>
+        <span className="text-xs font-bold" style={{ color: "#7CFC00" }}>{prefix}{value}</span>
       </div>
       <input
         type="range"
@@ -159,214 +159,92 @@ function ReferralSimulator() {
         step={step}
         value={value}
         onChange={e => onChange(Number(e.target.value))}
-        className="w-full h-1.5 rounded-full cursor-pointer appearance-none"
+        className="w-full h-1 rounded-full cursor-pointer appearance-none"
         style={{
           background: `linear-gradient(90deg, #7CFC00 ${((value - min) / (max - min)) * 100}%, rgba(255,255,255,0.12) 0%)`,
           accentColor: "#7CFC00",
         }}
       />
-      <div className="flex justify-between text-[9px]" style={{ color: "rgba(255,255,255,0.3)" }}>
-        <span>{min}{suffix}</span><span>{max}{suffix}</span>
+      <div className="flex justify-between text-[9px]" style={{ color: "rgba(255,255,255,0.28)" }}>
+        <span>{prefix}{min}</span><span>{prefix}{max}</span>
       </div>
     </div>
   );
 
   return (
-    <section className="px-5 py-8 sm:py-14">
-      <div className="max-w-5xl mx-auto">
-        <ScrollSection>
-          <div className="text-center mb-8">
-            <span className="chip-primary mb-3 inline-flex">
-              <Users size={10} className="fill-primary" /> Sistema de Indicações
-            </span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 mt-2">
-              Simule seus ganhos com indicações
-            </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto text-sm leading-relaxed">
-              Ajuste os parâmetros e veja em tempo real quanto você pode ganhar ao expandir sua rede na extraGO.
-            </p>
+    <div
+      className="relative overflow-hidden rounded-b-3xl"
+      style={{
+        borderTop: "1px solid rgba(124,252,0,0.10)",
+        boxShadow: "0 24px 60px rgba(0,0,0,0.5)",
+      }}
+    >
+      {/* Background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: "url(/indicacoes-counter-bg.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(2,6,16,0.88) 0%, rgba(0,10,6,0.84) 100%)" }} />
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.4) 40%, rgba(0,229,255,0.35) 60%, transparent)" }} />
+
+      <div className="relative z-10 px-4 py-4 sm:px-8 sm:py-6">
+        {/* Title row */}
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-4 rounded-full flex-shrink-0" style={{ background: "linear-gradient(180deg, #7CFC00, #00e5ff)" }} />
+          <p className="text-xs font-black tracking-[0.14em] uppercase" style={{ color: "rgba(255,255,255,0.5)" }}>Simule seus ganhos com indicações</p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-8">
+          {/* Left — sliders */}
+          <div className="flex flex-col gap-4">
+            <SliderField label="Indicados ativos" value={indicados} min={1} max={50} step={1} onChange={setIndicados} />
+            <SliderField label="Extras/mês por indicado" value={extrasPorMes} min={1} max={30} step={1} onChange={setExtrasPorMes} />
+            <SliderField label="Valor médio por extra" value={valorMedio} min={100} max={350} step={10} onChange={setValorMedio} prefix="R$ " />
           </div>
-        </ScrollSection>
 
-        <ScrollSection delay={0.1}>
-          <div
-            className="relative overflow-hidden rounded-3xl"
-            style={{
-              border: "1px solid rgba(124,252,0,0.18)",
-              boxShadow: "0 0 60px rgba(124,252,0,0.08), 0 24px 80px rgba(0,0,0,0.55)",
-            }}
-          >
-            {/* Background image */}
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage: "url(/indicacoes-counter-bg.png)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-            {/* Overlay for legibility */}
-            <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(2,8,18,0.82) 0%, rgba(0,12,8,0.78) 100%)" }} />
-            {/* Top glow line */}
-            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, #7CFC00 40%, #00e5ff 60%, transparent)" }} />
-
-            <div className="relative z-10 p-6 sm:p-10">
-              <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-
-                {/* Left — inputs */}
-                <div className="flex flex-col gap-7">
-                  <div className="flex items-center gap-2 mb-1">
-                    <div className="w-1.5 h-5 rounded-full" style={{ background: "linear-gradient(180deg, #7CFC00, #00e5ff)" }} />
-                    <span className="text-[11px] font-black tracking-[0.16em] uppercase" style={{ color: "rgba(255,255,255,0.45)" }}>Parâmetros da rede</span>
-                  </div>
-
-                  <SliderField
-                    label="Indicados ativos"
-                    value={indicados}
-                    min={1}
-                    max={200}
-                    step={1}
-                    onChange={setIndicados}
-                  />
-                  <SliderField
-                    label="Extras por mês (por indicado)"
-                    value={extrasPorMes}
-                    min={1}
-                    max={60}
-                    step={1}
-                    onChange={setExtrasPorMes}
-                  />
-                  <SliderField
-                    label="Valor médio por extra"
-                    value={valorMedio}
-                    min={100}
-                    max={800}
-                    step={10}
-                    onChange={setValorMedio}
-                    suffix=" R$"
-                  />
-
-                  {/* Volume total */}
-                  <div
-                    className="rounded-2xl px-5 py-4 border"
-                    style={{ background: "rgba(124,252,0,0.06)", borderColor: "rgba(124,252,0,0.18)" }}
-                  >
-                    <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: "rgba(124,252,0,0.7)" }}>
-                      Volume total gerado/mês
-                    </p>
-                    <p className="text-2xl font-black" style={{ color: "#7CFC00" }}>{fmt(volume)}</p>
-                    <p className="text-[10px] mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>
-                      {indicados} indicados × {extrasPorMes} extras × {fmt(valorMedio)}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right — results */}
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-2 mb-1">
-                    <div className="w-1.5 h-5 rounded-full" style={{ background: "linear-gradient(180deg, #00e5ff, #7CFC00)" }} />
-                    <span className="text-[11px] font-black tracking-[0.16em] uppercase" style={{ color: "rgba(255,255,255,0.45)" }}>Sua renda passiva/mês</span>
-                  </div>
-
-                  {/* Indicador */}
-                  <motion.div
-                    key={`ind-${indicador}`}
-                    initial={{ scale: 0.97 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                    className="rounded-2xl p-5 border"
-                    style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(255,255,255,0.10)" }}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "rgba(124,252,0,0.15)", color: "#7CFC00", border: "1px solid rgba(124,252,0,0.25)" }}>★</div>
-                          <div>
-                            <p className="text-xs font-bold" style={{ color: "#7CFC00" }}>Indicador</p>
-                            <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.4)" }}>2% sobre o volume</p>
-                          </div>
-                        </div>
-                        <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.35)" }}>Requisito: conta ativa</p>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-xl font-black" style={{ color: "#7CFC00" }}>{fmt(indicador)}</p>
-                        <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.35)" }}>por mês</p>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Agente de Captação */}
-                  <motion.div
-                    key={`agt-${agente}`}
-                    initial={{ scale: 0.97 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                    className="rounded-2xl p-5 border"
-                    style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(0,229,255,0.15)" }}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "rgba(0,229,255,0.12)", color: "#00e5ff", border: "1px solid rgba(0,229,255,0.22)" }}>★★</div>
-                          <div>
-                            <p className="text-xs font-bold" style={{ color: "#00e5ff" }}>Agente de Captação</p>
-                            <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.4)" }}>3% sobre o volume</p>
-                          </div>
-                        </div>
-                        <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.35)" }}>Requisito: 25 indicados ativos e 100 extras na rede</p>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-xl font-black" style={{ color: "#00e5ff" }}>{fmt(agente)}</p>
-                        <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.35)" }}>por mês</p>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Embaixador Regional */}
-                  <motion.div
-                    key={`emb-${embaixador}`}
-                    initial={{ scale: 0.97 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                    className="rounded-2xl p-5 border"
-                    style={{ background: "rgba(255,255,255,0.04)", borderColor: "rgba(250,204,21,0.18)" }}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: "rgba(250,204,21,0.12)", color: "#facc15", border: "1px solid rgba(250,204,21,0.22)" }}>★★★</div>
-                          <div>
-                            <p className="text-xs font-bold" style={{ color: "#facc15" }}>Embaixador Regional</p>
-                            <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.4)" }}>5% sobre o volume</p>
-                          </div>
-                        </div>
-                        <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.35)" }}>Requisito: 100 indicados ativos, 1.000 extras e aprovação</p>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-xl font-black" style={{ color: "#facc15" }}>{fmt(embaixador)}</p>
-                        <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.35)" }}>por mês</p>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  <Link href="/register?role=freelancer">
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                      <button
-                        className="w-full h-11 rounded-full font-bold text-black text-sm border-none cursor-pointer"
-                        style={{ background: "linear-gradient(135deg, #7CFC00, #9aff1c)", boxShadow: "0 4px 20px rgba(124,252,0,0.35)" }}
-                      >
-                        Comece a construir sua rede <ArrowRight size={15} className="inline ml-1" />
-                      </button>
-                    </motion.div>
-                  </Link>
-                </div>
+          {/* Right — results grid */}
+          <div className="flex flex-col gap-3">
+            <p className="text-[9px] font-black tracking-[0.14em] uppercase" style={{ color: "rgba(255,255,255,0.38)" }}>Sua renda passiva/mês</p>
+            <div className="grid grid-cols-3 gap-2">
+              {/* Indicador */}
+              <div className="rounded-xl p-2.5 border text-center" style={{ background: "rgba(124,252,0,0.06)", borderColor: "rgba(124,252,0,0.2)" }}>
+                <p className="text-[9px] font-bold mb-1" style={{ color: "#7CFC00" }}>Indicador</p>
+                <p className="text-[9px] mb-1.5" style={{ color: "rgba(255,255,255,0.4)" }}>2%</p>
+                <p className="text-sm font-black leading-tight" style={{ color: "#7CFC00" }}>{fmt(indicador)}</p>
+                <p className="text-[8px] mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>por mês</p>
+              </div>
+              {/* Agente */}
+              <div className="rounded-xl p-2.5 border text-center" style={{ background: "rgba(0,229,255,0.06)", borderColor: "rgba(0,229,255,0.2)" }}>
+                <p className="text-[9px] font-bold mb-1" style={{ color: "#00e5ff" }}>Agente</p>
+                <p className="text-[9px] mb-1.5" style={{ color: "rgba(255,255,255,0.4)" }}>3%</p>
+                <p className="text-sm font-black leading-tight" style={{ color: "#00e5ff" }}>{fmt(agente)}</p>
+                <p className="text-[8px] mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>por mês</p>
+              </div>
+              {/* Embaixador */}
+              <div className="rounded-xl p-2.5 border text-center" style={{ background: "rgba(250,204,21,0.06)", borderColor: "rgba(250,204,21,0.2)" }}>
+                <p className="text-[9px] font-bold mb-1" style={{ color: "#facc15" }}>Embaixador</p>
+                <p className="text-[9px] mb-1.5" style={{ color: "rgba(255,255,255,0.4)" }}>5%</p>
+                <p className="text-sm font-black leading-tight" style={{ color: "#facc15" }}>{fmt(embaixador)}</p>
+                <p className="text-[8px] mt-0.5" style={{ color: "rgba(255,255,255,0.3)" }}>por mês</p>
               </div>
             </div>
+            <Link href="/register?role=freelancer">
+              <button
+                className="w-full h-9 rounded-full font-bold text-black text-xs border-none cursor-pointer mt-1"
+                style={{ background: "linear-gradient(135deg, #7CFC00, #9aff1c)", boxShadow: "0 3px 14px rgba(124,252,0,0.3)" }}
+              >
+                Construir minha rede <ArrowRight size={12} className="inline ml-1" />
+              </button>
+            </Link>
           </div>
-        </ScrollSection>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -570,11 +448,6 @@ export default function LandingPage() {
           />
 
         {/* ══════════════════════════════════════════
-            SIMULADOR DE INDICAÇÕES
-        ══════════════════════════════════════════ */}
-        <ReferralSimulator />
-
-        {/* ══════════════════════════════════════════
             LIVE STATS — Real database data
         ══════════════════════════════════════════ */}
         <section className="px-5 pb-12">
@@ -762,19 +635,31 @@ export default function LandingPage() {
 
 
         {/* ══════════════════════════════════════════
-            REFERRAL BANNER — Simulação Indicações
+            SEÇÃO DE INDICAÇÕES — Banner + Simulador
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-5 sm:py-12">
-          <div className="max-w-5xl mx-auto">
+        <section
+          className="px-4 py-5 sm:px-5 sm:py-10 relative"
+          style={{
+            backgroundImage: "url(/indicacoes-bg-sec.jpg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          {/* Section overlay to maintain readability */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(2,6,18,0.72)" }} />
+          <div className="max-w-5xl mx-auto relative z-10">
             <ScrollSection>
+              {/* Banner card */}
               <Link href="/indicacoes">
                 <motion.div
-                  whileHover={{ y: -4, scale: 1.005 }}
+                  whileHover={{ y: -3, scale: 1.003 }}
                   transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                  className="relative overflow-hidden rounded-3xl cursor-pointer group"
+                  className="relative overflow-hidden rounded-t-3xl cursor-pointer group"
                   style={{
-                    border: "1px solid rgba(124,252,0,0.18)",
-                    boxShadow: "0 0 60px rgba(124,252,0,0.07), 0 24px 80px rgba(0,0,0,0.55)",
+                    border: "1px solid rgba(124,252,0,0.22)",
+                    borderBottom: "none",
+                    boxShadow: "0 0 50px rgba(124,252,0,0.07)",
                   }}
                 >
                   <img
@@ -785,6 +670,8 @@ export default function LandingPage() {
                   />
                 </motion.div>
               </Link>
+              {/* Simulator — seamlessly attached below */}
+              <ReferralSimulator />
             </ScrollSection>
           </div>
         </section>
