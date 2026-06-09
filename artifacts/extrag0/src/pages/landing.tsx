@@ -475,7 +475,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             HOW IT WORKS
         ══════════════════════════════════════════ */}
-        <section id="como-funciona" className="px-5 py-10 sm:py-14">
+        <section id="como-funciona" className="px-5 py-7 sm:py-14">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <div className="text-center mb-10">
@@ -525,7 +525,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             FOR WHOM
         ══════════════════════════════════════════ */}
-        <section id="para-quem" className="px-5 py-10 sm:py-14">
+        <section id="para-quem" className="px-5 py-7 sm:py-14">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <div className="text-center mb-10">
@@ -617,7 +617,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             REFERRAL HERO BANNER
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-8 sm:py-12">
+        <section className="px-5 py-5 sm:py-12">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <Link href="/indicacoes">
@@ -721,7 +721,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             SECTORS
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-8 sm:py-12">
+        <section className="px-5 py-5 sm:py-12">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <div className="text-center mb-8">
@@ -848,7 +848,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             TESTIMONIALS
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-10 sm:py-14">
+        <section className="px-5 py-7 sm:py-14">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <div className="text-center mb-10">
@@ -887,7 +887,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             INVESTIDORES & PARCEIROS BANNER
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-8 sm:py-12">
+        <section className="px-5 py-5 sm:py-12">
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <Link href="/investidores-parceiros">

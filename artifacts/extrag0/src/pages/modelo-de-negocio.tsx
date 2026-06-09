@@ -76,7 +76,7 @@ export default function ModeloDeNegocioPage() {
       <main className="relative z-10 flex-1">
 
         {/* ── INTRO ── */}
-        <section className="px-5 sm:px-10 py-10 sm:py-16">
+        <section className="px-5 sm:px-10 py-6 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal>
               <p className="text-slate-600 text-[15px] leading-relaxed max-w-3xl mb-8">
@@ -108,7 +108,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 1 ── */}
-        <section id="camada-1" className="px-5 sm:px-10 py-10 sm:py-16">
+        <section id="camada-1" className="px-5 sm:px-10 py-6 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-6">
               <Pill label="Camada 1" color={GA} icon={<Zap size={10} />} />
@@ -157,7 +157,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 2 ── */}
-        <section id="camada-2" className="px-5 sm:px-10 py-10 sm:py-16">
+        <section id="camada-2" className="px-5 sm:px-10 py-6 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-6">
               <Pill label="Camada 2" color={GC} icon={<Network size={10} />} />
@@ -203,7 +203,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 3 ── */}
-        <section id="camada-3" className="px-5 sm:px-10 py-10 sm:py-16">
+        <section id="camada-3" className="px-5 sm:px-10 py-6 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-6">
               <Pill label="Camada 3" color={PURPLE} icon={<BadgeCheck size={10} />} />
@@ -249,7 +249,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 4 ── */}
-        <section id="camada-4" className="px-5 sm:px-10 py-10 sm:py-16">
+        <section id="camada-4" className="px-5 sm:px-10 py-6 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-6">
               <Pill label="Camada 4" color={AMBER} icon={<Building2 size={10} />} />
@@ -292,7 +292,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── ESTRUTURA FINANCEIRA ── */}
-        <section id="financeiro" className="px-5 sm:px-10 py-10 sm:py-16">
+        <section id="financeiro" className="px-5 sm:px-10 py-6 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-6">
               <Pill label="Estrutura Financeira da Receita Operacional" color={GA} icon={<BarChart3 size={10} />} />
@@ -358,7 +358,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── MODELO DE EXPANSÃO ── */}
-        <section id="expansao" className="px-5 sm:px-10 py-10 sm:py-16">
+        <section id="expansao" className="px-5 sm:px-10 py-6 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-6">
               <Pill label="Modelo de Expansão" color={GC} icon={<Globe size={10} />} />
@@ -401,7 +401,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── REPRESENTANTES ESTADUAIS ── */}
-        <section id="representantes" className="px-5 sm:px-10 py-10 sm:py-16">
+        <section id="representantes" className="px-5 sm:px-10 py-6 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-6">
               <Pill label="Rede de Representantes Estaduais" color={AMBER} icon={<MapPin size={10} />} />
@@ -443,7 +443,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── COMO OS MOTORES SE CONECTAM ── */}
-        <section id="motores" className="px-5 sm:px-10 py-10 sm:py-20">
+        <section id="motores" className="px-5 sm:px-10 py-6 sm:py-20">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-10 text-center">
               <Pill label="Arquitetura de Receita" color={GA} icon={<Layers size={10} />} />
@@ -528,7 +528,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── FLYWHEEL extragO ── */}
-        <section id="flywheel" className="px-5 sm:px-10 py-10 sm:py-20">
+        <section id="flywheel" className="px-5 sm:px-10 py-6 sm:py-20">
           <div className="max-w-5xl mx-auto">
             <Reveal className="mb-10 text-center">
               <Pill label="Efeito de Rede" color={GC} icon={<Repeat size={10} />} />
@@ -644,7 +644,7 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── VISÃO DE LONGO PRAZO ── */}
-        <section className="px-5 sm:px-10 py-10 sm:py-16">
+        <section className="px-5 sm:px-10 py-6 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal>
               <GCard className="p-6 sm:p-10" accent={GA} glow>
@@ -674,7 +674,7 @@ export default function ModeloDeNegocioPage() {
         </section>
 
         {/* ── FOOTER NAV ── */}
-        <section className="px-5 sm:px-10 py-8 sm:py-12">
+        <section className="px-5 sm:px-10 py-5 sm:py-12">
           <div className="max-w-6xl mx-auto">
             <p className="text-[11px] font-black tracking-[0.14em] uppercase text-slate-400 mb-4">Documentação por camada</p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">

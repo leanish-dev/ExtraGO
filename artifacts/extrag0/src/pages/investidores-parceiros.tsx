@@ -72,6 +72,62 @@ function Divider({ color = "rgba(255,255,255,0.05)" }: { color?: string }) {
   return <div className="w-full h-px" style={{ background: color }} />;
 }
 
+/* ─── premium metric strip ─── */
+const KEY_METRICS = [
+  { value: "27",    label: "Estados",             color: "#7CFC00" },
+  { value: "108",   label: "Líderes Regionais",   color: "#00E5FF" },
+  { value: "4",     label: "Fontes de Receita",   color: "#a855f7" },
+  { value: "5",     label: "Níveis de Progressão",color: "#fbbf24" },
+  { value: "1",     label: "Plataforma Nacional", color: "#f43f5e" },
+];
+
+function MetricStrip() {
+  return (
+    <div
+      className="relative overflow-hidden"
+      style={{
+        background: "rgba(4,10,22,0.60)",
+        borderTop: "1px solid rgba(255,255,255,0.07)",
+        borderBottom: "1px solid rgba(255,255,255,0.07)",
+        backdropFilter: "blur(10px)",
+      }}
+    >
+      <div className="max-w-6xl mx-auto px-5 sm:px-10 py-3 sm:py-4">
+        <div className="flex items-center justify-center flex-wrap gap-x-4 sm:gap-x-8 gap-y-2">
+          {KEY_METRICS.map((m, i) => (
+            <React.Fragment key={i}>
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="flex items-center gap-2"
+              >
+                <span
+                  className="font-black leading-none"
+                  style={{ color: m.color, fontSize: "clamp(17px,2.2vw,24px)" }}
+                >
+                  {m.value}
+                </span>
+                <span className="text-[10px] sm:text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.42)" }}>
+                  {m.label}
+                </span>
+              </motion.div>
+              {i < KEY_METRICS.length - 1 && (
+                <span
+                  className="w-px h-4 flex-shrink-0 hidden sm:block"
+                  style={{ background: "rgba(255,255,255,0.10)" }}
+                />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+      <div className="absolute inset-x-0 bottom-0 h-[1px]" style={{ background: "linear-gradient(90deg,transparent,rgba(124,252,0,0.18),rgba(0,229,255,0.12),transparent)" }} />
+    </div>
+  );
+}
+
 /* ─── animated counter 0 → target ─── */
 function CountUp({ target, suffix = "", duration = 1800 }: {
   target: number; suffix?: string; duration?: number;
@@ -371,10 +427,12 @@ export default function InvestidoresParceirosPage() {
           </div>
         </div>
 
+        <MetricStrip />
+
         {/* ═══════════════════════════════
             02 · THE MARKET
         ═══════════════════════════════ */}
-        <section id="mercado" className="px-5 sm:px-10 py-8 sm:py-16">
+        <section id="mercado" className="px-5 sm:px-10 py-5 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="O Mercado" color={G} icon={<Globe size={10} />} />
@@ -436,7 +494,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             03 · THE PROBLEM
         ═══════════════════════════════ */}
-        <section id="problema" className="px-5 sm:px-10 py-8 sm:py-16">
+        <section id="problema" className="px-5 sm:px-10 py-5 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="O Problema" color="#f43f5e" icon={<Target size={10} />} />
@@ -499,7 +557,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             04 · WHY NOW
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-8 sm:py-16" style={{ background: "rgba(14,165,233,0.025)" }}>
+        <section className="px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(14,165,233,0.025)" }}>
           <div className="max-w-6xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-10 items-center">
               <Reveal>
@@ -561,7 +619,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             05 · SOLUTION — 4 pillars
         ═══════════════════════════════ */}
-        <section id="solucao" className="relative overflow-hidden px-5 sm:px-10 py-10 sm:py-24">
+        <section id="solucao" className="relative overflow-hidden px-5 sm:px-10 py-6 sm:py-24">
           {/* Background — network/ecosystem */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
@@ -605,7 +663,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             06 · COMPETITIVE ADVANTAGES
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-8 sm:py-16" style={{ background: "rgba(124,252,0,0.018)" }}>
+        <section className="px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(124,252,0,0.018)" }}>
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="Vantagens Competitivas" color={G} icon={<Shield size={10} />} />
@@ -640,11 +698,12 @@ export default function InvestidoresParceirosPage() {
         </section>
 
         <Divider />
+        <MetricStrip />
 
         {/* ═══════════════════════════════
             07 · NATIONAL EXPANSION
         ═══════════════════════════════ */}
-        <section id="expansao" className="relative overflow-hidden py-8 sm:py-16">
+        <section id="expansao" className="relative overflow-hidden py-5 sm:py-16">
           {/* map image accent */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
@@ -690,7 +749,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             08 · BUSINESS MODEL
         ═══════════════════════════════ */}
-        <section id="modelo" className="px-5 sm:px-10 py-8 sm:py-16">
+        <section id="modelo" className="px-5 sm:px-10 py-5 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="Modelo de Negócio" color={G} icon={<DollarSign size={10} />} />
@@ -841,7 +900,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             08b · 4 MOTORES DE RECEITA
         ═══════════════════════════════ */}
-        <section id="camadas" className="px-5 sm:px-10 py-10 sm:py-20">
+        <section id="camadas" className="px-5 sm:px-10 py-6 sm:py-20">
           <div className="max-w-6xl mx-auto">
 
             <Reveal className="mb-10 text-center">
@@ -955,11 +1014,12 @@ export default function InvestidoresParceirosPage() {
         </section>
 
         <Divider />
+        <MetricStrip />
 
         {/* ═══════════════════════════════
             09 · GOVERNANCE & OPS
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden px-5 sm:px-10 py-10 sm:py-24">
+        <section className="relative overflow-hidden px-5 sm:px-10 py-6 sm:py-24">
           {/* Background — Brazil map network */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
@@ -1031,7 +1091,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             09b · CAPITAL STRUCTURE — 30% investor block
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden px-5 sm:px-10 py-10 sm:py-24">
+        <section className="relative overflow-hidden px-5 sm:px-10 py-6 sm:py-24">
           <div className="relative z-10 max-w-6xl mx-auto">
 
             <Reveal className="mb-6 sm:mb-10">
@@ -1218,7 +1278,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             09c · WHY THE STRUCTURE SCALES
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-8 sm:py-16" style={{ background: "rgba(124,252,0,0.015)" }}>
+        <section className="px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(124,252,0,0.015)" }}>
           <div className="max-w-6xl mx-auto">
 
             <Reveal className="mb-8">
@@ -1295,7 +1355,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             10 · TEAM
         ═══════════════════════════════ */}
-        <section id="equipe" className="px-5 sm:px-10 py-8 sm:py-16">
+        <section id="equipe" className="px-5 sm:px-10 py-5 sm:py-16">
           <div className="max-w-5xl mx-auto">
             <Reveal className="text-center mb-8">
               <Pill label="Liderança" color={C} icon={<Users size={10} />} />
@@ -1349,7 +1409,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             11 · ROADMAP — timeline
         ═══════════════════════════════ */}
-        <section id="roadmap" className="px-5 sm:px-10 py-8 sm:py-16" style={{ background: "rgba(14,165,233,0.02)" }}>
+        <section id="roadmap" className="px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(14,165,233,0.02)" }}>
           <div className="max-w-6xl mx-auto">
             <Reveal className="text-center mb-6 sm:mb-10">
               <Pill label="Roadmap" color={C} icon={<TrendingUp size={10} />} />
@@ -1392,11 +1452,12 @@ export default function InvestidoresParceirosPage() {
         </section>
 
         <Divider />
+        <MetricStrip />
 
         {/* ═══════════════════════════════
             12 · LONG-TERM VISION
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden py-9 sm:py-20">
+        <section className="relative overflow-hidden py-6 sm:py-20">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
               style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 1, filter: "saturate(1.70) contrast(1.10)" }} />
@@ -1451,7 +1512,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             12b · BUILT FOR NATIONAL SCALE
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-8 sm:py-16">
+        <section className="px-5 sm:px-10 py-5 sm:py-16">
           <div className="max-w-6xl mx-auto">
             <Reveal>
               <div className="relative rounded-2xl overflow-hidden border"
@@ -1519,7 +1580,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             13 · FINAL CTA
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden px-5 sm:px-10 py-9 sm:py-20">
+        <section className="relative overflow-hidden px-5 sm:px-10 py-6 sm:py-20">
           <div className="relative z-10 max-w-4xl mx-auto">
             <Reveal>
               <div className="relative rounded-2xl border overflow-hidden"

@@ -5,8 +5,8 @@ import logoMain from "@assets/1779451173221_1779452671733.png";
 import {
   Menu, X, ChevronDown, ChevronRight,
   Home, TrendingUp, Zap, Network, BadgeCheck, Building2,
-  BarChart3, Globe, MapPin, ArrowRight, Sparkles, Mail, Layers,
-  Shield, BookOpen, Briefcase, Users,
+  BarChart3, Globe, MapPin, ArrowRight, Layers,
+  LogIn, UserPlus,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -24,33 +24,28 @@ const FA_PAGES = [
 /* ─── Main nav items (desktop) ─── */
 const DESKTOP_LINKS = [
   { label: "Início",        href: "/" },
-  { label: "Empresas",      href: "/register?role=company" },
-  { label: "Freelancers",   href: "/register?role=freelancer" },
   { label: "Investidores",  href: "/investidores-parceiros" },
-  { label: "Roadmap",       href: "/modelo-de-negocio" },
-  { label: "Segurança",     href: "/seguranca" },
-  { label: "Blog",          href: "/blog" },
-  { label: "Contato",       href: "mailto:extrago.contato@gmail.com", external: true },
 ];
 
 const DRAWER_SECTIONS = [
   {
     title: "INSTITUCIONAL",
     items: [
-      { label: "Home",                   href: "/",                                icon: <Home size={15} /> },
-      { label: "Empresas",               href: "/register?role=company",           icon: <Briefcase size={15} /> },
-      { label: "Freelancers",            href: "/register?role=freelancer",        icon: <Users size={15} /> },
-      { label: "Investidores",           href: "/investidores-parceiros",          icon: <TrendingUp size={15} /> },
-      { label: "Arquitetura Financeira", href: "/modelo-de-negocio",              icon: <Layers size={15} /> },
-      { label: "Roadmap",                href: "/modelo-de-negocio",              icon: <BarChart3 size={15} /> },
-      { label: "Segurança",              href: "/seguranca",                      icon: <Shield size={15} /> },
-      { label: "Blog",                   href: "/blog",                           icon: <BookOpen size={15} /> },
-      { label: "Contato",                href: "mailto:extrago.contato@gmail.com", icon: <Mail size={15} />, isExternal: true },
+      { label: "Home",                   href: "/",                        icon: <Home size={15} /> },
+      { label: "Investidores",           href: "/investidores-parceiros",  icon: <TrendingUp size={15} /> },
+      { label: "Arquitetura Financeira", href: "/modelo-de-negocio",       icon: <Layers size={15} /> },
     ],
   },
   {
-    title: "ARQUITETURA FINANCEIRA",
+    title: "ARQUITETURA",
     items: FA_PAGES.map(p => ({ label: p.label, href: p.href, icon: p.icon })),
+  },
+  {
+    title: "PLATAFORMA",
+    items: [
+      { label: "Login",    href: "/login",    icon: <LogIn size={15} /> },
+      { label: "Cadastro", href: "/register", icon: <UserPlus size={15} /> },
+    ],
   },
 ];
 
