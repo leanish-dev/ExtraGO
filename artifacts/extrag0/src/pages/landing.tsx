@@ -638,7 +638,7 @@ export default function LandingPage() {
             SEÇÃO DE INDICAÇÕES — Banner + Simulador
         ══════════════════════════════════════════ */}
         <section
-          className="px-4 py-5 sm:px-5 sm:py-10 relative"
+          className="relative"
           style={{
             backgroundImage: "url(/indicacoes-bg-sec.jpg)",
             backgroundSize: "cover",
@@ -646,33 +646,67 @@ export default function LandingPage() {
             backgroundRepeat: "no-repeat",
           }}
         >
-          {/* Section overlay to maintain readability */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(2,6,18,0.72)" }} />
-          <div className="max-w-5xl mx-auto relative z-10">
-            <ScrollSection>
-              {/* Banner card */}
-              <Link href="/indicacoes">
-                <motion.div
-                  whileHover={{ y: -3, scale: 1.003 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                  className="relative overflow-hidden rounded-t-3xl cursor-pointer group"
-                  style={{
-                    border: "1px solid rgba(124,252,0,0.22)",
-                    borderBottom: "none",
-                    boxShadow: "0 0 50px rgba(124,252,0,0.07)",
-                  }}
-                >
-                  <img
-                    src="/simulacao-indicacoes.png"
-                    alt="Simulação de Indicações extraGO"
-                    className="w-full h-auto block"
-                    style={{ display: "block", maxWidth: "100%" }}
-                  />
-                </motion.div>
-              </Link>
-              {/* Simulator — seamlessly attached below */}
-              <ReferralSimulator />
-            </ScrollSection>
+          {/* Section overlay for readability */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(1,4,14,0.78)" }} />
+
+          <div className="relative z-10 px-3 pt-6 pb-8 sm:px-5 sm:pt-10 sm:pb-12">
+            {/* Section header */}
+            <div className="max-w-5xl mx-auto mb-4 sm:mb-6">
+              <ScrollSection>
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+                  <div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border mb-2 text-[11px] font-bold tracking-widest uppercase"
+                      style={{ background: "rgba(124,252,0,0.10)", borderColor: "rgba(124,252,0,0.28)", color: "#7CFC00" }}>
+                      <Users size={11} /> Sistema de Indicações
+                    </div>
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight text-white">
+                      Indique, conecte e ganhe{" "}
+                      <span style={{ background: "linear-gradient(90deg,#7CFC00,#9aff1c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>comissões vitalícias</span>
+                    </h2>
+                    <p className="text-sm mt-1 max-w-lg" style={{ color: "rgba(255,255,255,0.72)" }}>
+                      Cada extra do seu indicado gera comissão para você — para sempre, sem limite.
+                    </p>
+                  </div>
+                  <Link href="/financial-architecture/referrals">
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-black border-none cursor-pointer"
+                      style={{ background: "linear-gradient(135deg, #7CFC00, #9aff1c)", boxShadow: "0 4px 20px rgba(124,252,0,0.38)" }}
+                    >
+                      Como funciona o Programa de Indicações <ArrowRight size={14} />
+                    </motion.button>
+                  </Link>
+                </div>
+              </ScrollSection>
+            </div>
+
+            <div className="max-w-5xl mx-auto">
+              <ScrollSection delay={0.08}>
+                {/* Banner image — no broken /indicacoes route */}
+                <Link href="/financial-architecture/referrals">
+                  <motion.div
+                    whileHover={{ y: -2, scale: 1.002 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 24 }}
+                    className="relative overflow-hidden rounded-t-2xl sm:rounded-t-3xl cursor-pointer group"
+                    style={{
+                      border: "1px solid rgba(124,252,0,0.25)",
+                      borderBottom: "none",
+                      boxShadow: "0 0 40px rgba(124,252,0,0.08)",
+                    }}
+                  >
+                    <img
+                      src="/simulacao-indicacoes.png"
+                      alt="Simulação de Indicações extraGO"
+                      className="w-full h-auto block"
+                      style={{ display: "block", maxWidth: "100%" }}
+                    />
+                  </motion.div>
+                </Link>
+                {/* Simulator — seamlessly attached */}
+                <ReferralSimulator />
+              </ScrollSection>
+            </div>
           </div>
         </section>
 
