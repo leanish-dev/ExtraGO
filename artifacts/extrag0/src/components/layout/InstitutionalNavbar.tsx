@@ -24,8 +24,9 @@ const FA_PAGES = [
 
 /* ─── Main nav items (desktop) ─── */
 const DESKTOP_LINKS: { label: string; href: string; external?: boolean }[] = [
-  { label: "Início",        href: "/" },
-  { label: "Investidores",  href: "/investidores-parceiros" },
+  { label: "Home",                   href: "/" },
+  { label: "Investidores",           href: "/investidores-parceiros" },
+  { label: "Arquitetura Financeira", href: "/modelo-de-negocio" },
 ];
 
 const DRAWER_SECTIONS = [
@@ -242,15 +243,39 @@ export default function InstitutionalNavbar() {
             </div>
           </nav>
 
-          {/* ── Right block — gradient card ── */}
-          <div className="flex items-center flex-shrink-0 ml-3">
+          {/* ── Right block — Entrar + Hamburger ── */}
+          <div className="flex items-center gap-2 flex-shrink-0 ml-3">
+            {/* Entrar button */}
+            <Link href="/login">
+              <button
+                className="hidden sm:flex items-center gap-1.5 px-4 h-9 rounded-full font-bold text-[12.5px] border cursor-pointer transition-all"
+                style={{
+                  color: GREEN,
+                  borderColor: `${GREEN}40`,
+                  background: `${GREEN}0a`,
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.background = `${GREEN}18`;
+                  (e.currentTarget as HTMLElement).style.borderColor = `${GREEN}80`;
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.background = `${GREEN}0a`;
+                  (e.currentTarget as HTMLElement).style.borderColor = `${GREEN}40`;
+                }}
+              >
+                <LogIn size={13} />
+                Entrar
+              </button>
+            </Link>
+
+            {/* Hamburger button */}
             <button
               onClick={() => setDrawerOpen(true)}
               aria-label="Abrir menu"
               style={{
-                width: 56,
-                height: 56,
-                borderRadius: 14,
+                width: 48,
+                height: 48,
+                borderRadius: 12,
                 background: `linear-gradient(145deg,${GREEN} 0%,${CYAN} 100%)`,
                 border: "none",
                 cursor: "pointer",
@@ -273,8 +298,7 @@ export default function InstitutionalNavbar() {
                 (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 18px rgba(0,201,167,0.38), inset 0 1px 0 rgba(255,255,255,0.2)";
               }}
             >
-              <ArrowRight size={17} />
-              <Sparkles size={13} />
+              <Menu size={18} />
             </button>
           </div>
         </div>
