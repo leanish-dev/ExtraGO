@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import { Shield, Lock, Eye, AlertTriangle, CheckCircle, Server, Key, ArrowRight, FileText } from "lucide-react";
-import logoMain from "@assets/1779451173221_1779452671733.png";
+import logoMain from "@assets/Logo-new_1781073251550.png";
 import { Reveal } from "@/lib/institutional-components";
 
 const PILLARS = [
@@ -227,7 +227,7 @@ export default function SegurancaPage() {
 
       <footer className="border-t py-6 px-5" style={{ borderColor: "rgba(0,0,0,0.07)", background: "#fff" }}>
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <img src={logoMain} alt="extraGO" style={{ height: "28px", objectFit: "contain" }} />
+          <img src={logoMain} alt="extraGO" style={{ height: "28px", objectFit: "contain", mixBlendMode: "screen" }} />
           <p className="text-[12px] text-slate-400">© 2026 extraGO · Todos os direitos reservados</p>
         </div>
       </footer>

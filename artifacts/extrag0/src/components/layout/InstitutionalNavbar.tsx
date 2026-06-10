@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ChevronDown, ChevronRight,
   Home as HomeIcon, TrendingUp, Zap, Network, BadgeCheck, Building2,
-  BarChart3, Globe, MapPin, ArrowRight, Layers, User,
+  BarChart3, Globe, MapPin, ArrowRight, Layers, User, Users, Share2,
   LogIn, UserPlus, BookOpen, Shield,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import logoMain from "@assets/1779451173221_1779452671733.png";
+import logoMain from "@assets/Logo-new_1781073251550.png";
 
 const G = "#16a34a";
 const C = "#00c9a7";
@@ -44,6 +44,32 @@ const DRAWER_SECTIONS = [
     { label: "Cadastro", href: "/register", icon: <UserPlus size={15} /> },
   ]},
 ];
+
+/* ── Reusable nav item with icon + label ── */
+function NavItem({
+  href, icon, label, active, className = "",
+}: { href: string; icon: React.ReactNode; label: string; active: boolean; className?: string }) {
+  const [hovered, setHovered] = React.useState(false);
+  const col = active ? ACTIVE_G : hovered ? "rgba(255,255,255,0.96)" : "rgba(255,255,255,0.60)";
+  return (
+    <Link href={href}>
+      <div
+        className={`relative flex flex-col items-center cursor-pointer ${className}`}
+        style={{ padding: "6px clamp(4px,1vw,10px)" }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <div style={{ color: col, marginBottom: 2, transition: "color 0.15s", lineHeight: 0 }}>{icon}</div>
+        <span style={{ fontSize: "clamp(9px,1.8vw,11px)", fontWeight: 600, color: col, whiteSpace: "nowrap", transition: "color 0.15s" }}>
+          {label}
+        </span>
+        {active && (
+          <span className="absolute bottom-0 left-2 right-2 rounded-full" style={{ height: 2.5, background: `linear-gradient(90deg,${G},${C})` }} />
+        )}
+      </div>
+    </Link>
+  );
+}
 
 /* ── Premium gradient hamburger ── */
 function GradientHamburger() {
@@ -195,6 +221,7 @@ export default function InstitutionalNavbar() {
                 style={{
                   height: "clamp(28px, 4vw, 36px)",
                   objectFit: "contain",
+                  mixBlendMode: "screen",
                   filter: "drop-shadow(0 0 6px rgba(22,163,74,0.28))",
                 }}
               />
@@ -204,72 +231,36 @@ export default function InstitutionalNavbar() {
           {/* ── CENTRE: Nav links with icons ── */}
           <nav
             className="flex items-center justify-center"
-            style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(4px,2.5vw,28px)" }}
+            style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(0px,1.5vw,20px)" }}
           >
+            {/* ─── Desktop-only extra links (hidden on mobile) ─── */}
+            <NavItem href="/#como-funciona" icon={<Zap size={16} />} label="Como Funciona" active={false} className="hidden lg:flex" />
+            <NavItem href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden lg:flex" />
+            <NavItem href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden lg:flex" />
+            <NavItem href="/financial-architecture/referrals" icon={<Share2 size={16} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
 
-            {/* Investidores */}
-            <Link href="/investidores-parceiros">
-              <div
-                className="relative flex flex-col items-center cursor-pointer group"
-                style={{ padding: "6px clamp(6px,1.5vw,14px)" }}
+            {/* ─── Always-visible links ─── */}
+            <NavItem href="/investidores-parceiros" icon={<TrendingUp size={16} />} label="Investidores" active={active("/investidores-parceiros")} />
+
+            {/* Arquitetura Financeira with dropdown */}
+            <div ref={faAnchorRef} className="fa-root relative flex flex-col items-center">
+              <button
+                onClick={() => setFaOpen(o => !o)}
+                className="relative flex flex-col items-center cursor-pointer bg-transparent border-none"
+                style={{ padding: "6px clamp(4px,1vw,10px)" }}
               >
-                <TrendingUp
-                  size={17}
+                <Layers
+                  size={16}
                   style={{
-                    color: active("/investidores-parceiros") ? ACTIVE_G : "rgba(255,255,255,0.55)",
+                    color: (active("/modelo-de-negocio") || active("/financial-architecture")) ? ACTIVE_G : "rgba(255,255,255,0.55)",
                     marginBottom: 2,
                     transition: "color 0.15s",
                   }}
                 />
-                <span
-                  style={{
-                    fontSize: "clamp(10px,2.2vw,12px)",
-                    fontWeight: 600,
-                    color: active("/investidores-parceiros") ? ACTIVE_G : "rgba(255,255,255,0.72)",
-                    whiteSpace: "nowrap",
-                    transition: "color 0.15s",
-                  }}
-                  onMouseEnter={e => {
-                    const el = e.currentTarget as HTMLElement;
-                    if (!active("/investidores-parceiros")) el.style.color = "rgba(255,255,255,0.96)";
-                  }}
-                  onMouseLeave={e => {
-                    const el = e.currentTarget as HTMLElement;
-                    el.style.color = active("/investidores-parceiros") ? ACTIVE_G : "rgba(255,255,255,0.72)";
-                  }}
-                >
-                  Investidores
-                </span>
-                {active("/investidores-parceiros") && (
-                  <span
-                    className="absolute bottom-0 left-2 right-2 rounded-full"
-                    style={{ height: 2.5, background: `linear-gradient(90deg,${G},${C})` }}
-                  />
-                )}
-              </div>
-            </Link>
-
-            {/* Arquitetura Financeira */}
-            <div ref={faAnchorRef} className="fa-root relative">
-              <button
-                onClick={() => setFaOpen(o => !o)}
-                className="relative flex flex-col items-center cursor-pointer bg-transparent border-none"
-                style={{ padding: "6px clamp(6px,1.5vw,14px)" }}
-              >
-                <div className="flex items-center gap-0.5">
-                  <Layers
-                    size={17}
-                    style={{
-                      color: (active("/modelo-de-negocio") || active("/financial-architecture")) ? ACTIVE_G : "rgba(255,255,255,0.55)",
-                      marginBottom: 2,
-                      transition: "color 0.15s",
-                    }}
-                  />
-                </div>
                 <div className="flex items-center gap-0.5">
                   <span
                     style={{
-                      fontSize: "clamp(10px,2.2vw,12px)",
+                      fontSize: "clamp(9px,1.8vw,11px)",
                       fontWeight: 600,
                       color: (active("/modelo-de-negocio") || active("/financial-architecture")) ? ACTIVE_G : "rgba(255,255,255,0.72)",
                       whiteSpace: "nowrap",
@@ -282,9 +273,9 @@ export default function InstitutionalNavbar() {
                   <motion.span
                     animate={{ rotate: faOpen ? 180 : 0 }}
                     transition={{ duration: 0.18 }}
-                    style={{ color: "rgba(255,255,255,0.45)", marginLeft: 1 }}
+                    style={{ color: "rgba(255,255,255,0.40)", marginLeft: 1 }}
                   >
-                    <ChevronDown size={10} />
+                    <ChevronDown size={9} />
                   </motion.span>
                 </div>
                 {(active("/modelo-de-negocio") || active("/financial-architecture")) && (
@@ -438,7 +429,7 @@ export default function InstitutionalNavbar() {
                   borderColor: "rgba(22,163,74,0.14)",
                 }}
               >
-                <img src={logoMain} alt="extraGO" style={{ height: 26, objectFit: "contain" }} />
+                <img src={logoMain} alt="extraGO" style={{ height: 26, objectFit: "contain", mixBlendMode: "screen" }} />
                 <button
                   onClick={() => setDrawer(false)}
                   style={{

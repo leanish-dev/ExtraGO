@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import logoMain from "@assets/1779451173221_1779452671733.png";
+import logoMain from "@assets/Logo-new_1781073251550.png";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import { Reveal, GCardDark as GCard, Pill, Divider, CountUp } from "@/lib/institutional-components";
 import {
@@ -412,6 +412,29 @@ export default function InvestidoresParceirosPage() {
           </div>
         </section>
 
+        {/* ── Banner institucional — após Mercado, antes de O Problema ── */}
+        <div
+          className="w-full px-4 sm:px-8"
+          style={{ margin: "0 0 4px" }}
+        >
+          <div
+            style={{
+              height: "clamp(150px, 20vw, 260px)",
+              overflow: "hidden",
+              borderRadius: "clamp(10px, 2vw, 18px)",
+              border: "1px solid rgba(0,229,255,0.14)",
+              boxShadow: "0 0 48px rgba(22,163,74,0.08), 0 10px 48px rgba(0,0,0,0.50), 0 0 0 1px rgba(255,255,255,0.03) inset",
+            }}
+          >
+            <img
+              src="/banner-page.png"
+              alt="extraGO — Infraestrutura nacional conectando empresas e profissionais"
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
+              draggable={false}
+            />
+          </div>
+        </div>
+
         <Divider />
 
         {/* ═══════════════════════════════
@@ -619,24 +642,6 @@ export default function InvestidoresParceirosPage() {
             </div>
           </div>
         </section>
-
-        <Divider />
-
-        {/* ── Banner institucional entre Vantagens e Expansão ── */}
-        <div className="w-full overflow-hidden" style={{ height: "clamp(160px, 22vw, 300px)" }}>
-          <img
-            src="/banner-page.png"
-            alt="extraGO — Conectando empresas, profissionais e oportunidades em escala nacional"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center",
-              display: "block",
-            }}
-            draggable={false}
-          />
-        </div>
 
         <MetricStrip />
 
@@ -1618,7 +1623,7 @@ export default function InvestidoresParceirosPage() {
       <footer className="relative z-10 border-t px-5 py-5"
         style={{ borderColor: "rgba(14,165,233,0.10)", background: "rgba(4,10,20,0.88)" }}>
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-white/28">
-          <img src={logoMain} alt="extraGO" className="h-4 object-contain opacity-55" />
+          <img src={logoMain} alt="extraGO" className="h-4 object-contain opacity-70" style={{ mixBlendMode: "screen" }} />
           <div className="flex items-center gap-5">
             <Link href="/" className="hover:text-[rgba(255,255,255,0.78)] transition-colors">← Página Inicial</Link>
             <Link href="/login" className="hover:text-[rgba(255,255,255,0.78)] transition-colors">Entrar</Link>

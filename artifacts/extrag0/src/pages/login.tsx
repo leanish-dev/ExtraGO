@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import authBanner from "@assets/file_00000000c3cc720e818941f8ad5cf15f_1779883604660.png";
-import logoMain from "@assets/1779451173221_1779452671733.png";
+import logoMain from "@assets/Logo-new_1781073251550.png";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Eye, EyeOff, ArrowLeft, Mail, ArrowRight, CheckCircle, Shield, Zap, Users, LogIn } from "lucide-react";
 
@@ -99,7 +99,7 @@ export default function LoginPage() {
         {/* Content */}
         <div className="relative z-10 flex flex-col justify-between p-10 xl:p-14 w-full">
           <Link href="/">
-            <img src={logoMain} alt="extraGO" className="h-8 object-contain cursor-pointer hover:opacity-90 transition-opacity drop-shadow-lg" />
+            <img src={logoMain} alt="extraGO" className="h-8 object-contain cursor-pointer hover:opacity-90 transition-opacity drop-shadow-lg" style={{ mixBlendMode: "screen" }} />
           </Link>
 
           <div className="mt-auto">
