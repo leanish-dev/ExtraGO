@@ -76,7 +76,7 @@ export default function BusinessPlansPage() {
   ];
 
   return (
-    <div className="relative min-h-screen flex flex-col overflow-x-hidden" style={{ background: "#f0fdf4", color: "#0f172a" }}>
+    <div className="relative min-h-screen flex flex-col overflow-x-hidden" style={{ background: "linear-gradient(160deg,#eff6ff 0%,#eef2ff 50%,#f0fdf4 100%)", color: "#0f172a", "--gcard-bg": "rgba(215,226,255,0.92)" } as React.CSSProperties}>
       <FABackground />
       <FANavBar />
       <div className="relative z-10"><FAHeader /></div>
@@ -144,10 +144,10 @@ export default function BusinessPlansPage() {
                   <stop offset="100%" stopColor="#7c3aed" />
                 </linearGradient>
                 <linearGradient id="bizEdge" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#f0fdf4" stopOpacity="1" />
-                  <stop offset="8%" stopColor="#f0fdf4" stopOpacity="0" />
-                  <stop offset="92%" stopColor="#f0fdf4" stopOpacity="0" />
-                  <stop offset="100%" stopColor="#f0fdf4" stopOpacity="1" />
+                  <stop offset="0%" stopColor="#eef2ff" stopOpacity="1" />
+                  <stop offset="8%" stopColor="#eef2ff" stopOpacity="0" />
+                  <stop offset="92%" stopColor="#eef2ff" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#eef2ff" stopOpacity="1" />
                 </linearGradient>
               </defs>
               <path d="M 70 52 L 295 52 L 320 36 L 545 36 L 570 22 L 795 22 L 820 36 L 840 22"

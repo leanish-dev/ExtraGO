@@ -150,7 +150,7 @@ export function GCard({
     <div
       className={`relative rounded-2xl border overflow-hidden ${className}`}
       style={{
-        background: "rgba(255,255,255,0.88)",
+        background: "var(--gcard-bg, rgba(255,255,255,0.88))",
         backdropFilter: "blur(20px) saturate(150%)",
         borderColor: accent ? `${accent}30` : "rgba(0,0,0,0.08)",
         boxShadow:

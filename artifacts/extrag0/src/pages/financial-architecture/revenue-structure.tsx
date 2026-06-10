@@ -75,7 +75,7 @@ export default function RevenueStructurePage() {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
-    <div className="relative min-h-screen flex flex-col overflow-x-hidden" style={{ background: "#f0fdf4", color: "#0f172a" }}>
+    <div className="relative min-h-screen flex flex-col overflow-x-hidden" style={{ background: "linear-gradient(160deg,#eff6ff 0%,#f0f9ff 50%,#f0fdf4 100%)", color: "#0f172a", "--gcard-bg": "rgba(218,232,255,0.92)" } as React.CSSProperties}>
       <FABackground />
       <FANavBar />
       <div className="relative z-10"><FAHeader /></div>

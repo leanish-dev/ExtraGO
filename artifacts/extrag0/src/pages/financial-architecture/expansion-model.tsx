@@ -58,7 +58,7 @@ export default function ExpansionModelPage() {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
-    <div className="relative min-h-screen flex flex-col overflow-x-hidden" style={{ background: "#f0fdf4", color: "#0f172a" }}>
+    <div className="relative min-h-screen flex flex-col overflow-x-hidden" style={{ background: "linear-gradient(160deg,#f0fdf4 0%,#ecfeff 50%,#f0f9ff 100%)", color: "#0f172a", "--gcard-bg": "rgba(220,250,242,0.92)" } as React.CSSProperties}>
       <FABackground />
       <FANavBar />
       <div className="relative z-10"><FAHeader /></div>

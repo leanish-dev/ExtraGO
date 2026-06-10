@@ -235,8 +235,8 @@ export default function InstitutionalNavbar() {
           >
             {/* ─── Desktop-only extra links (hidden on mobile) ─── */}
             <NavItem href="/#como-funciona" icon={<Zap size={16} />} label="Como Funciona" active={false} className="hidden lg:flex" />
-            <NavItem href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden xl:flex" />
-            <NavItem href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden xl:flex" />
+            <NavItem href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden lg:flex" />
+            <NavItem href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden lg:flex" />
             <NavItem href="/financial-architecture/referrals" icon={<Share2 size={16} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
             <NavItem href="/modelo-de-negocio" icon={<BarChart3 size={16} />} label="Plataforma" active={active("/modelo-de-negocio")} className="hidden lg:flex" />
 
