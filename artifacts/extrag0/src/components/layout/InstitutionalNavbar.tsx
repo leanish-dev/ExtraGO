@@ -214,15 +214,15 @@ export default function InstitutionalNavbar() {
 
           {/* ── LEFT: Logo ── */}
           <Link href="/" aria-label="extraGO – página inicial">
-            <div className="flex items-center flex-shrink-0" style={{ marginRight: "clamp(12px,3vw,32px)" }}>
+            <div className="flex items-center flex-shrink-0" style={{ marginRight: "clamp(10px,2.5vw,28px)" }}>
               <img
                 src={logoMain}
                 alt="extraGO"
                 style={{
-                  height: "clamp(28px, 4vw, 36px)",
+                  height: "clamp(32px, 5vw, 44px)",
                   objectFit: "contain",
                   mixBlendMode: "screen",
-                  filter: "drop-shadow(0 0 6px rgba(22,163,74,0.28))",
+                  filter: "drop-shadow(0 0 10px rgba(22,163,74,0.45)) drop-shadow(0 0 3px rgba(0,201,167,0.25))",
                 }}
               />
             </div>
@@ -231,13 +231,14 @@ export default function InstitutionalNavbar() {
           {/* ── CENTRE: Nav links with icons ── */}
           <nav
             className="flex items-center justify-center"
-            style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(0px,1.5vw,20px)" }}
+            style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(0px,1.2vw,16px)" }}
           >
             {/* ─── Desktop-only extra links (hidden on mobile) ─── */}
             <NavItem href="/#como-funciona" icon={<Zap size={16} />} label="Como Funciona" active={false} className="hidden lg:flex" />
-            <NavItem href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden lg:flex" />
-            <NavItem href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden lg:flex" />
+            <NavItem href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden xl:flex" />
+            <NavItem href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden xl:flex" />
             <NavItem href="/financial-architecture/referrals" icon={<Share2 size={16} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
+            <NavItem href="/modelo-de-negocio" icon={<BarChart3 size={16} />} label="Plataforma" active={active("/modelo-de-negocio")} className="hidden lg:flex" />
 
             {/* ─── Always-visible links ─── */}
             <NavItem href="/investidores-parceiros" icon={<TrendingUp size={16} />} label="Investidores" active={active("/investidores-parceiros")} />
@@ -415,27 +416,35 @@ export default function InstitutionalNavbar() {
               className="fixed left-0 top-0 bottom-0 z-[70] flex flex-col"
               style={{
                 width: "min(300px, 88vw)",
-                background: "#fff",
-                borderRight: "1px solid rgba(22,163,74,0.10)",
-                boxShadow: "4px 0 40px rgba(0,0,0,0.18)",
+                backgroundImage: "url(/drawer-bg.png)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                borderRight: "1px solid rgba(22,163,74,0.22)",
+                boxShadow: "4px 0 60px rgba(0,0,0,0.55)",
               }}
             >
+              {/* Dark overlay for readability */}
+              <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(2,8,22,0.78)", zIndex: 0 }} />
+
               {/* Header strip */}
               <div
-                className="flex items-center justify-between px-4 border-b flex-shrink-0"
+                className="relative z-10 flex items-center justify-between px-4 border-b flex-shrink-0"
                 style={{
-                  height: 58,
-                  background: `linear-gradient(180deg, ${NAV_BG} 0%, ${NAV_BG2} 100%)`,
-                  borderColor: "rgba(22,163,74,0.14)",
+                  height: 62,
+                  background: `linear-gradient(180deg, rgba(8,15,30,0.96) 0%, rgba(11,21,40,0.90) 100%)`,
+                  borderColor: "rgba(22,163,74,0.22)",
+                  backdropFilter: "blur(8px)",
                 }}
               >
-                <img src={logoMain} alt="extraGO" style={{ height: 26, objectFit: "contain", mixBlendMode: "screen" }} />
+                <img src={logoMain} alt="extraGO" style={{ height: 30, objectFit: "contain", mixBlendMode: "screen", filter: "drop-shadow(0 0 8px rgba(22,163,74,0.40))" }} />
                 <button
                   onClick={() => setDrawer(false)}
                   style={{
                     width: 30, height: 30, borderRadius: 8,
                     background: "rgba(255,255,255,0.10)",
-                    border: "none", color: "rgba(255,255,255,0.85)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    color: "rgba(255,255,255,0.85)",
                     cursor: "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}
@@ -446,10 +455,10 @@ export default function InstitutionalNavbar() {
               </div>
 
               {/* Nav sections */}
-              <div className="flex-1 overflow-y-auto py-3 px-3">
+              <div className="relative z-10 flex-1 overflow-y-auto py-3 px-3">
                 {DRAWER_SECTIONS.map((sec, si) => (
                   <div key={si} className="mb-5">
-                    <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "#94a3b8" }}>
+                    <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.65)" }}>
                       {sec.title}
                     </p>
                     <div className="space-y-0.5">
@@ -460,17 +469,18 @@ export default function InstitutionalNavbar() {
                             <div
                               className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"
                               style={{
-                                background: on ? `${G}12` : "transparent",
-                                color: on ? G : "#1E293B",
+                                background: on ? "rgba(22,163,74,0.20)" : "transparent",
+                                color: on ? "#7CFC00" : "rgba(255,255,255,0.88)",
                                 fontWeight: on ? 700 : 500,
                                 transition: "background 0.12s",
+                                border: on ? "1px solid rgba(22,163,74,0.30)" : "1px solid transparent",
                               }}
-                              onMouseEnter={e => { if (!on) (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)"; }}
+                              onMouseEnter={e => { if (!on) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)"; }}
                               onMouseLeave={e => { if (!on) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
                             >
-                              <span style={{ color: on ? G : "#64748b" }}>{item.icon}</span>
+                              <span style={{ color: on ? "#7CFC00" : "rgba(0,201,167,0.70)" }}>{item.icon}</span>
                               <span className="text-[13px] leading-snug">{item.label}</span>
-                              {on && <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: G }} />}
+                              {on && <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#7CFC00", boxShadow: "0 0 6px #7CFC00" }} />}
                             </div>
                           </Link>
                         );
@@ -481,12 +491,12 @@ export default function InstitutionalNavbar() {
               </div>
 
               {/* Footer CTAs */}
-              <div className="flex-shrink-0 p-4 border-t" style={{ borderColor: "rgba(22,163,74,0.10)" }}>
+              <div className="relative z-10 flex-shrink-0 p-4 border-t" style={{ borderColor: "rgba(22,163,74,0.22)", background: "rgba(2,8,22,0.60)", backdropFilter: "blur(8px)" }}>
                 {user ? (
                   <Link href="/app/dashboard" onClick={() => setDrawer(false)}>
                     <button
                       className="w-full h-11 rounded-full font-bold text-[13px] border-none cursor-pointer"
-                      style={{ background: `linear-gradient(135deg,${G},${C})`, color: "#fff" }}
+                      style={{ background: `linear-gradient(135deg,${G},${C})`, color: "#000", boxShadow: "0 0 20px rgba(22,163,74,0.35)" }}
                     >
                       Meu Painel <ArrowRight size={13} className="inline ml-1" />
                     </button>
@@ -496,22 +506,22 @@ export default function InstitutionalNavbar() {
                     <Link href="/login" onClick={() => setDrawer(false)}>
                       <button
                         className="w-full h-10 rounded-full font-bold text-[13px] border-none cursor-pointer"
-                        style={{ background: `linear-gradient(135deg,${G},${C})`, color: "#fff" }}
+                        style={{ background: `linear-gradient(135deg,${G},${C})`, color: "#000", boxShadow: "0 0 18px rgba(22,163,74,0.35)" }}
                       >
                         Entrar <ArrowRight size={12} className="inline ml-1" />
                       </button>
                     </Link>
                     <Link href="/register" onClick={() => setDrawer(false)}>
                       <button
-                        className="w-full h-10 rounded-full font-bold text-[13px] cursor-pointer border"
-                        style={{ color: G, borderColor: `${G}40`, background: `${G}08` }}
+                        className="w-full h-10 rounded-full font-bold text-[13px] cursor-pointer"
+                        style={{ color: "#7CFC00", border: "1px solid rgba(124,252,0,0.35)", background: "rgba(124,252,0,0.08)" }}
                       >
                         Criar Conta
                       </button>
                     </Link>
                   </div>
                 )}
-                <p className="text-center text-[10px] mt-3" style={{ color: "#94a3b8" }}>
+                <p className="text-center text-[10px] mt-3" style={{ color: "rgba(0,201,167,0.55)" }}>
                   extraGO · A Infraestrutura de Mão de Obra do Brasil
                 </p>
               </div>

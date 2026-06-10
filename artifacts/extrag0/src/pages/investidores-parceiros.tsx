@@ -611,7 +611,7 @@ export default function InvestidoresParceirosPage() {
         ═══════════════════════════════ */}
         <section className="px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(124,252,0,0.018)" }}>
           <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-8">
+            <Reveal className="mb-6">
               <Pill label="Vantagens Competitivas" color={G} icon={<Shield size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Defensabilidade estrutural.<br />Não apenas funcionalidades.
@@ -619,6 +619,53 @@ export default function InvestidoresParceirosPage() {
               <p className="text-[rgba(255,255,255,0.92)] text-[14px] leading-relaxed max-w-xl">
                 As vantagens da extraGO não são features que podem ser copiadas — são efeitos de rede e estruturas operacionais que se fortalecem com o tempo e com a escala.
               </p>
+            </Reveal>
+
+            {/* Arquitetura Financeira — ativo institucional visual */}
+            <Reveal className="mb-8">
+              <Link href="/modelo-de-negocio">
+                <motion.div
+                  whileHover={{ y: -3, scale: 1.003 }}
+                  transition={{ type: "spring", stiffness: 280, damping: 24 }}
+                  className="relative overflow-hidden rounded-2xl cursor-pointer group"
+                  style={{
+                    border: "1px solid rgba(124,252,0,0.20)",
+                    boxShadow: "0 0 28px rgba(124,252,0,0.07), 0 8px 36px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.03) inset",
+                  }}
+                >
+                  <img
+                    src="/arquitetura.png"
+                    alt="A Arquitetura Financeira da extraGO — infraestrutura de 4 fontes de receita"
+                    className="w-full block"
+                    style={{
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      maxHeight: "clamp(200px, 40vw, 480px)",
+                      background: "rgba(2,6,20,0.55)",
+                      width: "100%",
+                    }}
+                    draggable={false}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: "rgba(124,252,0,0.04)" }} />
+                  <div className="absolute bottom-3 right-3">
+                    <div
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold"
+                      style={{ background: "linear-gradient(135deg,#16a34a,#00c9a7)", color: "#fff", boxShadow: "0 0 14px rgba(22,163,74,0.35)" }}
+                    >
+                      Explorar Arquitetura Financeira <ArrowRight size={10} />
+                    </div>
+                  </div>
+                  <div className="absolute top-3 left-3">
+                    <div
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase"
+                      style={{ background: "rgba(2,8,22,0.78)", border: "1px solid rgba(124,252,0,0.28)", color: "rgba(124,252,0,0.90)", backdropFilter: "blur(8px)" }}
+                    >
+                      4 Fontes de Receita
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
             </Reveal>
 
             <div className="divide-y divide-white/6">

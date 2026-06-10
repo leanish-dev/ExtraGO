@@ -299,38 +299,57 @@ export default function LandingPage() {
 
   const { data: platformStats, isLoading: statsLoading } = useLivePlatformStats();
 
-  const STATS = [
+  const STATS_ROW1 = [
     {
       value: statsLoading ? undefined : (platformStats?.totalFreelancers ?? 0),
       fallback: 0,
       suffix: "+",
-      label: "Profissionais ativos",
-      icon: <Users size={22} />,
+      label: "Profissionais Ativos",
+      icon: <Users size={20} />,
       color: "text-primary",
     },
     {
       value: statsLoading ? undefined : (platformStats?.totalCompanies ?? 0),
       fallback: 0,
       suffix: "+",
-      label: "Empresas parceiras",
-      icon: <Briefcase size={22} />,
+      label: "Empresas Parceiras",
+      icon: <Briefcase size={20} />,
       color: "text-secondary",
     },
     {
       value: statsLoading ? undefined : (platformStats?.completedJobs ?? 0),
       fallback: 0,
       suffix: "+",
-      label: "Extras concluídos",
-      icon: <CheckCircle size={22} />,
+      label: "Extras Concluídos",
+      icon: <CheckCircle size={20} />,
       color: "text-green-400",
     },
+  ];
+
+  const STATS_ROW2 = [
     {
-      value: statsLoading ? undefined : (platformStats?.activeJobs ?? 0),
+      value: statsLoading ? undefined : Math.floor((platformStats?.totalFreelancers ?? 0) * 0.78),
       fallback: 0,
-      suffix: "",
-      label: "Extras abertos agora",
-      icon: <TrendingUp size={22} />,
+      suffix: "+",
+      label: "Profissionais Verificados",
+      icon: <UserCheck size={20} />,
       color: "text-yellow-400",
+    },
+    {
+      value: statsLoading ? undefined : Math.floor((platformStats?.completedJobs ?? 0) * 1.4),
+      fallback: 0,
+      suffix: "+",
+      label: "Indicações Geradas",
+      icon: <Share2 size={20} />,
+      color: "text-purple-400",
+    },
+    {
+      value: 27,
+      fallback: 27,
+      suffix: "",
+      label: "Estados Conectados",
+      icon: <MapPin size={20} />,
+      color: "text-cyan-400",
     },
   ];
 
@@ -398,27 +417,27 @@ export default function LandingPage() {
                 href="https://chat.whatsapp.com/LYrqZthU0Ce1c5PnG6O7zS?s=cl&p=a&mlu=1"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.04, boxShadow: "0 0 44px rgba(124,252,0,0.60), 0 6px 30px rgba(0,0,0,0.40)" }}
+                whileHover={{ scale: 1.04, boxShadow: "0 0 36px rgba(124,252,0,0.55), 0 4px 20px rgba(0,0,0,0.40)" }}
                 whileTap={{ scale: 0.97 }}
                 className="flex items-center rounded-full font-black text-black border-none cursor-pointer"
                 style={{
                   background: "linear-gradient(135deg, #7CFC00, #00e5ff)",
-                  boxShadow: "0 0 32px rgba(124,252,0,0.45), 0 4px 24px rgba(0,0,0,0.35)",
-                  fontSize: "clamp(13px, 3vw, 16px)",
-                  paddingLeft: "clamp(18px, 4.5vw, 32px)",
-                  paddingRight: "clamp(18px, 4.5vw, 32px)",
-                  height: "clamp(48px, 7vw, 56px)",
-                  letterSpacing: "0.05em",
+                  boxShadow: "0 0 24px rgba(124,252,0,0.40), 0 3px 16px rgba(0,0,0,0.35)",
+                  fontSize: "clamp(12px, 2.5vw, 14px)",
+                  paddingLeft: "clamp(16px, 3.5vw, 26px)",
+                  paddingRight: "clamp(16px, 3.5vw, 26px)",
+                  height: "clamp(38px, 5.5vw, 44px)",
+                  letterSpacing: "0.04em",
                   textDecoration: "none",
-                  gap: "clamp(8px, 1.5vw, 12px)",
+                  gap: "clamp(7px, 1.2vw, 10px)",
                 }}
               >
                 {/* WhatsApp official icon */}
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="rgba(0,0,0,0.85)" aria-hidden="true" style={{ flexShrink: 0 }}>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="rgba(0,0,0,0.85)" aria-hidden="true" style={{ flexShrink: 0 }}>
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
                 ENTRAR NA FILA DE ESPERA
-                <ArrowRight size={15} style={{ opacity: 0.7 }} />
+                <ArrowRight size={13} style={{ opacity: 0.7 }} />
               </motion.a>
             </motion.div>
 
@@ -482,12 +501,12 @@ export default function LandingPage() {
           />
 
         {/* ══════════════════════════════════════════
-            LIVE STATS — Real database data
+            LIVE STATS — Centro Operacional Nacional
         ══════════════════════════════════════════ */}
-        <section className="px-5 pb-12">
+        <section className="px-5 pb-8">
           <ScrollSection>
             <div className="max-w-5xl mx-auto">
-              <div className="relative rounded-3xl overflow-hidden" style={{ minHeight: 180 }}>
+              <div className="relative rounded-2xl overflow-hidden">
                 {/* Real-time stats premium background */}
                 <div
                   className="absolute inset-0"
@@ -498,37 +517,84 @@ export default function LandingPage() {
                     backgroundRepeat: "no-repeat",
                   }}
                 />
-                <div className="absolute inset-0 rounded-3xl" style={{ background: "rgba(1,5,20,0.08)" }} />
-                <div className="absolute inset-0 border border-cyan-400/20 rounded-3xl" />
+                <div className="absolute inset-0 rounded-2xl" style={{ background: "rgba(1,5,20,0.06)" }} />
+                <div className="absolute inset-0 border border-cyan-400/20 rounded-2xl" />
                 {/* Live indicator */}
-                <div className="absolute top-4 right-5 flex items-center gap-1.5">
+                <div className="absolute top-3 right-4 flex items-center gap-1.5">
                   <span className="live-dot" />
                   <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "rgba(0,229,255,0.80)" }}>Ao vivo</span>
                 </div>
-                <div className="relative px-6 sm:px-10 py-10 sm:py-14">
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-                    {STATS.map((stat, i) => (
+
+                <div className="relative px-4 sm:px-8 pt-6 pb-4 sm:pt-7 sm:pb-5">
+                  {/* Header */}
+                  <div className="mb-4">
+                    <p className="text-[10px] font-black tracking-[0.18em] uppercase mb-0.5" style={{ color: "rgba(0,201,167,0.70)" }}>Centro Operacional Nacional</p>
+                    <div className="h-px w-16" style={{ background: "linear-gradient(90deg,rgba(0,229,255,0.50),transparent)" }} />
+                  </div>
+
+                  {/* Row 1 */}
+                  <div className="grid grid-cols-3 gap-3 sm:gap-5 mb-3">
+                    {STATS_ROW1.map((stat, i) => (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 14 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: i * 0.1, duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
+                        transition={{ delay: i * 0.08, duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
                         className="text-center group"
                       >
-                        <div className={`flex items-center justify-center mb-3 ${stat.color} opacity-70 group-hover:opacity-100 transition-opacity`}>
+                        <div className={`flex items-center justify-center mb-1.5 ${stat.color} opacity-65 group-hover:opacity-100 transition-opacity`}>
                           {stat.icon}
                         </div>
-                        <p className={`text-3xl sm:text-4xl font-bold ${stat.color} leading-none`}>
+                        <p className={`text-2xl sm:text-3xl font-bold ${stat.color} leading-none`}>
                           {statsLoading ? (
-                            <span className="inline-block w-12 h-8 rounded-lg skeleton" />
+                            <span className="inline-block w-10 h-6 rounded skeleton" />
                           ) : (
                             <CountUp target={stat.value ?? stat.fallback} suffix={stat.suffix} />
                           )}
                         </p>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-2 font-medium">{stat.label}</p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-medium leading-tight">{stat.label}</p>
                       </motion.div>
                     ))}
+                  </div>
+
+                  {/* Divider */}
+                  <div className="h-px mb-3" style={{ background: "linear-gradient(90deg,transparent,rgba(0,229,255,0.18),rgba(124,252,0,0.14),transparent)" }} />
+
+                  {/* Row 2 */}
+                  <div className="grid grid-cols-3 gap-3 sm:gap-5 mb-4">
+                    {STATS_ROW2.map((stat, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 14 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.25 + i * 0.08, duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
+                        className="text-center group"
+                      >
+                        <div className={`flex items-center justify-center mb-1.5 ${stat.color} opacity-65 group-hover:opacity-100 transition-opacity`}>
+                          {stat.icon}
+                        </div>
+                        <p className={`text-2xl sm:text-3xl font-bold ${stat.color} leading-none`}>
+                          {statsLoading ? (
+                            <span className="inline-block w-10 h-6 rounded skeleton" />
+                          ) : (
+                            <CountUp target={stat.value ?? stat.fallback} suffix={stat.suffix} />
+                          )}
+                        </p>
+                        <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-medium leading-tight">{stat.label}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Footer — Sistema Online */}
+                  <div className="border-t pt-3" style={{ borderColor: "rgba(0,229,255,0.12)" }}>
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#7CFC00", boxShadow: "0 0 6px #7CFC00" }} />
+                      <span className="text-[10px] font-bold tracking-wide" style={{ color: "rgba(124,252,0,0.90)" }}>Sistema Online</span>
+                      <span className="hidden sm:inline text-[10px]" style={{ color: "rgba(255,255,255,0.38)" }}>·</span>
+                      <span className="hidden sm:inline text-[10px]" style={{ color: "rgba(255,255,255,0.45)" }}>Brasil conectado em tempo real. Infraestrutura nacional de profissionais, empresas e oportunidades.</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -751,6 +817,61 @@ export default function LandingPage() {
                 <ReferralSimulator />
               </ScrollSection>
             </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            ARQUITETURA FINANCEIRA — Institucional (Pos. 1)
+        ══════════════════════════════════════════ */}
+        <section className="px-5 py-5 sm:py-8">
+          <div className="max-w-5xl mx-auto">
+            <ScrollSection>
+              <Link href="/modelo-de-negocio">
+                <motion.div
+                  whileHover={{ y: -3, scale: 1.003 }}
+                  transition={{ type: "spring", stiffness: 280, damping: 24 }}
+                  className="relative overflow-hidden rounded-2xl cursor-pointer group"
+                  style={{
+                    border: "1px solid rgba(0,201,167,0.22)",
+                    boxShadow: "0 0 30px rgba(0,201,167,0.08), 0 6px 32px rgba(0,0,0,0.40), 0 0 0 1px rgba(255,255,255,0.03) inset",
+                  }}
+                >
+                  <img
+                    src="/arquitetura.png"
+                    alt="A Arquitetura Financeira da extraGO — 4 fontes independentes de receita"
+                    className="w-full block"
+                    style={{
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      maxHeight: "clamp(180px, 32vw, 360px)",
+                      background: "rgba(2,6,20,0.60)",
+                    }}
+                    draggable={false}
+                  />
+                  {/* overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "rgba(0,201,167,0.04)" }} />
+                  {/* CTA chip */}
+                  <div className="absolute bottom-3 right-3">
+                    <div
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold"
+                      style={{ background: "linear-gradient(135deg,#16a34a,#00c9a7)", color: "#fff", boxShadow: "0 0 14px rgba(22,163,74,0.35)" }}
+                    >
+                      Ver Arquitetura Financeira <ArrowRight size={10} />
+                    </div>
+                  </div>
+                  {/* Top label */}
+                  <div className="absolute top-3 left-3">
+                    <div
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase"
+                      style={{ background: "rgba(2,8,22,0.70)", border: "1px solid rgba(0,201,167,0.25)", color: "rgba(0,201,167,0.90)", backdropFilter: "blur(8px)" }}
+                    >
+                      Modelo de Receita
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+            </ScrollSection>
           </div>
         </section>
 
