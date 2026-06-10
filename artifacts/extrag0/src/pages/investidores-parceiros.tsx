@@ -83,17 +83,17 @@ function Background() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/investors-page-bg-new.png)",
+          backgroundImage: "url(/landing-page-bg.png)",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center top",
-          filter: "saturate(1.55) contrast(1.08)",
+          filter: "saturate(1.30) contrast(1.05)",
         }}
       />
-      {/* Overlay — dark enough for white text WCAG AA, image still clearly perceived */}
+      {/* Overlay — dark enough for white text WCAG AA */}
       <div
         className="absolute inset-0"
-        style={{ background: "rgba(4,10,22,0.72)" }}
+        style={{ background: "rgba(4,10,22,0.76)" }}
       />
     </div>
   );
@@ -621,6 +621,23 @@ export default function InvestidoresParceirosPage() {
         </section>
 
         <Divider />
+
+        {/* ── Banner institucional entre Vantagens e Expansão ── */}
+        <div className="w-full overflow-hidden" style={{ height: "clamp(160px, 22vw, 300px)" }}>
+          <img
+            src="/banner-page.png"
+            alt="extraGO — Conectando empresas, profissionais e oportunidades em escala nacional"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center",
+              display: "block",
+            }}
+            draggable={false}
+          />
+        </div>
+
         <MetricStrip />
 
         {/* ═══════════════════════════════

@@ -369,28 +369,35 @@ export default function LandingPage() {
             />
           </motion.div>
 
-          {/* CTAs — float below the image bottom-fade */}
-          <div className="w-full relative z-10 -mt-12 sm:-mt-16 px-5 pb-8 sm:pb-12">
+          {/* CTA — single waitlist conversion */}
+          <div className="w-full relative z-10 -mt-12 sm:-mt-16 px-5 pb-4 sm:pb-6">
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-sm sm:max-w-none mx-auto"
+              className="flex items-center justify-center"
             >
-              <Link href="/register?role=company" className="w-full sm:w-auto">
-                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                  <Button size="lg" className="w-full sm:w-auto bg-secondary text-black hover:bg-secondary/90 neon-glow-cyan rounded-full font-bold text-base h-13 px-8 border-none">
-                    <Briefcase size={18} className="mr-2" /> Sou Empresa
-                  </Button>
-                </motion.div>
-              </Link>
-              <Link href="/register?role=freelancer" className="w-full sm:w-auto">
-                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full font-bold text-base h-13 px-8 border-primary/40 text-primary hover:bg-primary/8 hover:border-primary/60">
-                    <Users size={18} className="mr-2" /> Quero Trabalhar
-                  </Button>
-                </motion.div>
-              </Link>
+              <motion.a
+                href="https://chat.whatsapp.com/LYrqZthU0Ce1c5PnG6O7zS?s=cl&p=a&mlu=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex items-center gap-2 rounded-full font-black text-black border-none cursor-pointer"
+                style={{
+                  background: "linear-gradient(135deg, #7CFC00, #00e5ff)",
+                  boxShadow: "0 0 32px rgba(124,252,0,0.45), 0 4px 24px rgba(0,0,0,0.35)",
+                  fontSize: "clamp(13px, 3vw, 16px)",
+                  paddingLeft: "clamp(20px, 5vw, 36px)",
+                  paddingRight: "clamp(20px, 5vw, 36px)",
+                  height: "clamp(46px, 7vw, 54px)",
+                  letterSpacing: "0.04em",
+                  textDecoration: "none",
+                }}
+              >
+                ENTRAR NA FILA DE ESPERA
+                <ArrowRight size={17} />
+              </motion.a>
             </motion.div>
 
             {/* Trust signals — scrolling ticker */}
@@ -398,10 +405,36 @@ export default function LandingPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.55 }}
+              className="mt-6"
             >
               <TrustTicker />
             </motion.div>
           </div>
+
+          {/* Banner-hero — institutional strip below CTA */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            className="w-full relative z-10"
+            style={{
+              height: "clamp(120px, 22vw, 220px)",
+              overflow: "hidden",
+            }}
+          >
+            <img
+              src="/banner-hero.jpg"
+              alt="extraGO — Rede que Cresce. Comissões automáticas. Bônus. Evolua."
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center",
+                display: "block",
+              }}
+              draggable={false}
+            />
+          </motion.div>
         </section>
 
 
