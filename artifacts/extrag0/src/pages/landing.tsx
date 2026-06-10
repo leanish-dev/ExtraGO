@@ -502,8 +502,8 @@ export default function LandingPage() {
                 <span className="chip-primary mb-3 inline-flex">
                   <Zap size={10} className="fill-primary" /> Como funciona
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2">Simples como deve ser</h2>
-                <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">Do cadastro ao pagamento, tudo em uma só plataforma.</p>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#0F172A" }}>Simples como deve ser</h2>
+                <p className="max-w-lg mx-auto leading-relaxed" style={{ color: "#334155" }}>Do cadastro ao pagamento, tudo em uma só plataforma.</p>
               </div>
             </ScrollSection>
 
@@ -552,8 +552,8 @@ export default function LandingPage() {
                 <span className="chip-primary mb-3 inline-flex" style={{ background: "rgba(0,229,255,0.12)", borderColor: "rgba(0,229,255,0.25)", color: "hsl(186,100%,50%)" }}>
                   Para quem é
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2">Feito para os dois lados</h2>
-                <p className="text-muted-foreground max-w-lg mx-auto leading-relaxed">Empresas que precisam de profissionais. Profissionais que buscam mais.</p>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#0F172A" }}>Feito para os dois lados</h2>
+                <p className="max-w-lg mx-auto leading-relaxed" style={{ color: "#334155" }}>Empresas que precisam de profissionais. Profissionais que buscam mais.</p>
               </div>
             </ScrollSection>
 
@@ -717,8 +717,8 @@ export default function LandingPage() {
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <div className="text-center mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-2">Presente em todos os setores</h2>
-                <p className="text-muted-foreground text-sm max-w-md mx-auto">Da gastronomia ao entretenimento, a extraGO conecta quem precisa com quem faz acontecer.</p>
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: "#0F172A" }}>Presente em todos os setores</h2>
+                <p className="text-sm max-w-md mx-auto" style={{ color: "#334155" }}>Da gastronomia ao entretenimento, a extraGO conecta quem precisa com quem faz acontecer.</p>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
@@ -847,7 +847,7 @@ export default function LandingPage() {
                 <span className="chip-primary mb-3 inline-flex">
                   <Sparkles size={10} /> Depoimentos reais
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2">O que dizem sobre nós</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#0F172A" }}>O que dizem sobre nós</h2>
               </div>
             </ScrollSection>
             <div className="grid sm:grid-cols-3 gap-5">

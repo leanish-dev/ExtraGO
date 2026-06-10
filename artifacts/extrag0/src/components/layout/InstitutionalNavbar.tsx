@@ -3,17 +3,15 @@ import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ChevronDown, ChevronRight,
-  Home, TrendingUp, Zap, Network, BadgeCheck, Building2,
+  Home as HomeIcon, TrendingUp, Zap, Network, BadgeCheck, Building2,
   BarChart3, Globe, MapPin, ArrowRight, Layers,
   LogIn, UserPlus, BookOpen, Shield,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
-/* ── Brand colours ── */
 const G = "#16a34a";
 const C = "#00c9a7";
 
-/* ── FA pages ── */
 const FA_PAGES = [
   { label: "Intermediação por Performance",  href: "/financial-architecture/performance",            icon: <Zap size={13} />,        color: "#16a34a" },
   { label: "Indicações Multinível",           href: "/financial-architecture/referrals",             icon: <Network size={13} />,    color: "#3b82f6" },
@@ -24,10 +22,9 @@ const FA_PAGES = [
   { label: "Representantes Estaduais",        href: "/financial-architecture/state-representatives", icon: <MapPin size={13} />,     color: "#d97706" },
 ];
 
-/* ── Drawer sections ── */
-const DRAWER = [
+const DRAWER_SECTIONS = [
   { title: "INSTITUCIONAL", items: [
-    { label: "Home",                   href: "/",                        icon: <Home size={15} /> },
+    { label: "Home",                   href: "/",                        icon: <HomeIcon size={15} /> },
     { label: "Investidores",           href: "/investidores-parceiros",  icon: <TrendingUp size={15} /> },
     { label: "Arquitetura Financeira", href: "/modelo-de-negocio",       icon: <Layers size={15} /> },
   ]},
@@ -42,28 +39,24 @@ const DRAWER = [
   ]},
 ];
 
-/* ──────────────────────────────────────
-   3-line gradient hamburger
-────────────────────────────────────── */
-function Hamburger() {
+/* ── Premium 3-line gradient hamburger ── */
+function GradientHamburger() {
   return (
-    <svg width="20" height="15" viewBox="0 0 20 15" fill="none" aria-hidden="true">
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true" style={{ display: "block" }}>
       <defs>
-        <linearGradient id="hg" x1="0" y1="0" x2="20" y2="0" gradientUnits="userSpaceOnUse">
+        <linearGradient id="hbg" x1="0" y1="0" x2="22" y2="0" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor={G} />
           <stop offset="100%" stopColor={C} />
         </linearGradient>
       </defs>
-      <rect x="0" y="0"   width="20" height="2.5" rx="1.25" fill="url(#hg)" />
-      <rect x="0" y="6.25" width="20" height="2.5" rx="1.25" fill="url(#hg)" />
-      <rect x="0" y="12.5" width="20" height="2.5" rx="1.25" fill="url(#hg)" />
+      <rect x="0" y="0"    width="22" height="2.8" rx="1.4" fill="url(#hbg)" />
+      <rect x="0" y="6.6"  width="22" height="2.8" rx="1.4" fill="url(#hbg)" />
+      <rect x="0" y="13.2" width="22" height="2.8" rx="1.4" fill="url(#hbg)" />
     </svg>
   );
 }
 
-/* ──────────────────────────────────────
-   FA dropdown (desktop)
-────────────────────────────────────── */
+/* ── FA dropdown ── */
 function FADropdown({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
     <AnimatePresence>
@@ -73,8 +66,9 @@ function FADropdown({ open, onClose }: { open: boolean; onClose: () => void }) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 6, scale: 0.97 }}
           transition={{ duration: 0.16 }}
-          className="absolute left-1/2 -translate-x-1/2 top-full mt-1 w-[360px] rounded-2xl overflow-hidden z-50"
+          className="absolute left-1/2 -translate-x-1/2 top-full mt-1 rounded-2xl overflow-hidden z-50"
           style={{
+            width: 360,
             background: "#fff",
             border: "1px solid rgba(22,163,74,0.14)",
             boxShadow: "0 20px 60px rgba(0,0,0,0.14)",
@@ -95,7 +89,8 @@ function FADropdown({ open, onClose }: { open: boolean; onClose: () => void }) {
             {FA_PAGES.map((p, i) => (
               <Link key={i} href={p.href} onClick={onClose}>
                 <div
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl cursor-pointer transition-all"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl cursor-pointer"
+                  style={{ transition: "background 0.12s" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = `${p.color}12`; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
                 >
@@ -111,16 +106,15 @@ function FADropdown({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
-/* ══════════════════════════════════════
-   MAIN COMPONENT
-══════════════════════════════════════ */
+/* ════════════════════════════════════════
+   MAIN NAVBAR
+════════════════════════════════════════ */
 export default function InstitutionalNavbar() {
   const [drawer, setDrawer] = useState(false);
   const [faOpen, setFaOpen] = useState(false);
-  const [location]          = useLocation();
+  const [loc]               = useLocation();
   const { user }            = useAuth();
 
-  /* Close FA dropdown on outside click */
   useEffect(() => {
     const fn = (e: MouseEvent) => {
       if (!(e.target as Element).closest(".fa-root")) setFaOpen(false);
@@ -129,72 +123,65 @@ export default function InstitutionalNavbar() {
     return () => document.removeEventListener("mousedown", fn);
   }, []);
 
-  /* Close on navigation */
-  useEffect(() => { setDrawer(false); setFaOpen(false); }, [location]);
+  useEffect(() => { setDrawer(false); setFaOpen(false); }, [loc]);
 
   const active = (href: string) =>
-    href === "/" ? location === "/" : location.startsWith(href);
+    href === "/" ? loc === "/" : loc.startsWith(href);
 
-  /* Shared link text style */
-  const linkStyle = (href: string): React.CSSProperties => ({
-    color: active(href) ? G : "#1a2a1a",
-    fontWeight: active(href) ? 700 : 600,
-    transition: "color 0.15s",
-    whiteSpace: "nowrap",
-    cursor: "pointer",
-  });
+  const linkColor = (href: string) =>
+    active(href) ? G : "#1e2d1e";
 
-  /* ─── RENDER ─── */
+  const H = 68; // navbar height
+
   return (
     <>
-      {/* ════════════════ NAVBAR ════════════════ */}
+      {/* ═══════════════════════════════════ HEADER ═══════════════════════════════════ */}
       <header
-        className="sticky top-0 z-50 w-full"
+        className="sticky top-0 z-50 w-full overflow-hidden"
         style={{
-          /*
-           * institutional-navbar.png IS the reference artwork:
-           * extraGO logo · world-map · candlestick chart · green CTA button.
-           * Stretched to fill exactly — no gaps, no crop.
-           */
+          height: H,
           backgroundImage: "url(/institutional-navbar.png)",
           backgroundSize: "100% 100%",
           backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
-          height: 68,
-          /* subtle depth shadow */
-          boxShadow: "0 2px 20px rgba(0,0,0,0.10)",
+          backgroundPosition: "center",
+          boxShadow: "0 2px 16px rgba(0,0,0,0.09)",
         }}
       >
-        {/*
-         * Full-width layout row — zero extra padding on right so the green
-         * button in the artwork stays flush with our interactive controls.
-         */}
-        <div className="w-full h-full flex items-center" style={{ paddingLeft: 0, paddingRight: 0 }}>
+        <div
+          className="w-full h-full flex items-center"
+          style={{ paddingLeft: 0, paddingRight: 0 }}
+        >
 
-          {/*
-           * ── LEFT: transparent click-area over the baked-in logo.
-           *    NO <img> tag — the logo exists only inside institutional-navbar.png.
-           *    width ~22 % matches the logo region in the artwork.
-           */}
-          <Link href="/" aria-label="extraGO — página inicial">
-            <div style={{ width: "clamp(110px, 22vw, 200px)", height: 68 }} />
+          {/* ── LEFT: transparent click-area over baked-in logo ─────────────────── */}
+          {/* The logo lives INSIDE institutional-navbar.png. No <img> in DOM. */}
+          <Link href="/" aria-label="extraGO – página inicial">
+            <div style={{ width: "clamp(100px, 21vw, 195px)", height: H }} />
           </Link>
 
-          {/* ── CENTRE: nav links — desktop only (md+); hidden on mobile → drawer ── */}
-          <nav className="hidden md:flex flex-1 items-center justify-center gap-0 lg:gap-1">
+          {/* ── CENTRE: links — ALL screen sizes ──────────────────────────────── */}
+          <nav className="flex flex-1 items-center justify-center" style={{ gap: 0 }}>
 
-            {/* Home */}
+            {/* Home — icon only (saves space on mobile) */}
             <Link href="/">
               <span
-                className="px-1.5 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-[12.5px] block relative"
-                style={linkStyle("/")}
+                className="relative flex items-center justify-center rounded-lg"
+                style={{
+                  width: 32,
+                  height: 32,
+                  color: active("/") ? G : "#1e2d1e",
+                  cursor: "pointer",
+                  transition: "color 0.15s",
+                  flexShrink: 0,
+                }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = G; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active("/") ? G : "#1a2a1a"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active("/") ? G : "#1e2d1e"; }}
               >
-                Home
+                <HomeIcon size={16} strokeWidth={active("/") ? 2.5 : 2} />
                 {active("/") && (
-                  <span className="absolute inset-x-1.5 bottom-0 h-[2px] rounded-full"
-                    style={{ background: `linear-gradient(90deg,${G},${C})` }} />
+                  <span
+                    className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-[2px] rounded-full"
+                    style={{ background: `linear-gradient(90deg,${G},${C})` }}
+                  />
                 )}
               </span>
             </Link>
@@ -202,10 +189,17 @@ export default function InstitutionalNavbar() {
             {/* Investidores */}
             <Link href="/investidores-parceiros">
               <span
-                className="px-1.5 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-[12.5px] block relative"
-                style={linkStyle("/investidores-parceiros")}
+                className="relative px-1.5 sm:px-2.5 py-1 rounded-lg block"
+                style={{
+                  fontSize: "clamp(9px, 2.4vw, 12.5px)",
+                  fontWeight: active("/investidores-parceiros") ? 700 : 600,
+                  color: linkColor("/investidores-parceiros"),
+                  whiteSpace: "nowrap",
+                  cursor: "pointer",
+                  transition: "color 0.15s",
+                }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = G; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active("/investidores-parceiros") ? G : "#1a2a1a"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = linkColor("/investidores-parceiros"); }}
               >
                 Investidores
                 {active("/investidores-parceiros") && (
@@ -215,25 +209,36 @@ export default function InstitutionalNavbar() {
               </span>
             </Link>
 
-            {/* Arquitetura Financeira — with dropdown on desktop */}
+            {/* Arquitetura Financeira — with dropdown */}
             <div className="relative fa-root">
               <button
                 onClick={() => setFaOpen(o => !o)}
-                className="flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-[12.5px] relative"
+                className="flex items-center rounded-lg"
                 style={{
-                  ...linkStyle("/modelo-de-negocio"),
+                  gap: "clamp(2px,0.5vw,4px)",
+                  paddingLeft: "clamp(4px,1.5vw,10px)",
+                  paddingRight: "clamp(4px,1.5vw,10px)",
+                  paddingTop: 4,
+                  paddingBottom: 4,
+                  fontSize: "clamp(9px,2.4vw,12.5px)",
+                  fontWeight: active("/modelo-de-negocio") || active("/financial-architecture") ? 700 : 600,
+                  color: active("/modelo-de-negocio") || active("/financial-architecture") ? G : "#1e2d1e",
                   background: "none",
                   border: "none",
-                  color: active("/modelo-de-negocio") || active("/financial-architecture") ? G : "#1a2a1a",
-                  fontWeight: active("/modelo-de-negocio") || active("/financial-architecture") ? 700 : 600,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "color 0.15s",
                 }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = G; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active("/modelo-de-negocio") || active("/financial-architecture") ? G : "#1a2a1a"; }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.color =
+                    active("/modelo-de-negocio") || active("/financial-architecture") ? G : "#1e2d1e";
+                }}
               >
                 <span className="hidden sm:inline">Arquitetura Financeira</span>
-                <span className="inline sm:hidden">Arq. Financeira</span>
+                <span className="inline sm:hidden">Arq. Fin.</span>
                 <motion.span animate={{ rotate: faOpen ? 180 : 0 }} transition={{ duration: 0.18 }}>
-                  <ChevronDown size={11} />
+                  <ChevronDown size={10} />
                 </motion.span>
               </button>
               {(active("/modelo-de-negocio") || active("/financial-architecture")) && (
@@ -244,31 +249,33 @@ export default function InstitutionalNavbar() {
             </div>
           </nav>
 
-          {/* ── RIGHT: Entrar + Hamburger — ml-auto ensures right-align when nav is hidden on mobile ── */}
-          <div className="flex items-center flex-shrink-0 ml-auto" style={{ gap: 4 }}>
+          {/* ── RIGHT: Entrar + Hamburger (drawer) + Home-arrow (artwork green btn) ── */}
+          <div className="flex items-center flex-shrink-0" style={{ gap: 0 }}>
 
-            {/* Entrar */}
+            {/* Entrar pill */}
             <Link href="/login">
               <button
-                className="flex items-center gap-1 rounded-full font-semibold cursor-pointer transition-all flex-shrink-0"
+                className="flex items-center rounded-full font-semibold cursor-pointer"
                 style={{
-                  fontSize: 11,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  height: 30,
+                  fontSize: "clamp(9px,2.2vw,12px)",
+                  paddingLeft: "clamp(6px,1.8vw,12px)",
+                  paddingRight: "clamp(6px,1.8vw,12px)",
+                  height: 28,
+                  marginRight: "clamp(2px,1vw,8px)",
                   color: G,
-                  border: `1.5px solid ${G}60`,
-                  background: "rgba(255,255,255,0.55)",
+                  border: `1.5px solid ${G}55`,
+                  background: "rgba(255,255,255,0.58)",
+                  transition: "all 0.15s",
                 }}
                 onMouseEnter={e => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.background = "rgba(255,255,255,0.90)";
-                  el.style.borderColor = `${G}`;
+                  el.style.background = "rgba(255,255,255,0.92)";
+                  el.style.borderColor = G;
                 }}
                 onMouseLeave={e => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.background = "rgba(255,255,255,0.55)";
-                  el.style.borderColor = `${G}60`;
+                  el.style.background = "rgba(255,255,255,0.58)";
+                  el.style.borderColor = `${G}55`;
                 }}
               >
                 Entrar
@@ -276,29 +283,48 @@ export default function InstitutionalNavbar() {
             </Link>
 
             {/*
-             * Hamburger — sits over the green button region in the artwork.
-             * Transparent background so the image's green/teal gradient shows through.
-             * The SVG 3-line icon is rendered on top in verde/cyan gradient.
+             * Hamburger button — transparent so the background artwork shows through.
+             * Opens drawer. Positioned BEFORE the green artwork arrow button.
+             * 3 gradient lines rendered in SVG.
              */}
             <button
               onClick={() => setDrawer(true)}
               aria-label="Abrir menu"
-              className="flex items-center justify-center flex-shrink-0"
+              className="flex items-center justify-center"
               style={{
-                width: 68,
-                height: 68,
+                width: 38,
+                height: H,
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
+                flexShrink: 0,
               }}
             >
-              <Hamburger />
+              <GradientHamburger />
             </button>
+
+            {/*
+             * Green-arrow Home button — transparent overlay positioned OVER the
+             * green/teal button that is baked into institutional-navbar.png artwork.
+             * Width matches the green CTA area in the reference image (~68 px).
+             * Clicking navigates to the landing page ("/").
+             */}
+            <Link href="/" aria-label="Ir para a página inicial">
+              <div
+                style={{
+                  width: H,
+                  height: H,
+                  background: "transparent",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                }}
+              />
+            </Link>
           </div>
         </div>
       </header>
 
-      {/* ════════════════ DRAWER ════════════════ */}
+      {/* ═══════════════════════════════════ DRAWER ═══════════════════════════════════ */}
       <AnimatePresence>
         {drawer && (
           <>
@@ -309,7 +335,7 @@ export default function InstitutionalNavbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.22 }}
               className="fixed inset-0 z-[60]"
-              style={{ background: "rgba(0,0,0,0.30)", backdropFilter: "blur(4px)" }}
+              style={{ background: "rgba(0,0,0,0.28)", backdropFilter: "blur(4px)" }}
               onClick={() => setDrawer(false)}
             />
             <motion.aside
@@ -317,66 +343,70 @@ export default function InstitutionalNavbar() {
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ duration: 0.28, ease: [0.19, 1, 0.22, 1] }}
+              transition={{ duration: 0.26, ease: [0.19, 1, 0.22, 1] }}
               className="fixed left-0 top-0 bottom-0 z-[70] flex flex-col"
               style={{
                 width: "min(300px, 88vw)",
                 background: "#fff",
                 borderRight: "1px solid rgba(22,163,74,0.10)",
-                boxShadow: "4px 0 40px rgba(0,0,0,0.14)",
+                boxShadow: "4px 0 40px rgba(0,0,0,0.12)",
               }}
             >
-              {/* Drawer header — uses full navbar image as bg strip */}
+              {/* Header strip — same artwork so logo appears naturally */}
               <div
-                className="flex items-center justify-between px-5 border-b flex-shrink-0"
+                className="flex items-center justify-between px-4 border-b flex-shrink-0"
                 style={{
-                  height: 60,
+                  height: 58,
                   backgroundImage: "url(/institutional-navbar.png)",
                   backgroundSize: "cover",
                   backgroundPosition: "left center",
                   borderColor: "rgba(22,163,74,0.12)",
                 }}
               >
-                <div style={{ width: 110 }} /> {/* logo visible via bg */}
+                <div style={{ width: 110 }} />
                 <button
                   onClick={() => setDrawer(false)}
                   style={{
-                    width: 32, height: 32, borderRadius: 8,
-                    background: "rgba(255,255,255,0.75)", border: "none",
-                    color: "#1e293b", cursor: "pointer",
+                    width: 30, height: 30, borderRadius: 8,
+                    background: "rgba(255,255,255,0.78)",
+                    border: "none", color: "#1e293b",
+                    cursor: "pointer",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}
                   aria-label="Fechar"
                 >
-                  <X size={16} />
+                  <X size={15} />
                 </button>
               </div>
 
               {/* Nav sections */}
               <div className="flex-1 overflow-y-auto py-3 px-3">
-                {DRAWER.map((section, si) => (
+                {DRAWER_SECTIONS.map((sec, si) => (
                   <div key={si} className="mb-5">
-                    <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase"
-                      style={{ color: "#94a3b8" }}>
-                      {section.title}
+                    <p
+                      className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase"
+                      style={{ color: "#94a3b8" }}
+                    >
+                      {sec.title}
                     </p>
                     <div className="space-y-0.5">
-                      {section.items.map((item, ii) => {
-                        const isActive = location === item.href;
+                      {sec.items.map((item, ii) => {
+                        const on = loc === item.href;
                         return (
                           <Link key={ii} href={item.href} onClick={() => setDrawer(false)}>
                             <div
-                              className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all"
+                              className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"
                               style={{
-                                background: isActive ? "rgba(22,163,74,0.09)" : "transparent",
-                                color: isActive ? G : "#334155",
+                                background: on ? `${G}12` : "transparent",
+                                color: on ? G : "#334155",
+                                transition: "background 0.12s",
                               }}
-                              onMouseEnter={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)"; }}
-                              onMouseLeave={e => { if (!isActive) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                              onMouseEnter={e => { if (!on) (e.currentTarget as HTMLElement).style.background = "rgba(0,0,0,0.04)"; }}
+                              onMouseLeave={e => { if (!on) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
                             >
-                              <span style={{ color: isActive ? G : "#64748b" }}>{item.icon}</span>
+                              <span style={{ color: on ? G : "#64748b" }}>{item.icon}</span>
                               <span className="text-[13px] font-medium leading-snug">{item.label}</span>
-                              {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: G }} />}
+                              {on && <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: G }} />}
                             </div>
                           </Link>
                         );
