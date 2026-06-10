@@ -659,11 +659,11 @@ export default function LandingPage() {
                       style={{ background: "rgba(124,252,0,0.10)", borderColor: "rgba(124,252,0,0.28)", color: "#7CFC00" }}>
                       <Users size={11} /> Sistema de Indicações
                     </div>
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight text-white">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight" style={{ color: "#0F172A" }}>
                       Indique, conecte e ganhe{" "}
                       <span style={{ background: "linear-gradient(90deg,#7CFC00,#9aff1c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>comissões vitalícias</span>
                     </h2>
-                    <p className="text-sm mt-1 max-w-lg" style={{ color: "rgba(255,255,255,0.72)" }}>
+                    <p className="text-sm mt-1 max-w-lg" style={{ color: "#334155" }}>
                       Cada extra do seu indicado gera comissão para você — para sempre, sem limite.
                     </p>
                   </div>

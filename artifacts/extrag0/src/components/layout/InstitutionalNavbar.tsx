@@ -42,16 +42,16 @@ const DRAWER_SECTIONS = [
 /* ── Premium 3-line gradient hamburger ── */
 function GradientHamburger() {
   return (
-    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true" style={{ display: "block" }}>
+    <svg width="24" height="18" viewBox="0 0 24 18" fill="none" aria-hidden="true" style={{ display: "block", filter: "drop-shadow(0 0 4px rgba(0,201,167,0.35))" }}>
       <defs>
-        <linearGradient id="hbg" x1="0" y1="0" x2="22" y2="0" gradientUnits="userSpaceOnUse">
+        <linearGradient id="hbg" x1="0" y1="0" x2="24" y2="0" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor={G} />
           <stop offset="100%" stopColor={C} />
         </linearGradient>
       </defs>
-      <rect x="0" y="0"    width="22" height="2.8" rx="1.4" fill="url(#hbg)" />
-      <rect x="0" y="6.6"  width="22" height="2.8" rx="1.4" fill="url(#hbg)" />
-      <rect x="0" y="13.2" width="22" height="2.8" rx="1.4" fill="url(#hbg)" />
+      <rect x="0" y="0"   width="24" height="3" rx="1.5" fill="url(#hbg)" />
+      <rect x="0" y="7.5" width="24" height="3" rx="1.5" fill="url(#hbg)" />
+      <rect x="0" y="15"  width="24" height="3" rx="1.5" fill="url(#hbg)" />
     </svg>
   );
 }
@@ -158,33 +158,8 @@ export default function InstitutionalNavbar() {
             <div style={{ width: "clamp(100px, 21vw, 195px)", height: H }} />
           </Link>
 
-          {/* ── CENTRE: links — ALL screen sizes ──────────────────────────────── */}
+          {/* ── CENTRE: Investidores + Arquitetura Financeira (all screen sizes) ── */}
           <nav className="flex flex-1 items-center justify-center" style={{ gap: 0 }}>
-
-            {/* Home — icon only (saves space on mobile) */}
-            <Link href="/">
-              <span
-                className="relative flex items-center justify-center rounded-lg"
-                style={{
-                  width: 32,
-                  height: 32,
-                  color: active("/") ? G : "#1e2d1e",
-                  cursor: "pointer",
-                  transition: "color 0.15s",
-                  flexShrink: 0,
-                }}
-                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = G; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active("/") ? G : "#1e2d1e"; }}
-              >
-                <HomeIcon size={16} strokeWidth={active("/") ? 2.5 : 2} />
-                {active("/") && (
-                  <span
-                    className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-3 h-[2px] rounded-full"
-                    style={{ background: `linear-gradient(90deg,${G},${C})` }}
-                  />
-                )}
-              </span>
-            </Link>
 
             {/* Investidores */}
             <Link href="/investidores-parceiros">
