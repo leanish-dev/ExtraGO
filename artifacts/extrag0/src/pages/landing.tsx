@@ -827,8 +827,8 @@ export default function LandingPage() {
                       >
                         {sector.icon}
                       </motion.span>
-                      <span className="text-sm font-bold text-white leading-tight drop-shadow-md">{sector.label}</span>
-                      <span className="text-[10px] text-white/50 font-medium group-hover:text-white/75 transition-colors duration-300">{sector.sub}</span>
+                      <span className="text-sm font-bold leading-tight drop-shadow-md" style={{ color: "rgba(255,255,255,0.96)" }}>{sector.label}</span>
+                      <span className="text-[10px] font-medium transition-colors duration-300" style={{ color: "rgba(255,255,255,0.72)" }}>{sector.sub}</span>
                     </div>
                   </motion.div>
                 ))}
@@ -918,7 +918,7 @@ export default function LandingPage() {
                       </span>
                     </h2>
 
-                    <p className="text-white/55 text-sm sm:text-base mb-7 max-w-md leading-relaxed">
+                    <p className="text-sm sm:text-base mb-7 max-w-md leading-relaxed" style={{ color: "rgba(255,255,255,0.72)" }}>
                       Conectamos empresas e profissionais. Movimentamos negócios. Impulsionamos o Brasil.
                     </p>
 
@@ -931,7 +931,7 @@ export default function LandingPage() {
                         { icon: <DollarSign size={14} />, label: "Parcerias que geram impacto" },
                         { icon: <MapPin size={14} />, label: "27 estados cobertos" },
                       ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 text-xs text-white/55 group-hover:text-white/75 transition-colors">
+                        <div key={i} className="flex items-center gap-2 text-xs transition-colors" style={{ color: "rgba(255,255,255,0.72)" }}>
                           <span className="text-primary/70 group-hover:text-primary transition-colors">{item.icon}</span>
                           {item.label}
                         </div>
@@ -946,7 +946,7 @@ export default function LandingPage() {
                       >
                         Conheça a Oportunidade <ArrowRight size={14} />
                       </div>
-                      <span className="text-xs text-white/35">Conectamos empresas e profissionais · Movimentamos negócios · Impulsionamos o Brasil</span>
+                      <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>Conectamos empresas e profissionais · Movimentamos negócios · Impulsionamos o Brasil</span>
                     </div>
                   </div>
                 </motion.div>

@@ -362,7 +362,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Um mercado imenso operando<br />de forma fragmentada.
               </h2>
-              <p className="text-white/88 text-[14px] leading-relaxed max-w-2xl">
+              <p className="text-[rgba(255,255,255,0.92)] text-[14px] leading-relaxed max-w-2xl">
                 O mercado de trabalho flexível no Brasil ainda opera majoritariamente através de grupos de WhatsApp, indicações informais e processos manuais descentralizados. A digitalização desse ecossistema representa uma das maiores oportunidades de infraestrutura da próxima década.
               </p>
             </Reveal>
@@ -388,8 +388,8 @@ export default function InvestidoresParceirosPage() {
                       style={{ background: `${item.color}14`, border: `1px solid ${item.color}25` }}>
                       <span style={{ color: item.color }}>{item.icon}</span>
                     </div>
-                    <h3 className="text-[14px] font-bold mb-2 text-white/90">{item.title}</h3>
-                    <p className="text-[12px] text-white/50 leading-relaxed">{item.desc}</p>
+                    <h3 className="text-[14px] font-bold mb-2 text-[rgba(255,255,255,0.94)]">{item.title}</h3>
+                    <p className="text-[12px]  leading-relaxed" style={{ color: "rgba(255,255,255,0.75)" }}>{item.desc}</p>
                   </GCard>
                 </Reveal>
               ))}
@@ -402,8 +402,8 @@ export default function InvestidoresParceirosPage() {
                     style={{ background: "rgba(124,252,0,0.12)", border: "1px solid rgba(124,252,0,0.22)" }}>
                     <Lightbulb size={18} style={{ color: G }} />
                   </div>
-                  <p className="text-[13px] text-white/60 leading-relaxed">
-                    <span className="text-white/85 font-semibold">A oportunidade da extraGO</span>{" "}
+                  <p className="text-[13px]  leading-relaxed" style={{ color: "rgba(255,255,255,0.82)" }}>
+                    <span className="text-[rgba(255,255,255,0.90)] font-semibold">A oportunidade da extraGO</span>{" "}
                     é criar a camada digital que faltava: um ecossistema onde profissionais acumulam reputação, empresas encontram talentos validados com velocidade, e toda a cadeia opera com rastreabilidade, eficiência e escala nacional.
                   </p>
                 </div>
@@ -457,12 +457,12 @@ export default function InvestidoresParceirosPage() {
                       </div>
                       <div>
                         <p className="text-[14px] font-bold" style={{ color: side.color }}>{side.title}</p>
-                        <p className="text-[10px] text-white/30 tracking-wide uppercase">{side.subtitle}</p>
+                        <p className="text-[10px]  tracking-wide uppercase" style={{ color: "rgba(255,255,255,0.58)" }}>{side.subtitle}</p>
                       </div>
                     </div>
                     <ul className="space-y-2.5">
                       {side.points.map((pt, j) => (
-                        <li key={j} className="flex items-start gap-2.5 text-[13px] text-white/58">
+                        <li key={j} className="flex items-start gap-2.5 text-[13px] " style={{ color: "rgba(255,255,255,0.80)" }}>
                           <span className="w-1 h-1 rounded-full flex-shrink-0 mt-[7px]" style={{ background: side.color }} />
                           {pt}
                         </li>
@@ -488,7 +488,7 @@ export default function InvestidoresParceirosPage() {
                 <h2 className="font-black leading-tight mb-4" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                   O momento certo<br />para construir isso.
                 </h2>
-                <p className="text-white/90 text-[14px] leading-relaxed">
+                <p className="text-[rgba(255,255,255,0.94)] text-[14px] leading-relaxed">
                   Múltiplas forças convergem simultaneamente criando uma janela estratégica única para a digitalização do mercado de trabalho flexível no Brasil.
                 </p>
               </Reveal>
@@ -526,8 +526,8 @@ export default function InvestidoresParceirosPage() {
                         <span style={{ color: item.color }}>{item.icon}</span>
                       </div>
                       <div>
-                        <p className="text-[13px] font-semibold text-white/95 mb-0.5">{item.title}</p>
-                        <p className="text-[12px] text-white/75 leading-relaxed">{item.desc}</p>
+                        <p className="text-[13px] font-semibold text-[rgba(255,255,255,0.96)] mb-0.5">{item.title}</p>
+                        <p className="text-[12px] text-[rgba(255,255,255,0.85)] leading-relaxed">{item.desc}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -556,7 +556,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 16px rgba(0,0,0,0.70)" }}>
                 Quatro pilares.<br />Um ecossistema completo.
               </h2>
-              <p className="text-white/65 text-[14px] leading-relaxed max-w-xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
+              <p className="text-[14px] leading-relaxed max-w-xl" style={{ color: "rgba(255,255,255,0.85)", textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 A extraGO não é um app de contratação — é a camada de infraestrutura que conecta todos os participantes do mercado de trabalho flexível em uma única plataforma integrada.
               </p>
             </Reveal>
@@ -571,7 +571,7 @@ export default function InvestidoresParceirosPage() {
                     </div>
                     <ul className="space-y-2">
                       {p.items.map((item, j) => (
-                        <li key={j} className="text-[14px] text-white/60 leading-snug">{item}</li>
+                        <li key={j} className="text-[14px]  leading-snug" style={{ color: "rgba(255,255,255,0.82)" }}>{item}</li>
                       ))}
                     </ul>
                   </div>
@@ -593,7 +593,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Defensabilidade estrutural.<br />Não apenas funcionalidades.
               </h2>
-              <p className="text-white/88 text-[14px] leading-relaxed max-w-xl">
+              <p className="text-[rgba(255,255,255,0.92)] text-[14px] leading-relaxed max-w-xl">
                 As vantagens da extraGO não são features que podem ser copiadas — são efeitos de rede e estruturas operacionais que se fortalecem com o tempo e com a escala.
               </p>
             </Reveal>
@@ -602,7 +602,7 @@ export default function InvestidoresParceirosPage() {
               {ADVANTAGES.map((adv, i) => (
                 <Reveal key={i} delay={i * 0.04}>
                   <div className="flex items-start gap-5 py-5">
-                    <span className="text-[10px] font-black tracking-widest text-white/38 flex-shrink-0 w-5 pt-1 hidden sm:block">
+                    <span className="text-[10px] font-black tracking-widest  flex-shrink-0 w-5 pt-1 hidden sm:block" style={{ color: "rgba(255,255,255,0.62)" }}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
@@ -610,8 +610,8 @@ export default function InvestidoresParceirosPage() {
                       <span style={{ color: adv.color }}>{adv.icon}</span>
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-[14px] font-bold text-white/98 mb-1.5 leading-tight">{adv.title}</h3>
-                      <p className="text-[13px] text-white/85 leading-relaxed">{adv.desc}</p>
+                      <h3 className="text-[14px] font-bold text-[rgba(255,255,255,0.98)] mb-1.5 leading-tight">{adv.title}</h3>
+                      <p className="text-[13px] text-[rgba(255,255,255,0.90)] leading-relaxed">{adv.desc}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -640,9 +640,9 @@ export default function InvestidoresParceirosPage() {
               <Pill label="Modelo de Expansão Nacional" color="#fbbf24" icon={<MapPin size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 16px rgba(0,0,0,0.70)" }}>
                 Um representante por estado.<br />
-                <span className="text-white/50">27 estados. Todo o Brasil.</span>
+                <span className="" style={{ color: "rgba(255,255,255,0.75)" }}>27 estados. Todo o Brasil.</span>
               </h2>
-              <p className="text-white/65 text-[14px] leading-relaxed max-w-2xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
+              <p className="text-[14px] leading-relaxed max-w-2xl" style={{ color: "rgba(255,255,255,0.85)", textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 A estratégia de expansão da extraGO é ancorada em representantes estaduais com profundo conhecimento regional. Cada representante é responsável pelo desenvolvimento comercial, parcerias locais, relacionamento com empresas e crescimento da rede profissional em seu estado.
               </p>
             </Reveal>
@@ -657,8 +657,8 @@ export default function InvestidoresParceirosPage() {
                 <Reveal key={i} delay={i * 0.07}>
                   <GCard className="p-4 sm:p-5 text-center" accent={s.color}>
                     <p className="text-[36px] sm:text-[42px] font-black leading-none mb-1" style={{ color: s.color, textShadow: `0 2px 18px rgba(0,0,0,0.75)` }}>{s.num}</p>
-                    <p className="text-[12px] font-semibold text-white/70 mb-0.5">{s.label}</p>
-                    <p className="text-[10px] text-white/30 leading-snug">{s.sub}</p>
+                    <p className="text-[12px] font-semibold text-[rgba(255,255,255,0.82)] mb-0.5">{s.label}</p>
+                    <p className="text-[10px]  leading-snug" style={{ color: "rgba(255,255,255,0.58)" }}>{s.sub}</p>
                   </GCard>
                 </Reveal>
               ))}
@@ -679,7 +679,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Múltiplas camadas de receita.<br />Todas recorrentes.
               </h2>
-              <p className="text-white/88 text-[14px] leading-relaxed max-w-xl">
+              <p className="text-[rgba(255,255,255,0.92)] text-[14px] leading-relaxed max-w-xl">
                 O modelo financeiro da extraGO combina intermediação por performance, assinaturas mensais e receita de rede — criando previsibilidade e escalabilidade.
               </p>
             </Reveal>
@@ -688,8 +688,8 @@ export default function InvestidoresParceirosPage() {
             <div className="grid lg:grid-cols-2 gap-4 mb-4">
               <Reveal>
                 <GCard className="p-5 sm:p-6 h-full" accent={G}>
-                  <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Camada 1 — Intermediação por Performance</p>
-                  <p className="text-[12px] text-white/50 leading-relaxed mb-4">
+                  <p className="text-[10px] font-black tracking-widest uppercase  mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Camada 1 — Intermediação por Performance</p>
+                  <p className="text-[12px]  leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.75)" }}>
                     Taxa cobrada sobre cada extra concluído. Quanto mais o profissional evolui, menor a taxa — incentivando qualidade, retenção e crescimento de longo prazo.
                   </p>
                   <div className="space-y-2.5">
@@ -698,7 +698,7 @@ export default function InvestidoresParceirosPage() {
                         initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }} transition={{ delay: i * 0.06 }}
                         className="flex items-center gap-3">
-                        <span className="w-[90px] text-[12px] font-medium text-white/60 flex-shrink-0">{f.name}</span>
+                        <span className="w-[90px] text-[12px] font-medium  flex-shrink-0" style={{ color: "rgba(255,255,255,0.82)" }}>{f.name}</span>
                         <div className="flex-1 h-5 rounded-lg overflow-hidden" style={{ background: "rgba(255,255,255,0.04)" }}>
                           <motion.div
                             initial={{ width: 0 }} whileInView={{ width: f.w }}
@@ -716,22 +716,22 @@ export default function InvestidoresParceirosPage() {
 
               <Reveal delay={0.08}>
                 <GCard className="p-5 sm:p-6 h-full" accent={C}>
-                  <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Camada 2 — Sistema de Indicações Multinível</p>
-                  <p className="text-[12px] text-white/50 leading-relaxed mb-3">
-                    Cada usuário recebe um <span className="text-white/70 font-semibold">código exclusivo</span>. Quando um indicado realiza extras, o indicador recebe uma <span className="text-white/70 font-semibold">comissão sobre o valor bruto</span> — de forma contínua e recorrente, com até 3 níveis de progressão.
+                  <p className="text-[10px] font-black tracking-widest uppercase  mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Camada 2 — Sistema de Indicações Multinível</p>
+                  <p className="text-[12px]  leading-relaxed mb-3" style={{ color: "rgba(255,255,255,0.75)" }}>
+                    Cada usuário recebe um <span className="text-[rgba(255,255,255,0.82)] font-semibold">código exclusivo</span>. Quando um indicado realiza extras, o indicador recebe uma <span className="text-[rgba(255,255,255,0.82)] font-semibold">comissão sobre o valor bruto</span> — de forma contínua e recorrente, com até 3 níveis de progressão.
                   </p>
                   <div className="space-y-2.5 mb-4">
                     {REFERRAL.map((t, i) => (
                       <div key={i} className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-white/6 bg-white/[0.025]">
-                        <span className="text-[13px] font-medium text-white/75">{t.label}</span>
+                        <span className="text-[13px] font-medium text-[rgba(255,255,255,0.85)]">{t.label}</span>
                         <span className="text-[18px] font-black" style={{ color: t.color }}>{t.pct}</span>
                       </div>
                     ))}
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {["Crescimento orgânico","Expansão viral","Retenção ativa","Renda recorrente","Efeitos de rede nacionais"].map((tag, i) => (
-                      <span key={i} className="text-[10px] px-2 py-0.5 rounded-full border border-white/7 text-white/38"
-                        style={{ background: "rgba(0,229,255,0.05)" }}>{tag}</span>
+                      <span key={i} className="text-[10px] px-2 py-0.5 rounded-full border border-white/7"
+                        style={{ color: "rgba(255,255,255,0.62)", background: "rgba(0,229,255,0.05)" }}>{tag}</span>
                     ))}
                   </div>
                 </GCard>
@@ -741,7 +741,7 @@ export default function InvestidoresParceirosPage() {
             {/* Camada 3 — Assinaturas */}
             <Reveal delay={0.12} className="mb-4">
               <GCard className="p-5 sm:p-6" accent="#a855f7">
-                <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Camada 3 — Assinaturas Premium (MRR)</p>
+                <p className="text-[10px] font-black tracking-widest uppercase  mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Camada 3 — Assinaturas Premium (MRR)</p>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {PLANS.map((plan) => (
                     <div key={plan.key} className="flex items-center justify-between py-3 px-4 rounded-xl border"
@@ -754,15 +754,15 @@ export default function InvestidoresParceirosPage() {
                         <span className="text-[12px] font-bold" style={{ color: plan.color }}>{plan.name}</span>
                       </div>
                       <div className="text-right">
-                        <span className="text-[14px] font-black text-white">{plan.price}</span>
-                        {plan.period && <span className="text-[10px] text-white/35 ml-0.5">{plan.period}</span>}
+                        <span className="text-[14px] font-black text-[rgba(255,255,255,0.96)]">{plan.price}</span>
+                        {plan.period && <span className="text-[10px] text-[rgba(255,255,255,0.62)] ml-0.5">{plan.period}</span>}
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="mt-4 pt-3 border-t border-white/5 flex items-start gap-2.5">
                   <TrendingUp size={13} className="text-purple-400 flex-shrink-0 mt-0.5" />
-                  <p className="text-[11px] text-white/40 leading-relaxed">
+                  <p className="text-[11px] text-[rgba(255,255,255,0.68)] leading-relaxed">
                     Receita mensal recorrente (MRR) que escala proporcionalmente com a base de usuários — criando previsibilidade financeira independente do volume de extras.
                   </p>
                 </div>
@@ -772,7 +772,7 @@ export default function InvestidoresParceirosPage() {
             {/* Financial distribution */}
             <Reveal delay={0.18}>
               <GCard className="p-5 sm:p-6" accent="#fbbf24">
-                <p className="text-[10px] font-black tracking-widest uppercase text-white/30 mb-4">Estrutura Financeira da Plataforma — Alocação da Receita Operacional</p>
+                <p className="text-[10px] font-black tracking-widest uppercase  mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Estrutura Financeira da Plataforma — Alocação da Receita Operacional</p>
                 {/* Stacked bar */}
                 <div className="flex h-8 rounded-xl overflow-hidden w-full mb-5 gap-px">
                   {FINANCIAL.map((item, i) => (
@@ -798,8 +798,8 @@ export default function InvestidoresParceirosPage() {
                           <span className="w-9 text-right text-[15px] font-black flex-shrink-0 leading-none" style={{ color: item.color }}>{item.pct}%</span>
                           <div className="w-px h-5 flex-shrink-0 rounded-full" style={{ background: `${item.color}35` }} />
                           <div className="min-w-0">
-                            <p className="text-[11px] font-semibold text-white/72 leading-tight">{item.label}</p>
-                            <p className="text-[10px] text-white/35 leading-snug truncate">{item.purpose}</p>
+                            <p className="text-[11px] font-semibold text-[rgba(255,255,255,0.82)] leading-tight">{item.label}</p>
+                            <p className="text-[10px] text-[rgba(255,255,255,0.62)] leading-snug truncate">{item.purpose}</p>
                           </div>
                         </motion.div>
                       ))}
@@ -808,7 +808,7 @@ export default function InvestidoresParceirosPage() {
                 </div>
                 <div className="mt-4 pt-3 border-t border-white/5 flex items-start gap-2.5">
                   <Shield size={12} style={{ color: G, flexShrink: 0, marginTop: 2 }} />
-                  <p className="text-[11px] text-white/40 leading-relaxed">
+                  <p className="text-[11px] text-[rgba(255,255,255,0.68)] leading-relaxed">
                     <span style={{ color: G }} className="font-semibold">25% em caixa e reserva estratégica</span>{" "}
                     garante solidez operacional, suporta crescimento acelerado e protege a operação em cenários adversos — enquanto 15% é distribuído diretamente a parceiros e investidores ativos.
                   </p>
@@ -831,7 +831,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(24px,3.8vw,44px)" }}>
                 Os 4 Motores de Receita da extraGO
               </h2>
-              <p className="text-white/88 text-[14px] leading-relaxed max-w-2xl mx-auto">
+              <p className="text-[rgba(255,255,255,0.92)] text-[14px] leading-relaxed max-w-2xl mx-auto">
                 Quatro fontes independentes gerando crescimento recorrente e escalável.
               </p>
             </Reveal>
@@ -874,12 +874,12 @@ export default function InvestidoresParceirosPage() {
                         <span style={{ color: item.color }}>{item.icon}</span>
                       </div>
                     </div>
-                    <p className="text-[13px] font-bold text-white/80 mb-2.5 leading-snug">{item.title}</p>
+                    <p className="text-[13px] font-bold text-[rgba(255,255,255,0.88)] mb-2.5 leading-snug">{item.title}</p>
                     <p className="font-black mb-3 leading-none"
                       style={{ fontSize: "clamp(17px,2vw,22px)", color: item.color }}>
                       {item.value}
                     </p>
-                    <p className="text-[12px] text-white/45 leading-relaxed">{item.desc}</p>
+                    <p className="text-[12px]  leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>{item.desc}</p>
                   </GCard>
                 </Reveal>
               ))}
@@ -894,10 +894,10 @@ export default function InvestidoresParceirosPage() {
                     <Layers size={20} style={{ color: G }} />
                   </div>
                   <div>
-                    <h3 className="text-[16px] font-black text-white/90 mb-1.5">
+                    <h3 className="text-[16px] font-black text-[rgba(255,255,255,0.94)] mb-1.5">
                       4 Fontes Independentes de Receita
                     </h3>
-                    <p className="text-[13px] text-white/55 leading-relaxed max-w-2xl">
+                    <p className="text-[13px] text-[rgba(255,255,255,0.78)] leading-relaxed max-w-2xl">
                       A combinação dessas quatro camadas cria um modelo escalável, resiliente e preparado para crescimento nacional de longo prazo.
                     </p>
                   </div>
@@ -956,7 +956,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 16px rgba(0,0,0,0.70)" }}>
                 Infraestrutura de gestão<br />para escala nacional.
               </h2>
-              <p className="text-white/65 text-[14px] leading-relaxed max-w-xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
+              <p className="text-[14px] leading-relaxed max-w-xl" style={{ color: "rgba(255,255,255,0.85)", textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 A extraGO possui uma arquitetura operacional completa, coordenada por cinco pilares que garantem execução nacional, regional e local.
               </p>
             </Reveal>
@@ -995,10 +995,10 @@ export default function InvestidoresParceirosPage() {
                       <span style={{ color: block.color }}>{block.icon}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-[13px] font-bold text-white/80 mb-2 leading-tight">{block.title}</h3>
+                      <h3 className="text-[13px] font-bold text-[rgba(255,255,255,0.88)] mb-2 leading-tight">{block.title}</h3>
                       <div className="flex flex-wrap gap-x-3 gap-y-0.5">
                         {block.items.map((item, j) => (
-                          <span key={j} className="text-[11px] text-white/42">{item}</span>
+                          <span key={j} className="text-[11px] text-[rgba(255,255,255,0.68)]">{item}</span>
                         ))}
                       </div>
                     </div>
@@ -1022,7 +1022,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 20px rgba(0,0,0,0.80)" }}>
                 Estrutura de Capital para<br />Crescimento de Longo Prazo.
               </h2>
-              <p className="text-white/90 text-[14px] leading-relaxed max-w-2xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.60)" }}>
+              <p className="text-[rgba(255,255,255,0.94)] text-[14px] leading-relaxed max-w-2xl" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.60)" }}>
                 A extraGO foi estruturada intencionalmente para suportar participação estratégica de investidores, parceiros institucionais e iniciativas de expansão — preservando a capacidade de crescimento e a solidez operacional de longo prazo.
               </p>
             </Reveal>
@@ -1113,13 +1113,13 @@ export default function InvestidoresParceirosPage() {
                     <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full"
                       style={{ background: "rgba(244,63,94,0.12)", border: "1px solid rgba(244,63,94,0.30)" }}>
                       <Crown size={10} style={{ color: "#f43f5e" }} />
-                      <span className="text-[9px] font-black tracking-[0.15em] uppercase text-white/55">Acesso Exclusivo</span>
+                      <span className="text-[9px] font-black tracking-[0.15em] uppercase text-[rgba(255,255,255,0.78)]">Acesso Exclusivo</span>
                     </div>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1">
-                    <h3 className="font-black text-white leading-tight mb-4"
+                    <h3 className="font-black text-[rgba(255,255,255,0.96)] leading-tight mb-4"
                       style={{ fontSize: "clamp(20px,3vw,36px)" }}>
                       Reservado para{" "}
                       <span style={{
@@ -1127,7 +1127,7 @@ export default function InvestidoresParceirosPage() {
                         WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
                       }}>Investidores Estratégicos</span>
                     </h3>
-                    <p className="text-white/62 text-[14px] leading-relaxed mb-8 max-w-xl">
+                    <p className="text-[rgba(255,255,255,0.80)] text-[14px] leading-relaxed mb-8 max-w-xl">
                       A extraGO mantém uma alocação dedicada reservada para investidores estratégicos, parceiros institucionais e iniciativas futuras de expansão — permitindo participação de capital enquanto preserva a capacidade de crescimento de longo prazo.
                     </p>
 
@@ -1162,9 +1162,9 @@ export default function InvestidoresParceirosPage() {
                               style={{ background: `${p.color}18`, border: `1px solid ${p.color}30` }}>
                               <span style={{ color: p.color }}>{p.icon}</span>
                             </div>
-                            <span className="text-[11px] font-bold text-white/80">{p.label}</span>
+                            <span className="text-[11px] font-bold text-[rgba(255,255,255,0.88)]">{p.label}</span>
                           </div>
-                          <p className="text-[10px] text-white/45 leading-relaxed">{p.desc}</p>
+                          <p className="text-[10px]  leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>{p.desc}</p>
                         </motion.div>
                       ))}
                     </div>
@@ -1187,7 +1187,7 @@ export default function InvestidoresParceirosPage() {
                     <div className="w-2.5 h-2.5 rounded-full mb-3" style={{ background: s.color, boxShadow: `0 0 8px ${s.color}60` }} />
                     <p className="text-[13px] font-bold mb-1 leading-tight"
                       style={{ color: i === 2 ? s.color : "rgba(255,255,255,0.85)" }}>{s.label}</p>
-                    <p className="text-[11px] text-white/42 leading-snug">{s.desc}</p>
+                    <p className="text-[11px] text-[rgba(255,255,255,0.68)] leading-snug">{s.desc}</p>
                   </div>
                 ))}
               </div>
@@ -1209,7 +1209,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Um modelo desenhado para<br />crescimento sustentável nacional.
               </h2>
-              <p className="text-white/88 text-[14px] leading-relaxed max-w-2xl">
+              <p className="text-[rgba(255,255,255,0.92)] text-[14px] leading-relaxed max-w-2xl">
                 A receita da extraGO é distribuída intencionalmente para financiar cada pilar do crescimento — garantindo que expansão, tecnologia, operação e retorno para parceiros coexistam de forma equilibrada.
               </p>
             </Reveal>
@@ -1251,7 +1251,7 @@ export default function InvestidoresParceirosPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-1.5 mb-1">
                         <span style={{ color: item.color }}>{item.icon}</span>
-                        <p className="text-[12px] font-bold text-white/95 leading-tight">{item.label}</p>
+                        <p className="text-[12px] font-bold text-[rgba(255,255,255,0.96)] leading-tight">{item.label}</p>
                       </div>
                       <p className="text-[11px] text-white/78 leading-relaxed">{item.desc}</p>
                     </div>
@@ -1263,8 +1263,8 @@ export default function InvestidoresParceirosPage() {
             <Reveal delay={0.2} className="mt-5">
               <div className="flex items-start gap-3 p-4 rounded-xl border border-white/6" style={{ background: "rgba(124,252,0,0.04)" }}>
                 <Lightbulb size={15} style={{ color: G, flexShrink: 0, marginTop: 2 }} />
-                <p className="text-[12px] text-white/88 leading-relaxed">
-                  <span className="text-white/98 font-semibold">A estrutura é o produto.</span>{" "}
+                <p className="text-[12px] text-[rgba(255,255,255,0.92)] leading-relaxed">
+                  <span className="text-[rgba(255,255,255,0.98)] font-semibold">A estrutura é o produto.</span>{" "}
                   Cada percentual foi projetado para que a extraGO cresça sem depender de capital externo contínuo — criando um modelo que se autofinancia, escala e distribui valor a cada ciclo.
                 </p>
               </div>
@@ -1285,7 +1285,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 As pessoas que estão construindo isso.
               </h2>
-              <p className="text-white/88 text-[14px] max-w-lg mx-auto">
+              <p className="text-[rgba(255,255,255,0.92)] text-[14px] max-w-lg mx-auto">
                 Uma equipe de fundadores com experiência complementar em tecnologia, marketing, operações e expansão comercial.
               </p>
             </Reveal>
@@ -1318,7 +1318,7 @@ export default function InvestidoresParceirosPage() {
                       </div>
                       <h3 className="font-bold text-[14px] leading-tight mb-0.5">{m.name}</h3>
                       <p className="text-[11px] font-bold tracking-wide mb-3" style={{ color: m.color }}>{m.role}</p>
-                      <p className="text-[11px] text-white/42 leading-relaxed">{m.bio}</p>
+                      <p className="text-[11px] text-[rgba(255,255,255,0.68)] leading-relaxed">{m.bio}</p>
                     </div>
                   </motion.div>
                 </Reveal>
@@ -1339,7 +1339,7 @@ export default function InvestidoresParceirosPage() {
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 A jornada rumo à liderança nacional.
               </h2>
-              <p className="text-white/88 text-[14px] max-w-lg mx-auto">
+              <p className="text-[rgba(255,255,255,0.92)] text-[14px] max-w-lg mx-auto">
                 Sete fases estruturadas de validação ao domínio nacional do mercado de trabalho flexível.
               </p>
             </Reveal>
@@ -1365,7 +1365,7 @@ export default function InvestidoresParceirosPage() {
                         </span>
                         {phase.done && <div className="w-1 h-1 rounded-full mt-0.5" style={{ background: phase.color }} />}
                       </div>
-                      <p className="text-[10px] text-white/88 leading-tight font-medium">{phase.title}</p>
+                      <p className="text-[10px] text-[rgba(255,255,255,0.92)] leading-tight font-medium">{phase.title}</p>
                     </div>
                   </Reveal>
                 ))}
@@ -1400,9 +1400,9 @@ export default function InvestidoresParceirosPage() {
                   <motion.p key={i}
                     initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }} transition={{ delay: i * 0.12 }}
-                    className="text-white/42 font-semibold"
+                    className="text-[rgba(255,255,255,0.68)] font-semibold"
                     style={{ fontSize: "clamp(14px,2.2vw,20px)" }}>
-                    <span className="text-white/75">{item.company}</span> {item.transformed}
+                    <span className="text-[rgba(255,255,255,0.85)]">{item.company}</span> {item.transformed}
                   </motion.p>
                 ))}
               </div>
@@ -1422,7 +1422,7 @@ export default function InvestidoresParceirosPage() {
               <motion.p
                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
                 viewport={{ once: true }} transition={{ delay: 0.62 }}
-                className="text-white/62 text-[14px] leading-relaxed max-w-2xl mx-auto"
+                className="text-[rgba(255,255,255,0.80)] text-[14px] leading-relaxed max-w-2xl mx-auto"
                 style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
                 Uma camada de tecnologia que conecta profissionais, empresas, parceiros e investidores — criando valor crescente para cada novo participante da rede e tornando o ecossistema mais robusto a cada dia.
               </motion.p>
@@ -1465,7 +1465,7 @@ export default function InvestidoresParceirosPage() {
                       }}>Construída para Escala Nacional.</span>
                     </h2>
 
-                    <p className="text-white/50 text-[14px] leading-relaxed mb-8 max-w-2xl mx-auto" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.65)" }}>
+                    <p className="text-[14px] leading-relaxed mb-8 max-w-2xl mx-auto" style={{ color: "rgba(255,255,255,0.85)", textShadow: "0 1px 8px rgba(0,0,0,0.65)" }}>
                       A extraGO foi estruturada desde o primeiro dia para suportar expansão nacional, parcerias estratégicas e participação de investidores de longo prazo.
                     </p>
 
@@ -1485,8 +1485,8 @@ export default function InvestidoresParceirosPage() {
                             <span style={{ color: p.color }}>{p.icon}</span>
                           </div>
                           <div>
-                            <p className="text-[13px] font-bold text-white/80 mb-0.5">{p.label}</p>
-                            <p className="text-[12px] text-white/42 leading-relaxed">{p.desc}</p>
+                            <p className="text-[13px] font-bold text-[rgba(255,255,255,0.88)] mb-0.5">{p.label}</p>
+                            <p className="text-[12px] text-[rgba(255,255,255,0.68)] leading-relaxed">{p.desc}</p>
                           </div>
                         </motion.div>
                       ))}
@@ -1552,7 +1552,7 @@ export default function InvestidoresParceirosPage() {
                     }}>da infraestrutura de mão de obra do Brasil?</span>
                   </h2>
 
-                  <p className="text-white/45 text-[14px] max-w-lg mx-auto leading-relaxed mb-6" style={{ textShadow: "0 1px 8px rgba(0,0,0,0.60)" }}>
+                  <p className="text-[14px] max-w-lg mx-auto leading-relaxed mb-6" style={{ color: "rgba(255,255,255,0.82)", textShadow: "0 1px 8px rgba(0,0,0,0.60)" }}>
                     A extraGO está estruturando uma rede nacional baseada em tecnologia, reputação, geolocalização e crescimento recorrente.
                   </p>
 
@@ -1579,7 +1579,7 @@ export default function InvestidoresParceirosPage() {
                       </Button>
                     </a>
                     <a href={`mailto:${CONTACT}`}>
-                      <Button size="lg" variant="outline" className="rounded-full font-bold px-8 h-11 text-white hover:bg-white/5 w-full sm:w-auto"
+                      <Button size="lg" variant="outline" className="rounded-full font-bold px-8 h-11 text-[rgba(255,255,255,0.96)] hover:bg-white/5 w-full sm:w-auto"
                         style={{ borderColor: "rgba(255,255,255,0.16)" }}>
                         <Briefcase size={15} className="mr-2" /> Tornar-se Parceiro
                       </Button>
@@ -1588,7 +1588,7 @@ export default function InvestidoresParceirosPage() {
 
                   <p className="text-[11px] text-white/28 flex items-center justify-center gap-2">
                     <Mail size={10} />
-                    <a href={`mailto:${CONTACT}`} className="hover:text-white/55 transition-colors">{CONTACT}</a>
+                    <a href={`mailto:${CONTACT}`} className="hover:text-[rgba(255,255,255,0.78)] transition-colors">{CONTACT}</a>
                   </p>
                 </div>
               </div>
@@ -1603,9 +1603,9 @@ export default function InvestidoresParceirosPage() {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-white/28">
           <img src={logoMain} alt="extraGO" className="h-4 object-contain opacity-55" />
           <div className="flex items-center gap-5">
-            <Link href="/" className="hover:text-white/55 transition-colors">← Página Inicial</Link>
-            <Link href="/login" className="hover:text-white/55 transition-colors">Entrar</Link>
-            <a href={`mailto:${CONTACT}`} className="hover:text-white/55 transition-colors">Contato</a>
+            <Link href="/" className="hover:text-[rgba(255,255,255,0.78)] transition-colors">← Página Inicial</Link>
+            <Link href="/login" className="hover:text-[rgba(255,255,255,0.78)] transition-colors">Entrar</Link>
+            <a href={`mailto:${CONTACT}`} className="hover:text-[rgba(255,255,255,0.78)] transition-colors">Contato</a>
           </div>
           <p className="text-center sm:text-right">© 2026 extraGO — A Infraestrutura de Mão de Obra do Brasil.</p>
         </div>
