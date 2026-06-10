@@ -180,8 +180,8 @@ export default function InstitutionalNavbar() {
             <div style={{ width: "clamp(110px, 22vw, 200px)", height: 68 }} />
           </Link>
 
-          {/* ── CENTRE: nav links (all screen sizes) ── */}
-          <nav className="flex-1 flex items-center justify-center gap-0 sm:gap-1">
+          {/* ── CENTRE: nav links — desktop only (md+); hidden on mobile → drawer ── */}
+          <nav className="hidden md:flex flex-1 items-center justify-center gap-0 lg:gap-1">
 
             {/* Home */}
             <Link href="/">
@@ -244,8 +244,8 @@ export default function InstitutionalNavbar() {
             </div>
           </nav>
 
-          {/* ── RIGHT: Entrar + Hamburger ── */}
-          <div className="flex items-center flex-shrink-0" style={{ gap: 4 }}>
+          {/* ── RIGHT: Entrar + Hamburger — ml-auto ensures right-align when nav is hidden on mobile ── */}
+          <div className="flex items-center flex-shrink-0 ml-auto" style={{ gap: 4 }}>
 
             {/* Entrar */}
             <Link href="/login">
