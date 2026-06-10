@@ -8,4 +8,12 @@ router.get("/healthz", (_req, res) => {
   res.json(data);
 });
 
+router.get("/health", (_req, res) => {
+  res.json({
+    status: "ok",
+    service: "extraGO",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 export default router;
