@@ -325,9 +325,9 @@ export default function LandingPage() {
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage: "url(/landing-page-bg.png)",
+            backgroundImage: "url(/landing-page-bg-darkblue.png)",
             backgroundSize: "cover",
-            backgroundPosition: "center top",
+            backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
         />
@@ -342,67 +342,39 @@ export default function LandingPage() {
       <main className="flex-1 relative z-10">
 
         {/* ══════════════════════════════════════════
-            HERO — Banner + Premium Headline
+            HERO — Landing-hero2 image
         ══════════════════════════════════════════ */}
         <section ref={heroRef} className="relative flex flex-col items-center justify-center overflow-hidden">
-          {/* Hero background image */}
+          {/* Hero image — full-width, no parallax distortion */}
           <motion.div
-            style={{ y: bannerY, opacity: bannerOpacity }}
-            className="absolute inset-0 z-0 pointer-events-none"
+            style={{ opacity: bannerOpacity }}
+            className="w-full relative z-0"
           >
-            <div
-              className="w-full h-full"
+            <img
+              src="/landing-hero2.png"
+              alt="extraGO — O ecossistema que conecta talentos, empresas e oportunidades em todo o Brasil"
+              className="w-full block"
               style={{
-                backgroundImage: "url(/hero-bg.png)",
-                backgroundSize: "cover",
-                backgroundPosition: "center top",
-                backgroundRepeat: "no-repeat",
+                objectFit: "cover",
+                objectPosition: "center top",
+                maxHeight: "clamp(340px, 60vw, 680px)",
+                width: "100%",
               }}
+              draggable={false}
             />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,17,26,0.02) 0%, rgba(8,17,26,0.04) 50%, rgba(8,17,26,0.20) 100%)" }} />
+            {/* bottom fade so CTAs blend naturally into the page */}
+            <div
+              className="absolute bottom-0 left-0 right-0 pointer-events-none"
+              style={{ height: "38%", background: "linear-gradient(to bottom, transparent, rgba(2,6,23,0.82))" }}
+            />
           </motion.div>
 
-          <div className="w-full max-w-5xl mx-auto px-5 text-center relative z-10 pt-16 sm:pt-24 pb-16 sm:pb-24">
-            {/* Live badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/12 border border-primary/25 text-xs font-bold text-primary mb-7 tracking-wide"
-            >
-              <span className="live-dot" />
-              {statsLoading ? "Carregando dados ao vivo..." : `${(platformStats?.activeJobs ?? 0)} extras abertos agora`}
-            </motion.div>
-
-            {/* Main headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.35 }}
-              className="text-4xl sm:text-5xl md:text-[64px] lg:text-7xl font-bold tracking-tight mb-5 leading-[1.04] max-w-4xl mx-auto"
-            >
-              O marketplace de{" "}
-              <TypewriterWord />
-              <br className="hidden sm:block" />
-              {" "}do Brasil
-            </motion.h1>
-
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-base sm:text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
-            >
-              Profissionais verificados. Empresas confiantes. Pagamento garantido.{" "}
-              A infraestrutura definitiva para gastronomia, hotelaria e eventos — em escala nacional.
-            </motion.p>
-
-            {/* CTAs */}
+          {/* CTAs — float below the image bottom-fade */}
+          <div className="w-full relative z-10 -mt-12 sm:-mt-16 px-5 pb-8 sm:pb-12">
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.62 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
               className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full max-w-sm sm:max-w-none mx-auto"
             >
               <Link href="/register?role=company" className="w-full sm:w-auto">
@@ -425,7 +397,7 @@ export default function LandingPage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.85 }}
+              transition={{ duration: 0.8, delay: 0.55 }}
             >
               <TrustTicker />
             </motion.div>
@@ -454,8 +426,18 @@ export default function LandingPage() {
           <ScrollSection>
             <div className="max-w-5xl mx-auto">
               <div className="relative rounded-3xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/6 rounded-3xl" />
-                <div className="absolute inset-0 border border-white/8 rounded-3xl" />
+                {/* Real-time stats premium background */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: "url(/real-time-stats.png)",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                />
+                <div className="absolute inset-0 rounded-3xl" style={{ background: "rgba(2,8,26,0.18)" }} />
+                <div className="absolute inset-0 border border-white/10 rounded-3xl" />
                 {/* Live indicator */}
                 <div className="absolute top-4 right-5 flex items-center gap-1.5">
                   <span className="live-dot" />

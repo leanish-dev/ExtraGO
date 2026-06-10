@@ -158,14 +158,17 @@ export default function InstitutionalNavbar() {
           </Link>
 
           {/* ── CENTRE: Investidores + Arquitetura Financeira ──────────────────── */}
-          <nav className="flex flex-1 items-center justify-center" style={{ gap: 0 }}>
+          <nav
+            className="flex items-center justify-center"
+            style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(4px,2vw,16px)", padding: "0 4px" }}
+          >
 
             {/* Investidores */}
             <Link href="/investidores-parceiros">
               <span
-                className="relative px-2 sm:px-3 py-1 rounded-lg block"
+                className="relative py-1 rounded-lg block"
                 style={{
-                  fontSize: "clamp(10px, 2.5vw, 13px)",
+                  fontSize: "clamp(11px, 2.6vw, 13px)",
                   fontWeight: 700,
                   letterSpacing: "0.01em",
                   color: linkColor("/investidores-parceiros"),
@@ -173,6 +176,8 @@ export default function InstitutionalNavbar() {
                   cursor: "pointer",
                   transition: "color 0.15s",
                   textShadow: "0 1px 2px rgba(255,255,255,0.60)",
+                  paddingLeft: "clamp(6px,1.8vw,12px)",
+                  paddingRight: "clamp(6px,1.8vw,12px)",
                 }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = HOVER; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = linkColor("/investidores-parceiros"); }}
@@ -186,17 +191,17 @@ export default function InstitutionalNavbar() {
             </Link>
 
             {/* Arquitetura Financeira — with dropdown */}
-            <div className="relative fa-root">
+            <div className="relative fa-root flex-shrink-0">
               <button
                 onClick={() => setFaOpen(o => !o)}
                 className="flex items-center rounded-lg"
                 style={{
                   gap: "clamp(2px,0.5vw,4px)",
-                  paddingLeft: "clamp(8px,2vw,12px)",
-                  paddingRight: "clamp(8px,2vw,12px)",
+                  paddingLeft: "clamp(6px,1.8vw,12px)",
+                  paddingRight: "clamp(6px,1.8vw,12px)",
                   paddingTop: 4,
                   paddingBottom: 4,
-                  fontSize: "clamp(10px,2.5vw,13px)",
+                  fontSize: "clamp(11px,2.6vw,13px)",
                   fontWeight: 700,
                   letterSpacing: "0.01em",
                   color: active("/modelo-de-negocio") || active("/financial-architecture") ? G : DEFAULT_LINK,
@@ -213,8 +218,8 @@ export default function InstitutionalNavbar() {
                     active("/modelo-de-negocio") || active("/financial-architecture") ? G : DEFAULT_LINK;
                 }}
               >
-                <span className="hidden sm:inline">Arquitetura Financeira</span>
-                <span className="inline sm:hidden">Arq. Fin.</span>
+                <span className="hidden sm:inline" style={{ fontSize: "clamp(11px,2.6vw,13px)" }}>Arquitetura Financeira</span>
+                <span className="inline sm:hidden" style={{ fontSize: "clamp(11px,2.6vw,13px)" }}>Arq. Fin.</span>
                 <motion.span animate={{ rotate: faOpen ? 180 : 0 }} transition={{ duration: 0.18 }}>
                   <ChevronDown size={11} />
                 </motion.span>
