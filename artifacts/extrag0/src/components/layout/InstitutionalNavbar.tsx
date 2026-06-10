@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import logoMain from "@assets/1779451173221_1779452671733.png";
 import {
-  Menu, X, ChevronDown, ChevronRight,
+  X, ChevronDown, ChevronRight,
   Home, TrendingUp, Zap, Network, BadgeCheck, Building2,
   BarChart3, Globe, MapPin, ArrowRight, Layers,
   LogIn, UserPlus, BookOpen, Shield,
@@ -22,9 +22,9 @@ const FA_PAGES = [
 ];
 
 const CENTER_LINKS = [
-  { label: "Home",                   href: "/" },
-  { label: "Investidores",           href: "/investidores-parceiros" },
-  { label: "Arquitetura Financeira", href: "/modelo-de-negocio", hasDropdown: true },
+  { label: "Home",                   href: "/",                    hasDropdown: false },
+  { label: "Investidores",           href: "/investidores-parceiros", hasDropdown: false },
+  { label: "Arquitetura Financeira", href: "/modelo-de-negocio",   hasDropdown: true  },
 ];
 
 const DRAWER_SECTIONS = [
@@ -60,19 +60,13 @@ const GREEN = "#16a34a";
 const CYAN  = "#00c9a7";
 const TEXT  = "#1e293b";
 const MUTED = "#64748b";
+const NAVBAR_H = 68;
 
 export default function InstitutionalNavbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [faOpen, setFaOpen]         = useState(false);
-  const [scrolled, setScrolled]     = useState(false);
   const [location]                  = useLocation();
   const { user }                    = useAuth();
-
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 12);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
 
   useEffect(() => {
     const fn = (e: MouseEvent) => {
@@ -87,88 +81,67 @@ export default function InstitutionalNavbar() {
   const isActive = (href: string) =>
     href === "/" ? location === "/" : location.startsWith(href);
 
-  const navBg     = scrolled ? "rgba(255,255,255,1)" : "rgba(255,255,255,0.97)";
-  const navShadow = scrolled
-    ? "0 2px 20px rgba(0,0,0,0.08), 0 1px 0 rgba(22,163,74,0.12)"
-    : "0 1px 0 rgba(22,163,74,0.10)";
-
   return (
     <>
-      {/* ═══════════════════ NAVBAR ═══════════════════ */}
+      {/* ══════════════════════════════ NAVBAR ══════════════════════════════ */}
       <header
         className="sticky top-0 z-50 w-full"
         style={{
-          background: navBg,
-          boxShadow: navShadow,
-          transition: "background 0.25s ease, box-shadow 0.25s ease",
+          backgroundImage: "url(/institutional-navbar.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+          height: NAVBAR_H,
+          boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
         }}
       >
-        {/* Decorative center artwork — world map + chart */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none" aria-hidden>
-          <img
-            src="/institutional-navbar.png"
-            alt=""
-            style={{
-              position: "absolute",
-              right: 0,
-              top: 0,
-              height: "100%",
-              width: "65%",
-              objectFit: "cover",
-              objectPosition: "left center",
-              opacity: 0.13,
-            }}
-          />
-          {/* Fade left edge so logo stays clean */}
-          <div style={{
-            position: "absolute", inset: 0, left: 0, width: "30%",
-            background: "linear-gradient(to right, rgba(255,255,255,1) 0%, transparent 100%)",
-          }} />
-          {/* Fade right edge */}
-          <div style={{
-            position: "absolute", inset: 0, left: "auto", right: 0, width: "15%",
-            background: "linear-gradient(to left, rgba(255,255,255,1) 0%, transparent 100%)",
-          }} />
-        </div>
-
+        {/* Full-width row — NO max-width, just horizontal padding */}
         <div
-          className="relative mx-auto flex items-center px-4 sm:px-6 lg:px-8"
-          style={{ maxWidth: 1280, height: 64 }}
+          className="w-full h-full flex items-center"
+          style={{ paddingLeft: 16, paddingRight: 0 }}
         >
-          {/* ── LEFT: Logo ── */}
-          <Link href="/" className="flex-shrink-0 flex items-center" style={{ minWidth: 120 }}>
+          {/* ── LOGO — left ── */}
+          <Link href="/" className="flex-shrink-0 flex items-center" style={{ marginRight: 24 }}>
             <img
               src={logoMain}
               alt="extraGO"
-              style={{ height: 38, objectFit: "contain", display: "block" }}
+              style={{
+                height: 46,
+                width: "auto",
+                objectFit: "contain",
+                display: "block",
+              }}
             />
           </Link>
 
-          {/* ── CENTER: Nav links (desktop) ── */}
-          <nav className="hidden lg:flex items-center justify-center flex-1 gap-1">
+          {/* ── CENTER: nav links (desktop only) ── */}
+          <nav className="hidden lg:flex items-center justify-center flex-1 gap-0.5">
             {CENTER_LINKS.map((link, i) => {
               const active = isActive(link.href);
+              const isFA = location.startsWith("/financial-architecture");
+
               if (link.hasDropdown) {
                 return (
                   <div key={i} className="relative fa-dd-root">
                     <button
                       onClick={() => setFaOpen(o => !o)}
-                      className="flex items-center gap-1 px-3 py-2 text-[13px] font-semibold rounded-lg transition-colors duration-150 whitespace-nowrap cursor-pointer"
+                      className="flex items-center gap-1 px-3 py-1.5 text-[13px] font-semibold rounded-lg transition-colors duration-150 whitespace-nowrap"
                       style={{
-                        color: active || location.startsWith("/financial-architecture") ? GREEN : TEXT,
+                        color: active || isFA ? GREEN : TEXT,
                         background: "none",
                         border: "none",
+                        cursor: "pointer",
                       }}
                       onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = GREEN; }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active || location.startsWith("/financial-architecture") ? GREEN : TEXT; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active || isFA ? GREEN : TEXT; }}
                     >
                       {link.label}
                       <motion.span animate={{ rotate: faOpen ? 180 : 0 }} transition={{ duration: 0.18 }}>
                         <ChevronDown size={12} />
                       </motion.span>
                     </button>
-                    {(active || location.startsWith("/financial-architecture")) && (
-                      <span className="absolute inset-x-3 bottom-1 h-[2px] rounded-full" style={{ background: `linear-gradient(90deg,${GREEN},${CYAN})` }} />
+                    {(active || isFA) && (
+                      <span className="absolute inset-x-3 bottom-0 h-[2px] rounded-full" style={{ background: `linear-gradient(90deg,${GREEN},${CYAN})` }} />
                     )}
 
                     <AnimatePresence>
@@ -214,10 +187,11 @@ export default function InstitutionalNavbar() {
                   </div>
                 );
               }
+
               return (
                 <Link key={i} href={link.href}>
                   <span
-                    className="relative px-3 py-2 text-[13px] font-semibold rounded-lg transition-colors duration-150 whitespace-nowrap cursor-pointer block"
+                    className="relative px-3 py-1.5 text-[13px] font-semibold rounded-lg transition-colors duration-150 whitespace-nowrap cursor-pointer block"
                     style={{ color: active ? GREEN : TEXT }}
                     onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = GREEN; }}
                     onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active ? GREEN : TEXT; }}
@@ -225,7 +199,7 @@ export default function InstitutionalNavbar() {
                     {link.label}
                     {active && (
                       <span
-                        className="absolute inset-x-3 bottom-1 h-[2px] rounded-full"
+                        className="absolute inset-x-3 bottom-0 h-[2px] rounded-full"
                         style={{ background: `linear-gradient(90deg,${GREEN},${CYAN})` }}
                       />
                     )}
@@ -236,74 +210,64 @@ export default function InstitutionalNavbar() {
           </nav>
 
           {/* ── RIGHT: Entrar + Hamburger ── */}
-          <div className="flex items-center gap-2 flex-shrink-0 ml-auto lg:ml-0" style={{ minWidth: 120, justifyContent: "flex-end" }}>
-            {/* Entrar — visible sm+ */}
+          <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
+            {/* Entrar button — sm+ */}
             <Link href="/login">
               <button
                 className="hidden sm:flex items-center gap-1.5 px-4 h-9 rounded-full text-[12.5px] font-semibold border cursor-pointer transition-all flex-shrink-0"
                 style={{
                   color: GREEN,
-                  borderColor: `${GREEN}38`,
-                  background: `${GREEN}08`,
+                  borderColor: `${GREEN}40`,
+                  background: "rgba(255,255,255,0.55)",
                 }}
                 onMouseEnter={e => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = `${GREEN}15`;
-                  el.style.borderColor = `${GREEN}60`;
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.85)";
+                  (e.currentTarget as HTMLElement).style.borderColor = `${GREEN}70`;
                 }}
                 onMouseLeave={e => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.background = `${GREEN}08`;
-                  el.style.borderColor = `${GREEN}38`;
+                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.55)";
+                  (e.currentTarget as HTMLElement).style.borderColor = `${GREEN}40`;
                 }}
               >
                 <LogIn size={13} /> Entrar
               </button>
             </Link>
 
-            {/* Hamburger — green/cyan gradient */}
+            {/* Hamburger — green/cyan gradient, flush right, full navbar height */}
             <button
               onClick={() => setDrawerOpen(true)}
               aria-label="Abrir menu"
-              className="flex items-center justify-center flex-shrink-0"
+              className="flex flex-col items-center justify-center flex-shrink-0"
               style={{
-                width: 52,
-                height: 52,
-                borderRadius: 14,
-                background: `linear-gradient(145deg, ${GREEN} 0%, ${CYAN} 100%)`,
+                width: NAVBAR_H,
+                height: NAVBAR_H,
+                borderRadius: "0 0 0 0",
+                background: `linear-gradient(160deg, ${GREEN} 0%, ${CYAN} 100%)`,
                 border: "none",
                 cursor: "pointer",
                 color: "#fff",
-                boxShadow: `0 4px 18px rgba(0,201,167,0.36), inset 0 1px 0 rgba(255,255,255,0.18)`,
-                transition: "transform 0.14s ease, box-shadow 0.16s ease",
+                gap: 6,
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.18)",
+                transition: "filter 0.15s ease",
+                flexShrink: 0,
               }}
-              onMouseEnter={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.transform = "scale(1.05)";
-                el.style.boxShadow = `0 6px 26px rgba(0,201,167,0.52), inset 0 1px 0 rgba(255,255,255,0.18)`;
-              }}
-              onMouseLeave={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.transform = "scale(1)";
-                el.style.boxShadow = `0 4px 18px rgba(0,201,167,0.36), inset 0 1px 0 rgba(255,255,255,0.18)`;
-              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.filter = "brightness(1.08)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.filter = "brightness(1)"; }}
             >
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                <ArrowRight size={16} />
-                <Sparkles size={12} />
-              </div>
+              <ArrowRight size={18} />
+              <Sparkles size={14} />
             </button>
           </div>
         </div>
 
-        {/* Bottom accent */}
+        {/* Bottom accent line */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-[1.5px]"
-          style={{ background: `linear-gradient(90deg, transparent, ${GREEN}2a, ${CYAN}22, transparent)` }}
+          className="absolute bottom-0 left-0 right-0 h-[1px]"
+          style={{ background: `linear-gradient(90deg, transparent, ${GREEN}30, ${CYAN}28, transparent)` }}
         />
       </header>
 
-      {/* ═══════════════════ DRAWER ═══════════════════ */}
+      {/* ══════════════════════════════ DRAWER ══════════════════════════════ */}
       <AnimatePresence>
         {drawerOpen && (
           <>
@@ -331,12 +295,13 @@ export default function InstitutionalNavbar() {
                 boxShadow: "4px 0 40px rgba(0,0,0,0.12)",
               }}
             >
+              {/* Header */}
               <div
                 className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
                 style={{ borderColor: "rgba(22,163,74,0.10)" }}
               >
                 <Link href="/" onClick={() => setDrawerOpen(false)}>
-                  <img src={logoMain} alt="extraGO" style={{ height: 32, objectFit: "contain" }} />
+                  <img src={logoMain} alt="extraGO" style={{ height: 34, width: "auto", objectFit: "contain" }} />
                 </Link>
                 <button
                   onClick={() => setDrawerOpen(false)}
@@ -352,6 +317,7 @@ export default function InstitutionalNavbar() {
                 </button>
               </div>
 
+              {/* Nav sections */}
               <div className="flex-1 overflow-y-auto py-3 px-3">
                 {DRAWER_SECTIONS.map((section, si) => (
                   <div key={si} className="mb-5">
@@ -384,6 +350,7 @@ export default function InstitutionalNavbar() {
                 ))}
               </div>
 
+              {/* Footer CTAs */}
               <div className="flex-shrink-0 p-4 border-t" style={{ borderColor: "rgba(22,163,74,0.10)" }}>
                 {user ? (
                   <Link href="/app/dashboard" onClick={() => setDrawerOpen(false)}>
