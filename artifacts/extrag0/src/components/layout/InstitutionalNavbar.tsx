@@ -41,20 +41,21 @@ const DRAWER_SECTIONS = [
   ]},
 ];
 
-/* ── Premium 3-line gradient hamburger ── */
+/* ── Premium 3-line gradient hamburger — 24×18px, 3px lines ── */
 function GradientHamburger() {
   return (
-    <svg width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true"
-      style={{ display: "block", filter: "drop-shadow(0 0 5px rgba(0,201,167,0.40))" }}>
+    <svg width="24" height="18" viewBox="0 0 24 18" fill="none" aria-hidden="true"
+      style={{ display: "block", filter: "drop-shadow(0 0 4px rgba(0,201,167,0.38)) drop-shadow(0 1px 2px rgba(0,0,0,0.18))" }}>
       <defs>
-        <linearGradient id="hbg" x1="0" y1="0" x2="26" y2="0" gradientUnits="userSpaceOnUse">
+        <linearGradient id="hbg" x1="0" y1="0" x2="24" y2="0" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor={G} />
           <stop offset="100%" stopColor={C} />
         </linearGradient>
       </defs>
-      <rect x="0" y="0"    width="26" height="3.2" rx="1.6" fill="url(#hbg)" />
-      <rect x="0" y="8.4"  width="26" height="3.2" rx="1.6" fill="url(#hbg)" />
-      <rect x="0" y="16.8" width="26" height="3.2" rx="1.6" fill="url(#hbg)" />
+      {/* 3 lines: 3px tall, gap = (18 - 3×3) / 2 = 4.5px between each */}
+      <rect x="0" y="0"    width="24" height="3" rx="1.5" fill="url(#hbg)" />
+      <rect x="0" y="7.5"  width="24" height="3" rx="1.5" fill="url(#hbg)" />
+      <rect x="0" y="15"   width="24" height="3" rx="1.5" fill="url(#hbg)" />
     </svg>
   );
 }
