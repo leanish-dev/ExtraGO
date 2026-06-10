@@ -189,7 +189,7 @@ function ReferralSimulator() {
           backgroundRepeat: "no-repeat",
         }}
       />
-      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(2,6,16,0.88) 0%, rgba(0,10,6,0.84) 100%)" }} />
+      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(2,6,16,0.62) 0%, rgba(0,10,6,0.58) 100%)" }} />
       <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.4) 40%, rgba(0,229,255,0.35) 60%, transparent)" }} />
 
       <div className="relative z-10 px-4 py-4 sm:px-8 sm:py-6">
@@ -359,7 +359,7 @@ export default function LandingPage() {
                 backgroundRepeat: "no-repeat",
               }}
             />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,17,26,0.32) 0%, rgba(8,17,26,0.38) 50%, rgba(8,17,26,0.62) 100%)" }} />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(8,17,26,0.06) 0%, rgba(8,17,26,0.12) 50%, rgba(8,17,26,0.48) 100%)" }} />
           </motion.div>
 
           <div className="w-full max-w-5xl mx-auto px-5 text-center relative z-10 pt-16 sm:pt-24 pb-16 sm:pb-24">
@@ -647,7 +647,7 @@ export default function LandingPage() {
           }}
         >
           {/* Section overlay for readability */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(1,4,14,0.78)" }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(1,4,14,0.44)" }} />
 
           <div className="relative z-10 px-3 pt-6 pb-8 sm:px-5 sm:pt-10 sm:pb-12">
             {/* Section header */}
