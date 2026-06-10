@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
-const G = "#16a34a";   /* verde extraGO */
-const C = "#00c9a7";   /* cyan extraGO  */
+const G = "#16a34a";
+const C = "#00c9a7";
 const HOVER = "#00c9a7";
 const DEFAULT_LINK = "#0B1220";
 
@@ -41,27 +41,54 @@ const DRAWER_SECTIONS = [
   ]},
 ];
 
-/* ── Premium 3-line gradient hamburger — 24×18px, 3px lines ── */
+/* ── Premium 3-line gradient hamburger ── */
 function GradientHamburger() {
   return (
-    <svg width="24" height="18" viewBox="0 0 24 18" fill="none" aria-hidden="true"
-      style={{ display: "block", filter: "drop-shadow(0 0 4px rgba(0,201,167,0.38)) drop-shadow(0 1px 2px rgba(0,0,0,0.18))" }}>
+    <svg
+      width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true"
+      style={{
+        display: "block",
+        filter: [
+          "drop-shadow(0 0 5px rgba(0,201,167,0.55))",
+          "drop-shadow(0 0 2px rgba(22,163,74,0.40))",
+          "drop-shadow(0 1px 3px rgba(0,0,0,0.22))",
+        ].join(" "),
+      }}
+    >
       <defs>
-        <linearGradient id="hbg" x1="0" y1="0" x2="24" y2="0" gradientUnits="userSpaceOnUse">
+        <linearGradient id="hbg2" x1="0" y1="0" x2="26" y2="0" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor={G} />
           <stop offset="100%" stopColor={C} />
         </linearGradient>
       </defs>
-      {/* 3 lines: 3px tall, gap = (18 - 3×3) / 2 = 4.5px between each */}
-      <rect x="0" y="0"    width="24" height="3" rx="1.5" fill="url(#hbg)" />
-      <rect x="0" y="7.5"  width="24" height="3" rx="1.5" fill="url(#hbg)" />
-      <rect x="0" y="15"   width="24" height="3" rx="1.5" fill="url(#hbg)" />
+      {/* Top line — full width */}
+      <rect x="0" y="0"    width="26" height="3.5" rx="1.75" fill="url(#hbg2)" />
+      {/* Middle line — slightly shorter for premium look */}
+      <rect x="2" y="8.25" width="22" height="3.5" rx="1.75" fill="url(#hbg2)" />
+      {/* Bottom line — full width */}
+      <rect x="0" y="16.5" width="26" height="3.5" rx="1.75" fill="url(#hbg2)" />
     </svg>
   );
 }
 
-/* ── FA dropdown ── */
-function FADropdown({ open, onClose }: { open: boolean; onClose: () => void }) {
+/* ── FA dropdown — rendered via portal-like fixed positioning to escape overflow:hidden ── */
+function FADropdown({ open, anchorRef, onClose }: {
+  open: boolean;
+  anchorRef: React.RefObject<HTMLDivElement | null>;
+  onClose: () => void;
+}) {
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (open && anchorRef.current) {
+      const rect = anchorRef.current.getBoundingClientRect();
+      setPos({
+        top: rect.bottom + 4,
+        left: Math.max(8, rect.left + rect.width / 2 - 180),
+      });
+    }
+  }, [open, anchorRef]);
+
   return (
     <AnimatePresence>
       {open && (
@@ -70,12 +97,18 @@ function FADropdown({ open, onClose }: { open: boolean; onClose: () => void }) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 6, scale: 0.97 }}
           transition={{ duration: 0.16 }}
-          className="absolute left-1/2 -translate-x-1/2 top-full mt-1 rounded-2xl overflow-hidden z-50"
           style={{
+            position: "fixed",
+            top: pos.top,
+            left: pos.left,
             width: 360,
+            maxWidth: "calc(100vw - 16px)",
             background: "#fff",
             border: "1px solid rgba(22,163,74,0.14)",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.14)",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+            borderRadius: 16,
+            overflow: "hidden",
+            zIndex: 9999,
           }}
         >
           <div className="px-4 pt-3 pb-2 border-b" style={{ borderColor: "rgba(22,163,74,0.10)" }}>
@@ -118,6 +151,7 @@ export default function InstitutionalNavbar() {
   const [faOpen, setFaOpen] = useState(false);
   const [loc]               = useLocation();
   const { user }            = useAuth();
+  const faAnchorRef         = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fn = (e: MouseEvent) => {
@@ -140,35 +174,35 @@ export default function InstitutionalNavbar() {
     <>
       {/* ═══════════════════════════════════ HEADER ═══════════════════════════════════ */}
       <header
-        className="sticky top-0 z-50 w-full overflow-hidden"
+        className="sticky top-0 z-50 w-full"
         style={{
           height: H,
           backgroundImage: "url(/institutional-navbar.png)",
           backgroundSize: "100% 100%",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
-          boxShadow: "0 2px 20px rgba(0,0,0,0.10)",
+          boxShadow: "0 2px 24px rgba(0,0,0,0.12)",
+          overflow: "visible",
         }}
       >
         <div className="w-full h-full flex items-center" style={{ paddingLeft: 0, paddingRight: 0 }}>
 
           {/* ── LEFT: transparent click-area over baked-in logo ─────────────────── */}
           <Link href="/" aria-label="extraGO – página inicial">
-            <div style={{ width: "clamp(100px, 21vw, 195px)", height: H }} />
+            <div style={{ width: "clamp(100px, 21vw, 195px)", height: H, flexShrink: 0 }} />
           </Link>
 
           {/* ── CENTRE: Investidores + Arquitetura Financeira ──────────────────── */}
           <nav
             className="flex items-center justify-center"
-            style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(4px,2vw,16px)", padding: "0 4px" }}
+            style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(2px,1.5vw,20px)", padding: "0 4px" }}
           >
-
             {/* Investidores */}
             <Link href="/investidores-parceiros">
               <span
                 className="relative py-1 rounded-lg block"
                 style={{
-                  fontSize: "clamp(11px, 2.6vw, 13px)",
+                  fontSize: "clamp(11px, 2.5vw, 13px)",
                   fontWeight: 700,
                   letterSpacing: "0.01em",
                   color: linkColor("/investidores-parceiros"),
@@ -176,8 +210,8 @@ export default function InstitutionalNavbar() {
                   cursor: "pointer",
                   transition: "color 0.15s",
                   textShadow: "0 1px 2px rgba(255,255,255,0.60)",
-                  paddingLeft: "clamp(6px,1.8vw,12px)",
-                  paddingRight: "clamp(6px,1.8vw,12px)",
+                  paddingLeft: "clamp(5px,1.6vw,12px)",
+                  paddingRight: "clamp(5px,1.6vw,12px)",
                 }}
                 onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = HOVER; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = linkColor("/investidores-parceiros"); }}
@@ -190,18 +224,18 @@ export default function InstitutionalNavbar() {
               </span>
             </Link>
 
-            {/* Arquitetura Financeira — with dropdown */}
-            <div className="relative fa-root flex-shrink-0">
+            {/* Arquitetura Financeira — dropdown via fixed positioning */}
+            <div ref={faAnchorRef} className="relative fa-root flex-shrink-0">
               <button
                 onClick={() => setFaOpen(o => !o)}
                 className="flex items-center rounded-lg"
                 style={{
-                  gap: "clamp(2px,0.5vw,4px)",
-                  paddingLeft: "clamp(6px,1.8vw,12px)",
-                  paddingRight: "clamp(6px,1.8vw,12px)",
+                  gap: "clamp(2px,0.4vw,4px)",
+                  paddingLeft: "clamp(5px,1.6vw,12px)",
+                  paddingRight: "clamp(5px,1.6vw,12px)",
                   paddingTop: 4,
                   paddingBottom: 4,
-                  fontSize: "clamp(11px,2.6vw,13px)",
+                  fontSize: "clamp(11px,2.5vw,13px)",
                   fontWeight: 700,
                   letterSpacing: "0.01em",
                   color: active("/modelo-de-negocio") || active("/financial-architecture") ? G : DEFAULT_LINK,
@@ -218,8 +252,8 @@ export default function InstitutionalNavbar() {
                     active("/modelo-de-negocio") || active("/financial-architecture") ? G : DEFAULT_LINK;
                 }}
               >
-                <span className="hidden sm:inline" style={{ fontSize: "clamp(11px,2.6vw,13px)" }}>Arquitetura Financeira</span>
-                <span className="inline sm:hidden" style={{ fontSize: "clamp(11px,2.6vw,13px)" }}>Arq. Fin.</span>
+                <span className="hidden sm:inline">Arquitetura Financeira</span>
+                <span className="inline sm:hidden">Arq. Fin.</span>
                 <motion.span animate={{ rotate: faOpen ? 180 : 0 }} transition={{ duration: 0.18 }}>
                   <ChevronDown size={11} />
                 </motion.span>
@@ -228,37 +262,37 @@ export default function InstitutionalNavbar() {
                 <span className="absolute inset-x-1.5 bottom-0 h-[2.5px] rounded-full"
                   style={{ background: `linear-gradient(90deg,${G},${C})` }} />
               )}
-              <FADropdown open={faOpen} onClose={() => setFaOpen(false)} />
+              <FADropdown open={faOpen} anchorRef={faAnchorRef} onClose={() => setFaOpen(false)} />
             </div>
           </nav>
 
-          {/* ── RIGHT: Entrar + Hamburger + Home (green artwork area) ─────────── */}
-          <div className="flex items-center flex-shrink-0" style={{ gap: 0 }}>
+          {/* ── RIGHT: Entrar + Hamburger + Home ────────────────────────────────── */}
+          <div className="flex items-center flex-shrink-0" style={{ gap: "clamp(0px,0.5vw,4px)" }}>
 
             {/* Entrar pill */}
             <Link href="/login">
               <button
                 className="flex items-center rounded-full font-bold cursor-pointer"
                 style={{
-                  fontSize: "clamp(9px,2.2vw,12px)",
-                  paddingLeft: "clamp(8px,2vw,14px)",
-                  paddingRight: "clamp(8px,2vw,14px)",
-                  height: 30,
-                  marginRight: "clamp(2px,1vw,8px)",
+                  fontSize: "clamp(10px,2.2vw,12px)",
+                  paddingLeft: "clamp(10px,2vw,16px)",
+                  paddingRight: "clamp(10px,2vw,16px)",
+                  height: 32,
                   color: G,
                   border: `1.5px solid ${G}66`,
-                  background: "rgba(255,255,255,0.65)",
+                  background: "rgba(255,255,255,0.68)",
                   transition: "all 0.15s",
+                  whiteSpace: "nowrap",
                 }}
                 onMouseEnter={e => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.background = "rgba(255,255,255,0.95)";
+                  el.style.background = "rgba(255,255,255,0.96)";
                   el.style.borderColor = G;
-                  el.style.boxShadow = `0 0 10px ${G}30`;
+                  el.style.boxShadow = `0 0 12px ${G}30`;
                 }}
                 onMouseLeave={e => {
                   const el = e.currentTarget as HTMLElement;
-                  el.style.background = "rgba(255,255,255,0.65)";
+                  el.style.background = "rgba(255,255,255,0.68)";
                   el.style.borderColor = `${G}66`;
                   el.style.boxShadow = "none";
                 }}
@@ -267,13 +301,13 @@ export default function InstitutionalNavbar() {
               </button>
             </Link>
 
-            {/* Hamburger — transparent bg, gradient SVG lines, opens drawer */}
+            {/* Hamburger */}
             <button
               onClick={() => setDrawer(true)}
               aria-label="Abrir menu"
               className="flex items-center justify-center"
               style={{
-                width: 40,
+                width: 44,
                 height: H,
                 background: "transparent",
                 border: "none",
@@ -284,11 +318,7 @@ export default function InstitutionalNavbar() {
               <GradientHamburger />
             </button>
 
-            {/*
-             * HOME — transparent overlay over the green/teal artwork area on the right
-             * of institutional-navbar.png. Contains a house icon that looks integrated
-             * into the artwork. Navigates to Landing Page.
-             */}
+            {/* Home — occupies the green/teal artwork area at far right */}
             <Link href="/" aria-label="Ir para a página inicial">
               <div
                 className="flex items-center justify-center"
@@ -297,16 +327,18 @@ export default function InstitutionalNavbar() {
                   height: H,
                   cursor: "pointer",
                   flexShrink: 0,
-                  position: "relative",
                 }}
               >
-                {/* House icon — blends with the green/cyan artwork */}
                 <HomeIcon
-                  size={22}
+                  size={24}
                   strokeWidth={2}
                   style={{
-                    color: "rgba(255,255,255,0.92)",
-                    filter: "drop-shadow(0 1px 4px rgba(0,0,0,0.28)) drop-shadow(0 0 8px rgba(0,229,255,0.35))",
+                    color: "rgba(255,255,255,0.95)",
+                    filter: [
+                      "drop-shadow(0 1px 4px rgba(0,0,0,0.32))",
+                      "drop-shadow(0 0 10px rgba(0,229,255,0.50))",
+                      "drop-shadow(0 0 3px rgba(124,252,0,0.30))",
+                    ].join(" "),
                   }}
                 />
               </div>
@@ -343,7 +375,7 @@ export default function InstitutionalNavbar() {
                 boxShadow: "4px 0 40px rgba(0,0,0,0.12)",
               }}
             >
-              {/* Header strip — same artwork so logo appears naturally */}
+              {/* Header strip */}
               <div
                 className="flex items-center justify-between px-4 border-b flex-shrink-0"
                 style={{

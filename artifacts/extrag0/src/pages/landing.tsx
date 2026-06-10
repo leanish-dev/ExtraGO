@@ -425,25 +425,25 @@ export default function LandingPage() {
         <section className="px-5 pb-12">
           <ScrollSection>
             <div className="max-w-5xl mx-auto">
-              <div className="relative rounded-3xl overflow-hidden">
+              <div className="relative rounded-3xl overflow-hidden" style={{ minHeight: 180 }}>
                 {/* Real-time stats premium background */}
                 <div
                   className="absolute inset-0"
                   style={{
                     backgroundImage: "url(/real-time-stats.png)",
                     backgroundSize: "cover",
-                    backgroundPosition: "center",
+                    backgroundPosition: "center top",
                     backgroundRepeat: "no-repeat",
                   }}
                 />
-                <div className="absolute inset-0 rounded-3xl" style={{ background: "rgba(2,8,26,0.18)" }} />
-                <div className="absolute inset-0 border border-white/10 rounded-3xl" />
+                <div className="absolute inset-0 rounded-3xl" style={{ background: "rgba(1,5,20,0.08)" }} />
+                <div className="absolute inset-0 border border-cyan-400/20 rounded-3xl" />
                 {/* Live indicator */}
                 <div className="absolute top-4 right-5 flex items-center gap-1.5">
                   <span className="live-dot" />
-                  <span className="text-[10px] font-bold text-primary/70 tracking-widest uppercase">Ao vivo</span>
+                  <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "rgba(0,229,255,0.80)" }}>Ao vivo</span>
                 </div>
-                <div className="relative px-6 sm:px-10 py-8 sm:py-10">
+                <div className="relative px-6 sm:px-10 py-10 sm:py-14">
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                     {STATS.map((stat, i) => (
                       <motion.div
@@ -484,8 +484,8 @@ export default function LandingPage() {
                 <span className="chip-primary mb-3 inline-flex">
                   <Zap size={10} className="fill-primary" /> Como funciona
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#0F172A" }}>Simples como deve ser</h2>
-                <p className="max-w-lg mx-auto leading-relaxed" style={{ color: "#334155" }}>Do cadastro ao pagamento, tudo em uma só plataforma.</p>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#EAF7FF" }}>Simples como deve ser</h2>
+                <p className="max-w-lg mx-auto leading-relaxed" style={{ color: "#D7E7F3" }}>Do cadastro ao pagamento, tudo em uma só plataforma.</p>
               </div>
             </ScrollSection>
 
@@ -534,8 +534,8 @@ export default function LandingPage() {
                 <span className="chip-primary mb-3 inline-flex" style={{ background: "rgba(0,229,255,0.12)", borderColor: "rgba(0,229,255,0.25)", color: "hsl(186,100%,50%)" }}>
                   Para quem é
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#0F172A" }}>Feito para os dois lados</h2>
-                <p className="max-w-lg mx-auto leading-relaxed" style={{ color: "#334155" }}>Empresas que precisam de profissionais. Profissionais que buscam mais.</p>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#EAF7FF" }}>Feito para os dois lados</h2>
+                <p className="max-w-lg mx-auto leading-relaxed" style={{ color: "#D7E7F3" }}>Empresas que precisam de profissionais. Profissionais que buscam mais.</p>
               </div>
             </ScrollSection>
 
@@ -641,11 +641,11 @@ export default function LandingPage() {
                       style={{ background: "rgba(124,252,0,0.10)", borderColor: "rgba(124,252,0,0.28)", color: "#7CFC00" }}>
                       <Users size={11} /> Sistema de Indicações
                     </div>
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight" style={{ color: "#0F172A" }}>
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold leading-tight" style={{ color: "#EAF7FF" }}>
                       Indique, conecte e ganhe{" "}
                       <span style={{ background: "linear-gradient(90deg,#7CFC00,#9aff1c)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>comissões vitalícias</span>
                     </h2>
-                    <p className="text-sm mt-1 max-w-lg" style={{ color: "#334155" }}>
+                    <p className="text-sm mt-1 max-w-lg" style={{ color: "#D7E7F3" }}>
                       Cada extra do seu indicado gera comissão para você — para sempre, sem limite.
                     </p>
                   </div>
@@ -699,8 +699,8 @@ export default function LandingPage() {
           <div className="max-w-5xl mx-auto">
             <ScrollSection>
               <div className="text-center mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: "#0F172A" }}>Presente em todos os setores</h2>
-                <p className="text-sm max-w-md mx-auto" style={{ color: "#334155" }}>Da gastronomia ao entretenimento, a extraGO conecta quem precisa com quem faz acontecer.</p>
+                <h2 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: "#EAF7FF" }}>Presente em todos os setores</h2>
+                <p className="text-sm max-w-md mx-auto" style={{ color: "#D7E7F3" }}>Da gastronomia ao entretenimento, a extraGO conecta quem precisa com quem faz acontecer.</p>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
@@ -829,7 +829,7 @@ export default function LandingPage() {
                 <span className="chip-primary mb-3 inline-flex">
                   <Sparkles size={10} /> Depoimentos reais
                 </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#0F172A" }}>O que dizem sobre nós</h2>
+                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#EAF7FF" }}>O que dizem sobre nós</h2>
               </div>
             </ScrollSection>
             <div className="grid sm:grid-cols-3 gap-5">
