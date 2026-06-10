@@ -219,7 +219,7 @@ export default function InstitutionalNavbar() {
                 src={logoMain}
                 alt="extraGO"
                 style={{
-                  height: "clamp(32px, 5vw, 44px)",
+                  height: "clamp(44px, 5.5vw, 50px)",
                   objectFit: "contain",
                   mixBlendMode: "screen",
                   filter: "drop-shadow(0 0 10px rgba(22,163,74,0.45)) drop-shadow(0 0 3px rgba(0,201,167,0.25))",
@@ -437,7 +437,7 @@ export default function InstitutionalNavbar() {
                   backdropFilter: "blur(8px)",
                 }}
               >
-                <img src={logoMain} alt="extraGO" style={{ height: 30, objectFit: "contain", mixBlendMode: "screen", filter: "drop-shadow(0 0 8px rgba(22,163,74,0.40))" }} />
+                <img src={logoMain} alt="extraGO" style={{ height: 38, objectFit: "contain", mixBlendMode: "screen", filter: "drop-shadow(0 0 8px rgba(22,163,74,0.40))" }} />
                 <button
                   onClick={() => setDrawer(false)}
                   style={{

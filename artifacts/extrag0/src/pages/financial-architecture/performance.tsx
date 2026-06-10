@@ -134,6 +134,47 @@ export default function PerformancePage() {
           </div>
         </section>
 
+        {/* ── Fee Flow Visual ── */}
+        <div className="relative overflow-hidden py-2" aria-hidden="true" style={{ background: "linear-gradient(90deg,rgba(22,163,74,0.025) 0%,rgba(59,130,246,0.025) 100%)" }}>
+          <div className="max-w-6xl mx-auto px-5 sm:px-10">
+            <svg viewBox="0 0 900 100" className="w-full" style={{ height: "clamp(60px,9vw,100px)", display: "block" }}>
+              <defs>
+                <linearGradient id="feeFlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#94a3b8" />
+                  <stop offset="25%" stopColor="#60a5fa" />
+                  <stop offset="50%" stopColor="#a855f7" />
+                  <stop offset="75%" stopColor="#22c55e" />
+                  <stop offset="100%" stopColor="#16a34a" />
+                </linearGradient>
+                <linearGradient id="feeEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#f0fdf4" stopOpacity="1" />
+                  <stop offset="8%" stopColor="#f0fdf4" stopOpacity="0" />
+                  <stop offset="92%" stopColor="#f0fdf4" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#f0fdf4" stopOpacity="1" />
+                </linearGradient>
+              </defs>
+              <path d="M 60 72 L 230 72 L 270 52 L 430 52 L 470 34 L 620 34 L 660 18 L 840 18"
+                fill="none" stroke="url(#feeFlow)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              {[
+                { x:60,  y:72, c:"#94a3b8", label:"20%", name:"Iniciante" },
+                { x:250, y:52, c:"#60a5fa", label:"18%", name:"Júnior" },
+                { x:450, y:34, c:"#a855f7", label:"15%", name:"Intermediário" },
+                { x:640, y:18, c:"#22c55e", label:"12%", name:"Sênior" },
+                { x:840, y:18, c:"#16a34a", label:"10%", name:"Elite" },
+              ].map((pt, i) => (
+                <g key={i}>
+                  <circle cx={pt.x} cy={pt.y} r={i === 4 ? 6 : 4.5} fill={pt.c} />
+                  <circle cx={pt.x} cy={pt.y} r={i === 4 ? 10 : 7} fill={pt.c} fillOpacity="0.12" />
+                  <text x={pt.x} y={pt.y - 10} textAnchor="middle" fill={pt.c} fontSize="9" fontWeight="800">{pt.label}</text>
+                  <text x={pt.x} y={pt.y + 18} textAnchor="middle" fill={pt.c} fontSize="7" opacity="0.65">{pt.name}</text>
+                </g>
+              ))}
+              <text x="450" y="94" textAnchor="middle" fill="rgba(100,116,139,0.55)" fontSize="7.5" fontWeight="600">progressão de nível → menor taxa de intermediação</text>
+              <rect x="0" y="0" width="900" height="100" fill="url(#feeEdge)" />
+            </svg>
+          </div>
+        </div>
+
         <Divider />
 
         {/* Benefícios da progressão */}

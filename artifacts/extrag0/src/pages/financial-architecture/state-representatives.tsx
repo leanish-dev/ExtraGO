@@ -110,6 +110,41 @@ export default function StateRepresentativesPage() {
           </div>
         </section>
 
+        {/* ── Brazil Network Visual ── */}
+        <div className="relative overflow-hidden py-3" aria-hidden="true" style={{ background: "linear-gradient(90deg,rgba(217,119,6,0.025) 0%,rgba(22,163,74,0.025) 100%)" }}>
+          <div className="max-w-6xl mx-auto px-5 sm:px-10">
+            <svg viewBox="0 0 900 110" className="w-full" style={{ height: "clamp(65px,10vw,110px)", display: "block" }}>
+              <defs>
+                <linearGradient id="repEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#f0fdf4" stopOpacity="1" />
+                  <stop offset="7%" stopColor="#f0fdf4" stopOpacity="0" />
+                  <stop offset="93%" stopColor="#f0fdf4" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#f0fdf4" stopOpacity="1" />
+                </linearGradient>
+              </defs>
+              {/* Center hub — platform */}
+              <circle cx={450} cy={55} r={16} fill="rgba(22,163,74,0.10)" stroke="#16a34a" strokeWidth="1.2" />
+              <circle cx={450} cy={55} r={24} fill="none" stroke="rgba(22,163,74,0.15)" strokeWidth="0.6" strokeDasharray="3 5" />
+              <text x={450} y={59} textAnchor="middle" fill="#16a34a" fontSize="8" fontWeight="900">27 UF</text>
+              {/* State nodes — spaced around center in two arcs */}
+              {[
+                {x:110,y:28,c:AMBER,l:"SP"},{x:195,y:18,c:GC,l:"RJ"},{x:280,y:32,c:AMBER,l:"MG"},
+                {x:355,y:20,c:GC,l:"RS"},{x:370,y:85,c:AMBER,l:"PR"},{x:285,y:88,c:GC,l:"SC"},
+                {x:550,y:20,c:AMBER,l:"BA"},{x:625,y:32,c:GC,l:"PE"},{x:700,y:18,c:AMBER,l:"CE"},
+                {x:780,y:28,c:GC,l:"PA"},{x:540,y:88,c:AMBER,l:"GO"},{x:620,y:90,c:GC,l:"MA"},
+              ].map((n, i) => (
+                <g key={i}>
+                  <line x1={n.x} y1={n.y} x2={450} y2={55} stroke="rgba(22,163,74,0.20)" strokeWidth="0.6" />
+                  <circle cx={n.x} cy={n.y} r={7} fill={`${n.c}14`} stroke={n.c} strokeWidth="0.8" />
+                  <text x={n.x} y={n.y+3} textAnchor="middle" fill={n.c} fontSize="6" fontWeight="800">{n.l}</text>
+                </g>
+              ))}
+              <text x={450} y={102} textAnchor="middle" fill="rgba(100,116,139,0.50)" fontSize="7.5" fontWeight="600">rede de representantes estaduais — 1 por estado · expansão nacional</text>
+              <rect x="0" y="0" width="900" height="110" fill="url(#repEdge)" />
+            </svg>
+          </div>
+        </div>
+
         <Divider />
 
         {/* Responsabilidades */}

@@ -339,6 +339,67 @@ export default function InvestidoresParceirosPage() {
           </motion.div>
         </section>
 
+        {/* ── Ecosystem Infrastructure Visual ── */}
+        <div className="relative overflow-hidden" aria-hidden="true" style={{ padding: "0" }}>
+          <div className="max-w-5xl mx-auto px-4">
+            <svg viewBox="0 0 900 130" className="w-full" style={{ height: "clamp(72px,12vw,130px)", display: "block" }}>
+              <defs>
+                <linearGradient id="invFlow1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#7CFC00" stopOpacity="0" />
+                  <stop offset="25%" stopColor="#7CFC00" stopOpacity="0.38" />
+                  <stop offset="65%" stopColor="#00e5ff" stopOpacity="0.45" />
+                  <stop offset="100%" stopColor="#00e5ff" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="invFlow2" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#a855f7" stopOpacity="0" />
+                  <stop offset="40%" stopColor="#a855f7" stopOpacity="0.22" />
+                  <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="invEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#0c1a2e" stopOpacity="1" />
+                  <stop offset="10%" stopColor="#0c1a2e" stopOpacity="0" />
+                  <stop offset="90%" stopColor="#0c1a2e" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#0c1a2e" stopOpacity="1" />
+                </linearGradient>
+              </defs>
+              {[40,65,90].map((y, i) => (
+                <line key={i} x1="0" y1={y} x2="900" y2={y} stroke="rgba(0,229,255,0.04)" strokeWidth="0.5" strokeDasharray="6 18" />
+              ))}
+              <path d="M 70 65 C 200 30, 390 110, 580 50 S 790 90, 840 65" fill="none" stroke="url(#invFlow1)" strokeWidth="1.3" />
+              <path d="M 70 80 C 185 105, 360 48, 540 95 S 760 55, 840 75" fill="none" stroke="url(#invFlow2)" strokeWidth="0.8" />
+              {[
+                {x:95, y:60,  r:6,   c:"#7CFC00", l:"SP"},
+                {x:185,y:38,  r:5,   c:"#00e5ff", l:"RJ"},
+                {x:280,y:100, r:4.5, c:"#7CFC00", l:"MG"},
+                {x:375,y:48,  r:4,   c:"#00e5ff", l:"DF"},
+                {x:455,y:95,  r:4.5, c:"#7CFC00", l:"BA"},
+                {x:545,y:50,  r:4,   c:"#00e5ff", l:"PE"},
+                {x:630,y:92,  r:4,   c:"#7CFC00", l:"CE"},
+                {x:720,y:40,  r:4.5, c:"#00e5ff", l:"PA"},
+                {x:808,y:82,  r:4,   c:"#7CFC00", l:"AM"},
+              ].map((n, i) => (
+                <g key={i}>
+                  <circle cx={n.x} cy={n.y} r={n.r*4} fill={n.c} fillOpacity="0.05" />
+                  <circle cx={n.x} cy={n.y} r={n.r*2.2} fill="none" stroke={n.c} strokeWidth="0.5" strokeOpacity="0.22" />
+                  <circle cx={n.x} cy={n.y} r={n.r} fill={n.c} fillOpacity="0.82" />
+                  <text x={n.x} y={n.y-n.r-3} textAnchor="middle" fill={n.c} fontSize="6.5" fontWeight="700" opacity="0.55">{n.l}</text>
+                </g>
+              ))}
+              {([
+                [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],
+              ] as [number,number][]).map(([a,b],i) => {
+                const cc=[{x:95,y:60},{x:185,y:38},{x:280,y:100},{x:375,y:48},{x:455,y:95},{x:545,y:50},{x:630,y:92},{x:720,y:40},{x:808,y:82}];
+                return <line key={i} x1={cc[a].x} y1={cc[a].y} x2={cc[b].x} y2={cc[b].y} stroke="rgba(0,229,255,0.14)" strokeWidth="0.55" />;
+              })}
+              <g transform="translate(450,65)">
+                <rect x="-20" y="-13" width="40" height="26" rx="8" fill="rgba(124,252,0,0.07)" stroke="rgba(124,252,0,0.22)" strokeWidth="0.8" />
+                <text textAnchor="middle" y="5" fill="rgba(124,252,0,0.62)" fontSize="10" fontWeight="900">PIX</text>
+              </g>
+              <rect x="0" y="0" width="900" height="130" fill="url(#invEdge)" />
+            </svg>
+          </div>
+        </div>
+
         {/* Inspiration strip */}
         <div style={{ background: "rgba(14,165,233,0.06)", borderTop: "1px solid rgba(14,165,233,0.14)", borderBottom: "1px solid rgba(14,165,233,0.14)" }}>
           <div className="max-w-4xl mx-auto px-5 py-4 text-center">

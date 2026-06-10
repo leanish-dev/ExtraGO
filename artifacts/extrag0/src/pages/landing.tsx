@@ -406,7 +406,7 @@ export default function LandingPage() {
           </motion.div>
 
           {/* CTA — single waitlist conversion */}
-          <div className="w-full relative z-10 -mt-12 sm:-mt-16 px-5 pb-4 sm:pb-6">
+          <div className="w-full relative z-10 px-5 pt-5 pb-4 sm:pt-6 sm:pb-5">
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
@@ -525,75 +525,77 @@ export default function LandingPage() {
                   <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "rgba(0,229,255,0.80)" }}>Ao vivo</span>
                 </div>
 
-                <div className="relative px-4 sm:px-8 pt-6 pb-4 sm:pt-7 sm:pb-5">
+                <div className="relative px-3 sm:px-7 pt-4 pb-3 sm:pt-5 sm:pb-4">
                   {/* Header */}
-                  <div className="mb-4">
-                    <p className="text-[10px] font-black tracking-[0.18em] uppercase mb-0.5" style={{ color: "rgba(0,201,167,0.70)" }}>Centro Operacional Nacional</p>
-                    <div className="h-px w-16" style={{ background: "linear-gradient(90deg,rgba(0,229,255,0.50),transparent)" }} />
+                  <div className="mb-2.5 flex items-center justify-between">
+                    <div>
+                      <p className="text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.70)" }}>Centro Operacional Nacional</p>
+                      <div className="h-px w-14 mt-0.5" style={{ background: "linear-gradient(90deg,rgba(0,229,255,0.50),transparent)" }} />
+                    </div>
                   </div>
 
                   {/* Row 1 */}
-                  <div className="grid grid-cols-3 gap-3 sm:gap-5 mb-3">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-2">
                     {STATS_ROW1.map((stat, i) => (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, y: 14 }}
+                        initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: i * 0.08, duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
+                        transition={{ delay: i * 0.07, duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
                         className="text-center group"
                       >
-                        <div className={`flex items-center justify-center mb-1.5 ${stat.color} opacity-65 group-hover:opacity-100 transition-opacity`}>
+                        <div className={`flex items-center justify-center mb-1 ${stat.color} opacity-60 group-hover:opacity-100 transition-opacity`} style={{ transform: "scale(0.85)" }}>
                           {stat.icon}
                         </div>
-                        <p className={`text-2xl sm:text-3xl font-bold ${stat.color} leading-none`}>
+                        <p className={`text-xl sm:text-2xl font-bold ${stat.color} leading-none`}>
                           {statsLoading ? (
-                            <span className="inline-block w-10 h-6 rounded skeleton" />
+                            <span className="inline-block w-8 h-5 rounded skeleton" />
                           ) : (
                             <CountUp target={stat.value ?? stat.fallback} suffix={stat.suffix} />
                           )}
                         </p>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-medium leading-tight">{stat.label}</p>
+                        <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium leading-tight">{stat.label}</p>
                       </motion.div>
                     ))}
                   </div>
 
                   {/* Divider */}
-                  <div className="h-px mb-3" style={{ background: "linear-gradient(90deg,transparent,rgba(0,229,255,0.18),rgba(124,252,0,0.14),transparent)" }} />
+                  <div className="h-px mb-2" style={{ background: "linear-gradient(90deg,transparent,rgba(0,229,255,0.18),rgba(124,252,0,0.14),transparent)" }} />
 
                   {/* Row 2 */}
-                  <div className="grid grid-cols-3 gap-3 sm:gap-5 mb-4">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-2.5">
                     {STATS_ROW2.map((stat, i) => (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, y: 14 }}
+                        initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.25 + i * 0.08, duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
+                        transition={{ delay: 0.2 + i * 0.07, duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
                         className="text-center group"
                       >
-                        <div className={`flex items-center justify-center mb-1.5 ${stat.color} opacity-65 group-hover:opacity-100 transition-opacity`}>
+                        <div className={`flex items-center justify-center mb-1 ${stat.color} opacity-60 group-hover:opacity-100 transition-opacity`} style={{ transform: "scale(0.85)" }}>
                           {stat.icon}
                         </div>
-                        <p className={`text-2xl sm:text-3xl font-bold ${stat.color} leading-none`}>
+                        <p className={`text-xl sm:text-2xl font-bold ${stat.color} leading-none`}>
                           {statsLoading ? (
-                            <span className="inline-block w-10 h-6 rounded skeleton" />
+                            <span className="inline-block w-8 h-5 rounded skeleton" />
                           ) : (
                             <CountUp target={stat.value ?? stat.fallback} suffix={stat.suffix} />
                           )}
                         </p>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 font-medium leading-tight">{stat.label}</p>
+                        <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium leading-tight">{stat.label}</p>
                       </motion.div>
                     ))}
                   </div>
 
                   {/* Footer — Sistema Online */}
-                  <div className="border-t pt-3" style={{ borderColor: "rgba(0,229,255,0.12)" }}>
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#7CFC00", boxShadow: "0 0 6px #7CFC00" }} />
-                      <span className="text-[10px] font-bold tracking-wide" style={{ color: "rgba(124,252,0,0.90)" }}>Sistema Online</span>
-                      <span className="hidden sm:inline text-[10px]" style={{ color: "rgba(255,255,255,0.38)" }}>·</span>
-                      <span className="hidden sm:inline text-[10px]" style={{ color: "rgba(255,255,255,0.45)" }}>Brasil conectado em tempo real. Infraestrutura nacional de profissionais, empresas e oportunidades.</span>
+                  <div className="border-t pt-2" style={{ borderColor: "rgba(0,229,255,0.10)" }}>
+                    <div className="flex items-center justify-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#7CFC00", boxShadow: "0 0 5px #7CFC00" }} />
+                      <span className="text-[9px] font-bold tracking-wide" style={{ color: "rgba(124,252,0,0.85)" }}>Sistema Online</span>
+                      <span className="hidden sm:inline text-[9px]" style={{ color: "rgba(255,255,255,0.32)" }}>·</span>
+                      <span className="hidden sm:inline text-[9px]" style={{ color: "rgba(255,255,255,0.42)" }}>Brasil conectado em tempo real — profissionais, empresas e oportunidades.</span>
                     </div>
                   </div>
                 </div>
@@ -743,6 +745,80 @@ export default function LandingPage() {
           </div>
         </section>
 
+
+        {/* ══════════════════════════════════════════
+            ECOSYSTEM VISUAL — Infraestrutura conectada
+        ══════════════════════════════════════════ */}
+        <section className="relative overflow-hidden py-1" aria-hidden="true">
+          <div className="relative max-w-5xl mx-auto px-4">
+            <svg viewBox="0 0 900 170" className="w-full" style={{ height: "clamp(90px,16vw,170px)", display: "block" }} aria-hidden="true">
+              <defs>
+                <linearGradient id="ecosFadeEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#020617" stopOpacity="1" />
+                  <stop offset="11%" stopColor="#020617" stopOpacity="0" />
+                  <stop offset="89%" stopColor="#020617" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#020617" stopOpacity="1" />
+                </linearGradient>
+                <linearGradient id="ecosFlow1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#7CFC00" stopOpacity="0" />
+                  <stop offset="28%" stopColor="#7CFC00" stopOpacity="0.42" />
+                  <stop offset="62%" stopColor="#00e5ff" stopOpacity="0.50" />
+                  <stop offset="100%" stopColor="#00e5ff" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="ecosFlow2" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#16a34a" stopOpacity="0" />
+                  <stop offset="45%" stopColor="#16a34a" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="#16a34a" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              {[55,85,115].map((y, i) => (
+                <line key={`hg${i}`} x1="0" y1={y} x2="900" y2={y} stroke="rgba(0,229,255,0.035)" strokeWidth="0.5" strokeDasharray="6 16" />
+              ))}
+              {[100,200,300,400,500,600,700,800].map((x, i) => (
+                <line key={`vg${i}`} x1={x} y1="15" x2={x} y2="155" stroke="rgba(0,229,255,0.025)" strokeWidth="0.5" strokeDasharray="4 18" />
+              ))}
+              <path d="M 70 85 C 195 45, 375 135, 555 65 S 775 115, 840 85" fill="none" stroke="url(#ecosFlow1)" strokeWidth="1.2" />
+              <path d="M 70 108 C 185 125, 355 65, 525 115 S 755 75, 840 98" fill="none" stroke="url(#ecosFlow2)" strokeWidth="0.7" />
+              {[
+                { x:95,  y:78,  r:5,   c:"#7CFC00", s:"SP" },
+                { x:172, y:52,  r:4,   c:"#00e5ff", s:"RJ" },
+                { x:255, y:118, r:3.5, c:"#7CFC00", s:"MG" },
+                { x:345, y:65,  r:3.2, c:"#00e5ff", s:"DF" },
+                { x:432, y:128, r:3.5, c:"#7CFC00", s:"BA" },
+                { x:518, y:70,  r:3,   c:"#00e5ff", s:"PE" },
+                { x:605, y:116, r:3,   c:"#7CFC00", s:"CE" },
+                { x:692, y:55,  r:3.5, c:"#00e5ff", s:"PA" },
+                { x:785, y:105, r:3,   c:"#7CFC00", s:"AM" },
+                { x:110, y:142, r:2.8, c:"#4ade80", s:"PR" },
+                { x:205, y:150, r:2.5, c:"#4ade80", s:"SC" },
+                { x:300, y:142, r:2.8, c:"#4ade80", s:"RS" },
+                { x:470, y:45,  r:2.5, c:"#4ade80", s:"GO" },
+                { x:570, y:145, r:2.5, c:"#4ade80", s:"MA" },
+                { x:660, y:48,  r:2.5, c:"#4ade80", s:"PI" },
+              ].map((n, i) => (
+                <g key={`n${i}`}>
+                  <circle cx={n.x} cy={n.y} r={n.r * 4.2} fill={n.c} fillOpacity="0.048" />
+                  <circle cx={n.x} cy={n.y} r={n.r * 2.3} fill="none" stroke={n.c} strokeWidth="0.45" strokeOpacity="0.20" />
+                  <circle cx={n.x} cy={n.y} r={n.r} fill={n.c} fillOpacity="0.80" />
+                  <text x={n.x} y={n.y - n.r - 3} textAnchor="middle" fill={n.c} fontSize="6" fontWeight="700" opacity="0.50">{n.s}</text>
+                </g>
+              ))}
+              {([
+                [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],
+                [0,9],[9,10],[10,11],[3,12],[4,13],[5,14],
+              ] as [number,number][]).map(([a, b], i) => {
+                const cc = [{x:95,y:78},{x:172,y:52},{x:255,y:118},{x:345,y:65},{x:432,y:128},{x:518,y:70},{x:605,y:116},{x:692,y:55},{x:785,y:105},{x:110,y:142},{x:205,y:150},{x:300,y:142},{x:470,y:45},{x:570,y:145},{x:660,y:48}];
+                const n1 = cc[a], n2 = cc[b];
+                return <line key={`c${i}`} x1={n1.x} y1={n1.y} x2={n2.x} y2={n2.y} stroke="rgba(0,229,255,0.14)" strokeWidth="0.5" />;
+              })}
+              <g transform="translate(450,85)">
+                <rect x="-16" y="-11" width="32" height="22" rx="6" fill="rgba(0,229,255,0.065)" stroke="rgba(0,229,255,0.20)" strokeWidth="0.7" />
+                <text textAnchor="middle" y="4" fill="rgba(0,229,255,0.58)" fontSize="9" fontWeight="900">PIX</text>
+              </g>
+              <rect x="0" y="0" width="900" height="170" fill="url(#ecosFadeEdge)" />
+            </svg>
+          </div>
+        </section>
 
         {/* ══════════════════════════════════════════
             SEÇÃO DE INDICAÇÕES — Banner + Simulador

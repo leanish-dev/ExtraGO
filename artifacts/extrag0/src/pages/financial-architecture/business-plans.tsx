@@ -132,6 +132,45 @@ export default function BusinessPlansPage() {
           </div>
         </section>
 
+        {/* ── Corporate Operations Visual ── */}
+        <div className="relative overflow-hidden py-2" aria-hidden="true" style={{ background: "linear-gradient(90deg,rgba(217,119,6,0.025) 0%,rgba(59,130,246,0.025) 100%)" }}>
+          <div className="max-w-6xl mx-auto px-5 sm:px-10">
+            <svg viewBox="0 0 900 90" className="w-full" style={{ height: "clamp(55px,8vw,90px)", display: "block" }}>
+              <defs>
+                <linearGradient id="bizFlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#64748b" />
+                  <stop offset="33%" stopColor="#d97706" />
+                  <stop offset="66%" stopColor="#3b82f6" />
+                  <stop offset="100%" stopColor="#7c3aed" />
+                </linearGradient>
+                <linearGradient id="bizEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#f0fdf4" stopOpacity="1" />
+                  <stop offset="8%" stopColor="#f0fdf4" stopOpacity="0" />
+                  <stop offset="92%" stopColor="#f0fdf4" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#f0fdf4" stopOpacity="1" />
+                </linearGradient>
+              </defs>
+              <path d="M 70 52 L 295 52 L 320 36 L 545 36 L 570 22 L 795 22 L 820 36 L 840 22"
+                fill="none" stroke="url(#bizFlow)" strokeWidth="1.8" strokeLinecap="round" />
+              {[
+                {x:70, y:52, c:"#64748b", l:"STARTER",  s:"R$ 99,90"},
+                {x:308,y:36, c:"#d97706", l:"BUSINESS", s:"R$ 299,90"},
+                {x:558,y:22, c:"#3b82f6", l:"CORPORATE",s:"R$ 799,90"},
+                {x:840,y:22, c:"#7c3aed", l:"ENTERPRISE",s:"Sob consulta"},
+              ].map((pt, i) => (
+                <g key={i}>
+                  <circle cx={pt.x} cy={pt.y} r={i===3?7:5} fill={pt.c} />
+                  <circle cx={pt.x} cy={pt.y} r={i===3?12:8} fill={pt.c} fillOpacity="0.11" />
+                  <text x={pt.x} y={pt.y-11} textAnchor="middle" fill={pt.c} fontSize="7.5" fontWeight="800">{pt.l}</text>
+                  <text x={pt.x} y={pt.y+20} textAnchor="middle" fill={pt.c} fontSize="7" opacity="0.60">{pt.s}</text>
+                </g>
+              ))}
+              <text x={450} y={82} textAnchor="middle" fill="rgba(100,116,139,0.50)" fontSize="7.5" fontWeight="600">planos empresariais → escala de operação corporativa integrada</text>
+              <rect x="0" y="0" width="900" height="90" fill="url(#bizEdge)" />
+            </svg>
+          </div>
+        </div>
+
         <Divider />
 
         {/* Objetivo estratégico */}

@@ -101,6 +101,52 @@ export default function ReferralsPage() {
           </div>
         </section>
 
+        {/* ── Referral Network Visual ── */}
+        <div className="relative overflow-hidden py-3" aria-hidden="true" style={{ background: "linear-gradient(90deg,rgba(59,130,246,0.025) 0%,rgba(22,163,74,0.025) 100%)" }}>
+          <div className="max-w-6xl mx-auto px-5 sm:px-10">
+            <svg viewBox="0 0 900 120" className="w-full" style={{ height: "clamp(70px,11vw,120px)", display: "block" }}>
+              <defs>
+                <linearGradient id="netEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#f0fdf4" stopOpacity="1" />
+                  <stop offset="8%" stopColor="#f0fdf4" stopOpacity="0" />
+                  <stop offset="92%" stopColor="#f0fdf4" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#f0fdf4" stopOpacity="1" />
+                </linearGradient>
+              </defs>
+              {([
+                [450,55,  85, 28],[450,55, 145, 28],[450,55, 205, 28],
+                [85,28,  50, 92],[85,28,  120,92],
+                [145,28, 110,92],[145,28, 180,92],
+                [205,28, 170,92],[205,28, 240,92],
+                [450,55, 625, 28],[450,55, 695, 28],[450,55, 765, 28],
+                [625,28, 590,92],[625,28, 660,92],
+                [695,28, 660,92],[695,28, 730,92],
+                [765,28, 730,92],[765,28, 800,92],
+              ] as [number,number,number,number][]).map(([x1,y1,x2,y2],i) => (
+                <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                  stroke={i < 3 ? "rgba(22,163,74,0.35)" : "rgba(59,130,246,0.25)"}
+                  strokeWidth="0.7" />
+              ))}
+              <circle cx={450} cy={55} r={14} fill="rgba(22,163,74,0.12)" stroke="#16a34a" strokeWidth="1.2" />
+              <text x={450} y={59} textAnchor="middle" fill="#16a34a" fontSize="9" fontWeight="900">5%</text>
+              {[85,145,205,625,695,765].map((x, i) => (
+                <g key={i}>
+                  <circle cx={x} cy={28} r={9} fill="rgba(124,58,237,0.10)" stroke="#7c3aed" strokeWidth="0.9" />
+                  <text x={x} y={32} textAnchor="middle" fill="#7c3aed" fontSize="7.5" fontWeight="800">3%</text>
+                </g>
+              ))}
+              {[50,120,110,180,170,240,590,660,660,730,730,800].map((x, i) => (
+                <g key={i}>
+                  <circle cx={x} cy={92} r={6} fill="rgba(59,130,246,0.10)" stroke="#3b82f6" strokeWidth="0.7" />
+                  <text x={x} y={96} textAnchor="middle" fill="#3b82f6" fontSize="6.5" fontWeight="700">2%</text>
+                </g>
+              ))}
+              <text x={450} y={112} textAnchor="middle" fill="rgba(100,116,139,0.55)" fontSize="7.5" fontWeight="600">rede de indicações multinível — comissões automáticas por camada</text>
+              <rect x="0" y="0" width="900" height="120" fill="url(#netEdge)" />
+            </svg>
+          </div>
+        </div>
+
         <Divider />
 
         {/* Benefícios do embaixador */}
