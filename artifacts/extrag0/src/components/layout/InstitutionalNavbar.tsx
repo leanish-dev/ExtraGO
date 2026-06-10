@@ -7,10 +7,16 @@ import {
   Home, TrendingUp, Zap, Network, BadgeCheck, Building2,
   BarChart3, Globe, MapPin, ArrowRight, Layers,
   LogIn, UserPlus, BookOpen, Shield,
-  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
+/* ── Constants ── */
+const GREEN = "#16a34a";
+const CYAN  = "#00c9a7";
+const TEXT  = "#1e293b";
+const H     = 68; // navbar height px
+
+/* ── FA dropdown pages ── */
 const FA_PAGES = [
   { label: "Intermediação por Performance",  href: "/financial-architecture/performance",            icon: <Zap size={13} />,        color: "#16a34a" },
   { label: "Indicações Multinível",           href: "/financial-architecture/referrals",             icon: <Network size={13} />,    color: "#3b82f6" },
@@ -21,46 +27,47 @@ const FA_PAGES = [
   { label: "Representantes Estaduais",        href: "/financial-architecture/state-representatives", icon: <MapPin size={13} />,     color: "#d97706" },
 ];
 
-const CENTER_LINKS = [
-  { label: "Home",                   href: "/",                    hasDropdown: false },
-  { label: "Investidores",           href: "/investidores-parceiros", hasDropdown: false },
-  { label: "Arquitetura Financeira", href: "/modelo-de-negocio",   hasDropdown: true  },
+/* ── Desktop centre links ── */
+const CENTRE_LINKS = [
+  { label: "Home",                   href: "/",                       dropdown: false },
+  { label: "Investidores",           href: "/investidores-parceiros", dropdown: false },
+  { label: "Arquitetura Financeira", href: "/modelo-de-negocio",      dropdown: true  },
 ];
 
+/* ── Drawer sections ── */
 const DRAWER_SECTIONS = [
-  {
-    title: "INSTITUCIONAL",
-    items: [
-      { label: "Home",                   href: "/",                        icon: <Home size={15} /> },
-      { label: "Investidores",           href: "/investidores-parceiros",  icon: <TrendingUp size={15} /> },
-      { label: "Arquitetura Financeira", href: "/modelo-de-negocio",       icon: <Layers size={15} /> },
-    ],
-  },
-  {
-    title: "ARQUITETURA",
-    items: FA_PAGES.map(p => ({ label: p.label, href: p.href, icon: p.icon })),
-  },
-  {
-    title: "CONTEÚDO",
-    items: [
-      { label: "Blog",      href: "/blog",      icon: <BookOpen size={15} /> },
-      { label: "Segurança", href: "/seguranca", icon: <Shield size={15} /> },
-    ],
-  },
-  {
-    title: "PLATAFORMA",
-    items: [
-      { label: "Login",    href: "/login",    icon: <LogIn size={15} /> },
-      { label: "Cadastro", href: "/register", icon: <UserPlus size={15} /> },
-    ],
-  },
+  { title: "INSTITUCIONAL", items: [
+    { label: "Home",                   href: "/",                        icon: <Home size={15} /> },
+    { label: "Investidores",           href: "/investidores-parceiros",  icon: <TrendingUp size={15} /> },
+    { label: "Arquitetura Financeira", href: "/modelo-de-negocio",       icon: <Layers size={15} /> },
+  ]},
+  { title: "ARQUITETURA", items: FA_PAGES.map(p => ({ label: p.label, href: p.href, icon: p.icon })) },
+  { title: "CONTEÚDO", items: [
+    { label: "Blog",      href: "/blog",      icon: <BookOpen size={15} /> },
+    { label: "Segurança", href: "/seguranca", icon: <Shield size={15} /> },
+  ]},
+  { title: "PLATAFORMA", items: [
+    { label: "Login",    href: "/login",    icon: <LogIn size={15} /> },
+    { label: "Cadastro", href: "/register", icon: <UserPlus size={15} /> },
+  ]},
 ];
 
-const GREEN = "#16a34a";
-const CYAN  = "#00c9a7";
-const TEXT  = "#1e293b";
-const MUTED = "#64748b";
-const NAVBAR_H = 68;
+/* ── 3-line gradient hamburger icon ── */
+function HamburgerLines() {
+  return (
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="hbg" x1="0" y1="0" x2="22" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor={GREEN} />
+          <stop offset="100%" stopColor={CYAN} />
+        </linearGradient>
+      </defs>
+      <rect y="0"  width="22" height="2.5" rx="1.25" fill="url(#hbg)" />
+      <rect y="6.5" width="22" height="2.5" rx="1.25" fill="url(#hbg)" />
+      <rect y="13" width="22" height="2.5" rx="1.25" fill="url(#hbg)" />
+    </svg>
+  );
+}
 
 export default function InstitutionalNavbar() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -68,6 +75,7 @@ export default function InstitutionalNavbar() {
   const [location]                  = useLocation();
   const { user }                    = useAuth();
 
+  /* Close dropdown on outside click */
   useEffect(() => {
     const fn = (e: MouseEvent) => {
       if (!(e.target as Element).closest(".fa-dd-root")) setFaOpen(false);
@@ -76,72 +84,91 @@ export default function InstitutionalNavbar() {
     return () => document.removeEventListener("mousedown", fn);
   }, []);
 
+  /* Close everything on route change */
   useEffect(() => { setDrawerOpen(false); setFaOpen(false); }, [location]);
 
   const isActive = (href: string) =>
     href === "/" ? location === "/" : location.startsWith(href);
 
+  /* The navbar background colour (matches the left tint of institutional-navbar.png) */
+  const BG = "#eef4f8";
+
   return (
     <>
-      {/* ══════════════════════════════ NAVBAR ══════════════════════════════ */}
+      {/* ═══════════════════════════ HEADER ═══════════════════════════ */}
       <header
-        className="sticky top-0 z-50 w-full"
+        className="sticky top-0 z-50 w-full overflow-hidden"
         style={{
-          backgroundImage: "url(/institutional-navbar.png)",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          backgroundRepeat: "no-repeat",
-          height: NAVBAR_H,
-          boxShadow: "0 2px 16px rgba(0,0,0,0.08)",
+          height: H,
+          background: BG,
+          boxShadow: "0 1px 0 rgba(22,163,74,0.10), 0 2px 12px rgba(0,0,0,0.06)",
         }}
       >
-        {/* Full-width row — NO max-width, just horizontal padding */}
+        {/*
+          institutional-navbar.png is the reference artwork.
+          It contains: world-map (center) + candlestick chart (right) + the brand logo.
+          We render it as a stretched full-cover background but mask the LEFT side
+          with a gradient so the HTML logo shows cleanly instead of the image's logo.
+        */}
         <div
-          className="w-full h-full flex items-center"
-          style={{ paddingLeft: 16, paddingRight: 0 }}
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "url(/institutional-navbar.png)",
+            backgroundSize: "100% 100%",   /* stretch to fill exactly */
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+        {/* Left mask — hides the logo baked into the image; HTML logo renders on top */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 0, left: 0, bottom: 0,
+            width: "38%",
+            background: `linear-gradient(to right, ${BG} 0%, ${BG} 55%, transparent 100%)`,
+          }}
+        />
+
+        {/* ── Content row ── */}
+        <div
+          className="relative w-full h-full flex items-center"
+          style={{ paddingLeft: 20, paddingRight: 0 }}
         >
-          {/* ── LOGO — left ── */}
-          <Link href="/" className="flex-shrink-0 flex items-center" style={{ marginRight: 24 }}>
+          {/* ── LEFT: Logo ── */}
+          <Link href="/" className="flex-shrink-0 flex items-center" style={{ marginRight: 28 }}>
             <img
               src={logoMain}
               alt="extraGO"
-              style={{
-                height: 46,
-                width: "auto",
-                objectFit: "contain",
-                display: "block",
-              }}
+              style={{ height: 44, width: "auto", objectFit: "contain", display: "block" }}
             />
           </Link>
 
-          {/* ── CENTER: nav links (desktop only) ── */}
+          {/* ── CENTRE: desktop nav links ── */}
           <nav className="hidden lg:flex items-center justify-center flex-1 gap-0.5">
-            {CENTER_LINKS.map((link, i) => {
+            {CENTRE_LINKS.map((link, i) => {
               const active = isActive(link.href);
-              const isFA = location.startsWith("/financial-architecture");
+              const faActive = location.startsWith("/financial-architecture");
 
-              if (link.hasDropdown) {
+              if (link.dropdown) {
                 return (
                   <div key={i} className="relative fa-dd-root">
                     <button
                       onClick={() => setFaOpen(o => !o)}
                       className="flex items-center gap-1 px-3 py-1.5 text-[13px] font-semibold rounded-lg transition-colors duration-150 whitespace-nowrap"
-                      style={{
-                        color: active || isFA ? GREEN : TEXT,
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
+                      style={{ color: active || faActive ? GREEN : TEXT, background: "none", border: "none", cursor: "pointer" }}
                       onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = GREEN; }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active || isFA ? GREEN : TEXT; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = active || faActive ? GREEN : TEXT; }}
                     >
                       {link.label}
                       <motion.span animate={{ rotate: faOpen ? 180 : 0 }} transition={{ duration: 0.18 }}>
                         <ChevronDown size={12} />
                       </motion.span>
                     </button>
-                    {(active || isFA) && (
-                      <span className="absolute inset-x-3 bottom-0 h-[2px] rounded-full" style={{ background: `linear-gradient(90deg,${GREEN},${CYAN})` }} />
+                    {(active || faActive) && (
+                      <span className="absolute inset-x-3 bottom-0 h-[2px] rounded-full"
+                        style={{ background: `linear-gradient(90deg,${GREEN},${CYAN})` }} />
                     )}
 
                     <AnimatePresence>
@@ -162,7 +189,9 @@ export default function InstitutionalNavbar() {
                             <Link href="/modelo-de-negocio" onClick={() => setFaOpen(false)}>
                               <div className="flex items-center gap-2 cursor-pointer">
                                 <Layers size={12} style={{ color: GREEN }} />
-                                <span className="text-[10px] font-black tracking-[0.12em] uppercase" style={{ color: "#94a3b8" }}>Ver documentação completa</span>
+                                <span className="text-[10px] font-black tracking-[0.12em] uppercase" style={{ color: "#94a3b8" }}>
+                                  Ver documentação completa
+                                </span>
                                 <ChevronRight size={10} style={{ color: "#cbd5e1" }} />
                               </div>
                             </Link>
@@ -198,10 +227,8 @@ export default function InstitutionalNavbar() {
                   >
                     {link.label}
                     {active && (
-                      <span
-                        className="absolute inset-x-3 bottom-0 h-[2px] rounded-full"
-                        style={{ background: `linear-gradient(90deg,${GREEN},${CYAN})` }}
-                      />
+                      <span className="absolute inset-x-3 bottom-0 h-[2px] rounded-full"
+                        style={{ background: `linear-gradient(90deg,${GREEN},${CYAN})` }} />
                     )}
                   </span>
                 </Link>
@@ -211,63 +238,65 @@ export default function InstitutionalNavbar() {
 
           {/* ── RIGHT: Entrar + Hamburger ── */}
           <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
-            {/* Entrar button — sm+ */}
+            {/* Entrar — sm and up */}
             <Link href="/login">
               <button
-                className="hidden sm:flex items-center gap-1.5 px-4 h-9 rounded-full text-[12.5px] font-semibold border cursor-pointer transition-all flex-shrink-0"
+                className="hidden sm:flex items-center gap-1.5 px-4 h-9 rounded-full text-[12.5px] font-semibold cursor-pointer transition-all flex-shrink-0"
                 style={{
                   color: GREEN,
-                  borderColor: `${GREEN}40`,
-                  background: "rgba(255,255,255,0.55)",
+                  border: `1.5px solid ${GREEN}55`,
+                  background: "rgba(255,255,255,0.65)",
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.85)";
-                  (e.currentTarget as HTMLElement).style.borderColor = `${GREEN}70`;
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.background = "rgba(255,255,255,0.95)";
+                  el.style.borderColor = `${GREEN}aa`;
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.55)";
-                  (e.currentTarget as HTMLElement).style.borderColor = `${GREEN}40`;
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.background = "rgba(255,255,255,0.65)";
+                  el.style.borderColor = `${GREEN}55`;
                 }}
               >
-                <LogIn size={13} /> Entrar
+                <LogIn size={13} />
+                Entrar
               </button>
             </Link>
 
-            {/* Hamburger — green/cyan gradient, flush right, full navbar height */}
+            {/*
+              Hamburger — 3 gradient lines, extraGO identity.
+              Square block same height as navbar, flush to right edge.
+              Background matches the green/teal button visible in the reference.
+            */}
             <button
               onClick={() => setDrawerOpen(true)}
               aria-label="Abrir menu"
-              className="flex flex-col items-center justify-center flex-shrink-0"
+              className="flex items-center justify-center flex-shrink-0"
               style={{
-                width: NAVBAR_H,
-                height: NAVBAR_H,
-                borderRadius: "0 0 0 0",
-                background: `linear-gradient(160deg, ${GREEN} 0%, ${CYAN} 100%)`,
+                width: H,
+                height: H,
+                background: `linear-gradient(155deg, ${GREEN} 0%, ${CYAN} 100%)`,
                 border: "none",
                 cursor: "pointer",
-                color: "#fff",
-                gap: 6,
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.18)",
+                boxShadow: `inset 0 1px 0 rgba(255,255,255,0.20), 0 0 20px rgba(0,201,167,0.22)`,
                 transition: "filter 0.15s ease",
-                flexShrink: 0,
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.filter = "brightness(1.08)"; }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.filter = "brightness(1.1)"; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.filter = "brightness(1)"; }}
             >
-              <ArrowRight size={18} />
-              <Sparkles size={14} />
+              <HamburgerLines />
             </button>
           </div>
         </div>
 
-        {/* Bottom accent line */}
+        {/* Bottom separator */}
         <div
           className="absolute bottom-0 left-0 right-0 h-[1px]"
-          style={{ background: `linear-gradient(90deg, transparent, ${GREEN}30, ${CYAN}28, transparent)` }}
+          style={{ background: `linear-gradient(90deg, transparent 0%, ${GREEN}28 30%, ${CYAN}22 70%, transparent 100%)` }}
         />
       </header>
 
-      {/* ══════════════════════════════ DRAWER ══════════════════════════════ */}
+      {/* ═══════════════════════════ DRAWER ═══════════════════════════ */}
       <AnimatePresence>
         {drawerOpen && (
           <>
@@ -295,7 +324,7 @@ export default function InstitutionalNavbar() {
                 boxShadow: "4px 0 40px rgba(0,0,0,0.12)",
               }}
             >
-              {/* Header */}
+              {/* Drawer header */}
               <div
                 className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
                 style={{ borderColor: "rgba(22,163,74,0.10)" }}
@@ -321,7 +350,8 @@ export default function InstitutionalNavbar() {
               <div className="flex-1 overflow-y-auto py-3 px-3">
                 {DRAWER_SECTIONS.map((section, si) => (
                   <div key={si} className="mb-5">
-                    <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "#94a3b8" }}>
+                    <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase"
+                      style={{ color: "#94a3b8" }}>
                       {section.title}
                     </p>
                     <div className="space-y-0.5">
