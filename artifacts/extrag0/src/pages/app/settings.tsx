@@ -528,17 +528,33 @@ function AssinaturasSection() {
 
       <SectionCard title="Planos Premium" icon={<Star size={15} />}>
         <div className="py-3">
-          <SettingRow label="Profissional" description="Taxa reduzida de 12%, destaque no feed, acesso prioritário">
+          <SettingRow label="extraGO PRO · R$ 19,90/mês" description="Destaque nas buscas, estatísticas avançadas, selo PRO">
             <SoonBadge />
           </SettingRow>
-          <SettingRow label="Elite" description="Taxa 10%, badge exclusiva, suporte dedicado">
+          <SettingRow label="extraGO PREMIUM · R$ 49,90/mês" description="Todos os benefícios PRO, perfil destacado, relatórios avançados">
             <SoonBadge />
           </SettingRow>
-          <SettingRow label="Empresarial" description="Multi-usuário, relatórios avançados, integração API">
+          <SettingRow label="extraGO ELITE · R$ 99,90/mês" description="Máxima prioridade, benefícios exclusivos, suporte dedicado">
             <SoonBadge />
           </SettingRow>
         </div>
       </SectionCard>
+
+      {user?.role === "company" && (
+        <SectionCard title="Planos Empresariais" icon={<CreditCard size={15} />}>
+          <div className="py-3">
+            <SettingRow label="Starter · R$ 99,90/mês" description="Publicação de extras, painel básico, banco de profissionais">
+              <SoonBadge />
+            </SettingRow>
+            <SettingRow label="Business · R$ 299,90/mês" description="Publicação ilimitada, dashboard analítico, suporte prioritário">
+              <SoonBadge />
+            </SettingRow>
+            <SettingRow label="Corporate · R$ 799,90/mês" description="Multi-unidade, API de integração, SLA garantido, gerente dedicado">
+              <SoonBadge />
+            </SettingRow>
+          </div>
+        </SectionCard>
+      )}
     </div>
   );
 }

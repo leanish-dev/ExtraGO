@@ -14,7 +14,6 @@ import { EmptyState } from "@/components/ui/empty";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import referralsBanner from "@assets/file_00000000b14c720e9386ccbf24ee87f8_1779868067153.png";
-import { isTestAccount } from "@/lib/test-accounts";
 
 const FacebookIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -228,9 +227,9 @@ export default function ReferralsPage() {
   const referralRate = referral?.commissionRate ?? 0.02;
   const referralPct = Math.round(referralRate * 100);
   const REFERRAL_TIERS = [
-    { key: "base", label: "Base", rate: 2, emoji: "🌱", reqs: "Disponível para todos os indicadores" },
-    { key: "pro", label: "Pro", rate: 3, emoji: "⚡", reqs: "25+ indicados ativos e 100+ extras na rede" },
-    { key: "ambassador", label: "Embaixador", rate: 5, emoji: "👑", reqs: "100+ ativos, 1000+ extras na rede e aprovação" },
+    { key: "indicador", label: "Indicador", rate: 2, emoji: "🌱", reqs: "Disponível para todos os indicadores" },
+    { key: "agente", label: "Agente de Captação", rate: 3, emoji: "⚡", reqs: "25+ indicados ativos e 100+ extras na rede" },
+    { key: "embaixador", label: "Embaixador Regional", rate: 5, emoji: "👑", reqs: "100+ ativos, 1000+ extras na rede e aprovação" },
   ];
   const currentReferralTierIdx = referralPct >= 5 ? 2 : referralPct >= 3 ? 1 : 0;
 

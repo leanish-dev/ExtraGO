@@ -871,7 +871,7 @@ router.post("/setup/seed", async (_req, res) => {
     await ensureNotif(marceloId, "💰 Comissão de indicação recebida!", { type: "commission_earned", message: "Ana Oliveira (sua indicação) completou o primeiro extra! Você ganhou R$12,00 de comissão. Continue indicando!", isRead: true, link: "/app/wallet" });
     await ensureNotif(marceloId, "🆕 3 novos extras disponíveis para você!", { type: "new_job", message: "Extras de Garçom e Bartender em São Paulo combinam com seu perfil. Salário de R$40/h a R$55/h. Confira agora!", isRead: false, link: "/app/jobs" });
     await ensureNotif(marceloId, "🏦 Saque aprovado e processado!", { type: "withdrawal_completed", message: "Seu saque de R$600,00 foi processado via PIX. O valor deve chegar na sua conta em até 30 minutos.", isRead: true, link: "/app/wallet" });
-    await ensureNotif(marceloId, "🌟 Parabéns! Você subiu de nível!", { type: "level_up", message: "Você completou 20 extras e atingiu o nível Júnior (Prata)! Sua taxa de plataforma caiu de 18% para 16% e agora tem acesso a extras premium.", isRead: true, link: "/app/profile" });
+    await ensureNotif(marceloId, "🌟 Parabéns! Você subiu de nível!", { type: "level_up", message: "Você completou 20 extras e atingiu o nível Júnior! Sua taxa de plataforma caiu de 20% para 18% e agora tem acesso a extras premium.", isRead: true, link: "/app/profile" });
     await ensureNotif(marceloId, "💬 Nova mensagem de Jean Carlos", { type: "new_message", message: "Jean Carlos enviou uma mensagem: \"Vou aprovar sua candidatura. O evento começa às 19h...\"", isRead: false, link: "/app/chat" });
 
     // Jean Carlos

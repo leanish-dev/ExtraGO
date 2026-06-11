@@ -3,7 +3,6 @@ export const TEST_EMAILS = [
   "teste.empresa@extrago.com",
   "teste.f@extrago.com",
   "teste.e@extrago.com",
-  "administracao@extrago.com",
 ] as const;
 
 export const SEED_EMAIL_DOMAIN = "seed.extrago.com";

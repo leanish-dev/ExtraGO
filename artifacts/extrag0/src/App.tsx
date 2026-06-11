@@ -144,14 +144,14 @@ function Router() {
       <Route path="/app/jobs" component={() => <ProtectedRoute component={JobsPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/applications" component={() => <ProtectedRoute component={ApplicationsPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/wallet" component={() => <ProtectedRoute component={WalletPage} allowedRoles={ALL_USER_ROLES} />} />
-      <Route path="/app/referrals" component={() => <ProtectedRoute component={ReferralsPage} allowedRoles={["freelancer"]} />} />
+      <Route path="/app/referrals" component={() => <ProtectedRoute component={ReferralsPage} allowedRoles={["freelancer", "admin"]} />} />
       <Route path="/app/profile" component={() => <ProtectedRoute component={ProfilePage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/notifications" component={() => <ProtectedRoute component={NotificationsPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/feed" component={() => <ProtectedRoute component={FeedPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/freelancers/:id" component={() => <ProtectedRoute component={FreelancerProfilePage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/companies/:id" component={() => <ProtectedRoute component={CompanyProfilePage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/network" component={() => <ProtectedRoute component={NetworkPage} allowedRoles={ALL_USER_ROLES} />} />
-      <Route path="/app/chat" component={() => <ProtectedRoute component={ChatPage} allowedRoles={APP_ROLES} />} />
+      <Route path="/app/chat" component={() => <ProtectedRoute component={ChatPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/settings" component={() => <ProtectedRoute component={SettingsPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/career" component={() => <ProtectedRoute component={CareerPage} allowedRoles={["freelancer", "admin"]} />} />
 
