@@ -275,6 +275,52 @@ router.post("/setup/seed", async (_req, res) => {
     });
     results.push(`Admin Leonardo: id=${leonardoId}`);
 
+    // 4. Freelancer teste: teste.f@extrago.com / ext123@
+    const hashExt = hashPassword("ext123@");
+    const testeFId = await upsertUser({
+      email: "teste.f@extrago.com",
+      passwordHash: hashExt,
+      name: "Freelancer Teste",
+      role: "freelancer",
+      bio: "Conta de teste para freelancer na plataforma extraGO.",
+      phone: "(11) 90000-0001",
+      pixKey: "teste.f@extrago.com",
+      categories: ["Garçom", "Bartender"],
+      languages: ["Português"],
+      serviceRegions: ["SP"],
+      level: "bronze",
+      reputationScore: 4.5,
+      completedJobs: 5,
+      responseRate: 0.90,
+      isVerified: true,
+      isBanned: false,
+      profileCompletion: 80,
+      referralCode: "TESTEF01",
+    });
+    results.push(`Freelancer Teste (teste.f): id=${testeFId}`);
+    await ensureWallet(testeFId, "freelancer", { balance: 50000 });
+
+    // 5. Company teste: teste.e@extrago.com / ext123@
+    const testeEId = await upsertUser({
+      email: "teste.e@extrago.com",
+      passwordHash: hashExt,
+      name: "Empresa Teste",
+      role: "company",
+      companyName: "Empresa Teste extraGO",
+      bio: "Conta de teste para empresa na plataforma extraGO.",
+      phone: "(11) 90000-0002",
+      pixKey: "teste.e@extrago.com",
+      categories: [],
+      languages: ["Português"],
+      serviceRegions: ["SP"],
+      isVerified: true,
+      isBanned: false,
+      profileCompletion: 80,
+      referralCode: "TESTEE01",
+    });
+    results.push(`Company Teste (teste.e): id=${testeEId}`);
+    await ensureWallet(testeEId, "company", { balance: 200000 });
+
     // ─── ADDITIONAL ECOSYSTEM USERS ───────────────────────────────────────
 
     const fl1Id = await upsertUser({

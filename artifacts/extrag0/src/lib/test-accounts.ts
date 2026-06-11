@@ -1,6 +1,8 @@
 export const TEST_EMAILS = [
   "teste.freelancer@extrago.com",
   "teste.empresa@extrago.com",
+  "teste.f@extrago.com",
+  "teste.e@extrago.com",
   "administracao@extrago.com",
 ] as const;
 

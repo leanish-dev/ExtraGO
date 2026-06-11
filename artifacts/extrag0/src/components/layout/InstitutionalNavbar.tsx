@@ -194,6 +194,15 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
   const role = (user?.role ?? "freelancer") as Role;
   const isAdmin = user?.role === "admin";
 
+  /* ── On institutional/public pages force the public (unauthenticated) nav style ── */
+  const INSTITUTIONAL_PATHS = [
+    "/investidores-parceiros", "/modelo-de-negocio", "/financial-architecture",
+    "/blog", "/seguranca", "/login", "/register",
+  ];
+  const isInstitutionalPage =
+    loc === "/" || INSTITUTIONAL_PATHS.some(p => loc.startsWith(p));
+  const effectiveUser = isInstitutionalPage ? null : user;
+
   /* ── Authenticated badge data (Phase 8) ── */
   const { data: notifs } = useListNotifications(undefined, { query: { queryKey: ["notifications"], enabled: !!user } });
   const unread = notifs?.filter((n: any) => !n.isRead).length ?? 0;
@@ -222,8 +231,8 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
 
   const H = 66;
 
-  const logoHref = user ? (isAdmin ? "/admin" : "/app/dashboard") : "/";
-  const firstName = user?.name?.split(" ")[0] ?? "";
+  const logoHref = effectiveUser ? (isAdmin ? "/admin" : "/app/dashboard") : "/";
+  const firstName = effectiveUser?.name?.split(" ")[0] ?? "";
   const isChatPage = loc.startsWith("/app/chat");
 
   const handleNavItem = (item: NavItem) => {
@@ -276,7 +285,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
             </div>
           </Link>
 
-          {user ? (
+          {effectiveUser ? (
             /* ── CENTRE (authenticated): compact welcome summary (Phase 10) ── */
             <div className="flex items-center min-w-0" style={{ flex: "1 1 0" }}>
               <div className="min-w-0">
@@ -284,24 +293,24 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                   Olá, <span className="text-primary">{firstName}</span>
                 </p>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  {user.role === "freelancer" && <LevelBadge level={user.level} size="xs" />}
-                  {user.role === "freelancer" && user.reputationScore != null && (
+                  {effectiveUser.role === "freelancer" && <LevelBadge level={effectiveUser.level} size="xs" />}
+                  {effectiveUser.role === "freelancer" && effectiveUser.reputationScore != null && (
                     <span className="text-[10px] text-yellow-400/85 flex items-center gap-0.5">
                       <Star size={9} className="fill-yellow-400 text-yellow-400" />
-                      {(user.reputationScore ?? 0).toFixed(1)}
+                      {(effectiveUser.reputationScore ?? 0).toFixed(1)}
                     </span>
                   )}
-                  {user.role === "freelancer" && (
+                  {effectiveUser.role === "freelancer" && (
                     <span className="hidden sm:inline text-[10px] text-white/45 font-medium">
-                      {user.completedJobs ?? 0} extras
+                      {effectiveUser.completedJobs ?? 0} extras
                     </span>
                   )}
-                  {user.role === "company" && user.companyName && (
-                    <span className="text-[10px] text-white/50 font-medium truncate">{user.companyName}</span>
+                  {effectiveUser.role === "company" && effectiveUser.companyName && (
+                    <span className="text-[10px] text-white/50 font-medium truncate">{effectiveUser.companyName}</span>
                   )}
                   {isAdmin && (
                     <span className="inline-flex items-center gap-1 text-[10px] text-primary font-bold px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/20">
-                      <Shield size={9} /> {user.adminRole === "super_admin" ? "Super Admin" : "Admin"}
+                      <Shield size={9} /> {effectiveUser.adminRole === "super_admin" ? "Super Admin" : "Admin"}
                     </span>
                   )}
                 </div>
@@ -372,7 +381,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
           {/* ── RIGHT: actions ── */}
           <div className="flex items-center flex-shrink-0" style={{ gap: "clamp(2px,0.8vw,8px)" }}>
 
-            {user ? (
+            {effectiveUser ? (
               <>
                 {/* Search (authenticated) */}
                 {onSearchOpen && (
@@ -387,7 +396,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 )}
 
                 {/* Chat (Phase 8 — always visible, non-admin) */}
-                {!isAdmin && (
+                {!isAdmin && effectiveUser && (
                   <Link href="/app/chat" aria-label="Mensagens">
                     <button
                       className={`relative flex items-center justify-center w-9 h-9 rounded-xl transition-all ${
@@ -405,16 +414,16 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                   </Link>
                 )}
 
-                {/* Notifications (Phase 8 — always visible) */}
-                <NotificationBell unread={unread} />
+                {/* Notifications (Phase 8 — authenticated only) */}
+                {effectiveUser && <NotificationBell unread={unread} />}
 
                 {/* Avatar → /app/profile (Phase 9 — direct, no dropdown) */}
                 <Link href="/app/profile" aria-label="Meu perfil">
                   <button className="relative flex items-center justify-center ml-0.5" title="Meu perfil">
-                    <AvatarInitials name={user.name} />
-                    {user.role === "freelancer" && user.level && (
+                    <AvatarInitials name={effectiveUser?.name} />
+                    {effectiveUser?.role === "freelancer" && effectiveUser?.level && (
                       <span className="absolute -bottom-1 -right-1 pointer-events-none">
-                        <LevelBadgeIcon level={user.level} size="xs" />
+                        <LevelBadgeIcon level={effectiveUser?.level} size="xs" />
                       </span>
                     )}
                   </button>
@@ -488,8 +497,8 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               <GradientHamburger />
             </button>
 
-            {/* Home */}
-            <Link href={logoHref} aria-label="Ir para a página inicial">
+            {/* Home — always links to Landing */}
+            <Link href="/" aria-label="Ir para a página inicial">
               <div
                 className="flex items-center justify-center"
                 style={{ width: 38, height: H, cursor: "pointer", flexShrink: 0 }}
@@ -581,18 +590,18 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               </div>
 
               {/* Authenticated user card */}
-              {user && (
+              {effectiveUser && (
                 <div className="relative z-10 flex items-center gap-3 px-4 py-3 border-b flex-shrink-0" style={{ borderColor: "rgba(22,163,74,0.18)" }}>
-                  <AvatarInitials name={user.name} />
+                  <AvatarInitials name={effectiveUser.name} />
                   <div className="min-w-0">
-                    <p className="text-[13px] font-bold text-white/95 truncate leading-tight">{user.name}</p>
-                    <p className="text-[10.5px] text-white/45 truncate">{user.email}</p>
+                    <p className="text-[13px] font-bold text-white/95 truncate leading-tight">{effectiveUser.name}</p>
+                    <p className="text-[10.5px] text-white/45 truncate">{effectiveUser.email}</p>
                   </div>
                 </div>
               )}
 
               {/* Search (mobile-first access — GlobalSearch trigger) */}
-              {user && onSearchOpen && (
+              {effectiveUser && onSearchOpen && (
                 <div className="relative z-10 px-3 pt-3 flex-shrink-0">
                   <button
                     onClick={() => { setDrawer(false); onSearchOpen(); }}
@@ -612,7 +621,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
 
               {/* Nav sections */}
               <div className="relative z-10 flex-1 overflow-y-auto py-3 px-3">
-                {user ? (
+                {effectiveUser ? (
                   visibleSections(role).map((sec, si) => (
                     <div key={si} className="mb-4">
                       <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.65)" }}>
@@ -685,7 +694,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
 
               {/* Footer CTAs */}
               <div className="relative z-10 flex-shrink-0 p-4 border-t" style={{ borderColor: "rgba(22,163,74,0.22)", background: "rgba(2,8,22,0.60)", backdropFilter: "blur(8px)" }}>
-                {user ? (
+                {effectiveUser ? (
                   <button
                     onClick={() => { logout(); setDrawer(false); }}
                     className="w-full h-11 rounded-full font-bold text-[13px] cursor-pointer flex items-center justify-center gap-2"

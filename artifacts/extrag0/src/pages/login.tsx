@@ -157,8 +157,8 @@ export default function LoginPage() {
             <img
               src={authBanner}
               alt="extraGO"
-              className="w-full object-cover object-center rounded-2xl"
-              style={{ height: 190, objectPosition: "40% center" }}
+              className="w-full rounded-2xl"
+              style={{ height: 190, objectFit: "contain", objectPosition: "center", background: "#050b10" }}
             />
             <div className="absolute inset-0 rounded-2xl" style={{
               background: "linear-gradient(to bottom, rgba(5,11,16,0.15) 0%, rgba(5,11,16,0.55) 65%, rgba(5,11,16,1) 100%)"
