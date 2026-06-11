@@ -5,14 +5,20 @@ import {
   X, ChevronDown, ChevronRight,
   Home as HomeIcon, TrendingUp, Zap, Network, BadgeCheck, Building2,
   BarChart3, Globe, MapPin, ArrowRight, Layers, User, Users, Share2,
-  LogIn, UserPlus, BookOpen, Shield,
+  LogIn, UserPlus, BookOpen, Shield, MessageCircle, Search, Lock, Star, LogOut,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useListNotifications } from "@workspace/api-client-react";
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/api-fetch";
+import { NotificationBell } from "@/components/notifications-dropdown";
+import { LevelBadge, LevelBadgeIcon } from "@/components/level-badge";
+import { toast } from "sonner";
+import { visibleSections, isItemLocked, type Role, type NavItem } from "./nav-config";
 import logoMain from "@assets/Logo-new_1781073251550.png";
 
 const G = "#16a34a";
 const C = "#00c9a7";
-const HOVER = "#00c9a7";
 
 const NAV_BG   = "#080F1E";
 const NAV_BG2  = "#0B1528";
@@ -28,7 +34,7 @@ const FA_PAGES = [
   { label: "Representantes Estaduais",        href: "/financial-architecture/state-representatives", icon: <MapPin size={13} />,     color: "#d97706" },
 ];
 
-const DRAWER_SECTIONS = [
+const PUBLIC_DRAWER_SECTIONS = [
   { title: "INSTITUCIONAL", items: [
     { label: "Home",                   href: "/",                        icon: <HomeIcon size={15} /> },
     { label: "Investidores",           href: "/investidores-parceiros",  icon: <TrendingUp size={15} /> },
@@ -46,7 +52,7 @@ const DRAWER_SECTIONS = [
 ];
 
 /* ── Reusable nav item with icon + label ── */
-function NavItem({
+function NavItemLink({
   href, icon, label, active, className = "",
 }: { href: string; icon: React.ReactNode; label: string; active: boolean; className?: string }) {
   const [hovered, setHovered] = React.useState(false);
@@ -91,6 +97,15 @@ function GradientHamburger() {
       <rect x="2" y="7.5"  width="18" height="3"   rx="1.5" fill="url(#hbNav)" />
       <rect x="0" y="15"   width="22" height="3"   rx="1.5" fill="url(#hbNav)" />
     </svg>
+  );
+}
+
+/* ── Avatar initials ── */
+function AvatarInitials({ name }: { name?: string }) {
+  return (
+    <div className="rounded-full bg-gradient-to-br from-primary via-[#9aff1c] to-secondary flex items-center justify-center font-bold text-black flex-shrink-0 w-8 h-8 text-sm">
+      {name?.charAt(0)?.toUpperCase() ?? "?"}
+    </div>
   );
 }
 
@@ -167,14 +182,30 @@ function FADropdown({ open, anchorRef, onClose }: {
 }
 
 /* ════════════════════════════════════════
-   MAIN NAVBAR
+   UNIFIED NAVBAR — single navbar for public + authenticated areas
 ════════════════════════════════════════ */
-export default function InstitutionalNavbar() {
+export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => void } = {}) {
   const [drawer, setDrawer] = useState(false);
   const [faOpen, setFaOpen] = useState(false);
-  const [loc]               = useLocation();
-  const { user }            = useAuth();
+  const [loc, setLocation]  = useLocation();
+  const { user, logout }    = useAuth();
   const faAnchorRef         = React.useRef<HTMLDivElement>(null);
+
+  const role = (user?.role ?? "freelancer") as Role;
+  const isAdmin = user?.role === "admin";
+
+  /* ── Authenticated badge data (Phase 8) ── */
+  const { data: notifs } = useListNotifications(undefined, { query: { queryKey: ["notifications"], enabled: !!user } });
+  const unread = notifs?.filter((n: any) => !n.isRead).length ?? 0;
+
+  const { data: unreadMsgsData } = useQuery({
+    queryKey: ["chat-unread"],
+    queryFn: () => apiFetch("/api/chat/unread"),
+    refetchInterval: 30000,
+    enabled: !!user && user.role !== "admin",
+    staleTime: 15000,
+  });
+  const unreadMessages: number = unreadMsgsData?.total ?? 0;
 
   useEffect(() => {
     const fn = (e: MouseEvent) => {
@@ -190,6 +221,23 @@ export default function InstitutionalNavbar() {
     href === "/" ? loc === "/" : loc.startsWith(href);
 
   const H = 66;
+
+  const logoHref = user ? (isAdmin ? "/admin" : "/app/dashboard") : "/";
+  const firstName = user?.name?.split(" ")[0] ?? "";
+  const isChatPage = loc.startsWith("/app/chat");
+
+  const handleNavItem = (item: NavItem) => {
+    setDrawer(false);
+    if (item.action === "logout") { logout(); return; }
+    if (item.action === "support") { window.open("mailto:suporte@extrag0.com.br", "_blank"); return; }
+    if (item.href) setLocation(item.href);
+  };
+
+  const handleLocked = (item: NavItem) => {
+    toast.message(item.lockMessage ?? "Acesso restrito para o seu tipo de conta.", {
+      description: isAdmin ? undefined : "Esta área pertence a outro perfil do ecossistema extraGO.",
+    });
+  };
 
   return (
     <>
@@ -213,7 +261,7 @@ export default function InstitutionalNavbar() {
         <div className="w-full h-full flex items-center px-4 sm:px-6" style={{ gap: 0 }}>
 
           {/* ── LEFT: Logo ── */}
-          <Link href="/" aria-label="extraGO – página inicial">
+          <Link href={logoHref} aria-label="extraGO – página inicial">
             <div className="flex items-center flex-shrink-0" style={{ marginRight: "clamp(10px,2.5vw,28px)" }}>
               <img
                 src={logoMain}
@@ -228,105 +276,188 @@ export default function InstitutionalNavbar() {
             </div>
           </Link>
 
-          {/* ── CENTRE: Nav links with icons ── */}
-          <nav
-            className="flex items-center justify-center"
-            style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(0px,1.2vw,16px)" }}
-          >
-            {/* ─── Desktop-only extra links (hidden on mobile) ─── */}
-            <NavItem href="/#como-funciona" icon={<Zap size={16} />} label="Como Funciona" active={false} className="hidden lg:flex" />
-            <NavItem href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden lg:flex" />
-            <NavItem href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden lg:flex" />
-            <NavItem href="/financial-architecture/referrals" icon={<Share2 size={16} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
-            <NavItem href="/modelo-de-negocio" icon={<BarChart3 size={16} />} label="Plataforma" active={active("/modelo-de-negocio")} className="hidden lg:flex" />
+          {user ? (
+            /* ── CENTRE (authenticated): compact welcome summary (Phase 10) ── */
+            <div className="flex items-center min-w-0" style={{ flex: "1 1 0" }}>
+              <div className="min-w-0">
+                <p className="text-[12px] sm:text-[13px] font-bold text-white/90 leading-tight truncate">
+                  Olá, <span className="text-primary">{firstName}</span>
+                </p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  {user.role === "freelancer" && <LevelBadge level={user.level} size="xs" />}
+                  {user.role === "freelancer" && user.reputationScore != null && (
+                    <span className="text-[10px] text-yellow-400/85 flex items-center gap-0.5">
+                      <Star size={9} className="fill-yellow-400 text-yellow-400" />
+                      {(user.reputationScore ?? 0).toFixed(1)}
+                    </span>
+                  )}
+                  {user.role === "freelancer" && (
+                    <span className="hidden sm:inline text-[10px] text-white/45 font-medium">
+                      {user.completedJobs ?? 0} extras
+                    </span>
+                  )}
+                  {user.role === "company" && user.companyName && (
+                    <span className="text-[10px] text-white/50 font-medium truncate">{user.companyName}</span>
+                  )}
+                  {isAdmin && (
+                    <span className="inline-flex items-center gap-1 text-[10px] text-primary font-bold px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/20">
+                      <Shield size={9} /> {user.adminRole === "super_admin" ? "Super Admin" : "Admin"}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* ── CENTRE (public): Nav links with icons ── */
+            <nav
+              className="flex items-center justify-center"
+              style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(0px,1.2vw,16px)" }}
+            >
+              <NavItemLink href="/#como-funciona" icon={<Zap size={16} />} label="Como Funciona" active={false} className="hidden lg:flex" />
+              <NavItemLink href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden lg:flex" />
+              <NavItemLink href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden lg:flex" />
+              <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={16} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
+              <NavItemLink href="/modelo-de-negocio" icon={<BarChart3 size={16} />} label="Plataforma" active={active("/modelo-de-negocio")} className="hidden lg:flex" />
 
-            {/* ─── Always-visible links ─── */}
-            <NavItem href="/investidores-parceiros" icon={<TrendingUp size={16} />} label="Investidores" active={active("/investidores-parceiros")} />
+              <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={16} />} label="Investidores" active={active("/investidores-parceiros")} />
 
-            {/* Arquitetura Financeira with dropdown */}
-            <div ref={faAnchorRef} className="fa-root relative flex flex-col items-center">
-              <button
-                onClick={() => setFaOpen(o => !o)}
-                className="relative flex flex-col items-center cursor-pointer bg-transparent border-none"
-                style={{ padding: "6px clamp(4px,1vw,10px)" }}
-              >
-                <Layers
-                  size={16}
-                  style={{
-                    color: (active("/modelo-de-negocio") || active("/financial-architecture")) ? ACTIVE_G : "rgba(255,255,255,0.55)",
-                    marginBottom: 2,
-                    transition: "color 0.15s",
-                  }}
-                />
-                <div className="flex items-center gap-0.5">
-                  <span
+              {/* Arquitetura Financeira with dropdown */}
+              <div ref={faAnchorRef} className="fa-root relative flex flex-col items-center">
+                <button
+                  onClick={() => setFaOpen(o => !o)}
+                  className="relative flex flex-col items-center cursor-pointer bg-transparent border-none"
+                  style={{ padding: "6px clamp(4px,1vw,10px)" }}
+                >
+                  <Layers
+                    size={16}
                     style={{
-                      fontSize: "clamp(9px,1.8vw,11px)",
-                      fontWeight: 600,
-                      color: (active("/modelo-de-negocio") || active("/financial-architecture")) ? ACTIVE_G : "rgba(255,255,255,0.72)",
-                      whiteSpace: "nowrap",
+                      color: (active("/modelo-de-negocio") || active("/financial-architecture")) ? ACTIVE_G : "rgba(255,255,255,0.55)",
+                      marginBottom: 2,
                       transition: "color 0.15s",
                     }}
-                  >
-                    <span className="hidden sm:inline">Arq. Financeira</span>
-                    <span className="inline sm:hidden">Arq. Fin.</span>
-                  </span>
-                  <motion.span
-                    animate={{ rotate: faOpen ? 180 : 0 }}
-                    transition={{ duration: 0.18 }}
-                    style={{ color: "rgba(255,255,255,0.40)", marginLeft: 1 }}
-                  >
-                    <ChevronDown size={9} />
-                  </motion.span>
-                </div>
-                {(active("/modelo-de-negocio") || active("/financial-architecture")) && (
-                  <span
-                    className="absolute bottom-0 left-2 right-2 rounded-full"
-                    style={{ height: 2.5, background: `linear-gradient(90deg,${G},${C})` }}
                   />
-                )}
-              </button>
-              <FADropdown open={faOpen} anchorRef={faAnchorRef} onClose={() => setFaOpen(false)} />
-            </div>
-          </nav>
+                  <div className="flex items-center gap-0.5">
+                    <span
+                      style={{
+                        fontSize: "clamp(9px,1.8vw,11px)",
+                        fontWeight: 600,
+                        color: (active("/modelo-de-negocio") || active("/financial-architecture")) ? ACTIVE_G : "rgba(255,255,255,0.72)",
+                        whiteSpace: "nowrap",
+                        transition: "color 0.15s",
+                      }}
+                    >
+                      <span className="hidden sm:inline">Arq. Financeira</span>
+                      <span className="inline sm:hidden">Arq. Fin.</span>
+                    </span>
+                    <motion.span
+                      animate={{ rotate: faOpen ? 180 : 0 }}
+                      transition={{ duration: 0.18 }}
+                      style={{ color: "rgba(255,255,255,0.40)", marginLeft: 1 }}
+                    >
+                      <ChevronDown size={9} />
+                    </motion.span>
+                  </div>
+                  {(active("/modelo-de-negocio") || active("/financial-architecture")) && (
+                    <span
+                      className="absolute bottom-0 left-2 right-2 rounded-full"
+                      style={{ height: 2.5, background: `linear-gradient(90deg,${G},${C})` }}
+                    />
+                  )}
+                </button>
+                <FADropdown open={faOpen} anchorRef={faAnchorRef} onClose={() => setFaOpen(false)} />
+              </div>
+            </nav>
+          )}
 
-          {/* ── RIGHT: Entrar | divider | Hamburger | Home ── */}
+          {/* ── RIGHT: actions ── */}
           <div className="flex items-center flex-shrink-0" style={{ gap: "clamp(2px,0.8vw,8px)" }}>
 
-            {/* Entrar — filled green pill */}
-            <Link href="/login">
-              <button
-                className="flex items-center rounded-full font-bold cursor-pointer"
-                style={{
-                  fontSize: "clamp(10px,2vw,12px)",
-                  paddingLeft: "clamp(10px,2vw,18px)",
-                  paddingRight: "clamp(10px,2vw,18px)",
-                  height: 34,
-                  color: "#fff",
-                  border: "none",
-                  background: `linear-gradient(135deg, ${G}, ${C})`,
-                  boxShadow: `0 0 16px rgba(22,163,74,0.35)`,
-                  transition: "all 0.15s",
-                  whiteSpace: "nowrap",
-                  gap: "clamp(4px,0.8vw,6px)",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                onMouseEnter={e => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.boxShadow = `0 0 22px rgba(22,163,74,0.55)`;
-                  el.style.filter = "brightness(1.08)";
-                }}
-                onMouseLeave={e => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.boxShadow = `0 0 16px rgba(22,163,74,0.35)`;
-                  el.style.filter = "none";
-                }}
-              >
-                <User size={13} />
-                Entrar
-              </button>
-            </Link>
+            {user ? (
+              <>
+                {/* Search (authenticated) */}
+                {onSearchOpen && (
+                  <button
+                    onClick={onSearchOpen}
+                    aria-label="Buscar"
+                    title="Buscar (⌘K)"
+                    className="hidden sm:flex items-center justify-center w-9 h-9 rounded-xl text-white/55 hover:text-white/90 hover:bg-white/8 transition-all"
+                  >
+                    <Search size={18} />
+                  </button>
+                )}
+
+                {/* Chat (Phase 8 — always visible, non-admin) */}
+                {!isAdmin && (
+                  <Link href="/app/chat" aria-label="Mensagens">
+                    <button
+                      className={`relative flex items-center justify-center w-9 h-9 rounded-xl transition-all ${
+                        isChatPage ? "text-primary bg-primary/12" : "text-white/55 hover:text-white/90 hover:bg-white/8"
+                      }`}
+                      title="Mensagens"
+                    >
+                      <MessageCircle size={18} />
+                      {unreadMessages > 0 && (
+                        <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] rounded-full bg-primary flex items-center justify-center text-[9px] font-bold text-black px-0.5 leading-none">
+                          {unreadMessages > 9 ? "9+" : unreadMessages}
+                        </span>
+                      )}
+                    </button>
+                  </Link>
+                )}
+
+                {/* Notifications (Phase 8 — always visible) */}
+                <NotificationBell unread={unread} />
+
+                {/* Avatar → /app/profile (Phase 9 — direct, no dropdown) */}
+                <Link href="/app/profile" aria-label="Meu perfil">
+                  <button className="relative flex items-center justify-center ml-0.5" title="Meu perfil">
+                    <AvatarInitials name={user.name} />
+                    {user.role === "freelancer" && user.level && (
+                      <span className="absolute -bottom-1 -right-1 pointer-events-none">
+                        <LevelBadgeIcon level={user.level} size="xs" />
+                      </span>
+                    )}
+                  </button>
+                </Link>
+              </>
+            ) : (
+              <>
+                {/* Entrar — filled green pill */}
+                <Link href="/login">
+                  <button
+                    className="flex items-center rounded-full font-bold cursor-pointer"
+                    style={{
+                      fontSize: "clamp(10px,2vw,12px)",
+                      paddingLeft: "clamp(10px,2vw,18px)",
+                      paddingRight: "clamp(10px,2vw,18px)",
+                      height: 34,
+                      color: "#fff",
+                      border: "none",
+                      background: `linear-gradient(135deg, ${G}, ${C})`,
+                      boxShadow: `0 0 16px rgba(22,163,74,0.35)`,
+                      transition: "all 0.15s",
+                      whiteSpace: "nowrap",
+                      gap: "clamp(4px,0.8vw,6px)",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    onMouseEnter={e => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.boxShadow = `0 0 22px rgba(22,163,74,0.55)`;
+                      el.style.filter = "brightness(1.08)";
+                    }}
+                    onMouseLeave={e => {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.boxShadow = `0 0 16px rgba(22,163,74,0.35)`;
+                      el.style.filter = "none";
+                    }}
+                  >
+                    <User size={13} />
+                    Entrar
+                  </button>
+                </Link>
+              </>
+            )}
 
             {/* Divider */}
             <div
@@ -358,15 +489,10 @@ export default function InstitutionalNavbar() {
             </button>
 
             {/* Home */}
-            <Link href="/" aria-label="Ir para a página inicial">
+            <Link href={logoHref} aria-label="Ir para a página inicial">
               <div
                 className="flex items-center justify-center"
-                style={{
-                  width: 38,
-                  height: H,
-                  cursor: "pointer",
-                  flexShrink: 0,
-                }}
+                style={{ width: 38, height: H, cursor: "pointer", flexShrink: 0 }}
               >
                 <HomeIcon
                   size={20}
@@ -393,7 +519,7 @@ export default function InstitutionalNavbar() {
         </div>
       </header>
 
-      {/* ═══════════════════════ DRAWER ═══════════════════════ */}
+      {/* ═══════════════════════ DRAWER (Phase 6 hamburger hub) ═══════════════════════ */}
       <AnimatePresence>
         {drawer && (
           <>
@@ -425,7 +551,7 @@ export default function InstitutionalNavbar() {
               }}
             >
               {/* Dark overlay for readability */}
-              <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(2,8,22,0.78)", zIndex: 0 }} />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: "rgba(2,8,22,0.82)", zIndex: 0 }} />
 
               {/* Header strip */}
               <div
@@ -454,53 +580,119 @@ export default function InstitutionalNavbar() {
                 </button>
               </div>
 
+              {/* Authenticated user card */}
+              {user && (
+                <div className="relative z-10 flex items-center gap-3 px-4 py-3 border-b flex-shrink-0" style={{ borderColor: "rgba(22,163,74,0.18)" }}>
+                  <AvatarInitials name={user.name} />
+                  <div className="min-w-0">
+                    <p className="text-[13px] font-bold text-white/95 truncate leading-tight">{user.name}</p>
+                    <p className="text-[10.5px] text-white/45 truncate">{user.email}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Search (mobile-first access — GlobalSearch trigger) */}
+              {user && onSearchOpen && (
+                <div className="relative z-10 px-3 pt-3 flex-shrink-0">
+                  <button
+                    onClick={() => { setDrawer(false); onSearchOpen(); }}
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl cursor-pointer text-left"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      color: "rgba(255,255,255,0.70)",
+                    }}
+                  >
+                    <Search size={15} style={{ color: "rgba(0,201,167,0.75)" }} />
+                    <span className="text-[12.5px] flex-1">Buscar na plataforma</span>
+                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md" style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.45)" }}>⌘K</span>
+                  </button>
+                </div>
+              )}
+
               {/* Nav sections */}
               <div className="relative z-10 flex-1 overflow-y-auto py-3 px-3">
-                {DRAWER_SECTIONS.map((sec, si) => (
-                  <div key={si} className="mb-5">
-                    <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.65)" }}>
-                      {sec.title}
-                    </p>
-                    <div className="space-y-0.5">
-                      {sec.items.map((item, ii) => {
-                        const on = loc === item.href;
-                        return (
-                          <Link key={ii} href={item.href} onClick={() => setDrawer(false)}>
-                            <div
-                              className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"
+                {user ? (
+                  visibleSections(role).map((sec, si) => (
+                    <div key={si} className="mb-4">
+                      <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.65)" }}>
+                        {sec.title}
+                      </p>
+                      <div className="space-y-0.5">
+                        {sec.items.map((item, ii) => {
+                          const locked = isItemLocked(item, role);
+                          const on = !locked && item.href ? (item.href === "/" ? loc === "/" : loc === item.href) : false;
+                          return (
+                            <button
+                              key={ii}
+                              onClick={() => locked ? handleLocked(item) : handleNavItem(item)}
+                              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer text-left"
                               style={{
                                 background: on ? "rgba(22,163,74,0.20)" : "transparent",
-                                color: on ? "#7CFC00" : "rgba(255,255,255,0.88)",
+                                color: locked ? "rgba(255,255,255,0.42)" : on ? "#7CFC00" : "rgba(255,255,255,0.88)",
                                 fontWeight: on ? 700 : 500,
-                                transition: "background 0.12s",
                                 border: on ? "1px solid rgba(22,163,74,0.30)" : "1px solid transparent",
+                                transition: "background 0.12s",
                               }}
                               onMouseEnter={e => { if (!on) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)"; }}
                               onMouseLeave={e => { if (!on) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
                             >
-                              <span style={{ color: on ? "#7CFC00" : "rgba(0,201,167,0.70)" }}>{item.icon}</span>
-                              <span className="text-[13px] leading-snug">{item.label}</span>
+                              <span style={{ color: locked ? "rgba(255,255,255,0.35)" : on ? "#7CFC00" : "rgba(0,201,167,0.70)" }}>{item.icon}</span>
+                              <span className="text-[13px] leading-snug flex-1">{item.label}</span>
+                              {locked && <Lock size={13} className="ml-auto flex-shrink-0 opacity-70" />}
                               {on && <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#7CFC00", boxShadow: "0 0 6px #7CFC00" }} />}
-                            </div>
-                          </Link>
-                        );
-                      })}
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  PUBLIC_DRAWER_SECTIONS.map((sec, si) => (
+                    <div key={si} className="mb-5">
+                      <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.65)" }}>
+                        {sec.title}
+                      </p>
+                      <div className="space-y-0.5">
+                        {sec.items.map((item, ii) => {
+                          const on = loc === item.href;
+                          return (
+                            <Link key={ii} href={item.href} onClick={() => setDrawer(false)}>
+                              <div
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer"
+                                style={{
+                                  background: on ? "rgba(22,163,74,0.20)" : "transparent",
+                                  color: on ? "#7CFC00" : "rgba(255,255,255,0.88)",
+                                  fontWeight: on ? 700 : 500,
+                                  transition: "background 0.12s",
+                                  border: on ? "1px solid rgba(22,163,74,0.30)" : "1px solid transparent",
+                                }}
+                                onMouseEnter={e => { if (!on) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)"; }}
+                                onMouseLeave={e => { if (!on) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
+                              >
+                                <span style={{ color: on ? "#7CFC00" : "rgba(0,201,167,0.70)" }}>{item.icon}</span>
+                                <span className="text-[13px] leading-snug">{item.label}</span>
+                                {on && <div className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background: "#7CFC00", boxShadow: "0 0 6px #7CFC00" }} />}
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
 
               {/* Footer CTAs */}
               <div className="relative z-10 flex-shrink-0 p-4 border-t" style={{ borderColor: "rgba(22,163,74,0.22)", background: "rgba(2,8,22,0.60)", backdropFilter: "blur(8px)" }}>
                 {user ? (
-                  <Link href="/app/dashboard" onClick={() => setDrawer(false)}>
-                    <button
-                      className="w-full h-11 rounded-full font-bold text-[13px] border-none cursor-pointer"
-                      style={{ background: `linear-gradient(135deg,${G},${C})`, color: "#000", boxShadow: "0 0 20px rgba(22,163,74,0.35)" }}
-                    >
-                      Meu Painel <ArrowRight size={13} className="inline ml-1" />
-                    </button>
-                  </Link>
+                  <button
+                    onClick={() => { logout(); setDrawer(false); }}
+                    className="w-full h-11 rounded-full font-bold text-[13px] cursor-pointer flex items-center justify-center gap-2"
+                    style={{ color: "#f87171", border: "1px solid rgba(248,113,113,0.30)", background: "rgba(248,113,113,0.10)" }}
+                  >
+                    <LogOut size={14} /> Sair da conta
+                  </button>
                 ) : (
                   <div className="space-y-2">
                     <Link href="/login" onClick={() => setDrawer(false)}>
