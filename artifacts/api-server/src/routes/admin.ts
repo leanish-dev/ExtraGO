@@ -3,7 +3,7 @@ import { db, usersTable, jobsTable, transactionsTable, walletsTable, notificatio
 import { eq, sql, desc, and } from "drizzle-orm";
 import { requireAdmin, formatUser } from "../lib/auth";
 import { AdminListUsersQueryParams, AdminListJobsQueryParams, AdminListWithdrawalsQueryParams } from "@workspace/api-zod";
-import { ensureWallet } from "../lib/ecosystem";
+import { ensureWallet, LEVEL_FEE } from "../lib/ecosystem";
 
 const router = Router();
 
@@ -428,7 +428,7 @@ router.get("/admin/analytics", requireAdmin, async (req, res) => {
   });
 
   const freelancers = allUsers.filter(u => u.role === "freelancer");
-  const levelDistribution = { bronze: freelancers.filter(u => u.level === "bronze").length, silver: freelancers.filter(u => u.level === "silver").length, gold: freelancers.filter(u => u.level === "gold").length, elite: freelancers.filter(u => u.level === "elite").length };
+  const levelDistribution = { bronze: freelancers.filter(u => u.level === "bronze").length, silver: freelancers.filter(u => u.level === "silver").length, gold: freelancers.filter(u => u.level === "gold").length, elite: freelancers.filter(u => u.level === "elite").length, diamond: freelancers.filter(u => u.level === "diamond").length };
 
   const walletMap = new Map(allWallets.map(w => [w.userId, w]));
   const topEarners = allUsers.filter(u => u.role === "freelancer").map(u => ({ ...formatUser(u), totalEarned: walletMap.get(u.id)?.totalEarned ?? 0 })).sort((a, b) => b.totalEarned - a.totalEarned).slice(0, 10);
@@ -518,8 +518,8 @@ router.get("/admin/analytics", requireAdmin, async (req, res) => {
   const revenueByMonth = growthByMonth.map(g => ({ month: g.month, amount: g.revenue }));
 
   // Fees by level
-  const feesByLevel = ["bronze", "silver", "gold", "elite"].map(level => {
-    const feeRate = { bronze: 0.18, silver: 0.16, gold: 0.14, elite: 0.10 }[level] ?? 0;
+  const feesByLevel = Object.keys(LEVEL_FEE).map(level => {
+    const feeRate = LEVEL_FEE[level] ?? 0;
     const levelFreelancerCount = freelancers.filter(u => u.level === level).length;
     const totalFees = Math.round(totalGross * feeRate * (levelFreelancerCount / Math.max(freelancers.length, 1)));
     return { level, totalFees, avgFee: feeRate, count: levelFreelancerCount };

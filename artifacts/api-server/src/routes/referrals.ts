@@ -3,6 +3,7 @@ import { db, usersTable, applicationsTable } from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { ValidateReferralCodeBody } from "@workspace/api-zod";
+import { referralRate, referralTierLabel } from "../lib/ecosystem";
 
 const router = Router();
 
@@ -34,11 +35,18 @@ router.get("/referrals/me", requireAuth, async (req, res) => {
 
   const totalConverted = inviteeData.filter(i => i.status === "converted").length;
   const activeReferrals = inviteeData.filter(i => (i.completedJobs ?? 0) >= 1).length;
-  // 3% of platform intermediation fee — approx R$20 per job avg
+  // Network extras = total completed extras across the whole referred network
+  const networkExtras = inviteeData.reduce((sum, i) => sum + (i.completedJobs ?? 0), 0);
+
+  // Current referral tier & commission rate (Indicador 2% / Agente de Captação 3% / Embaixador Regional 5%)
+  const commissionRate = referralRate(activeReferrals, networkExtras, user.ambassadorApproved ?? false);
+  const tier = referralTierLabel(commissionRate);
+
+  // Projected reward using the user's actual tier rate — approx R$20 platform fee per job avg
   const totalRewardEarned = inviteeData.reduce((sum, inv) => {
     const jobs = inv.completedJobs ?? 0;
-    const platformFeePerJob = 20; // avg R$20 platform fee per job
-    return sum + (jobs * platformFeePerJob * 0.03);
+    const platformFeePerJob = 20;
+    return sum + (jobs * platformFeePerJob * commissionRate);
   }, 0);
 
   res.json({
@@ -47,6 +55,9 @@ router.get("/referrals/me", requireAuth, async (req, res) => {
     totalInvited: invitees.length,
     totalConverted,
     activeReferrals,
+    networkExtras,
+    tier,
+    commissionRate,
     totalRewardEarned: Math.round(totalRewardEarned * 100) / 100,
     invitees: inviteeData,
   });

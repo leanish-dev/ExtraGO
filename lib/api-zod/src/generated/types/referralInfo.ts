@@ -12,6 +12,10 @@ export interface ReferralInfo {
   link: string;
   totalInvited: number;
   totalConverted: number;
+  activeReferrals?: number;
+  networkExtras?: number;
+  tier?: string;
+  commissionRate?: number;
   totalRewardEarned: number;
   invitees: ReferralInvitee[];
 }

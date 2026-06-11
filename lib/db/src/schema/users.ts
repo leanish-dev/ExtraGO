@@ -3,7 +3,9 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
 export const roleEnum = pgEnum("role", ["company", "freelancer", "admin"]);
-export const levelEnum = pgEnum("level", ["bronze", "silver", "gold", "elite"]);
+// Internal enum keys map to official 5-tier labels (see LEVEL_LABELS in ecosystem.ts):
+// bronze=Iniciante, silver=Júnior, gold=Intermediário, elite=Sênior, diamond=Elite
+export const levelEnum = pgEnum("level", ["bronze", "silver", "gold", "elite", "diamond"]);
 export const postTypeEnum = pgEnum("post_type", ["general", "job_completion", "availability"]);
 
 export const ADMIN_ROLES = [
@@ -44,6 +46,8 @@ export const usersTable = pgTable("users", {
   profileCompletion: integer("profile_completion").notNull().default(0),
   referralCode: text("referral_code").notNull().unique(),
   referredById: integer("referred_by_id"),
+  // Embaixador Regional (5% referral tier) requires explicit platform approval
+  ambassadorApproved: boolean("ambassador_approved").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

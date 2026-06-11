@@ -9,7 +9,7 @@ import {
 
 interface AnalyticsData {
   growthByMonth: Array<{ month: string; label: string; newFreelancers: number; newCompanies: number; revenue: number; jobs: number }>;
-  levelDistribution: { bronze: number; silver: number; gold: number; elite: number };
+  levelDistribution: Array<{ level: string; count: number; avgReputation: number }>;
   topEarners: Array<{ id: number; name: string; totalEarned: number; completedJobs: number; level: string; reputationScore: number }>;
   topCompanies: Array<{ id: number; name: string; companyName?: string; jobsPosted: number }>;
   conversionRate: number;
@@ -63,8 +63,9 @@ function MetricCard({ icon, label, value, sub, color }: { icon: React.ReactNode;
 const LEVEL_META: Record<string, { label: string; color: string; icon: string }> = {
   bronze: { label: "Iniciante", color: "text-sky-400 bg-sky-400/10 border-sky-400/20", icon: "🔵" },
   silver: { label: "Júnior", color: "text-slate-300 bg-slate-300/10 border-slate-300/20", icon: "⚪" },
-  gold: { label: "Intermediário", color: "text-yellow-400 bg-yellow-400/10 border-yellow-400/20", icon: "🥇" },
+  gold: { label: "Intermediário", color: "text-teal-400 bg-teal-400/10 border-teal-400/20", icon: "🥇" },
   elite: { label: "Sênior", color: "text-primary bg-primary/10 border-primary/20", icon: "👑" },
+  diamond: { label: "Elite", color: "text-amber-300 bg-amber-300/10 border-amber-300/20", icon: "💎" },
 };
 
 export default function AdminAnalyticsPage() {
@@ -97,7 +98,7 @@ export default function AdminAnalyticsPage() {
   }
 
   const d = data;
-  const totalLevels = Object.values(d.levelDistribution).reduce((s, v) => s + v, 0) || 1;
+  const totalLevels = d.levelDistribution.reduce((s, l) => s + l.count, 0) || 1;
 
   const chartConfigs = {
     users: { key: "newFreelancers", label: "Novos Freelancers", color: "#7CFC00", suffix: "" },
@@ -155,8 +156,8 @@ export default function AdminAnalyticsPage() {
         <div className="glass-card rounded-2xl p-5">
           <h2 className="text-sm font-bold mb-4 flex items-center gap-2"><Trophy size={14} className="text-primary" /> Distribuição de Níveis</h2>
           <div className="space-y-3">
-            {Object.entries(d.levelDistribution).map(([level, count]) => {
-              const meta = LEVEL_META[level];
+            {d.levelDistribution.map(({ level, count }) => {
+              const meta = LEVEL_META[level] ?? LEVEL_META.bronze;
               const pct = Math.round((count / totalLevels) * 100);
               return (
                 <div key={level}>
@@ -172,7 +173,7 @@ export default function AdminAnalyticsPage() {
                       animate={{ width: `${pct}%` }}
                       transition={{ duration: 0.6, delay: 0.1 }}
                       className={`h-full rounded-full ${
-                        level === "elite" ? "bg-primary" : level === "gold" ? "bg-yellow-400" : level === "silver" ? "bg-slate-300" : "bg-sky-400"
+                        level === "diamond" ? "bg-amber-300" : level === "elite" ? "bg-primary" : level === "gold" ? "bg-teal-400" : level === "silver" ? "bg-slate-300" : "bg-sky-400"
                       }`}
                     />
                   </div>

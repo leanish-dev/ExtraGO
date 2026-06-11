@@ -11,10 +11,11 @@ import { toast } from "sonner";
 import { apiFetch } from "@/lib/api-fetch";
 
 const LEVEL_COLORS: Record<string, { color: string; label: string; emoji: string }> = {
-  bronze: { color: "text-orange-400 border-orange-400/25 bg-orange-400/8", label: "Bronze", emoji: "🥉" },
-  silver: { color: "text-slate-300 border-slate-300/25 bg-slate-300/8", label: "Prata", emoji: "🥈" },
-  gold: { color: "text-yellow-400 border-yellow-400/25 bg-yellow-400/8", label: "Ouro", emoji: "🥇" },
-  elite: { color: "text-primary border-primary/25 bg-primary/8", label: "Elite", emoji: "👑" },
+  bronze: { color: "text-sky-400 border-sky-400/25 bg-sky-400/8", label: "Iniciante", emoji: "🔵" },
+  silver: { color: "text-slate-300 border-slate-300/25 bg-slate-300/8", label: "Júnior", emoji: "⚪" },
+  gold: { color: "text-teal-400 border-teal-400/25 bg-teal-400/8", label: "Intermediário", emoji: "🥇" },
+  elite: { color: "text-primary border-primary/25 bg-primary/8", label: "Sênior", emoji: "👑" },
+  diamond: { color: "text-amber-300 border-amber-300/25 bg-amber-300/8", label: "Elite", emoji: "💎" },
 };
 
 function UserCard({ user, type }: { user: any; type: "freelancer" | "company" }) {

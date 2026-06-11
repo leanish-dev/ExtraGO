@@ -30,6 +30,7 @@ export const UserLevel = {
   silver: 'silver',
   gold: 'gold',
   elite: 'elite',
+  diamond: 'diamond',
 } as const;
 
 export interface User {
@@ -362,6 +363,10 @@ export interface ReferralInfo {
   link: string;
   totalInvited: number;
   totalConverted: number;
+  activeReferrals?: number;
+  networkExtras?: number;
+  tier?: string;
+  commissionRate?: number;
   totalRewardEarned: number;
   invitees: ReferralInvitee[];
 }

@@ -1,11 +1,14 @@
 import { db, usersTable, walletsTable, transactionsTable, notificationsTable, depositRequestsTable, stateRepresentativesTable, applicationsTable, ratingsTable } from "@workspace/db";
 import { eq, sql, and } from "drizzle-orm";
 
+// Official 5-tier level system. Internal enum keys map to public labels:
+// bronze=Iniciante, silver=Júnior, gold=Intermediário, elite=Sênior, diamond=Elite
 export const LEVEL_FEE: Record<string, number> = {
-  bronze: 0.18,
-  silver: 0.16,
-  gold: 0.14,
-  elite: 0.10,
+  bronze: 0.20,
+  silver: 0.18,
+  gold: 0.15,
+  elite: 0.12,
+  diamond: 0.10,
 };
 
 export const LEVEL_LABELS: Record<string, string> = {
@@ -13,19 +16,41 @@ export const LEVEL_LABELS: Record<string, string> = {
   silver: "Júnior",
   gold: "Intermediário",
   elite: "Sênior",
+  diamond: "Elite",
 };
 
 export const LEVEL_THRESHOLDS = {
+  diamond: { jobs: 600, rep: 4.9 },
   elite: { jobs: 300, rep: 4.8 },
   gold: { jobs: 100, rep: 4.7 },
   silver: { jobs: 20, rep: 4.5 },
 };
 
-export function calculateLevel(completedJobs: number, rep: number): "bronze" | "silver" | "gold" | "elite" {
+export type LevelKey = "bronze" | "silver" | "gold" | "elite" | "diamond";
+
+export function calculateLevel(completedJobs: number, rep: number): LevelKey {
+  if (completedJobs >= LEVEL_THRESHOLDS.diamond.jobs && rep >= LEVEL_THRESHOLDS.diamond.rep) return "diamond";
   if (completedJobs >= LEVEL_THRESHOLDS.elite.jobs && rep >= LEVEL_THRESHOLDS.elite.rep) return "elite";
   if (completedJobs >= LEVEL_THRESHOLDS.gold.jobs && rep >= LEVEL_THRESHOLDS.gold.rep) return "gold";
   if (completedJobs >= LEVEL_THRESHOLDS.silver.jobs && rep >= LEVEL_THRESHOLDS.silver.rep) return "silver";
   return "bronze";
+}
+
+// Official 3-tier referral commission system (Phase 12):
+//   Indicador           2%  — active account (default)
+//   Agente de Captação  3%  — 25 active referrals + 100 network extras
+//   Embaixador Regional 5%  — 100 active referrals + 1000 network extras + platform approval
+// activeReferrals = referred users with >=1 completed extra; networkExtras = sum of referred users' completed extras
+export function referralRate(activeReferrals: number, networkExtras: number, approved: boolean): number {
+  if (activeReferrals >= 100 && networkExtras >= 1000 && approved) return 0.05;
+  if (activeReferrals >= 25 && networkExtras >= 100) return 0.03;
+  return 0.02;
+}
+
+export function referralTierLabel(rate: number): string {
+  if (rate >= 0.05) return "Embaixador Regional";
+  if (rate >= 0.03) return "Agente de Captação";
+  return "Indicador";
 }
 
 export function getLevelProgress(completedJobs: number, rep: number, currentLevel: string) {
@@ -33,7 +58,16 @@ export function getLevelProgress(completedJobs: number, rep: number, currentLeve
     bronze: { label: "Júnior", jobs: LEVEL_THRESHOLDS.silver.jobs, rep: LEVEL_THRESHOLDS.silver.rep },
     silver: { label: "Intermediário", jobs: LEVEL_THRESHOLDS.gold.jobs, rep: LEVEL_THRESHOLDS.gold.rep },
     gold: { label: "Sênior", jobs: LEVEL_THRESHOLDS.elite.jobs, rep: LEVEL_THRESHOLDS.elite.rep },
-    elite: null,
+    elite: { label: "Elite", jobs: LEVEL_THRESHOLDS.diamond.jobs, rep: LEVEL_THRESHOLDS.diamond.rep },
+    diamond: null,
+  };
+
+  const nextKeyMap: Record<string, string | null> = {
+    bronze: "silver",
+    silver: "gold",
+    gold: "elite",
+    elite: "diamond",
+    diamond: null,
   };
 
   const prevJobsMap: Record<string, number> = {
@@ -41,6 +75,7 @@ export function getLevelProgress(completedJobs: number, rep: number, currentLeve
     silver: LEVEL_THRESHOLDS.silver.jobs,
     gold: LEVEL_THRESHOLDS.gold.jobs,
     elite: LEVEL_THRESHOLDS.elite.jobs,
+    diamond: LEVEL_THRESHOLDS.diamond.jobs,
   };
 
   const next = nextLevelMap[currentLevel];
@@ -69,8 +104,7 @@ export function getLevelProgress(completedJobs: number, rep: number, currentLeve
   const progressPercent = Math.round((jobsPercent + repPercent) / 2);
 
   return {
-    nextLevel: Object.keys(LEVEL_THRESHOLDS).find(k => LEVEL_LABELS[k === "elite" ? "elite" : k] === next.label) ??
-      (currentLevel === "bronze" ? "silver" : currentLevel === "silver" ? "gold" : "elite"),
+    nextLevel: nextKeyMap[currentLevel],
     nextLevelLabel: next.label,
     progressPercent: Math.min(progressPercent, 99),
     jobsNeeded: Math.max(next.jobs - completedJobs, 0),
@@ -219,7 +253,7 @@ export async function completeJobCascade(
 
     if (!freelancer) throw new Error("Freelancer not found");
 
-    const feeRate = LEVEL_FEE[freelancer.level as string] ?? 0.18;
+    const feeRate = LEVEL_FEE[freelancer.level as string] ?? 0.20;
     const platformFee = Math.round(jobValue * feeRate);
     const freelancerEarnings = Math.round(jobValue - platformFee);
 
@@ -292,23 +326,29 @@ export async function completeJobCascade(
       });
     }
 
-    // Referral commission (3% of freelancer earnings) — ensure wallet exists in transaction
+    // Referral commission — tiered rate (Indicador 2% / Agente de Captação 3% / Embaixador Regional 5%)
+    let referralCommission = 0;
     if (freelancer.referredById) {
-      const commission = Math.round(freelancerEarnings * 0.03);
-      if (commission > 0) {
+      const referred = await tx.select({ cj: usersTable.completedJobs }).from(usersTable).where(eq(usersTable.referredById, freelancer.referredById));
+      const activeReferrals = referred.filter(r => (r.cj ?? 0) >= 1).length;
+      const networkExtras = referred.reduce((s, r) => s + (r.cj ?? 0), 0);
+      const [refUser] = await tx.select().from(usersTable).where(eq(usersTable.id, freelancer.referredById));
+      const refRate = referralRate(activeReferrals, networkExtras, refUser?.ambassadorApproved ?? false);
+      referralCommission = Math.round(freelancerEarnings * refRate);
+      if (referralCommission > 0) {
         let [refWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, freelancer.referredById));
         if (!refWallet) {
           [refWallet] = await tx.insert(walletsTable).values({ userId: freelancer.referredById, walletType: "freelancer" }).returning();
         }
         await tx.update(walletsTable).set({
-          balance: sql`${walletsTable.balance} + ${commission}`,
-          totalEarned: sql`${walletsTable.totalEarned} + ${commission}`,
+          balance: sql`${walletsTable.balance} + ${referralCommission}`,
+          totalEarned: sql`${walletsTable.totalEarned} + ${referralCommission}`,
         }).where(eq(walletsTable.id, refWallet.id));
         await tx.insert(transactionsTable).values({
           walletId: refWallet.id,
           type: "commission",
-          amount: commission,
-          description: `Comissão de indicação: ${freelancer.name}`,
+          amount: referralCommission,
+          description: `Comissão de indicação (${(refRate * 100).toFixed(0)}%): ${freelancer.name}`,
           status: "completed",
           referenceId: `app:${applicationId}`,
         });
@@ -407,17 +447,14 @@ export async function completeJobCascade(
       });
     }
 
-    if (freelancer.referredById) {
-      const commission = Math.round(freelancerEarnings * 0.03);
-      if (commission > 0) {
-        await tx.insert(notificationsTable).values({
-          userId: freelancer.referredById,
-          type: "commission_received",
-          title: "💰 Comissão de indicação!",
-          message: `+R$${(commission / 100).toFixed(2)} pelo Extra concluído por ${freelancer.name}`,
-          isRead: false,
-        });
-      }
+    if (freelancer.referredById && referralCommission > 0) {
+      await tx.insert(notificationsTable).values({
+        userId: freelancer.referredById,
+        type: "commission_received",
+        title: "💰 Comissão de indicação!",
+        message: `+R$${(referralCommission / 100).toFixed(2)} pelo Extra concluído por ${freelancer.name}`,
+        isRead: false,
+      });
     }
 
     return { completedApp, freelancer, freelancerEarnings, platformFee, feeRate, newLevel, levelChanged, newReputationScore };

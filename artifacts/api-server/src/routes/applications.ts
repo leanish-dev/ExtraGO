@@ -296,8 +296,8 @@ router.patch("/applications/:id/counter-offer", requireAuth, async (req, res) =>
   if (user.role !== "freelancer") {
     res.status(403).json({ error: "Only freelancers can propose a counter-offer" }); return;
   }
-  if (!["gold", "elite"].includes(user.level)) {
-    res.status(403).json({ error: "Only Gold or Sênior freelancers can propose counter-offers" }); return;
+  if (!["gold", "elite", "diamond"].includes(user.level)) {
+    res.status(403).json({ error: "Apenas profissionais Intermediário, Sênior ou Elite podem propor contrapropostas" }); return;
   }
 
   const [app] = await db.select().from(applicationsTable).where(eq(applicationsTable.id, id));

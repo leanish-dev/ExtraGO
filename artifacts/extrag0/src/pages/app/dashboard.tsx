@@ -515,7 +515,8 @@ function FreelancerDashboard() {
     bronze: { next: "Júnior", threshold: 20 },
     silver: { next: "Intermediário", threshold: 100 },
     gold: { next: "Sênior", threshold: 300 },
-    elite: { next: "Sênior", threshold: 300 },
+    elite: { next: "Elite", threshold: 600 },
+    diamond: { next: "Elite", threshold: 600 },
   };
   const currentLevel = user?.level ?? "bronze";
   const levelInfo = levelMap[currentLevel] ?? levelMap.bronze;
@@ -595,7 +596,7 @@ function FreelancerDashboard() {
               <p className="text-[10px] text-muted-foreground mt-1">de {levelInfo.threshold} extras</p>
             </div>
           </div>
-          <Progress value={progress} glow={currentLevel === "elite"} />
+          <Progress value={progress} glow={currentLevel === "diamond"} />
           <p className="text-xs text-muted-foreground mt-2">
             {Math.max(0, levelInfo.threshold - (user?.completedJobs ?? 0))} extras para o próximo nível
           </p>

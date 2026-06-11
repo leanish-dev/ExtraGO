@@ -4,11 +4,14 @@ import junior from "@assets/file_000000000860720ea1185b225f2f3df2_1780446428484.
 import intermediario from "@assets/file_000000004834720e8de5cc5b14e3eb4c_1780446428511.png";
 import senior from "@assets/file_000000009060720e844d1e584da5e83f_1780446428526.png";
 
+// Internal level keys map to official 5-tier labels:
+// bronze=Iniciante, silver=Júnior, gold=Intermediário, elite=Sênior, diamond=Elite
 export const LEVEL_IMAGES: Record<string, string> = {
   bronze: iniciante,
   silver: junior,
   gold: intermediario,
   elite: senior,
+  diamond: senior,
 };
 
 export const LEVEL_LABELS: Record<string, string> = {
@@ -16,6 +19,7 @@ export const LEVEL_LABELS: Record<string, string> = {
   silver: "Júnior",
   gold: "Intermediário",
   elite: "Sênior",
+  diamond: "Elite",
 };
 
 export const LEVEL_COLORS: Record<string, { text: string; border: string; bg: string }> = {
@@ -23,6 +27,7 @@ export const LEVEL_COLORS: Record<string, { text: string; border: string; bg: st
   silver: { text: "text-cyan-300", border: "border-cyan-300/30", bg: "bg-cyan-300/10" },
   gold: { text: "text-teal-400", border: "border-teal-400/30", bg: "bg-teal-400/10" },
   elite: { text: "text-primary", border: "border-primary/30", bg: "bg-primary/10" },
+  diamond: { text: "text-amber-300", border: "border-amber-300/30", bg: "bg-amber-300/10" },
 };
 
 const IMG_SIZES: Record<string, number> = { xs: 14, sm: 20, md: 28, lg: 40, xl: 56 };

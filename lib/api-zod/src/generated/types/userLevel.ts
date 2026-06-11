@@ -14,4 +14,5 @@ export const UserLevel = {
   silver: 'silver',
   gold: 'gold',
   elite: 'elite',
+  diamond: 'diamond',
 } as const;

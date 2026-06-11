@@ -502,14 +502,15 @@ export default function ProfilePage() {
 
           {/* Marketplace Stats card — freelancers only */}
           {user?.role === "freelancer" && (() => {
-            const FEE_MAP: Record<string, number> = { bronze: 18, silver: 16, gold: 14, elite: 10 };
+            const FEE_MAP: Record<string, number> = { bronze: 20, silver: 18, gold: 15, elite: 12, diamond: 10 };
             const NEXT_LEVEL_MAP: Record<string, { label: string; jobsNeeded: number } | null> = {
               bronze: { label: "Júnior", jobsNeeded: 20 },
               silver: { label: "Intermediário", jobsNeeded: 100 },
               gold: { label: "Sênior", jobsNeeded: 300 },
-              elite: null,
+              elite: { label: "Elite", jobsNeeded: 600 },
+              diamond: null,
             };
-            const currentFee = FEE_MAP[user?.level ?? "bronze"] ?? 18;
+            const currentFee = FEE_MAP[user?.level ?? "bronze"] ?? 20;
             const nextLvl = NEXT_LEVEL_MAP[user?.level ?? "bronze"];
             const jobsDone = user?.completedJobs ?? 0;
             const jobsToNext = nextLvl ? Math.max(0, nextLvl.jobsNeeded - jobsDone) : 0;
@@ -748,14 +749,14 @@ export default function ProfilePage() {
 
             const LEVELS = [
               {
-                key: "bronze", label: "Iniciante", min: 0, max: 19, fee: 18, net: 82,
+                key: "bronze", label: "Iniciante", min: 0, max: 19, fee: 20, net: 80,
                 color: "text-sky-400", border: "border-sky-400/30", bg: "bg-sky-400/8",
                 glow: "", icon: "🔵",
                 perks: ["Acesso a extras básicos", "Suporte padrão da plataforma"],
                 reqs: [{ label: "Nível de entrada — sem requisitos", met: true }],
               },
               {
-                key: "silver", label: "Júnior", min: 20, max: 99, fee: 16, net: 84,
+                key: "silver", label: "Júnior", min: 20, max: 99, fee: 18, net: 82,
                 color: "text-cyan-400", border: "border-cyan-400/30", bg: "bg-cyan-400/8",
                 glow: "shadow-[0_0_16px_rgba(0,229,255,0.12)]", icon: "⚡",
                 perks: ["Extras premium desbloqueados", "Destaque no perfil"],
@@ -765,7 +766,7 @@ export default function ProfilePage() {
                 ],
               },
               {
-                key: "gold", label: "Intermediário", min: 100, max: 299, fee: 14, net: 86,
+                key: "gold", label: "Intermediário", min: 100, max: 299, fee: 15, net: 85,
                 color: "text-yellow-400", border: "border-yellow-400/30", bg: "bg-yellow-400/8",
                 glow: "shadow-[0_0_16px_rgba(250,204,21,0.12)]", icon: "🥇",
                 perks: ["Extras exclusivos", "Bônus automático por extra"],
@@ -775,13 +776,23 @@ export default function ProfilePage() {
                 ],
               },
               {
-                key: "elite", label: "Sênior", min: 300, max: Infinity, fee: 10, net: 90,
+                key: "elite", label: "Sênior", min: 300, max: 599, fee: 12, net: 88,
                 color: "text-primary", border: "border-primary/30", bg: "bg-primary/8",
                 glow: "shadow-[0_0_20px_rgba(124,252,0,0.15)]", icon: "👑",
-                perks: ["Todos os benefícios", "Acesso VIP + suporte prioritário"],
+                perks: ["Benefícios premium da plataforma", "Suporte prioritário"],
                 reqs: [
                   { label: "300 extras concluídos", met: jobs >= 300 },
                   { label: "Avaliação ≥ 4.8 ⭐", met: rep >= 4.8 },
+                ],
+              },
+              {
+                key: "diamond", label: "Elite", min: 600, max: Infinity, fee: 10, net: 90,
+                color: "text-amber-300", border: "border-amber-300/30", bg: "bg-amber-300/8",
+                glow: "shadow-[0_0_22px_rgba(252,211,77,0.18)]", icon: "💎",
+                perks: ["Todos os benefícios", "Acesso VIP + suporte dedicado"],
+                reqs: [
+                  { label: "600 extras concluídos", met: jobs >= 600 },
+                  { label: "Avaliação ≥ 4.9 ⭐", met: rep >= 4.9 },
                 ],
               },
             ];

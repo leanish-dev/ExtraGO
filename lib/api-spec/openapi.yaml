@@ -1351,7 +1351,7 @@ components:
             type: string
         level:
           type: string
-          enum: [bronze, silver, gold, elite]
+          enum: [bronze, silver, gold, elite, diamond]
         reputationScore:
           type: number
         completedJobs:
@@ -1722,6 +1722,14 @@ components:
           type: integer
         totalConverted:
           type: integer
+        activeReferrals:
+          type: integer
+        networkExtras:
+          type: integer
+        tier:
+          type: string
+        commissionRate:
+          type: number
         totalRewardEarned:
           type: number
         invitees:

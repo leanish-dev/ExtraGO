@@ -33,7 +33,7 @@ function buildLevelConfig(completedJobs: number, reputationScore: number, isVeri
       level: "bronze",
       label: "Iniciante",
       min: 0, max: 19,
-      feePercent: 18,
+      feePercent: 20,
       color: "text-sky-400",
       bg: "bg-sky-400/10 border-sky-400/20",
       glow: "",
@@ -48,7 +48,7 @@ function buildLevelConfig(completedJobs: number, reputationScore: number, isVeri
       level: "silver",
       label: "Júnior",
       min: 20, max: 99,
-      feePercent: 16,
+      feePercent: 18,
       color: "text-cyan-400",
       bg: "bg-cyan-400/10 border-cyan-400/20",
       glow: "",
@@ -64,7 +64,7 @@ function buildLevelConfig(completedJobs: number, reputationScore: number, isVeri
       level: "gold",
       label: "Intermediário",
       min: 100, max: 299,
-      feePercent: 14,
+      feePercent: 15,
       color: "text-yellow-400",
       bg: "bg-yellow-400/10 border-yellow-400/20",
       glow: "",
@@ -80,8 +80,8 @@ function buildLevelConfig(completedJobs: number, reputationScore: number, isVeri
     {
       level: "elite",
       label: "Sênior",
-      min: 300, max: Infinity,
-      feePercent: 10,
+      min: 300, max: 599,
+      feePercent: 12,
       color: "text-primary",
       bg: "bg-primary/10 border-primary/20",
       glow: "shadow-[0_0_24px_rgba(124,252,0,0.12)]",
@@ -92,7 +92,24 @@ function buildLevelConfig(completedJobs: number, reputationScore: number, isVeri
         { label: "Avaliação ≥ 4.8 ⭐", met: reputationScore >= 4.8 },
         { label: "Documentação verificada", met: isVerified },
       ],
-      perks: ["Todos os benefícios", "Acesso VIP + suporte prioritário"],
+      perks: ["Benefícios premium da plataforma", "Suporte prioritário"],
+    },
+    {
+      level: "diamond",
+      label: "Elite",
+      min: 600, max: Infinity,
+      feePercent: 10,
+      color: "text-amber-300",
+      bg: "bg-amber-300/10 border-amber-300/20",
+      glow: "shadow-[0_0_24px_rgba(252,211,77,0.15)]",
+      icon: "💎",
+      iconClass: "bg-amber-300/15 border border-amber-300/30 text-amber-300",
+      requirements: [
+        { label: "600 extras concluídos", met: completedJobs >= 600 },
+        { label: "Avaliação ≥ 4.9 ⭐", met: reputationScore >= 4.9 },
+        { label: "Documentação verificada", met: isVerified },
+      ],
+      perks: ["Todos os benefícios", "Acesso VIP + suporte dedicado"],
     },
   ];
 }
@@ -103,12 +120,12 @@ const RANK_STYLES = [
   "bg-orange-400/15 text-orange-400 border border-orange-400/25",
 ];
 
-function SimuladorGanhos({ activeReferrals }: { activeReferrals: number }) {
+function SimuladorGanhos({ activeReferrals, rate }: { activeReferrals: number; rate: number }) {
   const [jobsPerMonth, setJobsPerMonth] = useState(3);
   const [avgValue, setAvgValue] = useState(280);
   const [refs, setRefs] = useState(Math.max(1, activeReferrals));
 
-  const monthly = refs * jobsPerMonth * avgValue * 0.03;
+  const monthly = refs * jobsPerMonth * avgValue * rate;
   const annual = monthly * 12;
   const projection3y = annual * 3;
 
@@ -177,7 +194,7 @@ function SimuladorGanhos({ activeReferrals }: { activeReferrals: number }) {
         </div>
       </div>
       <p className="text-[10px] text-muted-foreground/55 text-center">
-        Comissão de 3% sobre cada extra concluído pelos seus indicados ativos. Sem limite de ganhos.
+        Comissão de {Math.round(rate * 100)}% sobre cada extra concluído pelos seus indicados ativos. Sem limite de ganhos.
       </p>
     </div>
   );
@@ -205,8 +222,17 @@ export default function ReferralsPage() {
 
   const monthlyEarnings = (referral?.totalRewardEarned ?? 0) / Math.max(1, 3);
   const projectedAnnual = (referral?.totalRewardEarned ?? 0) * 4;
-  const activeReferrals = referral?.totalConverted ?? 0;
+  const activeReferrals = referral?.activeReferrals ?? referral?.totalConverted ?? 0;
   const inactiveReferrals = Math.max(0, (referral?.totalInvited ?? 0) - activeReferrals);
+  const networkExtras = referral?.networkExtras ?? 0;
+  const referralRate = referral?.commissionRate ?? 0.02;
+  const referralPct = Math.round(referralRate * 100);
+  const REFERRAL_TIERS = [
+    { key: "base", label: "Base", rate: 2, emoji: "🌱", reqs: "Disponível para todos os indicadores" },
+    { key: "pro", label: "Pro", rate: 3, emoji: "⚡", reqs: "25+ indicados ativos e 100+ extras na rede" },
+    { key: "ambassador", label: "Embaixador", rate: 5, emoji: "👑", reqs: "100+ ativos, 1000+ extras na rede e aprovação" },
+  ];
+  const currentReferralTierIdx = referralPct >= 5 ? 2 : referralPct >= 3 ? 1 : 0;
 
   const LEVEL_CONFIG = buildLevelConfig(user?.completedJobs ?? 0, user?.reputationScore ?? 0, user?.isVerified ?? false);
   const currentLevel = LEVEL_CONFIG.find(l => l.level === (user?.level ?? "bronze")) ?? LEVEL_CONFIG[0];
@@ -372,7 +398,7 @@ export default function ReferralsPage() {
                   {Math.max(0, nextLevel.min - (user?.completedJobs ?? 0))} extras para {nextLevel.label}
                 </span>
               </div>
-              <Progress value={progress} glow={currentLevel.level === "elite"} />
+              <Progress value={progress} glow={currentLevel.level === "diamond"} />
               <div className="flex items-center justify-between mt-2">
                 <p className="text-[10px] text-muted-foreground">{Math.round(progress)}% completo</p>
                 <p className={`text-[10px] font-bold ${nextLevel.color}`}>
@@ -406,13 +432,13 @@ export default function ReferralsPage() {
               transition={{ duration: 2, repeat: Infinity }}
               className="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full"
             >
-              3% por extra concluído
+              {referralPct}% por extra concluído
             </motion.span>
           </div>
 
           <p className="text-xs text-muted-foreground mb-4 leading-relaxed relative">
             Cada indicado que concluir um extra gera{" "}
-            <strong className="text-primary">3% da taxa de intermediação</strong> para você —
+            <strong className="text-primary">{referralPct}% da taxa de intermediação</strong> para você —
             de forma recorrente, enquanto ele estiver ativo na plataforma.
           </p>
 
@@ -723,7 +749,7 @@ export default function ReferralsPage() {
                       {inv.status === "converted" ? "✓ Ativo" : "Em progresso"}
                     </span>
                     {inv.status === "converted" && (
-                      <span className="text-[10px] text-primary font-bold">+3% comissão</span>
+                      <span className="text-[10px] text-primary font-bold">+{referralPct}% comissão</span>
                     )}
                   </div>
                 </motion.div>
@@ -731,6 +757,68 @@ export default function ReferralsPage() {
             </div>
           </motion.div>
         )}
+
+        {/* Referral commission tiers */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.16 }}
+          className="glass-card rounded-2xl p-5 border border-white/6"
+        >
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="font-bold flex items-center gap-2 text-sm">
+              <Gift size={14} className="text-primary" />
+              Níveis de Comissão por Indicação
+            </h2>
+            <span className="text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full">
+              Você: {referralPct}%
+            </span>
+          </div>
+          <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+            Quanto maior sua rede de indicados ativos, maior a comissão recorrente sobre cada extra que eles concluem.
+          </p>
+
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="rounded-xl border border-secondary/15 bg-secondary/5 p-3 text-center">
+              <p className="text-lg font-bold text-secondary">{activeReferrals}</p>
+              <p className="text-[10px] text-muted-foreground">Indicados ativos</p>
+            </div>
+            <div className="rounded-xl border border-primary/15 bg-primary/5 p-3 text-center">
+              <p className="text-lg font-bold text-primary">{networkExtras}</p>
+              <p className="text-[10px] text-muted-foreground">Extras na sua rede</p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            {REFERRAL_TIERS.map((t, i) => {
+              const isCurrent = i === currentReferralTierIdx;
+              return (
+                <div
+                  key={t.key}
+                  className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${isCurrent ? "bg-primary/8 border-primary/25" : "bg-white/2 border-white/6"}`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${isCurrent ? "bg-primary/15 border border-primary/30" : "bg-white/4 border border-white/8"}`}>
+                    {t.emoji}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-bold leading-tight ${isCurrent ? "text-primary" : "text-foreground/80"}`}>
+                      {t.label}{isCurrent && <span className="text-[9px] font-bold text-primary ml-1">· Atual</span>}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground leading-tight">{t.reqs}</p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className={`text-xl font-bold leading-none ${isCurrent ? "text-primary" : "text-muted-foreground/60"}`}>{t.rate}%</p>
+                    <p className="text-[9px] text-muted-foreground">por extra</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-muted-foreground/50 mt-3 flex items-start gap-1.5 leading-relaxed">
+            <Info size={10} className="flex-shrink-0 mt-0.5" />
+            O nível Embaixador (5%) requer aprovação da equipe extraGO.
+          </p>
+        </motion.div>
 
         {/* Earnings Simulator */}
         <motion.div
@@ -747,7 +835,7 @@ export default function ReferralsPage() {
           </h2>
           <p className="text-[11px] text-muted-foreground mb-5">Calcule quanto você pode ganhar com sua rede de indicados</p>
 
-          <SimuladorGanhos activeReferrals={activeReferrals} />
+          <SimuladorGanhos activeReferrals={activeReferrals} rate={referralRate} />
         </motion.div>
 
         {/* Leaderboard */}
