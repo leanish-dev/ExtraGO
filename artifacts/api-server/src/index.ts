@@ -1,6 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { db, usersTable, sessionsTable } from "@workspace/db";
+import { pool, db, usersTable, sessionsTable } from "@workspace/db";
 import { eq, lt } from "drizzle-orm";
 import { hashPassword, generateReferralCode, storeToken, generateToken } from "./lib/auth";
 
@@ -20,6 +20,24 @@ if (Number.isNaN(port) || port <= 0) {
 
 const MASTER_ADMIN_EMAIL = "leonardoscheffel2000@gmail.com";
 const MASTER_ADMIN_HASH = "55815ec3857918a0c7accc86eb5f8a645f4e35262b5a0a4ca56057142d0e502f";
+
+async function waitForDatabase(retries = 10, delayMs = 1500): Promise<void> {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const client = await pool.connect();
+      await client.query("SELECT 1");
+      client.release();
+      logger.info("Database connection established");
+      return;
+    } catch (err: any) {
+      logger.warn({ attempt, retries, err: err.message }, "Database not ready, retrying...");
+      if (attempt === retries) {
+        throw new Error(`Database unreachable after ${retries} attempts: ${err.message}`);
+      }
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+}
 
 async function seedMasterAdmin() {
   try {
@@ -72,6 +90,12 @@ app.listen(port, async (err) => {
   }
 
   logger.info({ port }, "Server listening");
+
+  try {
+    await waitForDatabase();
+  } catch (err: any) {
+    logger.error({ err: err.message }, "Could not connect to database at startup — continuing anyway");
+  }
 
   await seedMasterAdmin();
   await cleanExpiredSessions();
