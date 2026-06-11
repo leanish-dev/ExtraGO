@@ -58,9 +58,9 @@ export const APP_NAV_SECTIONS: NavSection[] = [
     title: "CARREIRA",
     items: [
       {
-        label: "Progressão de Nível", href: "/app/profile", icon: <TrendingUp size={16} />,
+        label: "Minha Carreira", href: "/app/career", icon: <TrendingUp size={16} />,
         unlocked: ["freelancer", "admin"], locked: ["company"],
-        lockMessage: "A progressão de nível é exclusiva para profissionais.",
+        lockMessage: "A progressão de carreira é exclusiva para profissionais.",
       },
     ],
   },
@@ -93,6 +93,11 @@ export const APP_NAV_SECTIONS: NavSection[] = [
     title: "CONTA",
     items: [
       { label: "Perfil", href: "/app/profile", icon: <UserIcon size={16} />, unlocked: ALL },
+      {
+        label: "Minha Carreira", href: "/app/career", icon: <TrendingUp size={16} />,
+        unlocked: ["freelancer", "admin"], locked: ["company"],
+        lockMessage: "A progressão de carreira é exclusiva para profissionais.",
+      },
       { label: "Configurações", href: "/app/settings", icon: <Settings size={16} />, unlocked: ALL },
       { label: "Central de Ajuda", action: "support", icon: <Mail size={16} />, unlocked: ALL },
     ],
