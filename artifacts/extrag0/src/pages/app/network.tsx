@@ -7,16 +7,8 @@ import { Search, UserPlus, UserMinus, CheckCircle, Shield, Users, Loader2, Build
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
-
 import { apiFetch } from "@/lib/api-fetch";
-
-const LEVEL_COLORS: Record<string, { color: string; label: string; emoji: string }> = {
-  bronze: { color: "text-sky-400 border-sky-400/25 bg-sky-400/8", label: "Iniciante", emoji: "🔵" },
-  silver: { color: "text-slate-300 border-slate-300/25 bg-slate-300/8", label: "Júnior", emoji: "⚪" },
-  gold: { color: "text-teal-400 border-teal-400/25 bg-teal-400/8", label: "Intermediário", emoji: "🥇" },
-  elite: { color: "text-primary border-primary/25 bg-primary/8", label: "Sênior", emoji: "👑" },
-  diamond: { color: "text-amber-300 border-amber-300/25 bg-amber-300/8", label: "Elite", emoji: "💎" },
-};
+import { LevelBadge } from "@/components/level-badge";
 
 function UserCard({ user, type }: { user: any; type: "freelancer" | "company" }) {
   const { user: me } = useAuth();
@@ -47,7 +39,6 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
     }
   };
 
-  const levelInfo = user.level ? LEVEL_COLORS[user.level] : null;
   const displayName = type === "company" ? (user.companyName || user.name) : user.name;
   const subName = type === "company" ? user.name : (user.categories?.[0] || "Freelancer");
 
@@ -93,11 +84,9 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
             </div>
           </Link>
 
-          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            {type === "freelancer" && levelInfo && (
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border inline-flex items-center gap-0.5 ${levelInfo.color}`}>
-                {levelInfo.emoji} {levelInfo.label}
-              </span>
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
+            {type === "freelancer" && user.level && (
+              <LevelBadge level={user.level} size="xs" />
             )}
             <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
               <Users size={9} /> {user.followersCount ?? 0} seguidores

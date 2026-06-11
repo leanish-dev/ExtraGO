@@ -93,7 +93,7 @@ export const APP_NAV_SECTIONS: NavSection[] = [
     title: "CONTA",
     items: [
       { label: "Perfil", href: "/app/profile", icon: <UserIcon size={16} />, unlocked: ALL },
-      { label: "Configurações", href: "/app/profile", icon: <Settings size={16} />, unlocked: ALL },
+      { label: "Configurações", href: "/app/settings", icon: <Settings size={16} />, unlocked: ALL },
       { label: "Central de Ajuda", action: "support", icon: <Mail size={16} />, unlocked: ALL },
     ],
   },

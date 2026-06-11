@@ -40,6 +40,7 @@ import CompanyProfilePage from "@/pages/app/company-profile";
 import NetworkPage from "@/pages/app/network";
 import ChatPage from "@/pages/app/chat";
 import JobDetailPage from "@/pages/app/job-detail";
+import SettingsPage from "@/pages/app/settings";
 
 import AdminDashboard from "@/pages/admin/index";
 import AdminUsersPage from "@/pages/admin/users";
@@ -150,6 +151,7 @@ function Router() {
       <Route path="/app/companies/:id" component={() => <ProtectedRoute component={CompanyProfilePage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/network" component={() => <ProtectedRoute component={NetworkPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/chat" component={() => <ProtectedRoute component={ChatPage} allowedRoles={APP_ROLES} />} />
+      <Route path="/app/settings" component={() => <ProtectedRoute component={SettingsPage} allowedRoles={ALL_USER_ROLES} />} />
 
       {/* Admin routes */}
       <Route path="/admin" component={() => <ProtectedRoute component={AdminDashboard} allowedRoles={ADMIN_ROLES} layout="admin" />} />

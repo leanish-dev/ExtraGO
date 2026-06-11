@@ -446,12 +446,17 @@ export default function ProfilePage() {
             <div className="flex-1 pb-1">
               <h1 className="text-xl font-bold leading-tight">{user?.name}</h1>
               <p className="text-xs text-muted-foreground">{user?.email}</p>
-              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+              <div className="flex items-center gap-2 mt-2 flex-wrap">
                 {user?.role === "freelancer" && (
-                  <LevelBadge level={user?.level} size="sm" />
+                  <LevelBadge level={user?.level} size="md" />
+                )}
+                {user?.adminRole === "super_admin" && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-400/12 border border-amber-400/30 text-amber-400">
+                    <Crown size={11} /> CEO
+                  </span>
                 )}
                 {user?.isVerified ? (
-                  <span className="text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+                  <span className="text-[10px] text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">
                     <CheckCircle size={9} /> Verificado
                   </span>
                 ) : (

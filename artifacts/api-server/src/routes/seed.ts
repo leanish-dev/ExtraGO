@@ -275,7 +275,39 @@ router.post("/setup/seed", async (_req, res) => {
     });
     results.push(`Admin Leonardo: id=${leonardoId}`);
 
-    // 4. Freelancer teste: teste.f@extrago.com / ext123@
+    // 4. Super Admin: leonardoscheffel2000@gmail.com (CEO)
+    const leo2Id = await upsertUser({
+      email: "leonardoscheffel2000@gmail.com",
+      passwordHash: hashPassword("Gremory26@"),
+      name: "Leonardo Scheffel",
+      role: "admin",
+      adminRole: "super_admin",
+      bio: "CEO e co-fundador da plataforma extraGO.",
+      isVerified: true,
+      isBanned: false,
+      profileCompletion: 100,
+      level: "elite",
+      referralCode: "CEO2024LS",
+    });
+    results.push(`Super Admin CEO (leonardoscheffel2000): id=${leo2Id}`);
+
+    // 5. Super Admin: extrago.ceo@yahoo.com (CEO)
+    const ceoyahooId = await upsertUser({
+      email: "extrago.ceo@yahoo.com",
+      passwordHash: hashPassword("Gremory26@"),
+      name: "CEO extraGO",
+      role: "admin",
+      adminRole: "super_admin",
+      bio: "Conta master CEO da plataforma extraGO.",
+      isVerified: true,
+      isBanned: false,
+      profileCompletion: 100,
+      level: "elite",
+      referralCode: "CEO2024EG",
+    });
+    results.push(`Super Admin CEO (extrago.ceo): id=${ceoyahooId}`);
+
+    // 6. Freelancer teste: teste.f@extrago.com / ext123@
     const hashExt = hashPassword("ext123@");
     const testeFId = await upsertUser({
       email: "teste.f@extrago.com",
