@@ -44,60 +44,22 @@ export default function ReferralsPage() {
               </p>
             </Reveal>
 
-            <div className="grid sm:grid-cols-3 gap-5 mb-8">
-              {[
-                {
-                  tier: "Indicador",
-                  pct: "2%",
-                  color: GC,
-                  icon: <Users size={20} />,
-                  req: "Conta ativa",
-                  desc: "Disponível para todos os usuários da plataforma com conta ativa. Não há requisitos mínimos além do cadastro.",
-                  top: false,
-                },
-                {
-                  tier: "Agente de Captação",
-                  pct: "3%",
-                  color: PURPLE,
-                  icon: <Network size={20} />,
-                  req: "25 indicados ativos · 100 extras concluídos pela rede",
-                  desc: "Usuário que demonstrou capacidade de construir e gerir uma rede ativa de indicados na plataforma.",
-                  top: false,
-                },
-                {
-                  tier: "Embaixador Regional",
-                  pct: "5%",
-                  color: GA,
-                  icon: <Crown size={20} />,
-                  req: "100 indicados ativos · 1.000 extras concluídos pela rede · Aprovação da plataforma · Atuação comprovada na região",
-                  desc: "O mais alto nível do programa. Profissional reconhecido pela plataforma como líder regional com impacto comprovado.",
-                  top: true,
-                },
-              ].map((item, i) => (
-                <Reveal key={i} delay={i * 0.09}>
-                  <GCard className="p-5 sm:p-6 h-full" accent={item.color} glow={item.top}>
-                    {item.top && (
-                      <span className="absolute top-3 right-3 text-[9px] font-black px-2 py-0.5 rounded-full"
-                        style={{ background: `${item.color}12`, border: `1px solid ${item.color}25`, color: item.color }}>
-                        NÍVEL MÁXIMO
-                      </span>
-                    )}
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                      style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
-                      <span style={{ color: item.color }}>{item.icon}</span>
-                    </div>
-                    <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: item.color }}>{item.tier}</p>
-                    <p className="font-black leading-none mb-2" style={{ fontSize: "clamp(36px,5vw,52px)", color: item.color }}>{item.pct}</p>
-                    <p className="text-[12px] text-slate-400 italic mb-4">do valor bruto dos extras realizados pelos indicados</p>
-                    <p className="text-[13px] text-slate-600 leading-relaxed mb-4">{item.desc}</p>
-                    <div className="pt-3 border-t border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">Requisitos</p>
-                      <p className="text-[12px] text-slate-500 leading-relaxed">{item.req}</p>
-                    </div>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
+            <Reveal className="mb-8">
+              <div
+                className="w-full rounded-2xl overflow-hidden"
+                style={{
+                  boxShadow: "0 8px 40px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.06)",
+                  border: "1px solid rgba(0,0,0,0.07)",
+                }}
+              >
+                <img
+                  src="/camada2-indicacoes-card.png"
+                  alt="Camada 2 — Sistema de Indicações Multinível"
+                  className="w-full h-auto block"
+                  style={{ display: "block" }}
+                />
+              </div>
+            </Reveal>
           </div>
         </section>
 

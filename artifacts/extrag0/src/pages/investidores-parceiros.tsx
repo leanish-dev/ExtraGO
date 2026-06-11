@@ -956,87 +956,25 @@ export default function InvestidoresParceirosPage() {
         <section id="camadas" className="px-5 sm:px-10 py-6 sm:py-20">
           <div className="max-w-6xl mx-auto">
 
-            <Reveal className="mb-10 text-center">
-              <Pill label="Motores de Receita" color={G} icon={<Layers size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(24px,3.8vw,44px)" }}>
-                Os 4 Motores de Receita da extraGO
-              </h2>
-              <p className="text-[rgba(255,255,255,0.92)] text-[14px] leading-relaxed max-w-2xl mx-auto">
-                Quatro fontes independentes gerando crescimento recorrente e escalável.
-              </p>
-            </Reveal>
-
-            {/* 4 cards */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              {[
-                {
-                  num: "01", color: G, icon: <Zap size={15} />,
-                  title: "Intermediação por Performance",
-                  value: "10% a 20%",
-                  desc: "Taxa aplicada sobre extras concluídos.",
-                },
-                {
-                  num: "02", color: C, icon: <Network size={15} />,
-                  title: "Indicações Multinível",
-                  value: "2% a 5%",
-                  desc: "Rede de crescimento baseada em usuários.",
-                },
-                {
-                  num: "03", color: "#a855f7", icon: <BadgeCheck size={15} />,
-                  title: "Assinaturas Profissionais",
-                  value: "R$ 19,90 a R$ 99,90",
-                  desc: "Receita recorrente B2C.",
-                },
-                {
-                  num: "04", color: "#f59e0b", icon: <Building2 size={15} />,
-                  title: "Assinaturas Empresariais",
-                  value: "R$ 99,90 a Enterprise",
-                  desc: "Receita recorrente B2B.",
-                },
-              ].map((item, i) => (
-                <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-5 sm:p-6 h-full" accent={item.color} glow>
-                    <div className="flex items-start justify-between mb-5">
-                      <span className="text-[10px] font-black tracking-[0.18em] uppercase"
-                        style={{ color: `${item.color}70` }}>Camada {item.num}</span>
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                        style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
-                        <span style={{ color: item.color }}>{item.icon}</span>
-                      </div>
-                    </div>
-                    <p className="text-[13px] font-bold text-[rgba(255,255,255,0.88)] mb-2.5 leading-snug">{item.title}</p>
-                    <p className="font-black mb-3 leading-none"
-                      style={{ fontSize: "clamp(17px,2vw,22px)", color: item.color }}>
-                      {item.value}
-                    </p>
-                    <p className="text-[12px]  leading-relaxed" style={{ color: "rgba(255,255,255,0.70)" }}>{item.desc}</p>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
-
-            {/* Summary highlighted block */}
-            <Reveal delay={0.22} className="mb-8">
-              <GCard className="p-5 sm:p-8" accent={G} glow>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: "rgba(124,252,0,0.10)", border: "1px solid rgba(124,252,0,0.20)" }}>
-                    <Layers size={20} style={{ color: G }} />
-                  </div>
-                  <div>
-                    <h3 className="text-[16px] font-black text-[rgba(255,255,255,0.94)] mb-1.5">
-                      4 Fontes Independentes de Receita
-                    </h3>
-                    <p className="text-[13px] text-[rgba(255,255,255,0.78)] leading-relaxed max-w-2xl">
-                      A combinação dessas quatro camadas cria um modelo escalável, resiliente e preparado para crescimento nacional de longo prazo.
-                    </p>
-                  </div>
-                </div>
-              </GCard>
+            <Reveal className="mb-8">
+              <div
+                className="w-full rounded-2xl overflow-hidden"
+                style={{
+                  boxShadow: "0 12px 60px rgba(0,0,0,0.28), 0 4px 20px rgba(0,0,0,0.18)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <img
+                  src="/motores-receita-card.png"
+                  alt="Os 4 Motores de Receita da extraGO"
+                  className="w-full h-auto block"
+                  style={{ display: "block" }}
+                />
+              </div>
             </Reveal>
 
             {/* CTA → dedicated model page */}
-            <Reveal delay={0.30} className="flex justify-center">
+            <Reveal delay={0.15} className="flex justify-center">
               <Link href="/modelo-de-negocio">
                 <button
                   className="flex items-center gap-2.5 rounded-full font-bold text-black border-none cursor-pointer"

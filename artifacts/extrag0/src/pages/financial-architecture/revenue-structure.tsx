@@ -106,65 +106,21 @@ export default function RevenueStructurePage() {
               </p>
             </Reveal>
 
-            <Reveal>
+            <Reveal className="mb-8">
               <div
-                className="relative rounded-2xl overflow-hidden mb-8"
+                className="w-full rounded-2xl overflow-hidden"
                 style={{
-                  border: `1px solid ${GA}30`,
-                  boxShadow: `0 0 0 1px ${GA}18, 0 4px 32px ${GA}14`,
+                  boxShadow: "0 8px 40px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.06)",
+                  border: "1px solid rgba(0,0,0,0.07)",
                 }}
               >
-                {/* Revenue background art — clearly visible */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    backgroundImage: "url(/receita-operacional-bg.jpg)",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center right",
-                    backgroundRepeat: "no-repeat",
-                  }}
+                <img
+                  src="/estrutura-finan-card.png"
+                  alt="Estrutura Financeira — Alocação da Receita Operacional"
+                  className="w-full h-auto block"
+                  style={{ display: "block" }}
                 />
-                {/* Light overlay — preserves readability, image still clearly perceived */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{ background: "rgba(255,255,255,0.78)" }}
-                />
-              <div className="relative p-6 sm:p-8">
-                <div className="space-y-5">
-                  {DISTRIBUTION.map((item, i) => (
-                    <div key={i}>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                            style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
-                            <span style={{ color: item.color }}>{item.icon}</span>
-                          </div>
-                          <div>
-                            <p className="text-[13px] font-semibold text-slate-700">{item.label}</p>
-                            <p className="text-[11px] text-slate-400">{item.desc}</p>
-                          </div>
-                        </div>
-                        <span className="font-black text-[18px] sm:text-[22px] ml-4 flex-shrink-0" style={{ color: item.color }}>{item.pct}%</span>
-                      </div>
-                      <div className="h-2.5 rounded-full" style={{ background: "rgba(0,0,0,0.06)" }}>
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${item.pct * 4}%` }}
-                          viewport={{ once: true }}
-                          transition={{ delay: i * 0.08 + 0.2, duration: 1.0, ease: [0.19, 1, 0.22, 1] }}
-                          className="h-full rounded-full"
-                          style={{ background: `linear-gradient(90deg,${item.color}60,${item.color})` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                  <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
-                    <span className="text-[12px] text-slate-400 font-semibold">Total distribuído da receita operacional</span>
-                    <span className="font-black text-[20px]" style={{ color: GA }}>100%</span>
-                  </div>
-                </div>
-              </div>{/* /relative p-6 */}
-              </div>{/* /outer bg wrapper */}
+              </div>
             </Reveal>
           </div>
         </section>

@@ -79,58 +79,22 @@ export default function PerformancePage() {
               </p>
             </Reveal>
 
-            <div className="space-y-3 mb-8">
-              {LEVELS.map((item, i) => (
-                <Reveal key={i} delay={i * 0.07}>
-                  <GCard className="p-5 sm:p-6" accent={item.color} glow={item.top}>
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                      <div className="sm:w-44 flex-shrink-0">
-                        <p className="text-[10px] font-black tracking-widest uppercase mb-0.5" style={{ color: item.color }}>{item.level}</p>
-                        <p className="font-black leading-none" style={{ fontSize: "clamp(32px,4vw,46px)", color: item.color }}>{item.fee}</p>
-                        {item.top && (
-                          <span className="inline-block mt-1 text-[9px] font-black px-2 py-0.5 rounded-full"
-                            style={{ background: `${item.color}12`, color: item.color, border: `1px solid ${item.color}25` }}>
-                            NÍVEL MÁXIMO
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-[13px] text-slate-600 mb-3 leading-relaxed">{item.desc}</p>
-                        {item.reqs.length > 0 ? (
-                          <>
-                            <p className="text-[10px] font-black tracking-widest uppercase text-slate-400 mb-2">Requisitos</p>
-                            <div className="flex flex-wrap gap-x-6 gap-y-1.5">
-                              {item.reqs.map((r, j) => (
-                                <div key={j} className="flex items-center gap-1.5">
-                                  <CheckCircle size={11} style={{ color: item.color, flexShrink: 0 }} />
-                                  <span className="text-[12px] text-slate-600">{r}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </>
-                        ) : (
-                          <p className="text-[12px] text-slate-400 italic">Nível de entrada — sem requisitos prévios. Disponível imediatamente ao criar a conta.</p>
-                        )}
-                      </div>
-                      {/* Progress bar */}
-                      <div className="hidden sm:flex flex-col justify-center w-24">
-                        <div className="h-1.5 rounded-full" style={{ background: "rgba(0,0,0,0.07)" }}>
-                          <motion.div
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${100 - i * 20}%` }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.07 + 0.3, duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
-                            className="h-full rounded-full"
-                            style={{ background: item.color }}
-                          />
-                        </div>
-                        <p className="text-[9px] text-slate-400 mt-1 text-center">{item.fee} taxa</p>
-                      </div>
-                    </div>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
+            <Reveal className="mb-8">
+              <div
+                className="w-full rounded-2xl overflow-hidden"
+                style={{
+                  boxShadow: "0 8px 40px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.06)",
+                  border: "1px solid rgba(0,0,0,0.07)",
+                }}
+              >
+                <img
+                  src="/camada1-card.png"
+                  alt="Camada 1 — Intermediação por Performance"
+                  className="w-full h-auto block"
+                  style={{ display: "block" }}
+                />
+              </div>
+            </Reveal>
           </div>
         </section>
 
