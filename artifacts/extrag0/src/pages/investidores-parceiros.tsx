@@ -814,136 +814,25 @@ export default function InvestidoresParceirosPage() {
               </p>
             </Reveal>
 
-            {/* Camada 1 — Intermediação */}
-            <div className="grid lg:grid-cols-2 gap-4 mb-4">
-              <Reveal>
-                <GCard className="p-5 sm:p-6 h-full" accent={G}>
-                  <p className="text-[10px] font-black tracking-widest uppercase  mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Camada 1 — Intermediação por Performance</p>
-                  <p className="text-[12px]  leading-relaxed mb-4" style={{ color: "rgba(255,255,255,0.75)" }}>
-                    Taxa cobrada sobre cada extra concluído. Quanto mais o profissional evolui, menor a taxa — incentivando qualidade, retenção e crescimento de longo prazo.
-                  </p>
-                  <div className="space-y-2.5">
-                    {FEES.map((f, i) => (
-                      <motion.div key={i}
-                        initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-                        className="flex items-center gap-3">
-                        <span className="w-[90px] text-[12px] font-medium  flex-shrink-0" style={{ color: "rgba(255,255,255,0.82)" }}>{f.name}</span>
-                        <div className="flex-1 h-5 rounded-lg overflow-hidden" style={{ background: "rgba(255,255,255,0.04)" }}>
-                          <motion.div
-                            initial={{ width: 0 }} whileInView={{ width: f.w }}
-                            viewport={{ once: true }} transition={{ delay: i * 0.06 + 0.3, duration: 0.8, ease: [0.19,1,0.22,1] }}
-                            className="h-full rounded-lg flex items-center justify-end pr-2"
-                            style={{ background: `linear-gradient(90deg,${f.color}28,${f.color}62)`, borderRight: `2px solid ${f.color}` }}>
-                            <span className="text-[10px] font-black" style={{ color: f.color }}>{f.fee}%</span>
-                          </motion.div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </GCard>
-              </Reveal>
-
-              <Reveal delay={0.08}>
-                <GCard className="p-5 sm:p-6 h-full" accent={C}>
-                  <p className="text-[10px] font-black tracking-widest uppercase  mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Camada 2 — Sistema de Indicações Multinível</p>
-                  <p className="text-[12px]  leading-relaxed mb-3" style={{ color: "rgba(255,255,255,0.75)" }}>
-                    Cada usuário recebe um <span className="text-[rgba(255,255,255,0.82)] font-semibold">código exclusivo</span>. Quando um indicado realiza extras, o indicador recebe uma <span className="text-[rgba(255,255,255,0.82)] font-semibold">comissão sobre o valor bruto</span> — de forma contínua e recorrente, com até 3 níveis de progressão.
-                  </p>
-                  <div className="space-y-2.5 mb-4">
-                    {REFERRAL.map((t, i) => (
-                      <div key={i} className="flex items-center justify-between px-4 py-2.5 rounded-xl border border-white/6 bg-white/[0.025]">
-                        <span className="text-[13px] font-medium text-[rgba(255,255,255,0.85)]">{t.label}</span>
-                        <span className="text-[18px] font-black" style={{ color: t.color }}>{t.pct}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {["Crescimento orgânico","Expansão viral","Retenção ativa","Renda recorrente","Efeitos de rede nacionais"].map((tag, i) => (
-                      <span key={i} className="text-[10px] px-2 py-0.5 rounded-full border border-white/7"
-                        style={{ color: "rgba(255,255,255,0.62)", background: "rgba(0,229,255,0.05)" }}>{tag}</span>
-                    ))}
-                  </div>
-                </GCard>
-              </Reveal>
-            </div>
-
-            {/* Camada 3 — Assinaturas */}
-            <Reveal delay={0.12} className="mb-4">
-              <GCard className="p-5 sm:p-6" accent="#a855f7">
-                <p className="text-[10px] font-black tracking-widest uppercase  mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Camada 3 — Assinaturas Premium (MRR)</p>
-                <div className="grid sm:grid-cols-2 gap-2">
-                  {PLANS.map((plan) => (
-                    <div key={plan.key} className="flex items-center justify-between py-3 px-4 rounded-xl border"
-                      style={{
-                        background: plan.flagship ? `${plan.color}08` : "rgba(255,255,255,0.02)",
-                        borderColor: plan.flagship ? `${plan.color}22` : "rgba(255,255,255,0.05)",
-                      }}>
-                      <div className="flex items-center gap-2.5">
-                        <span style={{ color: plan.color }}>{plan.icon}</span>
-                        <span className="text-[12px] font-bold" style={{ color: plan.color }}>{plan.name}</span>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-[14px] font-black text-[rgba(255,255,255,0.96)]">{plan.price}</span>
-                        {plan.period && <span className="text-[10px] text-[rgba(255,255,255,0.62)] ml-0.5">{plan.period}</span>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 pt-3 border-t border-white/5 flex items-start gap-2.5">
-                  <TrendingUp size={13} className="text-purple-400 flex-shrink-0 mt-0.5" />
-                  <p className="text-[11px] text-[rgba(255,255,255,0.68)] leading-relaxed">
-                    Receita mensal recorrente (MRR) que escala proporcionalmente com a base de usuários — criando previsibilidade financeira independente do volume de extras.
-                  </p>
-                </div>
-              </GCard>
+            {/* Camada 1 */}
+            <Reveal className="mb-4">
+              <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <img src="/camada1-card.png" alt="Camada 1 — Intermediação por Performance" className="w-full h-auto block" />
+              </div>
             </Reveal>
 
-            {/* Financial distribution */}
-            <Reveal delay={0.18}>
-              <GCard className="p-5 sm:p-6" accent="#fbbf24">
-                <p className="text-[10px] font-black tracking-widest uppercase  mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Estrutura Financeira da Plataforma — Alocação da Receita Operacional</p>
-                {/* Stacked bar */}
-                <div className="flex h-8 rounded-xl overflow-hidden w-full mb-5 gap-px">
-                  {FINANCIAL.map((item, i) => (
-                    <motion.div key={i}
-                      initial={{ width: 0 }} whileInView={{ width: `${item.pct}%` }}
-                      viewport={{ once: true }} transition={{ delay: i * 0.06 + 0.2, duration: 0.85, ease: [0.19,1,0.22,1] }}
-                      className="h-full flex items-center justify-center relative group"
-                      style={{ background: `${item.color}30`, borderRight: `2px solid ${item.color}50` }}
-                      title={`${item.label}: ${item.pct}%`}>
-                      {item.pct >= 15 && <span className="text-[9px] font-black" style={{ color: item.color }}>{item.pct}%</span>}
-                    </motion.div>
-                  ))}
-                </div>
-                {/* Legend — editorial rows */}
-                <div className="grid sm:grid-cols-2 gap-0 sm:gap-x-6">
-                  {[FINANCIAL.slice(0,4), FINANCIAL.slice(4)].map((col, ci) => (
-                    <div key={ci} className="divide-y divide-white/5">
-                      {col.map((item, i) => (
-                        <motion.div key={i}
-                          initial={{ opacity: 0, x: -4 }} whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }} transition={{ delay: (ci * 4 + i) * 0.04 }}
-                          className="flex items-center gap-3 py-3">
-                          <span className="w-9 text-right text-[15px] font-black flex-shrink-0 leading-none" style={{ color: item.color }}>{item.pct}%</span>
-                          <div className="w-px h-5 flex-shrink-0 rounded-full" style={{ background: `${item.color}35` }} />
-                          <div className="min-w-0">
-                            <p className="text-[11px] font-semibold text-[rgba(255,255,255,0.82)] leading-tight">{item.label}</p>
-                            <p className="text-[10px] text-[rgba(255,255,255,0.62)] leading-snug truncate">{item.purpose}</p>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 pt-3 border-t border-white/5 flex items-start gap-2.5">
-                  <Shield size={12} style={{ color: G, flexShrink: 0, marginTop: 2 }} />
-                  <p className="text-[11px] text-[rgba(255,255,255,0.68)] leading-relaxed">
-                    <span style={{ color: G }} className="font-semibold">25% em caixa e reserva estratégica</span>{" "}
-                    garante solidez operacional, suporta crescimento acelerado e protege a operação em cenários adversos — enquanto 15% é distribuído diretamente a parceiros e investidores ativos.
-                  </p>
-                </div>
-              </GCard>
+            {/* Camada 2 */}
+            <Reveal className="mb-4" delay={0.06}>
+              <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <img src="/camada2-indicacoes-card.png" alt="Camada 2 — Sistema de Indicações Multinível" className="w-full h-auto block" />
+              </div>
+            </Reveal>
+
+            {/* Estrutura Financeira */}
+            <Reveal delay={0.12}>
+              <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <img src="/estrutura-finan-card.png" alt="Estrutura Financeira — Alocação da Receita Operacional" className="w-full h-auto block" />
+              </div>
             </Reveal>
           </div>
         </section>
