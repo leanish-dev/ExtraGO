@@ -149,15 +149,30 @@ function FADropdown({ open, anchorRef, onClose }: {
             zIndex: 9999,
           }}
         >
-          <div className="px-4 pt-3 pb-2 border-b" style={{ borderColor: "rgba(22,163,74,0.10)" }}>
+          <div className="p-3 border-b" style={{ borderColor: "rgba(22,163,74,0.12)" }}>
             <Link href="/modelo-de-negocio" onClick={onClose}>
-              <div className="flex items-center gap-2 cursor-pointer">
-                <Layers size={12} color={G} />
-                <span className="text-[10px] font-black tracking-[0.12em] uppercase" style={{ color: "#94a3b8" }}>
-                  Ver documentação completa
-                </span>
-                <ChevronRight size={10} color="#cbd5e1" />
-              </div>
+              <motion.div
+                whileHover={{ scale: 1.015, y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-3 px-4 py-3.5 rounded-xl cursor-pointer"
+                style={{
+                  background: `linear-gradient(135deg, ${G} 0%, #00c9a7 100%)`,
+                  boxShadow: "0 4px 22px rgba(22,163,74,0.38), 0 2px 8px rgba(0,0,0,0.18)",
+                }}
+              >
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "rgba(255,255,255,0.22)" }}>
+                  <Layers size={18} color="#fff" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[12.5px] font-black text-white tracking-[0.04em] uppercase leading-tight">
+                    Ver Documentação Completa
+                  </p>
+                  <p className="text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.72)" }}>
+                    Arquitetura financeira completa →
+                  </p>
+                </div>
+                <ChevronRight size={14} color="rgba(255,255,255,0.70)" />
+              </motion.div>
             </Link>
           </div>
           <div className="p-2">
@@ -276,7 +291,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 src={logoMain}
                 alt="extraGO"
                 style={{
-                  height: "clamp(44px, 5.5vw, 50px)",
+                  height: "clamp(52px, 7vw, 62px)",
                   objectFit: "contain",
                   mixBlendMode: "screen",
                   filter: "drop-shadow(0 0 10px rgba(22,163,74,0.45)) drop-shadow(0 0 3px rgba(0,201,167,0.25))",
@@ -334,17 +349,9 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 </>
               ) : (
                 <>
-                  <NavItemLink href="/" icon={<HomeIcon size={16} />} label="Início" active={loc === "/"} className="hidden lg:flex" />
-                  <NavItemLink href="/#como-funciona" icon={<Zap size={16} />} label="Como Funciona" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={16} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
-                  <NavItemLink href="/modelo-de-negocio" icon={<BarChart3 size={16} />} label="Plataforma" active={active("/modelo-de-negocio")} className="hidden lg:flex" />
-                  <NavItemLink href="/financial-architecture/professional-plans" icon={<BadgeCheck size={16} />} label="Reputação" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/sobre" icon={<BookOpen size={16} />} label="Sobre" active={active("/sobre")} className="hidden lg:flex" />
-                  <NavItemLink href="/blog" icon={<MessageCircle size={16} />} label="Blog" active={active("/blog")} className="hidden xl:flex" />
-                  <NavItemLink href="/seguranca" icon={<Shield size={16} />} label="Segurança" active={active("/seguranca")} className="hidden xl:flex" />
-                  <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={16} />} label="Investidores" active={active("/investidores-parceiros")} className="hidden lg:flex" />
+                  <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={17} />} label="Investidores" active={active("/investidores-parceiros")} className="hidden lg:flex" />
+                  <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={17} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
+                  <NavItemLink href="/blog" icon={<BookOpen size={17} />} label="Blog" active={active("/blog")} className="hidden lg:flex" />
                 </>
               )}
 
@@ -449,6 +456,29 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               </>
             ) : (
               <>
+                {/* Cadastro — outline pill */}
+                <Link href="/register">
+                  <button
+                    className="hidden sm:flex items-center rounded-full font-bold cursor-pointer"
+                    style={{
+                      fontSize: "clamp(10px,2vw,12px)",
+                      paddingLeft: "clamp(10px,2vw,16px)",
+                      paddingRight: "clamp(10px,2vw,16px)",
+                      height: 34,
+                      color: "rgba(255,255,255,0.85)",
+                      border: `1px solid rgba(22,163,74,0.55)`,
+                      background: "transparent",
+                      transition: "all 0.15s",
+                      whiteSpace: "nowrap",
+                      gap: "clamp(4px,0.8vw,6px)",
+                    }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(22,163,74,0.12)"; el.style.borderColor = `${G}`; }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; el.style.borderColor = "rgba(22,163,74,0.55)"; }}
+                  >
+                    <UserPlus size={13} />
+                    Cadastro
+                  </button>
+                </Link>
                 {/* Entrar — filled green pill */}
                 <Link href="/login">
                   <button
@@ -484,6 +514,24 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                   </button>
                 </Link>
               </>
+            )}
+
+            {/* Mobile-only public quick links */}
+            {!effectiveUser && (
+              <div className="flex lg:hidden items-center" style={{ gap: 0 }}>
+                <Link href="/investidores-parceiros">
+                  <div className="flex flex-col items-center gap-0.5 px-2 py-1 cursor-pointer" style={{ color: active("/investidores-parceiros") ? ACTIVE_G : "rgba(255,255,255,0.58)" }}>
+                    <TrendingUp size={15} />
+                    <span style={{ fontSize: "7.5px", fontWeight: 700, whiteSpace: "nowrap" }}>Invest.</span>
+                  </div>
+                </Link>
+                <Link href="/modelo-de-negocio">
+                  <div className="flex flex-col items-center gap-0.5 px-2 py-1 cursor-pointer" style={{ color: active("/modelo-de-negocio") ? ACTIVE_G : "rgba(255,255,255,0.58)" }}>
+                    <Layers size={15} />
+                    <span style={{ fontSize: "7.5px", fontWeight: 700, whiteSpace: "nowrap" }}>Arq. Fin.</span>
+                  </div>
+                </Link>
+              </div>
             )}
 
             {/* Divider */}

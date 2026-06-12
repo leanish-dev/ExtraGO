@@ -316,7 +316,7 @@ export default function LandingPage() {
           </motion.div>
 
           {/* CTA — single waitlist conversion */}
-          <div className="w-full relative z-10 px-5 pt-5 pb-4 sm:pt-6 sm:pb-5">
+          <div className="w-full relative z-10 px-5 pt-5 pb-2 sm:pt-6 sm:pb-2">
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
@@ -351,28 +351,38 @@ export default function LandingPage() {
               </motion.a>
             </motion.div>
 
-            {/* ── Benefits strip ── */}
+            {/* ── Benefits ticker — animated marquee ── */}
+            <style>{`
+              @keyframes benefits-ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+              .btr { animation: benefits-ticker 22s linear infinite; }
+              .btr:hover { animation-play-state: paused; }
+            `}</style>
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.45 }}
-              className="mt-5 max-w-5xl mx-auto"
+              className="mt-4 max-w-5xl mx-auto overflow-hidden rounded-xl"
+              style={{ background: "rgba(0,0,0,0.32)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.07)" }}
             >
-              <div
-                className="flex items-center justify-center gap-5 sm:gap-8 flex-wrap px-2 py-3 rounded-xl"
-                style={{ background: "rgba(0,0,0,0.28)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.06)" }}
-              >
-                {[
-                  { icon: <UserCheck size={13} />, label: "Profissionais Verificados" },
-                  { icon: <Shield size={13} />,    label: "Pagamento Garantido"       },
-                  { icon: <Star size={13} />,      label: "Reputação Profissional"    },
-                  { icon: <TrendingUp size={13} />, label: "Sistema de Níveis"         },
-                ].map((b, i) => (
-                  <div key={i} className="flex items-center gap-1.5">
-                    <span style={{ color: "#7CFC00", opacity: 0.80, lineHeight: 0 }}>{b.icon}</span>
-                    <span style={{ fontSize: "11px", fontWeight: 600, color: "rgba(255,255,255,0.65)", whiteSpace: "nowrap" }}>{b.label}</span>
-                  </div>
-                ))}
+              <div className="py-2.5 overflow-hidden">
+                <div className="btr" style={{ display: "flex", width: "max-content" }}>
+                  {[
+                    { icon: <UserCheck size={13} />, label: "Profissionais Verificados" },
+                    { icon: <Shield size={13} />,    label: "Pagamento Garantido"       },
+                    { icon: <Star size={13} />,      label: "Reputação Profissional"    },
+                    { icon: <TrendingUp size={13} />, label: "Sistema de Níveis"        },
+                    { icon: <UserCheck size={13} />, label: "Profissionais Verificados" },
+                    { icon: <Shield size={13} />,    label: "Pagamento Garantido"       },
+                    { icon: <Star size={13} />,      label: "Reputação Profissional"    },
+                    { icon: <TrendingUp size={13} />, label: "Sistema de Níveis"        },
+                  ].map((b, i) => (
+                    <div key={i} className="flex items-center gap-1.5 mx-5" style={{ flexShrink: 0 }}>
+                      <span style={{ color: "#7CFC00", opacity: 0.80, lineHeight: 0 }}>{b.icon}</span>
+                      <span style={{ fontSize: "11px", fontWeight: 600, color: "rgba(255,255,255,0.65)", whiteSpace: "nowrap" }}>{b.label}</span>
+                      <span style={{ color: "rgba(255,255,255,0.18)", marginLeft: "6px", fontSize: "14px", lineHeight: "1" }}>·</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </motion.div>
 

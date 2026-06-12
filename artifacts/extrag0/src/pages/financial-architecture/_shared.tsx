@@ -15,11 +15,11 @@ export function FABackground() {
     <div
       className="fixed inset-0 z-0 pointer-events-none"
       style={{
-        backgroundImage: "url(/fa-bg.png)",
+        backgroundImage: "url(/fa-sub-bg.png)",
         backgroundSize: "cover",
-        backgroundPosition: "center top",
+        backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        opacity: 0.55,
+        opacity: 1,
       }}
     />
   );
