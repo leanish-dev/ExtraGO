@@ -342,6 +342,8 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                   <NavItemLink href="/modelo-de-negocio" icon={<BarChart3 size={16} />} label="Plataforma" active={active("/modelo-de-negocio")} className="hidden lg:flex" />
                   <NavItemLink href="/financial-architecture/professional-plans" icon={<BadgeCheck size={16} />} label="Reputação" active={false} className="hidden lg:flex" />
                   <NavItemLink href="/sobre" icon={<BookOpen size={16} />} label="Sobre" active={active("/sobre")} className="hidden lg:flex" />
+                  <NavItemLink href="/blog" icon={<MessageCircle size={16} />} label="Blog" active={active("/blog")} className="hidden xl:flex" />
+                  <NavItemLink href="/seguranca" icon={<Shield size={16} />} label="Segurança" active={active("/seguranca")} className="hidden xl:flex" />
                   <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={16} />} label="Investidores" active={active("/investidores-parceiros")} className="hidden lg:flex" />
                 </>
               )}

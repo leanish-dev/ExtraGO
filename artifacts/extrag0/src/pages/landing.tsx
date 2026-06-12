@@ -351,6 +351,31 @@ export default function LandingPage() {
               </motion.a>
             </motion.div>
 
+            {/* ── Benefits strip ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.45 }}
+              className="mt-5 max-w-5xl mx-auto"
+            >
+              <div
+                className="flex items-center justify-center gap-5 sm:gap-8 flex-wrap px-2 py-3 rounded-xl"
+                style={{ background: "rgba(0,0,0,0.28)", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                {[
+                  { icon: <UserCheck size={13} />, label: "Profissionais Verificados" },
+                  { icon: <Shield size={13} />,    label: "Pagamento Garantido"       },
+                  { icon: <Star size={13} />,      label: "Reputação Profissional"    },
+                  { icon: <TrendingUp size={13} />, label: "Sistema de Níveis"         },
+                ].map((b, i) => (
+                  <div key={i} className="flex items-center gap-1.5">
+                    <span style={{ color: "#7CFC00", opacity: 0.80, lineHeight: 0 }}>{b.icon}</span>
+                    <span style={{ fontSize: "11px", fontWeight: 600, color: "rgba(255,255,255,0.65)", whiteSpace: "nowrap" }}>{b.label}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
           </div>
 
         </section>

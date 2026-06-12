@@ -269,52 +269,6 @@ export default function InvestidoresParceirosPage() {
           </Reveal>
         </section>
 
-        <Divider />
-
-        {/* ═══════════════════════════════
-            05 · SOLUTION — 4 pillars
-        ═══════════════════════════════ */}
-        <section id="solucao" className="relative overflow-hidden px-5 sm:px-10 py-6 sm:py-24">
-          {/* Background — network/ecosystem */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 0.90, filter: "saturate(1.80) contrast(1.15)" }} />
-            <div className="absolute inset-0"
-              style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.52) 0%,rgba(5,12,26,0.08) 50%,rgba(5,12,26,0.52) 100%)" }} />
-          </div>
-          <div className="relative z-10 max-w-6xl mx-auto">
-            <Reveal className="mb-8">
-              <Pill label="A Solução" color={G} icon={<Zap size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 16px rgba(0,0,0,0.70)" }}>
-                Quatro pilares.<br />Um ecossistema completo.
-              </h2>
-              <p className="text-[14px] leading-relaxed max-w-xl" style={{ color: "rgba(255,255,255,0.85)", textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
-                A extraGO não é um app de contratação — é a camada de infraestrutura que conecta todos os participantes do mercado de trabalho flexível em uma única plataforma integrada.
-              </p>
-            </Reveal>
-
-            <div className="grid sm:grid-cols-2 gap-x-12 gap-y-8">
-              {PILLARS.map((p, i) => (
-                <Reveal key={i} delay={i * 0.07}>
-                  <div className="pl-5 border-l-2" style={{ borderColor: `${p.color}60` }}>
-                    <div className="flex items-center gap-2.5 mb-3">
-                      <span style={{ color: p.color }}>{p.icon}</span>
-                      <span className="text-[11px] font-black tracking-[0.15em] uppercase" style={{ color: p.color }}>{p.name}</span>
-                    </div>
-                    <ul className="space-y-2">
-                      {p.items.map((item, j) => (
-                        <li key={j} className="text-[14px]  leading-snug" style={{ color: "rgba(255,255,255,0.82)" }}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <Divider />
-
         {/* ═══════════════════════════════
             06 · COMPETITIVE ADVANTAGES
         ═══════════════════════════════ */}
@@ -398,52 +352,6 @@ export default function InvestidoresParceirosPage() {
             </div>
           </div>
         </section>
-
-        {/* ═══════════════════════════════
-            07 · NATIONAL EXPANSION
-        ═══════════════════════════════ */}
-        <section id="expansao" className="relative overflow-hidden py-5 sm:py-16">
-          {/* map image accent */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 0.88, filter: "saturate(1.70) contrast(1.12)" }} />
-            <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.55) 0%,rgba(5,12,26,0.06) 25%,rgba(5,12,26,0.06) 75%,rgba(5,12,26,0.55) 100%)" }} />
-          </div>
-
-          <div className="relative z-10 px-5 sm:px-10 max-w-6xl mx-auto">
-            <Reveal className="mb-8">
-              <Pill label="Modelo de Expansão Nacional" color="#fbbf24" icon={<MapPin size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 16px rgba(0,0,0,0.70)" }}>
-                Um representante por estado.<br />
-                <span className="" style={{ color: "rgba(255,255,255,0.75)" }}>27 estados. Todo o Brasil.</span>
-              </h2>
-              <p className="text-[14px] leading-relaxed max-w-2xl" style={{ color: "rgba(255,255,255,0.85)", textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
-                A estratégia de expansão da extraGO é ancorada em representantes estaduais com profundo conhecimento regional. Cada representante é responsável pelo desenvolvimento comercial, parcerias locais, relacionamento com empresas e crescimento da rede profissional em seu estado.
-              </p>
-            </Reveal>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              {[
-                { num: "27",  label: "Representantes Estaduais",  sub: "1 representante por estado",     color: "#fbbf24" },
-                { num: "108", label: "Líderes Regionais",          sub: "até 108 líderes por rede",       color: G        },
-                { num: "4",   label: "Fontes de Receita",          sub: "todos recorrentes",               color: C        },
-                { num: "10%", label: "Menor Taxa Operacional",     sub: "nível Elite da plataforma",      color: "#a855f7" },
-              ].map((s, i) => (
-                <Reveal key={i} delay={i * 0.07}>
-                  <GCard className="p-4 sm:p-5 text-center" accent={s.color}>
-                    <p className="text-[36px] sm:text-[42px] font-black leading-none mb-1" style={{ color: s.color, textShadow: `0 2px 18px rgba(0,0,0,0.75)` }}>{s.num}</p>
-                    <p className="text-[12px] font-semibold text-[rgba(255,255,255,0.82)] mb-0.5">{s.label}</p>
-                    <p className="text-[10px]  leading-snug" style={{ color: "rgba(255,255,255,0.58)" }}>{s.sub}</p>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        <Divider />
 
         {/* ═══════════════════════════════
             08 · BUSINESS MODEL
