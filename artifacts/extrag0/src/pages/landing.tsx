@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import logoMain from "@assets/Logo-new_1781073251550.png";
 import simplesComoDeveSerImg from "@assets/Simples-como-deve-ser-card_1781247644621.png";
 import feitoParaOsDoisLadosImg from "@assets/Feito-para-os-dois-lados_1781247644430.png";
+import presenteEmTodosOsSetoresImg from "@assets/Presente-em-todos_-os-setores_1781250617174.png";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import referralArt from "@assets/file_00000000f534720e8e4eab1278948eb7_1780142932397.png";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
@@ -55,96 +56,6 @@ function TypewriterWord() {
   );
 }
 
-/* ─────────── Trust ticker ─────────── */
-const TICKER_ITEMS = [
-  { icon: "🌎", text: "Presente em todo o Brasil",   color: "#7CFC00" },
-  { icon: "✅", text: "Profissionais Verificados",    color: "#00e5ff" },
-  { icon: "💳", text: "Pagamento Garantido",          color: "#7CFC00" },
-  { icon: "⭐", text: "Reputação Profissional",       color: "#00e5ff" },
-  { icon: "🏆", text: "Sistema de Níveis",            color: "#7CFC00" },
-  { icon: "🚀", text: "Expansão Nacional",            color: "#00e5ff" },
-  { icon: "⚡", text: "PIX Instantâneo",              color: "#7CFC00" },
-  { icon: "🔒", text: "Pagamento Seguro",             color: "#00e5ff" },
-];
-
-function TrustTicker() {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
-  return (
-    <div
-      className="overflow-hidden w-full mt-8 rounded-2xl"
-      style={{
-        maskImage: "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)",
-        background: "rgba(8,16,36,0.55)",
-        backdropFilter: "blur(10px)",
-        border: "1px solid rgba(0,229,255,0.12)",
-        padding: "10px 0",
-      }}
-    >
-      <div className="ticker-track">
-        {items.map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-2 flex-shrink-0" style={{ padding: "0 8px" }}>
-            <span className="text-base leading-none">{item.icon}</span>
-            <span
-              className="text-[11px] font-bold tracking-wide uppercase"
-              style={{ color: item.color, whiteSpace: "nowrap" }}
-            >
-              {item.text}
-            </span>
-            <span
-              className="w-[3px] h-[3px] rounded-full flex-shrink-0"
-              style={{ background: "rgba(255,255,255,0.20)", marginLeft: 6 }}
-            />
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ─────────── Floating particles ─────────── */
-function FloatingParticles() {
-  const particles = Array.from({ length: 8 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 2.5 + 0.8,
-    duration: Math.random() * 14 + 10,
-    delay: Math.random() * 8,
-    color: i % 3 === 0 ? "rgba(124,252,0,0.55)" : i % 3 === 1 ? "rgba(0,229,255,0.45)" : "rgba(255,255,255,0.25)",
-    drift: (Math.random() - 0.5) * 60,
-  }));
-
-  return (
-    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-      {particles.map(p => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full"
-          style={{
-            left: `${p.x}%`,
-            top: `${p.y}%`,
-            width: p.size,
-            height: p.size,
-            background: p.color,
-            boxShadow: `0 0 ${p.size * 3}px ${p.color}`,
-          }}
-          animate={{
-            y: [-20, p.drift - 40, -20],
-            x: [0, (Math.random() - 0.5) * 30, 0],
-            opacity: [0, 0.8, 0.4, 0.8, 0],
-            scale: [0.5, 1, 0.7, 1, 0.5],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 /* ─────────── Referral Simulator ─────────── */
 function ReferralSimulator() {
@@ -371,9 +282,6 @@ export default function LandingPage() {
         />
       </div>
 
-      {/* ── Floating particles (for visual life) ── */}
-      <FloatingParticles />
-
       {/* ── Unified navbar ── */}
       <InstitutionalNavbar />
 
@@ -443,15 +351,6 @@ export default function LandingPage() {
               </motion.a>
             </motion.div>
 
-            {/* Trust signals — scrolling ticker */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.55 }}
-              className="mt-6"
-            >
-              <TrustTicker />
-            </motion.div>
           </div>
 
         </section>
@@ -488,35 +387,6 @@ export default function LandingPage() {
                 <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 55% at 8% 50%,rgba(22,163,74,0.12) 0%,transparent 58%), radial-gradient(ellipse 55% 60% at 93% 15%,rgba(0,229,255,0.09) 0%,transparent 55%), radial-gradient(ellipse 45% 35% at 50% 95%,rgba(124,252,0,0.08) 0%,transparent 62%)" }} />
                 {/* Network grid */}
                 <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px)", backgroundSize: "44px 44px" }} />
-                {/* Connection arcs + node dots */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="conArc1" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#7CFC00" stopOpacity="0" />
-                        <stop offset="35%" stopColor="#7CFC00" stopOpacity="0.18" />
-                        <stop offset="65%" stopColor="#00e5ff" stopOpacity="0.18" />
-                        <stop offset="100%" stopColor="#00e5ff" stopOpacity="0" />
-                      </linearGradient>
-                      <linearGradient id="conArc2" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#16a34a" stopOpacity="0" />
-                        <stop offset="50%" stopColor="#16a34a" stopOpacity="0.11" />
-                        <stop offset="100%" stopColor="#16a34a" stopOpacity="0" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M 0 180 C 180 70, 380 210, 580 90 S 830 170, 1000 100" fill="none" stroke="url(#conArc1)" strokeWidth="1.4" />
-                    <path d="M 0 120 C 160 210, 350 70, 540 175 S 800 70, 1000 150" fill="none" stroke="url(#conArc2)" strokeWidth="0.9" />
-                    {([
-                      [75, 150, 2.5, "#7CFC00"], [210, 80, 2, "#00e5ff"], [370, 185, 2.5, "#7CFC00"],
-                      [510, 105, 2, "#00e5ff"], [650, 168, 2.5, "#7CFC00"], [790, 82, 2, "#00e5ff"], [935, 145, 2.5, "#7CFC00"],
-                    ] as [number,number,number,string][]).map(([cx,cy,r,c], i) => (
-                      <g key={i}>
-                        <circle cx={cx} cy={cy} r={r * 4.5} fill={c} fillOpacity="0.045" />
-                        <circle cx={cx} cy={cy} r={r} fill={c} fillOpacity="0.88" />
-                      </g>
-                    ))}
-                  </svg>
-                </div>
                 {/* Top accent line */}
                 <div className="absolute inset-x-0 top-0 h-[1.5px]" style={{ background: "linear-gradient(90deg,transparent,rgba(0,229,255,0.55) 30%,rgba(124,252,0,0.65) 50%,rgba(0,229,255,0.55) 70%,transparent)" }} />
                 {/* Live indicator */}
@@ -785,249 +655,19 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             SECTORS
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-5 sm:py-12">
-          <div className="max-w-5xl mx-auto">
-            <ScrollSection>
-              <div className="text-center mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: "#EAF7FF" }}>Presente em todos os setores</h2>
-                <p className="text-sm max-w-md mx-auto" style={{ color: "#D7E7F3" }}>Da gastronomia ao entretenimento, a extraGO conecta quem precisa com quem faz acontecer.</p>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[
-                  {
-                    icon: "🍽️",
-                    label: "Gastronomia",
-                    sub: "Chefs & Cozinha",
-                    img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80",
-                    glow: "from-orange-500/25 to-amber-500/15",
-                    border: "hover:border-orange-500/40",
-                    dot: "bg-orange-400",
-                  },
-                  {
-                    icon: "🏨",
-                    label: "Hotelaria",
-                    sub: "Recepção & Concierge",
-                    img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
-                    glow: "from-cyan-500/25 to-blue-500/15",
-                    border: "hover:border-cyan-500/40",
-                    dot: "bg-cyan-400",
-                  },
-                  {
-                    icon: "🎉",
-                    label: "Eventos",
-                    sub: "Produção & Staff",
-                    img: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80",
-                    glow: "from-purple-500/25 to-pink-500/15",
-                    border: "hover:border-purple-500/40",
-                    dot: "bg-purple-400",
-                  },
-                  {
-                    icon: "🍸",
-                    label: "Bares & Baladas",
-                    sub: "Bartenders & Equipe",
-                    img: "https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=600&q=80",
-                    glow: "from-pink-500/25 to-red-500/15",
-                    border: "hover:border-pink-500/40",
-                    dot: "bg-pink-400",
-                  },
-                  {
-                    icon: "✈️",
-                    label: "Turismo",
-                    sub: "Guias & Receptivo",
-                    img: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&q=80",
-                    glow: "from-sky-500/25 to-cyan-500/15",
-                    border: "hover:border-sky-500/40",
-                    dot: "bg-sky-400",
-                  },
-                  {
-                    icon: "🎭",
-                    label: "Entretenimento",
-                    sub: "Shows & Produção",
-                    img: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=600&q=80",
-                    glow: "from-yellow-500/25 to-orange-500/15",
-                    border: "hover:border-yellow-500/40",
-                    dot: "bg-yellow-400",
-                  },
-                  {
-                    icon: "🏋️",
-                    label: "Esportes",
-                    sub: "Fitness & Arenas",
-                    img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80",
-                    glow: "from-green-500/25 to-emerald-500/15",
-                    border: "hover:border-green-500/40",
-                    dot: "bg-green-400",
-                  },
-                  {
-                    icon: "🤝",
-                    label: "Serviços",
-                    sub: "Suporte & Equipe",
-                    img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600&q=80",
-                    glow: "from-primary/25 to-secondary/15",
-                    border: "hover:border-primary/40",
-                    dot: "bg-primary",
-                  },
-                ].map((sector, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.06, duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-                    whileHover={{ y: -4, transition: { duration: 0.25 } }}
-                    className={`relative overflow-hidden rounded-2xl group cursor-default border border-white/8 ${sector.border} transition-colors duration-500`}
-                    style={{ minHeight: 148 }}
-                  >
-                    {/* Background image — zoom on hover */}
-                    <div
-                      className="absolute inset-0 bg-cover bg-center scale-100 group-hover:scale-110 transition-transform duration-700 ease-out"
-                      style={{ backgroundImage: `url(${sector.img})` }}
-                    />
-                    {/* Base dark overlay */}
-                    <div className="absolute inset-0 bg-black/72 group-hover:bg-black/55 transition-all duration-500" />
-                    {/* Neon glow — appears on hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${sector.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                    {/* Bottom gradient for text legibility */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                    {/* Top-left live dot */}
-                    <div className={`absolute top-3 left-3 w-1.5 h-1.5 rounded-full ${sector.dot} opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-[0_0_6px_currentColor]`} />
-                    {/* Content */}
-                    <div className="relative z-10 p-4 flex flex-col items-center justify-end h-full gap-1.5 text-center" style={{ minHeight: 148 }}>
-                      <motion.span
-                        animate={{ scale: [1, 1.08, 1] }}
-                        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
-                        className="text-2xl drop-shadow-lg mb-0.5"
-                      >
-                        {sector.icon}
-                      </motion.span>
-                      <span className="text-sm font-bold leading-tight drop-shadow-md" style={{ color: "rgba(255,255,255,0.96)" }}>{sector.label}</span>
-                      <span className="text-[10px] font-medium transition-colors duration-300" style={{ color: "rgba(255,255,255,0.72)" }}>{sector.sub}</span>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </ScrollSection>
-          </div>
+        <section id="setores" className="py-2 sm:py-4">
+          <ScrollSection>
+            <img
+              src={presenteEmTodosOsSetoresImg}
+              alt="Presente em Todos os Setores — Da gastronomia ao entretenimento, a extraGO conecta quem precisa com quem faz acontecer"
+              className="w-full h-auto block"
+              style={{ display: "block" }}
+              draggable={false}
+            />
+          </ScrollSection>
         </section>
 
-        {/* ══════════════════════════════════════════
-            TESTIMONIALS
-        ══════════════════════════════════════════ */}
-        <section className="px-5 py-7 sm:py-14">
-          <div className="max-w-5xl mx-auto">
-            <ScrollSection>
-              <div className="text-center mb-10">
-                <span className="chip-primary mb-3 inline-flex">
-                  <Sparkles size={10} /> Depoimentos reais
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#EAF7FF" }}>O que dizem sobre nós</h2>
-              </div>
-            </ScrollSection>
-            <div className="grid sm:grid-cols-3 gap-5">
-              {TESTIMONIALS.map((t, i) => (
-                <ScrollSection key={i} delay={i * 0.1}>
-                  <motion.div
-                    whileHover={{ y: -4 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                    className="glass-card rounded-2xl p-6 border border-white/8 h-full"
-                  >
-                    <div className="flex mb-3 gap-0.5">
-                      {Array.from({ length: t.stars }).map((_, si) => (
-                        <Star key={si} size={13} className="fill-yellow-400 text-yellow-400" />
-                      ))}
-                    </div>
-                    <p className="text-sm text-foreground/85 leading-relaxed mb-5">"{t.text}"</p>
-                    <div>
-                      <p className="font-bold text-sm">{t.name}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{t.role}</p>
-                    </div>
-                  </motion.div>
-                </ScrollSection>
-              ))}
-            </div>
-          </div>
-        </section>
-
-
-        {/* ══════════════════════════════════════════
-            INVESTIDORES & PARCEIROS BANNER
-        ══════════════════════════════════════════ */}
-        <section className="px-5 py-5 sm:py-12">
-          <div className="max-w-5xl mx-auto">
-            <ScrollSection>
-              <Link href="/investidores-parceiros">
-                <motion.div
-                  whileHover={{ y: -4, scale: 1.005 }}
-                  transition={{ type: "spring", stiffness: 280, damping: 24 }}
-                  className="relative overflow-hidden rounded-3xl cursor-pointer group"
-                  style={{
-                    background: "rgba(4,7,12,0.0)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    boxShadow: "0 24px 80px rgba(0,0,0,0.55)",
-                  }}
-                >
-                  {/* Background image */}
-                  <div
-                    className="absolute inset-0 bg-cover bg-center scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                    style={{ backgroundImage: "url(/investors-bg.png)" }}
-                  />
-                  {/* Dark overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#050810]/90 via-[#050810]/65 to-[#050810]/25" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#050810]/60 via-transparent to-transparent" />
-                  {/* Top accent */}
-                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-primary/50 via-secondary/40 to-transparent" />
-
-                  <div className="relative z-10 p-7 sm:p-10 lg:py-12 lg:px-12">
-                    {/* Badge */}
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-bold tracking-widest uppercase mb-5"
-                      style={{ background: "rgba(124,252,0,0.1)", border: "1px solid rgba(124,252,0,0.28)", color: "#7CFC00" }}>
-                      <TrendingUp size={11} /> Investidores & Parceiros
-                    </div>
-
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight mb-3 max-w-lg">
-                      A infraestrutura de mão de obra<br />
-                      <span style={{ background: "linear-gradient(90deg,#7CFC00,#9aff1c 40%,#00E5FF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                        do Brasil.
-                      </span>
-                    </h2>
-
-                    <p className="text-sm sm:text-base mb-7 max-w-md leading-relaxed" style={{ color: "rgba(255,255,255,0.72)" }}>
-                      Conectamos empresas e profissionais. Movimentamos negócios. Impulsionamos o Brasil.
-                    </p>
-
-                    {/* 5 key metrics */}
-                    <div className="flex flex-wrap gap-4 sm:gap-6 mb-8">
-                      {[
-                        { icon: <Users size={14} />, label: "Marketplace de Talentos" },
-                        { icon: <Globe size={14} />, label: "Presença nacional, conexão local" },
-                        { icon: <BarChart3 size={14} />, label: "Plataforma escalável" },
-                        { icon: <DollarSign size={14} />, label: "Parcerias que geram impacto" },
-                        { icon: <MapPin size={14} />, label: "27 estados cobertos" },
-                      ].map((item, i) => (
-                        <div key={i} className="flex items-center gap-2 text-xs transition-colors" style={{ color: "rgba(255,255,255,0.72)" }}>
-                          <span className="text-primary/70 group-hover:text-primary transition-colors">{item.icon}</span>
-                          {item.label}
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* CTA row */}
-                    <div className="flex items-center gap-4 flex-wrap">
-                      <div
-                        className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-sm text-black transition-all group-hover:shadow-[0_0_32px_rgba(124,252,0,0.45)]"
-                        style={{ background: "linear-gradient(135deg,#7CFC00,#9aff1c)" }}
-                      >
-                        Conheça a Oportunidade <ArrowRight size={14} />
-                      </div>
-                      <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>Conectamos empresas e profissionais · Movimentamos negócios · Impulsionamos o Brasil</span>
-                    </div>
-                  </div>
-                </motion.div>
-              </Link>
-            </ScrollSection>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
+                {/* ══════════════════════════════════════════
             CTA FINAL
         ══════════════════════════════════════════ */}
         <section className="px-5 pb-16 sm:pb-20">

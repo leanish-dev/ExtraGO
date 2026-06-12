@@ -25,61 +25,6 @@ const C = "#00E5FF";   // cyan
 const T = "#0ea5e9";   // teal
 
 
-/* ─── premium metric strip ─── */
-const KEY_METRICS = [
-  { value: "27",    label: "Estados",             color: "#7CFC00" },
-  { value: "108",   label: "Líderes Regionais",   color: "#00E5FF" },
-  { value: "4",     label: "Fontes de Receita",   color: "#a855f7" },
-  { value: "5",     label: "Níveis de Progressão",color: "#fbbf24" },
-  { value: "1",     label: "Plataforma Nacional", color: "#f43f5e" },
-];
-
-function MetricStrip() {
-  return (
-    <div
-      className="relative overflow-hidden"
-      style={{
-        background: "rgba(4,10,22,0.60)",
-        borderTop: "1px solid rgba(255,255,255,0.07)",
-        borderBottom: "1px solid rgba(255,255,255,0.07)",
-        backdropFilter: "blur(10px)",
-      }}
-    >
-      <div className="max-w-6xl mx-auto px-5 sm:px-10 py-3 sm:py-4">
-        <div className="flex items-center justify-center flex-wrap gap-x-4 sm:gap-x-8 gap-y-2">
-          {KEY_METRICS.map((m, i) => (
-            <React.Fragment key={i}>
-              <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="flex items-center gap-2"
-              >
-                <span
-                  className="font-black leading-none"
-                  style={{ color: m.color, fontSize: "clamp(17px,2.2vw,24px)" }}
-                >
-                  {m.value}
-                </span>
-                <span className="text-[10px] sm:text-[11px] font-medium leading-tight" style={{ color: "rgba(255,255,255,0.62)" }}>
-                  {m.label}
-                </span>
-              </motion.div>
-              {i < KEY_METRICS.length - 1 && (
-                <span
-                  className="w-px h-4 flex-shrink-0 hidden sm:block"
-                  style={{ background: "rgba(255,255,255,0.10)" }}
-                />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-      <div className="absolute inset-x-0 bottom-0 h-[1px]" style={{ background: "linear-gradient(90deg,transparent,rgba(124,252,0,0.18),rgba(0,229,255,0.12),transparent)" }} />
-    </div>
-  );
-}
 
 /* ─── full-page background ─── */
 function Background() {
@@ -245,85 +190,12 @@ export default function InvestidoresParceirosPage() {
               src={investidoresHeroImg}
               alt="A Infraestrutura de Mão de Obra do Brasil — extraGO Investidores & Parceiros Estratégicos"
               className="w-full h-auto block"
-              style={{ display: "block", maxHeight: "clamp(220px, 40vw, 560px)", objectFit: "cover", objectPosition: "center" }}
+              style={{ display: "block" }}
               draggable={false}
             />
           </motion.div>
         </section>
 
-        {/* ── Ecosystem Infrastructure Visual ── */}
-        <div className="relative overflow-hidden" aria-hidden="true" style={{ padding: "0" }}>
-          <div className="max-w-5xl mx-auto px-4">
-            <svg viewBox="0 0 900 130" className="w-full" style={{ height: "clamp(72px,12vw,130px)", display: "block" }}>
-              <defs>
-                <linearGradient id="invFlow1" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#7CFC00" stopOpacity="0" />
-                  <stop offset="25%" stopColor="#7CFC00" stopOpacity="0.38" />
-                  <stop offset="65%" stopColor="#00e5ff" stopOpacity="0.45" />
-                  <stop offset="100%" stopColor="#00e5ff" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient id="invFlow2" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#a855f7" stopOpacity="0" />
-                  <stop offset="40%" stopColor="#a855f7" stopOpacity="0.22" />
-                  <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient id="invEdge" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#0c1a2e" stopOpacity="1" />
-                  <stop offset="10%" stopColor="#0c1a2e" stopOpacity="0" />
-                  <stop offset="90%" stopColor="#0c1a2e" stopOpacity="0" />
-                  <stop offset="100%" stopColor="#0c1a2e" stopOpacity="1" />
-                </linearGradient>
-              </defs>
-              {[40,65,90].map((y, i) => (
-                <line key={i} x1="0" y1={y} x2="900" y2={y} stroke="rgba(0,229,255,0.04)" strokeWidth="0.5" strokeDasharray="6 18" />
-              ))}
-              <path d="M 70 65 C 200 30, 390 110, 580 50 S 790 90, 840 65" fill="none" stroke="url(#invFlow1)" strokeWidth="1.3" />
-              <path d="M 70 80 C 185 105, 360 48, 540 95 S 760 55, 840 75" fill="none" stroke="url(#invFlow2)" strokeWidth="0.8" />
-              {[
-                {x:95, y:60,  r:6,   c:"#7CFC00", l:"SP"},
-                {x:185,y:38,  r:5,   c:"#00e5ff", l:"RJ"},
-                {x:280,y:100, r:4.5, c:"#7CFC00", l:"MG"},
-                {x:375,y:48,  r:4,   c:"#00e5ff", l:"DF"},
-                {x:455,y:95,  r:4.5, c:"#7CFC00", l:"BA"},
-                {x:545,y:50,  r:4,   c:"#00e5ff", l:"PE"},
-                {x:630,y:92,  r:4,   c:"#7CFC00", l:"CE"},
-                {x:720,y:40,  r:4.5, c:"#00e5ff", l:"PA"},
-                {x:808,y:82,  r:4,   c:"#7CFC00", l:"AM"},
-              ].map((n, i) => (
-                <g key={i}>
-                  <circle cx={n.x} cy={n.y} r={n.r*4} fill={n.c} fillOpacity="0.05" />
-                  <circle cx={n.x} cy={n.y} r={n.r*2.2} fill="none" stroke={n.c} strokeWidth="0.5" strokeOpacity="0.22" />
-                  <circle cx={n.x} cy={n.y} r={n.r} fill={n.c} fillOpacity="0.82" />
-                  <text x={n.x} y={n.y-n.r-3} textAnchor="middle" fill={n.c} fontSize="6.5" fontWeight="700" opacity="0.55">{n.l}</text>
-                </g>
-              ))}
-              {([
-                [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],
-              ] as [number,number][]).map(([a,b],i) => {
-                const cc=[{x:95,y:60},{x:185,y:38},{x:280,y:100},{x:375,y:48},{x:455,y:95},{x:545,y:50},{x:630,y:92},{x:720,y:40},{x:808,y:82}];
-                return <line key={i} x1={cc[a].x} y1={cc[a].y} x2={cc[b].x} y2={cc[b].y} stroke="rgba(0,229,255,0.14)" strokeWidth="0.55" />;
-              })}
-              <g transform="translate(450,65)">
-                <rect x="-20" y="-13" width="40" height="26" rx="8" fill="rgba(124,252,0,0.07)" stroke="rgba(124,252,0,0.22)" strokeWidth="0.8" />
-                <text textAnchor="middle" y="5" fill="rgba(124,252,0,0.62)" fontSize="10" fontWeight="900">PIX</text>
-              </g>
-              <rect x="0" y="0" width="900" height="130" fill="url(#invEdge)" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Inspiration strip */}
-        <div style={{ background: "rgba(14,165,233,0.06)", borderTop: "1px solid rgba(14,165,233,0.14)", borderBottom: "1px solid rgba(14,165,233,0.14)" }}>
-          <div className="max-w-4xl mx-auto px-5 py-4 text-center">
-            <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.65)" }}>
-              Inspirada em{" "}
-              <span className="font-semibold" style={{ color: "rgba(255,255,255,0.92)" }}>Uber, Airbnb, LinkedIn, Stripe e Nubank</span>
-              {" "}— a extraGO une marketplace, reputação, geolocalização, pagamentos, gamificação e crescimento em rede em um único ecossistema.
-            </p>
-          </div>
-        </div>
-
-        <MetricStrip />
 
         {/* ═══════════════════════════════
             02 · THE MARKET
@@ -406,7 +278,7 @@ export default function InvestidoresParceirosPage() {
           {/* Background — network/ecosystem */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.90, filter: "saturate(1.80) contrast(1.15)" }} />
+              style={{ backgroundImage: "url(/sec-pilares.png)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 0.90, filter: "saturate(1.80) contrast(1.15)" }} />
             <div className="absolute inset-0"
               style={{ background: "linear-gradient(135deg,rgba(5,12,26,0.52) 0%,rgba(5,12,26,0.08) 50%,rgba(5,12,26,0.52) 100%)" }} />
           </div>
@@ -527,8 +399,6 @@ export default function InvestidoresParceirosPage() {
           </div>
         </section>
 
-        <MetricStrip />
-
         {/* ═══════════════════════════════
             07 · NATIONAL EXPANSION
         ═══════════════════════════════ */}
@@ -536,7 +406,7 @@ export default function InvestidoresParceirosPage() {
           {/* map image accent */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center 42%", opacity: 0.88, filter: "saturate(1.70) contrast(1.12)" }} />
+              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 0.88, filter: "saturate(1.70) contrast(1.12)" }} />
             <div className="absolute inset-0"
               style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.55) 0%,rgba(5,12,26,0.06) 25%,rgba(5,12,26,0.06) 75%,rgba(5,12,26,0.55) 100%)" }} />
           </div>
@@ -727,7 +597,6 @@ export default function InvestidoresParceirosPage() {
         </section>
 
         <Divider />
-        <MetricStrip />
 
         {/* ═══════════════════════════════
             09 · GOVERNANCE & OPS
@@ -736,7 +605,7 @@ export default function InvestidoresParceirosPage() {
           {/* Background — Brazil map network */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.88, filter: "saturate(1.75) contrast(1.12)" }} />
+              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 0.88, filter: "saturate(1.75) contrast(1.12)" }} />
             <div className="absolute inset-0"
               style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.52) 0%,rgba(5,12,26,0.08) 50%,rgba(5,12,26,0.52) 100%)" }} />
           </div>
@@ -995,7 +864,6 @@ export default function InvestidoresParceirosPage() {
         </section>
 
         <Divider />
-        <MetricStrip />
 
         {/* ═══════════════════════════════
             12 · LONG-TERM VISION
@@ -1003,7 +871,7 @@ export default function InvestidoresParceirosPage() {
         <section className="relative overflow-hidden py-6 sm:py-20">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "cover", backgroundPosition: "center", opacity: 1, filter: "saturate(1.70) contrast(1.10)" }} />
+              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 1, filter: "saturate(1.70) contrast(1.10)" }} />
             <div className="absolute inset-0"
               style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.55) 0%,rgba(5,12,26,0.04) 22%,rgba(5,12,26,0.04) 78%,rgba(5,12,26,0.55) 100%)" }} />
           </div>
