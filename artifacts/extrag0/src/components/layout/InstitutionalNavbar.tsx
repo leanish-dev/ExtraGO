@@ -291,7 +291,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 src={logoMain}
                 alt="extraGO"
                 style={{
-                  height: "clamp(52px, 7vw, 62px)",
+                  height: "clamp(56px, 8.5vw, 66px)",
                   objectFit: "contain",
                   mixBlendMode: "screen",
                   filter: "drop-shadow(0 0 10px rgba(22,163,74,0.45)) drop-shadow(0 0 3px rgba(0,201,167,0.25))",
@@ -349,7 +349,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 </>
               ) : (
                 <>
-                  <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={17} />} label="Investidores" active={active("/investidores-parceiros")} className="hidden lg:flex" />
+                  <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={17} />} label="Investidores" active={active("/investidores-parceiros")} className="flex" />
                   <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={17} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
                   <NavItemLink href="/blog" icon={<BookOpen size={17} />} label="Blog" active={active("/blog")} className="hidden lg:flex" />
                 </>
@@ -359,39 +359,72 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               <div ref={faAnchorRef} className="fa-root relative flex flex-col items-center">
                 <button
                   onClick={() => setFaOpen(o => !o)}
-                  className="relative flex flex-col items-center cursor-pointer bg-transparent border-none"
-                  style={{ padding: "6px clamp(4px,1vw,10px)" }}
+                  className="relative flex flex-col items-center cursor-pointer border-none"
+                  style={{
+                    padding: "5px clamp(6px,1.2vw,12px)",
+                    borderRadius: 8,
+                    background: faOpen
+                      ? "rgba(22,163,74,0.14)"
+                      : (active("/modelo-de-negocio") || active("/financial-architecture"))
+                        ? "rgba(22,163,74,0.08)"
+                        : "transparent",
+                    border: faOpen
+                      ? `1px solid rgba(22,163,74,0.40)`
+                      : "1px solid transparent",
+                    transition: "background 0.15s, border-color 0.15s",
+                  }}
+                  onMouseEnter={e => {
+                    if (!faOpen) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)";
+                  }}
+                  onMouseLeave={e => {
+                    if (!faOpen) (e.currentTarget as HTMLElement).style.background =
+                      (active("/modelo-de-negocio") || active("/financial-architecture"))
+                        ? "rgba(22,163,74,0.08)"
+                        : "transparent";
+                  }}
                 >
                   <Layers
                     size={16}
                     style={{
-                      color: (active("/modelo-de-negocio") || active("/financial-architecture")) ? ACTIVE_G : "rgba(255,255,255,0.55)",
+                      color: faOpen
+                        ? ACTIVE_G
+                        : (active("/modelo-de-negocio") || active("/financial-architecture"))
+                          ? ACTIVE_G
+                          : "rgba(255,255,255,0.55)",
                       marginBottom: 2,
                       transition: "color 0.15s",
                     }}
                   />
-                  <div className="flex items-center gap-0.5">
+                  <div className="flex items-center gap-1">
                     <span
                       style={{
                         fontSize: "clamp(9px,1.8vw,11px)",
-                        fontWeight: 600,
-                        color: (active("/modelo-de-negocio") || active("/financial-architecture")) ? ACTIVE_G : "rgba(255,255,255,0.72)",
+                        fontWeight: 700,
+                        color: faOpen
+                          ? ACTIVE_G
+                          : (active("/modelo-de-negocio") || active("/financial-architecture"))
+                            ? ACTIVE_G
+                            : "rgba(255,255,255,0.80)",
                         whiteSpace: "nowrap",
                         transition: "color 0.15s",
                       }}
                     >
-                      <span className="hidden sm:inline">Arq. Financeira</span>
-                      <span className="inline sm:hidden">Arq. Fin.</span>
+                      Arq. Financeira
                     </span>
                     <motion.span
                       animate={{ rotate: faOpen ? 180 : 0 }}
                       transition={{ duration: 0.18 }}
-                      style={{ color: "rgba(255,255,255,0.40)", marginLeft: 1 }}
+                      style={{
+                        color: faOpen ? ACTIVE_G : "rgba(255,255,255,0.55)",
+                        display: "flex",
+                        alignItems: "center",
+                        transition: "color 0.15s",
+                      }}
                     >
-                      <ChevronDown size={9} />
+                      <ChevronDown size={11} />
                     </motion.span>
                   </div>
-                  {(active("/modelo-de-negocio") || active("/financial-architecture")) && (
+                  {(active("/modelo-de-negocio") || active("/financial-architecture")) && !faOpen && (
                     <span
                       className="absolute bottom-0 left-2 right-2 rounded-full"
                       style={{ height: 2.5, background: `linear-gradient(90deg,${G},${C})` }}
@@ -459,7 +492,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 {/* Cadastro — outline pill */}
                 <Link href="/register">
                   <button
-                    className="hidden sm:flex items-center rounded-full font-bold cursor-pointer"
+                    className="hidden lg:flex items-center rounded-full font-bold cursor-pointer"
                     style={{
                       fontSize: "clamp(10px,2vw,12px)",
                       paddingLeft: "clamp(10px,2vw,16px)",
@@ -514,24 +547,6 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                   </button>
                 </Link>
               </>
-            )}
-
-            {/* Mobile-only public quick links */}
-            {!effectiveUser && (
-              <div className="flex lg:hidden items-center" style={{ gap: 0 }}>
-                <Link href="/investidores-parceiros">
-                  <div className="flex flex-col items-center gap-0.5 px-2 py-1 cursor-pointer" style={{ color: active("/investidores-parceiros") ? ACTIVE_G : "rgba(255,255,255,0.58)" }}>
-                    <TrendingUp size={15} />
-                    <span style={{ fontSize: "7.5px", fontWeight: 700, whiteSpace: "nowrap" }}>Invest.</span>
-                  </div>
-                </Link>
-                <Link href="/modelo-de-negocio">
-                  <div className="flex flex-col items-center gap-0.5 px-2 py-1 cursor-pointer" style={{ color: active("/modelo-de-negocio") ? ACTIVE_G : "rgba(255,255,255,0.58)" }}>
-                    <Layers size={15} />
-                    <span style={{ fontSize: "7.5px", fontWeight: 700, whiteSpace: "nowrap" }}>Arq. Fin.</span>
-                  </div>
-                </Link>
-              </div>
             )}
 
             {/* Divider */}
