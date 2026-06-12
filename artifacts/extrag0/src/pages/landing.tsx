@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import logoMain from "@assets/Logo-new_1781073251550.png";
+import simplesComoDeveSerImg from "@assets/Simples-como-deve-ser-card_1781247644621.png";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import referralArt from "@assets/file_00000000f534720e8e4eab1278948eb7_1780142932397.png";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
@@ -607,50 +608,25 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             HOW IT WORKS
         ══════════════════════════════════════════ */}
-        <section id="como-funciona" className="px-5 py-7 sm:py-14">
-          <div className="max-w-5xl mx-auto">
+        <section id="como-funciona" className="px-3 sm:px-6 py-5 sm:py-10">
+          <div className="max-w-6xl mx-auto">
             <ScrollSection>
-              <div className="text-center mb-10">
-                <span className="chip-primary mb-3 inline-flex">
-                  <Zap size={10} className="fill-primary" /> Como funciona
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#EAF7FF" }}>Simples como deve ser</h2>
-                <p className="max-w-lg mx-auto leading-relaxed" style={{ color: "#D7E7F3" }}>Do cadastro ao pagamento, tudo em uma só plataforma.</p>
+              <div
+                className="w-full overflow-hidden rounded-2xl"
+                style={{
+                  boxShadow: "0 8px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,229,255,0.10)",
+                  border: "1px solid rgba(0,229,255,0.14)",
+                }}
+              >
+                <img
+                  src={simplesComoDeveSerImg}
+                  alt="Simples como deve ser — Do cadastro ao pagamento, tudo em uma só plataforma"
+                  className="w-full h-auto block"
+                  style={{ display: "block" }}
+                  draggable={false}
+                />
               </div>
             </ScrollSection>
-
-            <div className="grid sm:grid-cols-3 gap-5 relative">
-              <div className="hidden sm:block absolute top-14 left-[calc(33%+32px)] right-[calc(33%+32px)] h-px"
-                style={{ background: "linear-gradient(90deg, rgba(124,252,0,0.4), rgba(0,229,255,0.3))" }} />
-              {HOW_IT_WORKS.map((item, i) => (
-                <ScrollSection key={i} delay={i * 0.12}>
-                  <motion.div
-                    whileHover={{ y: -6, scale: 1.02 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className={`glass-card rounded-2xl p-6 border ${item.bg} ${item.glow} relative transition-all cursor-default overflow-hidden`}
-                  >
-                    {/* Large step number watermark */}
-                    <div className="absolute -top-2 -right-1 text-[72px] font-black leading-none select-none pointer-events-none"
-                      style={{ color: "rgba(255,255,255,0.025)", fontFamily: "var(--font-display)" }}>
-                      {item.step}
-                    </div>
-                    {/* Step indicator pill */}
-                    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold mb-4 ${item.bg} border ${item.color}`}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                      Passo {item.step}
-                    </div>
-                    <div className={`w-12 h-12 rounded-2xl ${item.bg} border flex items-center justify-center mb-4 ${item.color}`}
-                      style={i === 0 ? { boxShadow: "0 0 18px rgba(124,252,0,0.25)" } :
-                             i === 1 ? { boxShadow: "0 0 18px rgba(0,229,255,0.25)" } :
-                             { boxShadow: "0 0 18px rgba(250,204,21,0.25)" }}>
-                      {item.icon}
-                    </div>
-                    <h3 className="font-bold text-base mb-2">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                  </motion.div>
-                </ScrollSection>
-              ))}
-            </div>
           </div>
         </section>
 
