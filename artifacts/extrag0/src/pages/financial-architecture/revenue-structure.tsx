@@ -127,25 +127,15 @@ export default function RevenueStructurePage() {
         </section>
 
         {/* Estrutura de Capital — 30% Investidores */}
-        <section className="px-5 sm:px-10 pt-0 pb-6 sm:pb-10">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div
-                className="w-full overflow-hidden rounded-2xl"
-                style={{
-                  boxShadow: "0 8px 40px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.06)",
-                  border: "1px solid rgba(0,0,0,0.07)",
-                }}
-              >
-                <img
-                  src={estruturaCapitalImg}
-                  alt="30% Reservado para Investidores Estratégicos — Estrutura de Capital extraGO"
-                  className="w-full h-auto block"
-                  style={{ display: "block" }}
-                />
-              </div>
-            </Reveal>
-          </div>
+        <section className="pt-0 pb-4 sm:pb-8">
+          <Reveal>
+            <img
+              src={estruturaCapitalImg}
+              alt="30% Reservado para Investidores Estratégicos — Estrutura de Capital extraGO"
+              className="w-full h-auto block"
+              style={{ display: "block" }}
+            />
+          </Reveal>
         </section>
 
         <Divider />

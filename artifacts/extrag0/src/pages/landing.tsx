@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import logoMain from "@assets/Logo-new_1781073251550.png";
 import simplesComoDeveSerImg from "@assets/Simples-como-deve-ser-card_1781247644621.png";
+import feitoParaOsDoisLadosImg from "@assets/Feito-para-os-dois-lados_1781247644430.png";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import referralArt from "@assets/file_00000000f534720e8e4eab1278948eb7_1780142932397.png";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
@@ -453,37 +454,6 @@ export default function LandingPage() {
             </motion.div>
           </div>
 
-          {/* Banner-hero — institutional strip below CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="w-full relative z-10 px-3 sm:px-5"
-            style={{ paddingBottom: "2px" }}
-          >
-            <div
-              style={{
-                height: "clamp(120px, 22vw, 220px)",
-                overflow: "hidden",
-                borderRadius: "clamp(10px, 2vw, 20px)",
-                border: "1px solid rgba(0,229,255,0.18)",
-                boxShadow: "0 0 40px rgba(124,252,0,0.10), 0 8px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04) inset",
-              }}
-            >
-              <img
-                src="/banner-hero.jpg"
-                alt="extraGO — Rede que Cresce. Comissões automáticas. Bônus. Evolua."
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center",
-                  display: "block",
-                }}
-                draggable={false}
-              />
-            </div>
-          </motion.div>
         </section>
 
 
@@ -507,19 +477,48 @@ export default function LandingPage() {
         <section className="px-5 pb-8">
           <ScrollSection>
             <div className="max-w-5xl mx-auto">
-              <div className="relative rounded-2xl overflow-hidden">
-                {/* Real-time stats premium background */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    backgroundImage: "url(/real-time-stats.png)",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center top",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                />
-                <div className="absolute inset-0 rounded-2xl" style={{ background: "rgba(1,5,20,0.06)" }} />
-                <div className="absolute inset-0 border border-cyan-400/20 rounded-2xl" />
+              <div className="relative rounded-2xl overflow-hidden"
+                style={{
+                  border: "1px solid rgba(0,229,255,0.22)",
+                  boxShadow: "0 0 60px rgba(0,229,255,0.08), 0 0 120px rgba(124,252,0,0.05), 0 16px 60px rgba(0,0,0,0.65)",
+                }}>
+                {/* Deep navy base */}
+                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#020b1e 0%,#031228 45%,#020d20 70%,#031428 100%)" }} />
+                {/* Volumetric light — brand glows */}
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 55% at 8% 50%,rgba(22,163,74,0.12) 0%,transparent 58%), radial-gradient(ellipse 55% 60% at 93% 15%,rgba(0,229,255,0.09) 0%,transparent 55%), radial-gradient(ellipse 45% 35% at 50% 95%,rgba(124,252,0,0.08) 0%,transparent 62%)" }} />
+                {/* Network grid */}
+                <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px)", backgroundSize: "44px 44px" }} />
+                {/* Connection arcs + node dots */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="conArc1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#7CFC00" stopOpacity="0" />
+                        <stop offset="35%" stopColor="#7CFC00" stopOpacity="0.18" />
+                        <stop offset="65%" stopColor="#00e5ff" stopOpacity="0.18" />
+                        <stop offset="100%" stopColor="#00e5ff" stopOpacity="0" />
+                      </linearGradient>
+                      <linearGradient id="conArc2" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#16a34a" stopOpacity="0" />
+                        <stop offset="50%" stopColor="#16a34a" stopOpacity="0.11" />
+                        <stop offset="100%" stopColor="#16a34a" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <path d="M 0 180 C 180 70, 380 210, 580 90 S 830 170, 1000 100" fill="none" stroke="url(#conArc1)" strokeWidth="1.4" />
+                    <path d="M 0 120 C 160 210, 350 70, 540 175 S 800 70, 1000 150" fill="none" stroke="url(#conArc2)" strokeWidth="0.9" />
+                    {([
+                      [75, 150, 2.5, "#7CFC00"], [210, 80, 2, "#00e5ff"], [370, 185, 2.5, "#7CFC00"],
+                      [510, 105, 2, "#00e5ff"], [650, 168, 2.5, "#7CFC00"], [790, 82, 2, "#00e5ff"], [935, 145, 2.5, "#7CFC00"],
+                    ] as [number,number,number,string][]).map(([cx,cy,r,c], i) => (
+                      <g key={i}>
+                        <circle cx={cx} cy={cy} r={r * 4.5} fill={c} fillOpacity="0.045" />
+                        <circle cx={cx} cy={cy} r={r} fill={c} fillOpacity="0.88" />
+                      </g>
+                    ))}
+                  </svg>
+                </div>
+                {/* Top accent line */}
+                <div className="absolute inset-x-0 top-0 h-[1.5px]" style={{ background: "linear-gradient(90deg,transparent,rgba(0,229,255,0.55) 30%,rgba(124,252,0,0.65) 50%,rgba(0,229,255,0.55) 70%,transparent)" }} />
                 {/* Live indicator */}
                 <div className="absolute top-3 right-4 flex items-center gap-1.5">
                   <span className="live-dot" />
@@ -608,193 +607,34 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             HOW IT WORKS
         ══════════════════════════════════════════ */}
-        <section id="como-funciona" className="px-3 sm:px-6 py-5 sm:py-10">
-          <div className="max-w-6xl mx-auto">
-            <ScrollSection>
-              <div
-                className="w-full overflow-hidden rounded-2xl"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,229,255,0.10)",
-                  border: "1px solid rgba(0,229,255,0.14)",
-                }}
-              >
-                <img
-                  src={simplesComoDeveSerImg}
-                  alt="Simples como deve ser — Do cadastro ao pagamento, tudo em uma só plataforma"
-                  className="w-full h-auto block"
-                  style={{ display: "block" }}
-                  draggable={false}
-                />
-              </div>
-            </ScrollSection>
-          </div>
+        <section id="como-funciona" className="py-2 sm:py-4">
+          <ScrollSection>
+            <img
+              src={simplesComoDeveSerImg}
+              alt="Simples como deve ser — Do cadastro ao pagamento, tudo em uma só plataforma"
+              className="w-full h-auto block"
+              style={{ display: "block" }}
+              draggable={false}
+            />
+          </ScrollSection>
         </section>
 
         {/* ══════════════════════════════════════════
             FOR WHOM
         ══════════════════════════════════════════ */}
-        <section id="para-quem" className="px-5 py-7 sm:py-14">
-          <div className="max-w-5xl mx-auto">
-            <ScrollSection>
-              <div className="text-center mb-10">
-                <span className="chip-primary mb-3 inline-flex" style={{ background: "rgba(0,229,255,0.12)", borderColor: "rgba(0,229,255,0.25)", color: "hsl(186,100%,50%)" }}>
-                  Para quem é
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-3 mt-2" style={{ color: "#EAF7FF" }}>Feito para os dois lados</h2>
-                <p className="max-w-lg mx-auto leading-relaxed" style={{ color: "#D7E7F3" }}>Empresas que precisam de profissionais. Profissionais que buscam mais.</p>
-              </div>
-            </ScrollSection>
-
-            <div className="grid sm:grid-cols-2 gap-5">
-              <ScrollSection delay={0.05}>
-                <motion.div
-                  whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(0,229,255,0.08), 0 0 0 1px rgba(0,229,255,0.2)" }}
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  className="glass-card rounded-2xl p-5 border border-secondary/12 h-full cursor-default"
-                >
-                  <div className="w-11 h-11 rounded-2xl bg-secondary/12 border border-secondary/25 flex items-center justify-center mb-4">
-                    <Briefcase size={20} className="text-secondary" />
-                  </div>
-                  <h3 className="text-lg font-bold mb-1.5">Para Empresas</h3>
-                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">Restaurantes, bares, hotéis e organizadores de eventos.</p>
-                  <ul className="space-y-2.5 mb-5">
-                    {FEATURES_COMPANY.map((f, i) => (
-                      <motion.li
-                        key={i}
-                        initial={{ opacity: 0, x: -8 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.06 }}
-                        className="flex items-start gap-2.5 text-sm"
-                      >
-                        <CheckCircle size={14} className="text-secondary flex-shrink-0 mt-0.5" />
-                        <span>{f}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                  <Link href="/register?role=company">
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                      <Button className="w-full bg-secondary text-black hover:bg-secondary/90 neon-glow-cyan rounded-xl font-bold border-none h-11">
-                        Começar como Empresa <ArrowRight size={16} className="ml-1" />
-                      </Button>
-                    </motion.div>
-                  </Link>
-                </motion.div>
-              </ScrollSection>
-
-              <ScrollSection delay={0.12}>
-                <motion.div
-                  whileHover={{ y: -4, boxShadow: "0 12px 40px rgba(124,252,0,0.08), 0 0 0 1px rgba(124,252,0,0.2)" }}
-                  transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                  className="glass-card rounded-2xl p-5 border border-primary/12 h-full cursor-default"
-                >
-                  <div className="w-11 h-11 rounded-2xl bg-primary/12 border border-primary/25 flex items-center justify-center mb-4">
-                    <Users size={20} className="text-primary" />
-                  </div>
-                  <h3 className="text-lg font-bold mb-1.5">Para Freelancers</h3>
-                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">Garçons, barmans, hostess, cozinheiros e muito mais.</p>
-                  <ul className="space-y-2.5 mb-5">
-                    {FEATURES_FREELANCER.map((f, i) => (
-                      <motion.li
-                        key={i}
-                        initial={{ opacity: 0, x: -8 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.06 }}
-                        className="flex items-start gap-2.5 text-sm"
-                      >
-                        <CheckCircle size={14} className="text-primary flex-shrink-0 mt-0.5" />
-                        <span>{f}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                  <Link href="/register?role=freelancer">
-                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                      <Button className="w-full bg-primary text-black hover:bg-primary/90 neon-glow rounded-xl font-bold border-none h-11">
-                        Quero Trabalhar <ArrowRight size={16} className="ml-1" />
-                      </Button>
-                    </motion.div>
-                  </Link>
-                </motion.div>
-              </ScrollSection>
-            </div>
-          </div>
+        <section id="para-quem" className="pt-1 pb-3 sm:pt-2 sm:pb-5">
+          <ScrollSection>
+            <img
+              src={feitoParaOsDoisLadosImg}
+              alt="Feito para os dois lados — Para Empresas e Para Profissionais"
+              className="w-full h-auto block"
+              style={{ display: "block" }}
+              draggable={false}
+            />
+          </ScrollSection>
         </section>
 
 
-        {/* ══════════════════════════════════════════
-            ECOSYSTEM VISUAL — Infraestrutura conectada
-        ══════════════════════════════════════════ */}
-        <section className="relative overflow-hidden py-1" aria-hidden="true">
-          <div className="relative max-w-5xl mx-auto px-4">
-            <svg viewBox="0 0 900 170" className="w-full" style={{ height: "clamp(90px,16vw,170px)", display: "block" }} aria-hidden="true">
-              <defs>
-                <linearGradient id="ecosFadeEdge" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#020617" stopOpacity="1" />
-                  <stop offset="11%" stopColor="#020617" stopOpacity="0" />
-                  <stop offset="89%" stopColor="#020617" stopOpacity="0" />
-                  <stop offset="100%" stopColor="#020617" stopOpacity="1" />
-                </linearGradient>
-                <linearGradient id="ecosFlow1" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#7CFC00" stopOpacity="0" />
-                  <stop offset="28%" stopColor="#7CFC00" stopOpacity="0.42" />
-                  <stop offset="62%" stopColor="#00e5ff" stopOpacity="0.50" />
-                  <stop offset="100%" stopColor="#00e5ff" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient id="ecosFlow2" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#16a34a" stopOpacity="0" />
-                  <stop offset="45%" stopColor="#16a34a" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#16a34a" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              {[55,85,115].map((y, i) => (
-                <line key={`hg${i}`} x1="0" y1={y} x2="900" y2={y} stroke="rgba(0,229,255,0.035)" strokeWidth="0.5" strokeDasharray="6 16" />
-              ))}
-              {[100,200,300,400,500,600,700,800].map((x, i) => (
-                <line key={`vg${i}`} x1={x} y1="15" x2={x} y2="155" stroke="rgba(0,229,255,0.025)" strokeWidth="0.5" strokeDasharray="4 18" />
-              ))}
-              <path d="M 70 85 C 195 45, 375 135, 555 65 S 775 115, 840 85" fill="none" stroke="url(#ecosFlow1)" strokeWidth="1.2" />
-              <path d="M 70 108 C 185 125, 355 65, 525 115 S 755 75, 840 98" fill="none" stroke="url(#ecosFlow2)" strokeWidth="0.7" />
-              {[
-                { x:95,  y:78,  r:5,   c:"#7CFC00", s:"SP" },
-                { x:172, y:52,  r:4,   c:"#00e5ff", s:"RJ" },
-                { x:255, y:118, r:3.5, c:"#7CFC00", s:"MG" },
-                { x:345, y:65,  r:3.2, c:"#00e5ff", s:"DF" },
-                { x:432, y:128, r:3.5, c:"#7CFC00", s:"BA" },
-                { x:518, y:70,  r:3,   c:"#00e5ff", s:"PE" },
-                { x:605, y:116, r:3,   c:"#7CFC00", s:"CE" },
-                { x:692, y:55,  r:3.5, c:"#00e5ff", s:"PA" },
-                { x:785, y:105, r:3,   c:"#7CFC00", s:"AM" },
-                { x:110, y:142, r:2.8, c:"#4ade80", s:"PR" },
-                { x:205, y:150, r:2.5, c:"#4ade80", s:"SC" },
-                { x:300, y:142, r:2.8, c:"#4ade80", s:"RS" },
-                { x:470, y:45,  r:2.5, c:"#4ade80", s:"GO" },
-                { x:570, y:145, r:2.5, c:"#4ade80", s:"MA" },
-                { x:660, y:48,  r:2.5, c:"#4ade80", s:"PI" },
-              ].map((n, i) => (
-                <g key={`n${i}`}>
-                  <circle cx={n.x} cy={n.y} r={n.r * 4.2} fill={n.c} fillOpacity="0.048" />
-                  <circle cx={n.x} cy={n.y} r={n.r * 2.3} fill="none" stroke={n.c} strokeWidth="0.45" strokeOpacity="0.20" />
-                  <circle cx={n.x} cy={n.y} r={n.r} fill={n.c} fillOpacity="0.80" />
-                  <text x={n.x} y={n.y - n.r - 3} textAnchor="middle" fill={n.c} fontSize="6" fontWeight="700" opacity="0.50">{n.s}</text>
-                </g>
-              ))}
-              {([
-                [0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],
-                [0,9],[9,10],[10,11],[3,12],[4,13],[5,14],
-              ] as [number,number][]).map(([a, b], i) => {
-                const cc = [{x:95,y:78},{x:172,y:52},{x:255,y:118},{x:345,y:65},{x:432,y:128},{x:518,y:70},{x:605,y:116},{x:692,y:55},{x:785,y:105},{x:110,y:142},{x:205,y:150},{x:300,y:142},{x:470,y:45},{x:570,y:145},{x:660,y:48}];
-                const n1 = cc[a], n2 = cc[b];
-                return <line key={`c${i}`} x1={n1.x} y1={n1.y} x2={n2.x} y2={n2.y} stroke="rgba(0,229,255,0.14)" strokeWidth="0.5" />;
-              })}
-              <g transform="translate(450,85)">
-                <rect x="-16" y="-11" width="32" height="22" rx="6" fill="rgba(0,229,255,0.065)" stroke="rgba(0,229,255,0.20)" strokeWidth="0.7" />
-                <text textAnchor="middle" y="4" fill="rgba(0,229,255,0.58)" fontSize="9" fontWeight="900">PIX</text>
-              </g>
-              <rect x="0" y="0" width="900" height="170" fill="url(#ecosFadeEdge)" />
-            </svg>
-          </div>
-        </section>
 
         {/* ══════════════════════════════════════════
             SEÇÃO DE INDICAÇÕES — Banner + Simulador
@@ -871,6 +711,21 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* ── Banner hero — reposicionado após Indicações ── */}
+        <div className="w-full" style={{ lineHeight: 0 }}>
+          <img
+            src="/banner-hero.jpg"
+            alt="extraGO — Rede que Cresce. Comissões automáticas. Bônus. Evolua."
+            style={{
+              width: "100%",
+              display: "block",
+              objectFit: "cover",
+              objectPosition: "center",
+            }}
+            draggable={false}
+          />
+        </div>
 
         {/* ══════════════════════════════════════════
             ARQUITETURA FINANCEIRA — Institucional (Pos. 1)

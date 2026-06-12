@@ -322,13 +322,28 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               className="flex items-center justify-center"
               style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(0px,1.2vw,16px)" }}
             >
-              <NavItemLink href="/#como-funciona" icon={<Zap size={16} />} label="Como Funciona" active={false} className="hidden lg:flex" />
-              <NavItemLink href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden lg:flex" />
-              <NavItemLink href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden lg:flex" />
-              <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={16} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
-              <NavItemLink href="/modelo-de-negocio" icon={<BarChart3 size={16} />} label="Plataforma" active={active("/modelo-de-negocio")} className="hidden lg:flex" />
-
-              <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={16} />} label="Investidores" active={active("/investidores-parceiros")} />
+              {loc === "/investidores-parceiros" ? (
+                <>
+                  <NavItemLink href="/investidores-parceiros" icon={<HomeIcon size={16} />} label="Visão Geral" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/investidores-parceiros#mercado" icon={<Globe size={16} />} label="Mercado" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/investidores-parceiros#solucao" icon={<Zap size={16} />} label="Oportunidade" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/financial-architecture/expansion-model" icon={<TrendingUp size={16} />} label="Expansão" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/financial-architecture/professional-plans" icon={<BadgeCheck size={16} />} label="Benefícios" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/modelo-de-negocio" icon={<BarChart3 size={16} />} label="Modelo" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/investidores-parceiros#equipe" icon={<Users size={16} />} label="Governança" active={false} className="hidden lg:flex" />
+                </>
+              ) : (
+                <>
+                  <NavItemLink href="/" icon={<HomeIcon size={16} />} label="Início" active={loc === "/"} className="hidden lg:flex" />
+                  <NavItemLink href="/#como-funciona" icon={<Zap size={16} />} label="Como Funciona" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/register?role=company" icon={<Building2 size={16} />} label="Empresas" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/register?role=freelancer" icon={<Users size={16} />} label="Profissionais" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={16} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
+                  <NavItemLink href="/financial-architecture/professional-plans" icon={<BadgeCheck size={16} />} label="Reputação" active={false} className="hidden lg:flex" />
+                  <NavItemLink href="/sobre" icon={<BookOpen size={16} />} label="Sobre" active={active("/sobre")} className="hidden lg:flex" />
+                  <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={16} />} label="Investidores" active={active("/investidores-parceiros")} className="hidden lg:flex" />
+                </>
+              )}
 
               {/* Arquitetura Financeira with dropdown */}
               <div ref={faAnchorRef} className="fa-root relative flex flex-col items-center">

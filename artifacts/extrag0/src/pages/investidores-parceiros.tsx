@@ -328,26 +328,16 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             02 · THE MARKET
         ═══════════════════════════════ */}
-        <section id="mercado" className="px-3 sm:px-6 py-4 sm:py-10">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div
-                className="w-full overflow-hidden rounded-2xl"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.50), 0 0 0 1px rgba(0,229,255,0.10)",
-                  border: "1px solid rgba(0,229,255,0.12)",
-                }}
-              >
-                <img
-                  src={oMercadoImg}
-                  alt="O Mercado — Um mercado imenso operando de forma fragmentada"
-                  className="w-full h-auto block"
-                  style={{ display: "block" }}
-                  draggable={false}
-                />
-              </div>
-            </Reveal>
-          </div>
+        <section id="mercado" className="py-2 sm:py-4">
+          <Reveal>
+            <img
+              src={oMercadoImg}
+              alt="O Mercado — Um mercado imenso operando de forma fragmentada"
+              className="w-full h-auto block"
+              style={{ display: "block" }}
+              draggable={false}
+            />
+          </Reveal>
         </section>
 
         {/* ── Banner institucional — após Mercado, antes de O Problema ── */}
@@ -378,26 +368,16 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             03 · THE PROBLEM
         ═══════════════════════════════ */}
-        <section id="problema" className="px-3 sm:px-6 py-4 sm:py-10">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div
-                className="w-full overflow-hidden rounded-2xl"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.50), 0 0 0 1px rgba(244,63,94,0.12)",
-                  border: "1px solid rgba(244,63,94,0.14)",
-                }}
-              >
-                <img
-                  src={oProblemaImg}
-                  alt="O Problema — Dois lados. Uma dor compartilhada."
-                  className="w-full h-auto block"
-                  style={{ display: "block" }}
-                  draggable={false}
-                />
-              </div>
-            </Reveal>
-          </div>
+        <section id="problema" className="py-2 sm:py-4">
+          <Reveal>
+            <img
+              src={oProblemaImg}
+              alt="O Problema — Dois lados. Uma dor compartilhada."
+              className="w-full h-auto block"
+              style={{ display: "block" }}
+              draggable={false}
+            />
+          </Reveal>
         </section>
 
         <Divider />
@@ -405,26 +385,16 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             04 · WHY NOW
         ═══════════════════════════════ */}
-        <section className="px-3 sm:px-6 py-4 sm:py-10">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div
-                className="w-full overflow-hidden rounded-2xl"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.50), 0 0 0 1px rgba(0,229,255,0.10)",
-                  border: "1px solid rgba(0,229,255,0.12)",
-                }}
-              >
-                <img
-                  src={porQueAgoraImg}
-                  alt="Por Que Agora — O momento certo para construir isso"
-                  className="w-full h-auto block"
-                  style={{ display: "block" }}
-                  draggable={false}
-                />
-              </div>
-            </Reveal>
-          </div>
+        <section className="py-2 sm:py-4">
+          <Reveal>
+            <img
+              src={porQueAgoraImg}
+              alt="Por Que Agora — O momento certo para construir isso"
+              className="w-full h-auto block"
+              style={{ display: "block" }}
+              draggable={false}
+            />
+          </Reveal>
         </section>
 
         <Divider />
@@ -834,26 +804,16 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             09b · CAPITAL STRUCTURE — 30% investor block
         ═══════════════════════════════ */}
-        <section className="px-3 sm:px-6 py-4 sm:py-10">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div
-                className="w-full overflow-hidden rounded-2xl"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.50), 0 0 0 1px rgba(244,63,94,0.14)",
-                  border: "1px solid rgba(244,63,94,0.20)",
-                }}
-              >
-                <img
-                  src={estruturaCapitalImg}
-                  alt="30% Reservado para Investidores Estratégicos — Estrutura de Capital extraGO"
-                  className="w-full h-auto block"
-                  style={{ display: "block" }}
-                  draggable={false}
-                />
-              </div>
-            </Reveal>
-          </div>
+        <section className="py-2 sm:py-4">
+          <Reveal>
+            <img
+              src={estruturaCapitalImg}
+              alt="30% Reservado para Investidores Estratégicos — Estrutura de Capital extraGO"
+              className="w-full h-auto block"
+              style={{ display: "block" }}
+              draggable={false}
+            />
+          </Reveal>
         </section>
 
         <Divider />
