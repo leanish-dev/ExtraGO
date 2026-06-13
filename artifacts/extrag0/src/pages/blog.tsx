@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import { ArrowRight, BookOpen, Clock, Tag } from "lucide-react";
-import logoMain from "@assets/Logo-new_1781073251550.png";
+import logoMain from "@assets/Logo-no-text_1781338757912.png";
 import { Reveal } from "@/lib/institutional-components";
 
 const POSTS = [

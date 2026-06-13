@@ -9,6 +9,9 @@ import heroArqImg from "@assets/Hero-arquitetura-main_1781335479652.png";
 import assProfissionaisArqImg from "@assets/Assinaturas-Profissionais-arqfin_1781335479672.png";
 import assEmpresariaisArqImg from "@assets/Assinaturas-Empresariais-arqfin_1781335479732.png";
 import representantesArqImg from "@assets/Representantes-arqfin_1781335479562.png";
+import modeloExpansaoImg from "@assets/Modelo-Expansão_1781338758063.png";
+import efeitoDeRedeImg from "@assets/Efeito-de-Rede_1781338758017.png";
+import visaoLongoPrazoImg from "@assets/Visão-Longo-Prazo_1781338758036.png";
 import {
   Zap, Network, BadgeCheck, Building2,
   DollarSign, MapPin, TrendingUp, Globe,
@@ -290,22 +293,14 @@ export default function ModeloDeNegocioPage() {
               </p>
             </Reveal>
 
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
-              {[
-                { phase: "Fase 1", region: "Rio Grande do Sul", color: GA },
-                { phase: "Fase 2", region: "Região Sul", color: GC },
-                { phase: "Fase 3", region: "Sudeste", color: PURPLE },
-                { phase: "Fase 4", region: "Capitais Estratégicas", color: AMBER },
-                { phase: "Fase 5", region: "Cobertura Nacional", color: ROSE },
-              ].map((item, i) => (
-                <Reveal key={i} delay={i * 0.07} className="flex-1">
-                  <GCard className="p-4 text-center h-full" accent={item.color}>
-                    <p className="text-[9px] font-black tracking-widest uppercase mb-1" style={{ color: item.color }}>{item.phase}</p>
-                    <p className="text-[13px] font-bold text-slate-700 leading-snug">{item.region}</p>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
+            <Reveal className="mb-6">
+              <img
+                src={modeloExpansaoImg}
+                alt="Modelo de Expansão Nacional — 5 Fases do Rio Grande do Sul à cobertura nacional"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
+            </Reveal>
 
             <WhyBlock text="A expansão em fases permite crescimento nacional sem necessidade de estrutura física centralizada. Cada representante estadual é um multiplicador de mercado — desenvolvendo relacionamentos locais, parcerias regionais e crescimento de rede de forma descentralizada e economicamente eficiente." />
             <ImpactBlock text="Expansão nacional com capital eficiente: cada estado ativado multiplica as fontes de receita sem aumento proporcional de custos fixos. O modelo de representantes cria barreiras competitivas regionais que fortalecem a posição da extraGO e são difíceis de replicar por concorrentes sem presença local." />
@@ -465,54 +460,13 @@ export default function ModeloDeNegocioPage() {
               </p>
             </Reveal>
 
-            {/* Circular flywheel visual */}
             <Reveal delay={0.1} className="mb-10">
-              <div className="relative">
-                {/* Central circle */}
-                <div className="relative mx-auto" style={{ maxWidth: 520 }}>
-                  <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { label: "Mais Empresas", sub: "publicam Extras na plataforma", color: GA, icon: <Building2 size={18} />, arrow: "→" },
-                      { label: "Mais Extras", sub: "concluídos geram receita C1", color: GC, icon: <Zap size={18} />, arrow: "↓" },
-                      { label: "Mais Indicações", sub: "ativam crescimento orgânico C2", color: ROSE, icon: <Network size={18} />, arrow: "↑" },
-                      { label: "Mais Profissionais", sub: "se cadastram e assinam C3", color: PURPLE, icon: <Users size={18} />, arrow: "←" },
-                    ].map((node, i) => (
-                      <Reveal key={i} delay={i * 0.10}>
-                        <motion.div
-                          whileHover={{ scale: 1.03 }}
-                          transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                          className="rounded-2xl p-4 sm:p-5 text-center cursor-default"
-                          style={{
-                            background: `linear-gradient(135deg,${node.color}10 0%,${node.color}05 100%)`,
-                            border: `1.5px solid ${node.color}25`,
-                            boxShadow: `0 4px 20px ${node.color}10`,
-                          }}>
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3"
-                            style={{ background: `${node.color}14`, border: `1px solid ${node.color}22` }}>
-                            <span style={{ color: node.color }}>{node.icon}</span>
-                          </div>
-                          <p className="text-[14px] font-black text-slate-800 mb-1 leading-tight">{node.label}</p>
-                          <p className="text-[11px] text-slate-400 leading-snug">{node.sub}</p>
-                        </motion.div>
-                      </Reveal>
-                    ))}
-                  </div>
-
-                  {/* Center label */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="rounded-full flex flex-col items-center justify-center text-center"
-                      style={{
-                        width: 88, height: 88,
-                        background: `linear-gradient(135deg,${GA}18,${GC}12)`,
-                        border: `2px solid ${GA}30`,
-                        boxShadow: `0 0 32px ${GA}20`,
-                      }}>
-                      <Repeat size={16} style={{ color: GA }} />
-                      <p className="text-[8px] font-black tracking-wide uppercase mt-1" style={{ color: GA }}>Flywheel</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <img
+                src={efeitoDeRedeImg}
+                alt="Efeito de Rede extraGO — Flywheel autossustentável de crescimento"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
             </Reveal>
 
             {/* Why it compounds */}
@@ -569,33 +523,15 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── VISÃO DE LONGO PRAZO ── */}
-        <section className="px-5 sm:px-10 py-6 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <GCard className="p-6 sm:p-10" accent={GA} glow>
-                <div className="flex flex-col sm:flex-row items-start gap-6">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${GA}12`, border: `1px solid ${GA}25` }}>
-                    <TrendingUp size={22} style={{ color: GA }} />
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-black tracking-widest uppercase mb-2" style={{ color: GA }}>Visão de Longo Prazo</p>
-                    <p className="text-slate-800 text-[15px] sm:text-[17px] font-semibold leading-relaxed mb-3">
-                      Assim como o Uber transformou o transporte, o Airbnb transformou a hospedagem e o LinkedIn transformou
-                      o networking profissional, a extraGO busca <strong>transformar a contratação de mão de obra sob demanda no Brasil.</strong>
-                    </p>
-                    <p className="text-slate-500 text-[13px] leading-relaxed mb-4">
-                      Nosso objetivo não é apenas criar uma plataforma. Nosso objetivo é construir a infraestrutura nacional
-                      que conecta empresas, profissionais, oportunidades e crescimento econômico em um único ecossistema.
-                    </p>
-                    <p className="font-black text-[14px] tracking-wide" style={{ color: GA }}>
-                      extraGO — A infraestrutura de mão de obra do Brasil. 🚀
-                    </p>
-                  </div>
-                </div>
-              </GCard>
-            </Reveal>
-          </div>
+        <section className="py-0">
+          <Reveal>
+            <img
+              src={visaoLongoPrazoImg}
+              alt="Visão de Longo Prazo — A extraGO como infraestrutura de mão de obra do Brasil"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
         </section>
 
         {/* ── FOOTER NAV ── */}

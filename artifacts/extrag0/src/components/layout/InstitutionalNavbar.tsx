@@ -15,7 +15,7 @@ import { NotificationBell } from "@/components/notifications-dropdown";
 import { LevelBadge, LevelBadgeIcon } from "@/components/level-badge";
 import { toast } from "sonner";
 import { visibleSections, isItemLocked, type Role, type NavItem } from "./nav-config";
-import logoMain from "@assets/Logo-new_1781073251550.png";
+import logoMain from "@assets/Logo-no-text_1781338757912.png";
 
 const G = "#16a34a";
 const C = "#00c9a7";
@@ -355,81 +355,85 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 </>
               )}
 
-              {/* Arquitetura Financeira with dropdown */}
+              {/* Arquitetura Financeira — primary highlighted with dropdown */}
               <div ref={faAnchorRef} className="fa-root relative flex flex-col items-center">
                 <button
                   onClick={() => setFaOpen(o => !o)}
-                  className="relative flex flex-col items-center cursor-pointer border-none"
+                  className="relative flex items-center gap-1.5 cursor-pointer border-none"
                   style={{
-                    padding: "5px clamp(6px,1.2vw,12px)",
-                    borderRadius: 8,
+                    padding: "6px clamp(8px,1.4vw,14px)",
+                    borderRadius: 20,
                     background: faOpen
-                      ? "rgba(22,163,74,0.14)"
+                      ? `linear-gradient(135deg,${G},${C})`
                       : (active("/modelo-de-negocio") || active("/financial-architecture"))
-                        ? "rgba(22,163,74,0.08)"
-                        : "transparent",
+                        ? `linear-gradient(135deg,${G}cc,${C}cc)`
+                        : `linear-gradient(135deg,rgba(22,163,74,0.18),rgba(0,201,167,0.12))`,
                     border: faOpen
-                      ? `1px solid rgba(22,163,74,0.40)`
-                      : "1px solid transparent",
-                    transition: "background 0.15s, border-color 0.15s",
+                      ? "1px solid transparent"
+                      : `1px solid rgba(22,163,74,0.45)`,
+                    boxShadow: faOpen
+                      ? `0 0 18px rgba(22,163,74,0.45)`
+                      : `0 0 10px rgba(22,163,74,0.18)`,
+                    transition: "background 0.18s, box-shadow 0.18s, border-color 0.18s",
                   }}
                   onMouseEnter={e => {
-                    if (!faOpen) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)";
+                    if (!faOpen) {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.background = `linear-gradient(135deg,rgba(22,163,74,0.30),rgba(0,201,167,0.22))`;
+                      el.style.boxShadow = `0 0 16px rgba(22,163,74,0.30)`;
+                    }
                   }}
                   onMouseLeave={e => {
-                    if (!faOpen) (e.currentTarget as HTMLElement).style.background =
-                      (active("/modelo-de-negocio") || active("/financial-architecture"))
-                        ? "rgba(22,163,74,0.08)"
-                        : "transparent";
+                    if (!faOpen) {
+                      const el = e.currentTarget as HTMLElement;
+                      el.style.background = (active("/modelo-de-negocio") || active("/financial-architecture"))
+                        ? `linear-gradient(135deg,${G}cc,${C}cc)`
+                        : `linear-gradient(135deg,rgba(22,163,74,0.18),rgba(0,201,167,0.12))`;
+                      el.style.boxShadow = `0 0 10px rgba(22,163,74,0.18)`;
+                    }
                   }}
                 >
                   <Layers
-                    size={16}
+                    size={14}
                     style={{
                       color: faOpen
-                        ? ACTIVE_G
+                        ? "#fff"
                         : (active("/modelo-de-negocio") || active("/financial-architecture"))
-                          ? ACTIVE_G
-                          : "rgba(255,255,255,0.55)",
-                      marginBottom: 2,
+                          ? "#fff"
+                          : ACTIVE_G,
                       transition: "color 0.15s",
+                      flexShrink: 0,
                     }}
                   />
-                  <div className="flex items-center gap-1">
-                    <span
-                      style={{
-                        fontSize: "clamp(9px,1.8vw,11px)",
-                        fontWeight: 700,
-                        color: faOpen
-                          ? ACTIVE_G
-                          : (active("/modelo-de-negocio") || active("/financial-architecture"))
-                            ? ACTIVE_G
-                            : "rgba(255,255,255,0.80)",
-                        whiteSpace: "nowrap",
-                        transition: "color 0.15s",
-                      }}
-                    >
-                      Arq. Financeira
-                    </span>
-                    <motion.span
-                      animate={{ rotate: faOpen ? 180 : 0 }}
-                      transition={{ duration: 0.18 }}
-                      style={{
-                        color: faOpen ? ACTIVE_G : "rgba(255,255,255,0.55)",
-                        display: "flex",
-                        alignItems: "center",
-                        transition: "color 0.15s",
-                      }}
-                    >
-                      <ChevronDown size={11} />
-                    </motion.span>
-                  </div>
-                  {(active("/modelo-de-negocio") || active("/financial-architecture")) && !faOpen && (
-                    <span
-                      className="absolute bottom-0 left-2 right-2 rounded-full"
-                      style={{ height: 2.5, background: `linear-gradient(90deg,${G},${C})` }}
-                    />
-                  )}
+                  <span
+                    style={{
+                      fontSize: "clamp(9px,1.8vw,11px)",
+                      fontWeight: 800,
+                      color: faOpen
+                        ? "#fff"
+                        : (active("/modelo-de-negocio") || active("/financial-architecture"))
+                          ? "#fff"
+                          : ACTIVE_G,
+                      whiteSpace: "nowrap",
+                      transition: "color 0.15s",
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    Arq. Financeira
+                  </span>
+                  <motion.span
+                    animate={{ rotate: faOpen ? 180 : 0 }}
+                    transition={{ duration: 0.18 }}
+                    style={{
+                      color: faOpen ? "#fff" : ACTIVE_G,
+                      display: "flex",
+                      alignItems: "center",
+                      transition: "color 0.15s",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <ChevronDown size={11} />
+                  </motion.span>
                 </button>
                 <FADropdown open={faOpen} anchorRef={faAnchorRef} onClose={() => setFaOpen(false)} />
               </div>

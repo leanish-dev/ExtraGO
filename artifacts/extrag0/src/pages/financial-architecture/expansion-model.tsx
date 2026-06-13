@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Globe, MapPin, TrendingUp, Users, Building2, Target, Layers, Shield, Zap, BarChart3, Network, Star } from "lucide-react";
+import modeloExpansaoImg from "@assets/Modelo-Expansão_1781338758063.png";
 import {
   FABackground, FAHeader, FANavBar, GCard, Pill, Reveal, Divider,
   CheckItem, GA, GC, PageHero,
@@ -89,40 +90,14 @@ export default function ExpansionModelPage() {
               </p>
             </Reveal>
 
-            <div className="space-y-4 mb-8">
-              {PHASES.map((item, i) => (
-                <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-5 sm:p-6" accent={item.color} glow={item.final}>
-                    <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                      <div className="flex items-center gap-3 sm:w-52 sm:flex-shrink-0">
-                        <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ background: `${item.color}14`, border: `2px solid ${item.color}40` }}>
-                          <span style={{ color: item.color }}>{item.icon}</span>
-                        </div>
-                        <div>
-                          <p className="text-[9px] font-black tracking-widest uppercase mb-0.5" style={{ color: item.color }}>{item.phase}</p>
-                          <p className="font-black text-[15px] text-slate-800 leading-tight">{item.region}</p>
-                          {item.final && (
-                            <span className="inline-block mt-1 text-[9px] font-black px-2 py-0.5 rounded-full"
-                              style={{ background: `${item.color}12`, color: item.color, border: `1px solid ${item.color}25` }}>
-                              OBJETIVO FINAL
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-[13px] text-slate-600 leading-relaxed mb-3">{item.desc}</p>
-                        <div className="grid grid-cols-2 gap-1.5">
-                          {item.goals.map((g, j) => (
-                            <CheckItem key={j} text={g} color={item.color} />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
+            <Reveal className="mb-8">
+              <img
+                src={modeloExpansaoImg}
+                alt="Modelo de Expansão Nacional — 5 Fases do Rio Grande do Sul à cobertura nacional"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
+            </Reveal>
           </div>
         </section>
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import logoMain from "@assets/Logo-new_1781073251550.png";
+import logoMain from "@assets/Logo-no-text_1781338757912.png";
 import painelCentroBgImg from "@assets/Painel-centro-bg_1781330517500.png";
 import intermediacaoCardLandingImg from "@assets/Intermediação-card-landing_1781331775567.png";
 import simplesComoDeveSerImg from "@assets/Simples-como-deve-ser-card_1781247644621.png";

@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import { Shield, Lock, Eye, AlertTriangle, CheckCircle, Server, Key, ArrowRight, FileText } from "lucide-react";
-import logoMain from "@assets/Logo-new_1781073251550.png";
+import logoMain from "@assets/Logo-no-text_1781338757912.png";
 import { Reveal } from "@/lib/institutional-components";
 
 const PILLARS = [

@@ -2,7 +2,9 @@ import React, { useRef, useState, useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import logoMain from "@assets/Logo-new_1781073251550.png";
+import logoMain from "@assets/Logo-no-text_1781338757912.png";
+import modeloExpansaoImg from "@assets/Modelo-Expansão_1781338758063.png";
+import visaoLongoPrazoImg from "@assets/Visão-Longo-Prazo_1781338758036.png";
 import investidoresHeroImg from "@assets/Investidores-page-hero2_1781247644596.png";
 import oMercadoImg from "@assets/O-mercado-section_1781247644534.png";
 import oProblemaImg from "@assets/O-problema-section-investidores_1781247644565.png";
@@ -687,103 +689,31 @@ export default function InvestidoresParceirosPage() {
         <Divider />
 
         {/* ═══════════════════════════════
-            11 · ROADMAP — timeline
+            11 · MODELO DE EXPANSÃO
         ═══════════════════════════════ */}
-        <section id="roadmap" className="px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(14,165,233,0.02)" }}>
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="text-center mb-6 sm:mb-10">
-              <Pill label="Roadmap" color={C} icon={<TrendingUp size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
-                A jornada rumo à liderança nacional.
-              </h2>
-              <p className="text-[rgba(255,255,255,0.92)] text-[14px] max-w-lg mx-auto">
-                Sete fases estruturadas de validação ao domínio nacional do mercado de trabalho flexível.
-              </p>
-            </Reveal>
-
-            {/* Vertical timeline on mobile, horizontal on desktop */}
-            <div className="relative">
-              {/* Desktop connector */}
-              <div className="absolute top-[22px] left-[40px] right-[40px] h-px hidden lg:block"
-                style={{ background: `linear-gradient(90deg,${G}50,${C}30,rgba(168,85,247,0.12))` }} />
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-                {ROADMAP_PHASES.map((phase, i) => (
-                  <Reveal key={i} delay={i * 0.05}>
-                    <div className="flex flex-col items-center text-center gap-2">
-                      <div className="relative z-10 w-11 h-11 rounded-2xl flex flex-col items-center justify-center border transition-all duration-300"
-                        style={{
-                          background: phase.done ? `${phase.color}15` : "rgba(255,255,255,0.03)",
-                          borderColor: phase.done ? `${phase.color}45` : "rgba(255,255,255,0.07)",
-                          boxShadow: phase.done ? `0 0 18px ${phase.color}22` : "none",
-                        }}>
-                        <span className="text-[9px] font-black" style={{ color: phase.done ? phase.color : "rgba(255,255,255,0.18)" }}>
-                          {phase.n}
-                        </span>
-                        {phase.done && <div className="w-1 h-1 rounded-full mt-0.5" style={{ background: phase.color }} />}
-                      </div>
-                      <p className="text-[10px] text-[rgba(255,255,255,0.92)] leading-tight font-medium">{phase.title}</p>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </div>
+        <section id="roadmap" className="py-0">
+          <Reveal>
+            <img
+              src={modeloExpansaoImg}
+              alt="Modelo de Expansão Nacional — 5 Fases do Rio Grande do Sul à cobertura nacional"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
         </section>
-
-        <Divider />
 
         {/* ═══════════════════════════════
             12 · LONG-TERM VISION
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden py-6 sm:py-20">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/investors-bg.png)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 1, filter: "saturate(1.70) contrast(1.10)" }} />
-            <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.55) 0%,rgba(5,12,26,0.04) 22%,rgba(5,12,26,0.04) 78%,rgba(5,12,26,0.55) 100%)" }} />
-          </div>
-
-          <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-10 text-center">
-            <Reveal>
-              <Pill label="Visão de Longo Prazo" color={G} icon={<Sparkles size={10} />} />
-              <div className="space-y-1 mb-6">
-                {[
-                  { company: "Uber",    transformed: "transformou o transporte."     },
-                  { company: "Airbnb",  transformed: "transformou a hospedagem."     },
-                  { company: "LinkedIn",transformed: "transformou o networking profissional." },
-                ].map((item, i) => (
-                  <motion.p key={i}
-                    initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }} transition={{ delay: i * 0.12 }}
-                    className="text-[rgba(255,255,255,0.68)] font-semibold"
-                    style={{ fontSize: "clamp(14px,2.2vw,20px)" }}>
-                    <span className="text-[rgba(255,255,255,0.85)]">{item.company}</span> {item.transformed}
-                  </motion.p>
-                ))}
-              </div>
-              <motion.p
-                initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ delay: 0.45 }}
-                className="font-black leading-tight mb-6"
-                style={{
-                  fontSize: "clamp(20px,3.8vw,44px)",
-                  background: `linear-gradient(90deg,${G},#9aff1c 45%,${C})`,
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                  filter: "drop-shadow(0 2px 12px rgba(0,0,0,0.70))",
-                }}>
-                A extraGO está construindo a infraestrutura<br className="hidden sm:block" />
-                digital de mão de obra do Brasil.
-              </motion.p>
-              <motion.p
-                initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-                viewport={{ once: true }} transition={{ delay: 0.62 }}
-                className="text-[rgba(255,255,255,0.80)] text-[14px] leading-relaxed max-w-2xl mx-auto"
-                style={{ textShadow: "0 1px 8px rgba(0,0,0,0.55)" }}>
-                Uma camada de tecnologia que conecta profissionais, empresas, parceiros e investidores — criando valor crescente para cada novo participante da rede e tornando o ecossistema mais robusto a cada dia.
-              </motion.p>
-            </Reveal>
-          </div>
+        <section className="py-0">
+          <Reveal>
+            <img
+              src={visaoLongoPrazoImg}
+              alt="Visão de Longo Prazo — A extraGO como infraestrutura de mão de obra do Brasil"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
         </section>
 
         <Divider />
