@@ -368,13 +368,13 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               </div>
 
               {/* Segurança — desktop only */}
-              <NavItemLink href="/seguranca" icon={<Shield size={17} />} label="Segurança" active={active("/seguranca")} className="hidden lg:flex" />
+              <NavItemLink href="/seguranca" icon={<Shield size={17} />} label="Segurança" active={active("/seguranca")} className="desktop-only" />
 
               {/* Indicações — desktop only */}
-              <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={17} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
+              <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={17} />} label="Indicações" active={active("/financial-architecture/referrals")} className="desktop-only" />
 
               {/* Como Funciona — desktop only */}
-              <NavItemLink href="/#como-funciona" icon={<BookOpen size={17} />} label="Como Funciona" active={false} className="hidden lg:flex" />
+              <NavItemLink href="/#como-funciona" icon={<BookOpen size={17} />} label="Como Funciona" active={false} className="desktop-only" />
             </nav>
           )}
 
@@ -434,7 +434,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 {/* Cadastro — gradient CTA pill (desktop only) */}
                 <Link href="/register">
                   <button
-                    className="hidden lg:flex items-center rounded-full font-bold cursor-pointer"
+                    className="desktop-only items-center rounded-full font-bold cursor-pointer"
                     style={{
                       fontSize: "clamp(10px,2vw,12px)",
                       paddingLeft: "clamp(10px,2vw,16px)",

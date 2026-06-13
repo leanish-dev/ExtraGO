@@ -917,3 +917,9 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ── Desktop-only navbar items
+   Outside any @layer — cascade priority beats all Tailwind utilities.
+   Base rule hides; @media rule re-shows at ≥1024px (appears later → wins). ── */
+.desktop-only { display: none; }
+@media (min-width: 1024px) { .desktop-only { display: flex; } }
