@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import motoresReceitaCardImg from "@assets/Motores-receita-arqfin_1781330517476.png";
+import intermediacaoCardImg from "@assets/Intermediação-card-arqfin_1781330517374.png";
+import indicacoesCardImg from "@assets/Indicações-Multinível-card-arqfin_1781330517245.png";
+import distribuicaoReceitaCardImg from "@assets/Distribuição-da-Receita-card-arqfin_1781330533244.png";
 import {
   Zap, Network, BadgeCheck, Building2,
   DollarSign, MapPin, TrendingUp, Globe,
@@ -122,28 +125,23 @@ export default function ModeloDeNegocioPage() {
               </p>
             </Reveal>
 
-            <div className="grid sm:grid-cols-5 gap-3 mb-6">
-              {[
-                { level: "Iniciante", fee: "20%", color: "#64748b" },
-                { level: "Júnior", fee: "18%", color: GC },
-                { level: "Intermediário", fee: "15%", color: PURPLE },
-                { level: "Sênior", fee: "12%", color: AMBER },
-                { level: "Elite", fee: "10%", color: GA },
-              ].map((item, i) => (
-                <Reveal key={i} delay={i * 0.07}>
-                  <GCard className="p-4 text-center" accent={item.color} glow={i === 4}>
-                    <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: item.color }}>{item.level}</p>
-                    <p className="font-black leading-none" style={{ fontSize: "clamp(26px,3vw,36px)", color: item.color }}>{item.fee}</p>
-                    {i === 4 && (
-                      <span className="text-[9px] font-black mt-1 px-2 py-0.5 rounded-full inline-block"
-                        style={{ background: `${item.color}12`, color: item.color, border: `1px solid ${item.color}25` }}>
-                        MÁXIMO DESCONTO
-                      </span>
-                    )}
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
+            <Reveal className="mb-6">
+              <div
+                className="w-full rounded-2xl overflow-hidden p-1"
+                style={{
+                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(22,163,74,0.18), 0 0 32px rgba(22,163,74,0.08)",
+                  border: "1px solid rgba(22,163,74,0.20)",
+                  background: "rgba(240,253,244,0.6)",
+                }}
+              >
+                <img
+                  src={intermediacaoCardImg}
+                  alt="Camada 1 — Intermediação por Performance: Iniciante 20%, Júnior 18%, Intermediário 15%, Sênior 12%, Elite 10%"
+                  className="w-full h-auto block rounded-xl"
+                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
+                />
+              </div>
+            </Reveal>
 
             <WhyBlock text="A Camada 1 é a base da monetização. Cada extra concluído gera receita direta para a plataforma. O sistema de progressão de taxas incentiva qualidade e cria retenção natural: profissionais que constroem reputação pagam menos e permanecem na plataforma por mais tempo — alinhando o sucesso da plataforma com o sucesso do profissional." />
             <ImpactBlock text="Receita diretamente proporcional ao volume de extras concluídos — quanto mais a plataforma cresce, mais esta camada produz. Estimada como a maior fonte de receita no early stage. A estrutura de taxas progressivas garante retenção orgânica sem custo de aquisição adicional." />
@@ -171,25 +169,23 @@ export default function ModeloDeNegocioPage() {
               </p>
             </Reveal>
 
-            <div className="grid sm:grid-cols-3 gap-4 mb-6">
-              {[
-                { tier: "Indicador", pct: "2%", color: GC, req: "Conta ativa" },
-                { tier: "Agente de Captação", pct: "3%", color: PURPLE, req: "25 indicados ativos · 100 extras na rede" },
-                { tier: "Embaixador Regional", pct: "5%", color: GA, req: "100 indicados ativos · 1.000 extras na rede · Aprovação da plataforma" },
-              ].map((item, i) => (
-                <Reveal key={i} delay={i * 0.09}>
-                  <GCard className="p-5 h-full" accent={item.color} glow={i === 2}>
-                    <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: item.color }}>{item.tier}</p>
-                    <p className="font-black leading-none mb-2" style={{ fontSize: "clamp(30px,4vw,44px)", color: item.color }}>{item.pct}</p>
-                    <p className="text-[12px] text-slate-400 leading-snug italic">do valor bruto dos extras realizados pelos indicados</p>
-                    <div className="mt-3 pt-3 border-t border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1">Requisito</p>
-                      <p className="text-[12px] text-slate-500">{item.req}</p>
-                    </div>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
+            <Reveal className="mb-6">
+              <div
+                className="w-full rounded-2xl overflow-hidden p-1"
+                style={{
+                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,150,255,0.18), 0 0 32px rgba(0,150,255,0.08)",
+                  border: "1px solid rgba(59,130,246,0.20)",
+                  background: "rgba(240,249,255,0.6)",
+                }}
+              >
+                <img
+                  src={indicacoesCardImg}
+                  alt="Camada 2 — Programa de Indicações Multinível: Indicador 2%, Agente de Captação 3%, Embaixador Regional 5%"
+                  className="w-full h-auto block rounded-xl"
+                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
+                />
+              </div>
+            </Reveal>
 
             <WhyBlock text="Transforma cada usuário em um agente de crescimento. Em vez de depender exclusivamente de marketing pago, a plataforma cria uma rede de incentivo onde cada novo profissional traz mais profissionais — reduzindo o CAC estruturalmente e criando crescimento orgânico exponencial com efeitos de rede autossustentáveis." />
             <ImpactBlock text="Reduz o custo de aquisição de clientes (CAC) de forma estrutural. A rede de indicações torna o crescimento autossustentável, aumenta o LTV por usuário e cria barreiras de saída para quem está ativo na rede de referrals. Cada Embaixador Regional potencialmente move centenas de profissionais novos para a plataforma." />
@@ -306,44 +302,22 @@ export default function ModeloDeNegocioPage() {
               </p>
             </Reveal>
 
-            <Reveal>
-              <GCard className="p-5 sm:p-8 mb-6" accent={GA} glow>
-                <div className="space-y-4">
-                  {[
-                    { label: "Caixa e Reserva Estratégica", pct: 25, color: GA, desc: "Garantia de liquidez, segurança financeira e sustentabilidade." },
-                    { label: "Fundadores e Investidores", pct: 20, color: AMBER, desc: "Participação nos resultados e crescimento do ecossistema." },
-                    { label: "Marketing e Expansão", pct: 20, color: GC, desc: "Aquisição de usuários e crescimento nacional." },
-                    { label: "Tecnologia e Inovação", pct: 10, color: PURPLE, desc: "Infraestrutura, desenvolvimento e inteligência artificial." },
-                    { label: "Operações", pct: 10, color: "#0891b2", desc: "Atendimento, suporte, jurídico e gestão." },
-                    { label: "Fundo de Crescimento Estratégico", pct: 10, color: ROSE, desc: "Expansão, novos produtos e oportunidades." },
-                    { label: "Representantes Estaduais", pct: 5, color: "#ea580c", desc: "Desenvolvimento da rede regional." },
-                  ].map((item, i) => (
-                    <div key={i}>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <div>
-                          <span className="text-[13px] font-semibold text-slate-700">{item.label}</span>
-                          <span className="ml-2 text-[11px] text-slate-400">{item.desc}</span>
-                        </div>
-                        <span className="font-black text-[15px] ml-4 flex-shrink-0" style={{ color: item.color }}>{item.pct}%</span>
-                      </div>
-                      <div className="h-2 rounded-full" style={{ background: "rgba(0,0,0,0.06)" }}>
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${item.pct * 4}%` }}
-                          viewport={{ once: true }}
-                          transition={{ delay: i * 0.07 + 0.2, duration: 0.9, ease: [0.19, 1, 0.22, 1] }}
-                          className="h-full rounded-full"
-                          style={{ background: `linear-gradient(90deg,${item.color}60,${item.color})` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                  <div className="pt-3 border-t border-slate-100 flex justify-between">
-                    <span className="text-[12px] text-slate-400">Total da receita operacional distribuída</span>
-                    <span className="font-black text-[15px]" style={{ color: GA }}>100%</span>
-                  </div>
-                </div>
-              </GCard>
+            <Reveal className="mb-6">
+              <div
+                className="w-full rounded-2xl overflow-hidden p-1"
+                style={{
+                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(217,119,6,0.20), 0 0 32px rgba(217,119,6,0.08)",
+                  border: "1px solid rgba(217,119,6,0.22)",
+                  background: "rgba(255,251,235,0.6)",
+                }}
+              >
+                <img
+                  src={distribuicaoReceitaCardImg}
+                  alt="Distribuição da Receita Operacional: 25% Caixa, 20% Fundadores e Investidores, 20% Marketing, 10% Tecnologia, 10% Operações, 10% Fundo de Crescimento, 5% Representantes"
+                  className="w-full h-auto block rounded-xl"
+                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
+                />
+              </div>
             </Reveal>
 
             <WhyBlock text="A distribuição estratégica da receita garante que crescimento, tecnologia, expansão e retorno para fundadores e investidores coexistam de forma equilibrada — sem depender de capital externo contínuo para sustentar a operação. Cada percentual foi calculado para que a extraGO financie seu próprio crescimento a partir da receita gerada." />

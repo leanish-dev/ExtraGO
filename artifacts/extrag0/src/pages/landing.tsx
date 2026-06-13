@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import logoMain from "@assets/Logo-new_1781073251550.png";
 import painelCentroBgImg from "@assets/Painel-centro-bg_1781330517500.png";
+import intermediacaoCardLandingImg from "@assets/Intermediação-card-landing_1781331775567.png";
 import simplesComoDeveSerImg from "@assets/Simples-como-deve-ser-card_1781247644621.png";
 import feitoParaOsDoisLadosImg from "@assets/Feito-para-os-dois-lados_1781247644430.png";
 import presenteEmTodosOsSetoresImg from "@assets/Presente-em-todos_-os-setores_1781250617174.png";
@@ -407,15 +408,14 @@ export default function LandingPage() {
           />
 
         {/* ══════════════════════════════════════════
-            LIVE STATS — Centro Operacional Nacional
+            PAINEL EM TEMPO REAL
         ══════════════════════════════════════════ */}
         <section className="px-5 pb-8">
           <ScrollSection>
             <div className="max-w-5xl mx-auto">
-              <div className="relative rounded-2xl overflow-hidden"
+              <div className="relative overflow-hidden"
                 style={{
-                  border: "1px solid rgba(0,229,255,0.22)",
-                  boxShadow: "0 0 60px rgba(0,229,255,0.08), 0 0 120px rgba(124,252,0,0.05), 0 16px 60px rgba(0,0,0,0.65)",
+                  borderRadius: "4px",
                 }}>
                 {/* Deep navy base */}
                 <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#020b1e 0%,#031228 45%,#020d20 70%,#031428 100%)" }} />
@@ -439,7 +439,7 @@ export default function LandingPage() {
                   {/* Header */}
                   <div className="mb-2.5 flex items-center justify-between">
                     <div>
-                      <p className="text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.70)" }}>Centro Operacional Nacional</p>
+                      <p className="text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.70)" }}>Painel em Tempo Real</p>
                       <div className="h-px w-14 mt-0.5" style={{ background: "linear-gradient(90deg,rgba(0,229,255,0.50),transparent)" }} />
                     </div>
                   </div>
@@ -544,7 +544,40 @@ export default function LandingPage() {
           </ScrollSection>
         </section>
 
-
+        {/* ══════════════════════════════════════════
+            MODELO DE RECEITA
+        ══════════════════════════════════════════ */}
+        <section className="px-5 py-8 sm:py-12">
+          <ScrollSection>
+            <div className="max-w-5xl mx-auto">
+              <div className="mb-6 text-center">
+                <p className="text-[10px] font-black tracking-[0.22em] uppercase mb-2" style={{ color: "rgba(0,229,255,0.75)" }}>Arquitetura Financeira</p>
+                <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,4vw,40px)", color: "#f8fafc" }}>
+                  Modelo de Receita
+                </h2>
+                <p className="text-[14px] leading-relaxed max-w-xl mx-auto" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  Cinco níveis progressivos — do Iniciante ao Elite — com taxas que diminuem conforme o profissional constrói reputação e entrega resultados.
+                </p>
+              </div>
+              <div
+                className="w-full rounded-2xl overflow-hidden p-1"
+                style={{
+                  boxShadow: "0 8px 56px rgba(0,0,0,0.30), 0 0 0 1px rgba(0,229,255,0.15), 0 0 40px rgba(0,229,255,0.06)",
+                  border: "1px solid rgba(0,229,255,0.18)",
+                  background: "rgba(2,10,28,0.60)",
+                }}
+              >
+                <img
+                  src={intermediacaoCardLandingImg}
+                  alt="Modelo de Receita — Intermediação por Performance: do Iniciante 20% ao Elite 10%"
+                  className="w-full h-auto block rounded-xl"
+                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
+                  draggable={false}
+                />
+              </div>
+            </div>
+          </ScrollSection>
+        </section>
 
         {/* ══════════════════════════════════════════
             SEÇÃO DE INDICAÇÕES — Banner + Simulador
