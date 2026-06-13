@@ -81,21 +81,12 @@ export default function PerformancePage() {
             </Reveal>
 
             <Reveal className="mb-8">
-              <div
-                className="w-full rounded-2xl overflow-hidden p-1"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(22,163,74,0.18), 0 0 32px rgba(22,163,74,0.08)",
-                  border: "1px solid rgba(22,163,74,0.20)",
-                  background: "rgba(240,253,244,0.6)",
-                }}
-              >
-                <img
-                  src={intermediacaoCardImg}
-                  alt="Camada 1 — Intermediação por Performance"
-                  className="w-full h-auto block rounded-xl"
-                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
-                />
-              </div>
+              <img
+                src={intermediacaoCardImg}
+                alt="Camada 1 — Intermediação por Performance"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
             </Reveal>
           </div>
         </section>

@@ -413,22 +413,15 @@ export default function LandingPage() {
         <section className="px-5 pb-8">
           <ScrollSection>
             <div className="max-w-5xl mx-auto">
-              <div className="relative overflow-hidden"
-                style={{
-                  borderRadius: "4px",
-                }}>
-                {/* Deep navy base */}
-                <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#020b1e 0%,#031228 45%,#020d20 70%,#031428 100%)" }} />
-                {/* Background image — Centro Operacional Nacional */}
+              <div className="relative">
+                {/* Background image */}
                 <div className="absolute inset-0" style={{ backgroundImage: `url(${painelCentroBgImg})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }} />
                 {/* Dark overlay for readability */}
-                <div className="absolute inset-0" style={{ background: "rgba(4,10,20,0.65)" }} />
+                <div className="absolute inset-0" style={{ background: "rgba(4,10,20,0.60)" }} />
                 {/* Volumetric light — brand glows */}
-                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 55% at 8% 50%,rgba(22,163,74,0.12) 0%,transparent 58%), radial-gradient(ellipse 55% 60% at 93% 15%,rgba(0,229,255,0.09) 0%,transparent 55%), radial-gradient(ellipse 45% 35% at 50% 95%,rgba(124,252,0,0.08) 0%,transparent 62%)" }} />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 55% at 8% 50%,rgba(22,163,74,0.10) 0%,transparent 58%), radial-gradient(ellipse 55% 60% at 93% 15%,rgba(0,229,255,0.07) 0%,transparent 55%), radial-gradient(ellipse 45% 35% at 50% 95%,rgba(124,252,0,0.06) 0%,transparent 62%)" }} />
                 {/* Network grid */}
-                <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px)", backgroundSize: "44px 44px" }} />
-                {/* Top accent line */}
-                <div className="absolute inset-x-0 top-0 h-[1.5px]" style={{ background: "linear-gradient(90deg,transparent,rgba(0,229,255,0.55) 30%,rgba(124,252,0,0.65) 50%,rgba(0,229,255,0.55) 70%,transparent)" }} />
+                <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.020) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.020) 1px,transparent 1px)", backgroundSize: "44px 44px" }} />
                 {/* Live indicator */}
                 <div className="absolute top-3 right-4 flex items-center gap-1.5">
                   <span className="live-dot" />
@@ -547,35 +540,17 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════════
             MODELO DE RECEITA
         ══════════════════════════════════════════ */}
-        <section className="px-5 py-8 sm:py-12">
+        <section className="py-2 sm:py-4">
           <ScrollSection>
-            <div className="max-w-5xl mx-auto">
-              <div className="mb-6 text-center">
-                <p className="text-[10px] font-black tracking-[0.22em] uppercase mb-2" style={{ color: "rgba(0,229,255,0.75)" }}>Arquitetura Financeira</p>
-                <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,4vw,40px)", color: "#f8fafc" }}>
-                  Modelo de Receita
-                </h2>
-                <p className="text-[14px] leading-relaxed max-w-xl mx-auto" style={{ color: "rgba(255,255,255,0.55)" }}>
-                  Cinco níveis progressivos — do Iniciante ao Elite — com taxas que diminuem conforme o profissional constrói reputação e entrega resultados.
-                </p>
-              </div>
-              <div
-                className="w-full rounded-2xl overflow-hidden p-1"
-                style={{
-                  boxShadow: "0 8px 56px rgba(0,0,0,0.30), 0 0 0 1px rgba(0,229,255,0.15), 0 0 40px rgba(0,229,255,0.06)",
-                  border: "1px solid rgba(0,229,255,0.18)",
-                  background: "rgba(2,10,28,0.60)",
-                }}
-              >
-                <img
-                  src={intermediacaoCardLandingImg}
-                  alt="Modelo de Receita — Intermediação por Performance: do Iniciante 20% ao Elite 10%"
-                  className="w-full h-auto block rounded-xl"
-                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
-                  draggable={false}
-                />
-              </div>
-            </div>
+            <Link href="/arquitetura-financeira">
+              <img
+                src={intermediacaoCardLandingImg}
+                alt="Modelo de Receita — Intermediação por Performance: do Iniciante 20% ao Elite 10%"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%", cursor: "pointer" }}
+                draggable={false}
+              />
+            </Link>
           </ScrollSection>
         </section>
 

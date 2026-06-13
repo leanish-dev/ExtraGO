@@ -126,21 +126,12 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
 
             <Reveal className="mb-6">
-              <div
-                className="w-full rounded-2xl overflow-hidden p-1"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(22,163,74,0.18), 0 0 32px rgba(22,163,74,0.08)",
-                  border: "1px solid rgba(22,163,74,0.20)",
-                  background: "rgba(240,253,244,0.6)",
-                }}
-              >
-                <img
-                  src={intermediacaoCardImg}
-                  alt="Camada 1 — Intermediação por Performance: Iniciante 20%, Júnior 18%, Intermediário 15%, Sênior 12%, Elite 10%"
-                  className="w-full h-auto block rounded-xl"
-                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
-                />
-              </div>
+              <img
+                src={intermediacaoCardImg}
+                alt="Camada 1 — Intermediação por Performance: Iniciante 20%, Júnior 18%, Intermediário 15%, Sênior 12%, Elite 10%"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
             </Reveal>
 
             <WhyBlock text="A Camada 1 é a base da monetização. Cada extra concluído gera receita direta para a plataforma. O sistema de progressão de taxas incentiva qualidade e cria retenção natural: profissionais que constroem reputação pagam menos e permanecem na plataforma por mais tempo — alinhando o sucesso da plataforma com o sucesso do profissional." />
@@ -170,21 +161,12 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
 
             <Reveal className="mb-6">
-              <div
-                className="w-full rounded-2xl overflow-hidden p-1"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,150,255,0.18), 0 0 32px rgba(0,150,255,0.08)",
-                  border: "1px solid rgba(59,130,246,0.20)",
-                  background: "rgba(240,249,255,0.6)",
-                }}
-              >
-                <img
-                  src={indicacoesCardImg}
-                  alt="Camada 2 — Programa de Indicações Multinível: Indicador 2%, Agente de Captação 3%, Embaixador Regional 5%"
-                  className="w-full h-auto block rounded-xl"
-                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
-                />
-              </div>
+              <img
+                src={indicacoesCardImg}
+                alt="Camada 2 — Programa de Indicações Multinível: Indicador 2%, Agente de Captação 3%, Embaixador Regional 5%"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
             </Reveal>
 
             <WhyBlock text="Transforma cada usuário em um agente de crescimento. Em vez de depender exclusivamente de marketing pago, a plataforma cria uma rede de incentivo onde cada novo profissional traz mais profissionais — reduzindo o CAC estruturalmente e criando crescimento orgânico exponencial com efeitos de rede autossustentáveis." />
@@ -303,21 +285,12 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
 
             <Reveal className="mb-6">
-              <div
-                className="w-full rounded-2xl overflow-hidden p-1"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(217,119,6,0.20), 0 0 32px rgba(217,119,6,0.08)",
-                  border: "1px solid rgba(217,119,6,0.22)",
-                  background: "rgba(255,251,235,0.6)",
-                }}
-              >
-                <img
-                  src={distribuicaoReceitaCardImg}
-                  alt="Distribuição da Receita Operacional: 25% Caixa, 20% Fundadores e Investidores, 20% Marketing, 10% Tecnologia, 10% Operações, 10% Fundo de Crescimento, 5% Representantes"
-                  className="w-full h-auto block rounded-xl"
-                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
-                />
-              </div>
+              <img
+                src={distribuicaoReceitaCardImg}
+                alt="Distribuição da Receita Operacional: 25% Caixa, 20% Fundadores e Investidores, 20% Marketing, 10% Tecnologia, 10% Operações, 10% Fundo de Crescimento, 5% Representantes"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
             </Reveal>
 
             <WhyBlock text="A distribuição estratégica da receita garante que crescimento, tecnologia, expansão e retorno para fundadores e investidores coexistam de forma equilibrada — sem depender de capital externo contínuo para sustentar a operação. Cada percentual foi calculado para que a extraGO financie seu próprio crescimento a partir da receita gerada." />
@@ -431,21 +404,12 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
 
             <Reveal className="mb-10">
-              <div
-                className="w-full rounded-2xl overflow-hidden p-1"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(22,163,74,0.18), 0 0 32px rgba(22,163,74,0.07)",
-                  border: "1px solid rgba(22,163,74,0.20)",
-                  background: "rgba(240,253,244,0.6)",
-                }}
-              >
-                <img
-                  src={motoresReceitaCardImg}
-                  alt="Os 4 Motores de Receita da extraGO"
-                  className="w-full h-auto block rounded-xl"
-                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
-                />
-              </div>
+              <img
+                src={motoresReceitaCardImg}
+                alt="Os 4 Motores de Receita da extraGO"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
             </Reveal>
 
             {/* Flow — horizontal on desktop, vertical on mobile */}

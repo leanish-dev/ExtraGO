@@ -290,21 +290,15 @@ export default function InvestidoresParceirosPage() {
                 <motion.div
                   whileHover={{ y: -3, scale: 1.003 }}
                   transition={{ type: "spring", stiffness: 280, damping: 24 }}
-                  className="relative overflow-hidden rounded-2xl cursor-pointer group"
-                  style={{
-                    border: "1px solid rgba(124,252,0,0.20)",
-                    boxShadow: "0 0 28px rgba(124,252,0,0.07), 0 8px 36px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.03) inset",
-                  }}
+                  className="relative overflow-hidden cursor-pointer group"
+                  style={{}}
                 >
                   <img
                     src="/arquitetura.png"
                     alt="A Arquitetura Financeira da extraGO — infraestrutura de 4 fontes de receita"
-                    className="w-full block"
+                    className="w-full block h-auto"
                     style={{
                       objectFit: "contain",
-                      objectPosition: "center",
-                      maxHeight: "clamp(200px, 40vw, 480px)",
-                      background: "rgba(2,6,20,0.55)",
                       width: "100%",
                     }}
                     draggable={false}
@@ -457,20 +451,12 @@ export default function InvestidoresParceirosPage() {
           <div className="max-w-6xl mx-auto">
 
             <Reveal className="mb-8">
-              <div
-                className="w-full rounded-2xl overflow-hidden"
-                style={{
-                  boxShadow: "0 12px 60px rgba(0,0,0,0.28), 0 4px 20px rgba(0,0,0,0.18)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                }}
-              >
-                <img
-                  src="/motores-receita-card.png"
-                  alt="Os 4 Motores de Receita da extraGO"
-                  className="w-full h-auto block"
-                  style={{ display: "block" }}
-                />
-              </div>
+              <img
+                src="/motores-receita-card.png"
+                alt="Os 4 Motores de Receita da extraGO"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
             </Reveal>
 
             {/* CTA → dedicated model page */}

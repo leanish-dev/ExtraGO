@@ -109,21 +109,12 @@ export default function RevenueStructurePage() {
             </Reveal>
 
             <Reveal className="mb-8">
-              <div
-                className="w-full rounded-2xl overflow-hidden p-1"
-                style={{
-                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(217,119,6,0.20), 0 0 32px rgba(217,119,6,0.08)",
-                  border: "1px solid rgba(217,119,6,0.22)",
-                  background: "rgba(255,251,235,0.6)",
-                }}
-              >
-                <img
-                  src={distribuicaoReceitaCardImg}
-                  alt="Distribuição da Receita — Alocação da Receita Operacional"
-                  className="w-full h-auto block rounded-xl"
-                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
-                />
-              </div>
+              <img
+                src={distribuicaoReceitaCardImg}
+                alt="Distribuição da Receita — Alocação da Receita Operacional"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+              />
             </Reveal>
           </div>
         </section>
