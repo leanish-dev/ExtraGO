@@ -282,11 +282,11 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
           style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(0,201,167,0.35) 30%, rgba(22,163,74,0.40) 50%, rgba(0,201,167,0.35) 70%, transparent 100%)" }}
         />
 
-        <div className="w-full h-full flex items-center px-4 sm:px-6" style={{ gap: 0 }}>
+        <div className="w-full h-full flex items-center px-2 sm:px-3" style={{ gap: 0 }}>
 
           {/* ── LEFT: Logo ── */}
           <Link href={logoHref} aria-label="extraGO – página inicial">
-            <div className="flex items-center flex-shrink-0" style={{ marginRight: "clamp(10px,2.5vw,28px)" }}>
+            <div className="flex items-center flex-shrink-0" style={{ marginRight: "clamp(4px,1vw,12px)" }}>
               <img
                 src={logoMain}
                 alt="extraGO"
@@ -334,28 +334,13 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
           ) : (
             /* ── CENTRE (public): Nav links with icons ── */
             <nav
-              className="flex items-center justify-center"
-              style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(0px,1.2vw,16px)" }}
+              className="flex items-center"
+              style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(0px,0.8vw,8px)" }}
             >
-              {loc === "/investidores-parceiros" ? (
-                <>
-                  <NavItemLink href="/investidores-parceiros" icon={<HomeIcon size={16} />} label="Visão Geral" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/investidores-parceiros#mercado" icon={<Globe size={16} />} label="Mercado" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/investidores-parceiros#solucao" icon={<Zap size={16} />} label="Oportunidade" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/financial-architecture/expansion-model" icon={<TrendingUp size={16} />} label="Expansão" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/financial-architecture/professional-plans" icon={<BadgeCheck size={16} />} label="Benefícios" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/modelo-de-negocio" icon={<BarChart3 size={16} />} label="Modelo" active={false} className="hidden lg:flex" />
-                  <NavItemLink href="/investidores-parceiros#equipe" icon={<Users size={16} />} label="Governança" active={false} className="hidden lg:flex" />
-                </>
-              ) : (
-                <>
-                  <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={17} />} label="Investidores" active={active("/investidores-parceiros")} className="flex" />
-                  <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={17} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
-                  <NavItemLink href="/blog" icon={<BookOpen size={17} />} label="Blog" active={active("/blog")} className="hidden lg:flex" />
-                </>
-              )}
+              {/* Investidores — mobile + desktop */}
+              <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={17} />} label="Investidores" active={active("/investidores-parceiros")} className="flex" />
 
-              {/* Arquitetura Financeira — primary highlighted with dropdown */}
+              {/* Arquitetura Financeira — mobile + desktop, primary visual highlight */}
               <div ref={faAnchorRef} className="fa-root relative flex flex-col items-center">
                 <button
                   onClick={() => setFaOpen(o => !o)}
@@ -437,6 +422,15 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 </button>
                 <FADropdown open={faOpen} anchorRef={faAnchorRef} onClose={() => setFaOpen(false)} />
               </div>
+
+              {/* Segurança — desktop only */}
+              <NavItemLink href="/seguranca" icon={<Shield size={17} />} label="Segurança" active={active("/seguranca")} className="hidden lg:flex" />
+
+              {/* Indicações — desktop only */}
+              <NavItemLink href="/financial-architecture/referrals" icon={<Share2 size={17} />} label="Indicações" active={active("/financial-architecture/referrals")} className="hidden lg:flex" />
+
+              {/* Como Funciona — desktop only */}
+              <NavItemLink href="/#como-funciona" icon={<BookOpen size={17} />} label="Como Funciona" active={false} className="hidden lg:flex" />
             </nav>
           )}
 
@@ -493,7 +487,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               </>
             ) : (
               <>
-                {/* Cadastro — outline pill */}
+                {/* Cadastro — gradient CTA pill (desktop only) */}
                 <Link href="/register">
                   <button
                     className="hidden lg:flex items-center rounded-full font-bold cursor-pointer"
@@ -502,15 +496,16 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                       paddingLeft: "clamp(10px,2vw,16px)",
                       paddingRight: "clamp(10px,2vw,16px)",
                       height: 34,
-                      color: "rgba(255,255,255,0.85)",
-                      border: `1px solid rgba(22,163,74,0.55)`,
-                      background: "transparent",
+                      color: "#000",
+                      border: "none",
+                      background: `linear-gradient(135deg, ${G}, ${C})`,
+                      boxShadow: `0 0 14px rgba(22,163,74,0.38)`,
                       transition: "all 0.15s",
                       whiteSpace: "nowrap",
                       gap: "clamp(4px,0.8vw,6px)",
                     }}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = "rgba(22,163,74,0.12)"; el.style.borderColor = `${G}`; }}
-                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = "transparent"; el.style.borderColor = "rgba(22,163,74,0.55)"; }}
+                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.boxShadow = `0 0 22px rgba(22,163,74,0.58)`; el.style.filter = "brightness(1.08)"; }}
+                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.boxShadow = `0 0 14px rgba(22,163,74,0.38)`; el.style.filter = "none"; }}
                   >
                     <UserPlus size={13} />
                     Cadastro
@@ -565,24 +560,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               }}
             />
 
-            {/* Hamburger */}
-            <button
-              onClick={() => setDrawer(true)}
-              aria-label="Abrir menu"
-              className="flex items-center justify-center"
-              style={{
-                width: 38,
-                height: H,
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                flexShrink: 0,
-              }}
-            >
-              <GradientHamburger />
-            </button>
-
-            {/* Home — always links to Landing */}
+            {/* Home — always links to Landing (before Hamburger) */}
             <Link href="/" aria-label="Ir para a página inicial">
               <div
                 className="flex items-center justify-center"
@@ -609,6 +587,23 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 />
               </div>
             </Link>
+
+            {/* Hamburger — LAST item */}
+            <button
+              onClick={() => setDrawer(true)}
+              aria-label="Abrir menu"
+              className="flex items-center justify-center"
+              style={{
+                width: 38,
+                height: H,
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                flexShrink: 0,
+              }}
+            >
+              <GradientHamburger />
+            </button>
           </div>
         </div>
       </header>
