@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import intermediacaoCardImg from "@assets/Intermediação-card-arqfin_1781330517374.png";
 import { motion } from "framer-motion";
 import { Zap, CheckCircle, TrendingUp, Users, Building2, Globe, BarChart3, Shield, Award, Target, Star, Layers } from "lucide-react";
 import {
@@ -81,17 +82,18 @@ export default function PerformancePage() {
 
             <Reveal className="mb-8">
               <div
-                className="w-full rounded-2xl overflow-hidden"
+                className="w-full rounded-2xl overflow-hidden p-1"
                 style={{
-                  boxShadow: "0 8px 40px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.06)",
-                  border: "1px solid rgba(0,0,0,0.07)",
+                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(22,163,74,0.18), 0 0 32px rgba(22,163,74,0.08)",
+                  border: "1px solid rgba(22,163,74,0.20)",
+                  background: "rgba(240,253,244,0.6)",
                 }}
               >
                 <img
-                  src="/camada1-card.png"
+                  src={intermediacaoCardImg}
                   alt="Camada 1 — Intermediação por Performance"
-                  className="w-full h-auto block"
-                  style={{ display: "block" }}
+                  className="w-full h-auto block rounded-xl"
+                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
                 />
               </div>
             </Reveal>

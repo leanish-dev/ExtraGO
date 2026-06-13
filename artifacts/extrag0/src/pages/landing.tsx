@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import logoMain from "@assets/Logo-new_1781073251550.png";
+import painelCentroBgImg from "@assets/Painel-centro-bg_1781330517500.png";
 import simplesComoDeveSerImg from "@assets/Simples-como-deve-ser-card_1781247644621.png";
 import feitoParaOsDoisLadosImg from "@assets/Feito-para-os-dois-lados_1781247644430.png";
 import presenteEmTodosOsSetoresImg from "@assets/Presente-em-todos_-os-setores_1781250617174.png";
@@ -418,6 +419,10 @@ export default function LandingPage() {
                 }}>
                 {/* Deep navy base */}
                 <div className="absolute inset-0" style={{ background: "linear-gradient(135deg,#020b1e 0%,#031228 45%,#020d20 70%,#031428 100%)" }} />
+                {/* Background image — Centro Operacional Nacional */}
+                <div className="absolute inset-0" style={{ backgroundImage: `url(${painelCentroBgImg})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }} />
+                {/* Dark overlay for readability */}
+                <div className="absolute inset-0" style={{ background: "rgba(4,10,20,0.65)" }} />
                 {/* Volumetric light — brand glows */}
                 <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 55% at 8% 50%,rgba(22,163,74,0.12) 0%,transparent 58%), radial-gradient(ellipse 55% 60% at 93% 15%,rgba(0,229,255,0.09) 0%,transparent 55%), radial-gradient(ellipse 45% 35% at 50% 95%,rgba(124,252,0,0.08) 0%,transparent 62%)" }} />
                 {/* Network grid */}

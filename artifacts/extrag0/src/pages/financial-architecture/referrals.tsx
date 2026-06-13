@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import indicacoesCardImg from "@assets/Indicações-Multinível-card-arqfin_1781330517245.png";
 import { Network, Users, Crown, Target, TrendingUp, Globe, Building2, Shield, BarChart3, Layers, Award, Zap } from "lucide-react";
 import {
   FABackground, FAHeader, FANavBar, GCard, Pill, Reveal, Divider,
@@ -46,17 +47,18 @@ export default function ReferralsPage() {
 
             <Reveal className="mb-8">
               <div
-                className="w-full rounded-2xl overflow-hidden"
+                className="w-full rounded-2xl overflow-hidden p-1"
                 style={{
-                  boxShadow: "0 8px 40px rgba(0,0,0,0.10), 0 2px 12px rgba(0,0,0,0.06)",
-                  border: "1px solid rgba(0,0,0,0.07)",
+                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,150,255,0.18), 0 0 32px rgba(0,150,255,0.08)",
+                  border: "1px solid rgba(59,130,246,0.20)",
+                  background: "rgba(240,249,255,0.6)",
                 }}
               >
                 <img
-                  src="/camada2-indicacoes-card.png"
-                  alt="Camada 2 — Sistema de Indicações Multinível"
-                  className="w-full h-auto block"
-                  style={{ display: "block" }}
+                  src={indicacoesCardImg}
+                  alt="Camada 2 — Programa de Indicações Multinível"
+                  className="w-full h-auto block rounded-xl"
+                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
                 />
               </div>
             </Reveal>

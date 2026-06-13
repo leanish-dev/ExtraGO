@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import motoresReceitaCardImg from "@assets/Motores-receita-arqfin_1781330517476.png";
 import {
   Zap, Network, BadgeCheck, Building2,
   DollarSign, MapPin, TrendingUp, Globe,
@@ -453,6 +454,24 @@ export default function ModeloDeNegocioPage() {
               <p className="text-slate-500 text-[14px] leading-relaxed max-w-2xl mx-auto">
                 Cada camada de receita alimenta as demais — criando um ecossistema integrado onde o crescimento em uma frente impulsiona todas as outras.
               </p>
+            </Reveal>
+
+            <Reveal className="mb-10">
+              <div
+                className="w-full rounded-2xl overflow-hidden p-1"
+                style={{
+                  boxShadow: "0 8px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(22,163,74,0.18), 0 0 32px rgba(22,163,74,0.07)",
+                  border: "1px solid rgba(22,163,74,0.20)",
+                  background: "rgba(240,253,244,0.6)",
+                }}
+              >
+                <img
+                  src={motoresReceitaCardImg}
+                  alt="Os 4 Motores de Receita da extraGO"
+                  className="w-full h-auto block rounded-xl"
+                  style={{ display: "block", objectFit: "contain", maxWidth: "100%" }}
+                />
+              </div>
             </Reveal>
 
             {/* Flow — horizontal on desktop, vertical on mobile */}
