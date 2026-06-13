@@ -272,9 +272,9 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             06 · COMPETITIVE ADVANTAGES
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(124,252,0,0.018)" }}>
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section className="py-5 sm:py-16" style={{ background: "rgba(124,252,0,0.018)" }}>
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Vantagens Competitivas" color={G} icon={<Shield size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Defensabilidade estrutural.<br />Não apenas funcionalidades.
@@ -283,16 +283,17 @@ export default function InvestidoresParceirosPage() {
                 As vantagens da extraGO não são features que podem ser copiadas — são efeitos de rede e estruturas operacionais que se fortalecem com o tempo e com a escala.
               </p>
             </Reveal>
+          </div>
 
-            {/* Arquitetura Financeira — ativo institucional visual */}
-            <Reveal className="mb-8">
-              <Link href="/modelo-de-negocio">
-                <motion.div
-                  whileHover={{ y: -3, scale: 1.003 }}
-                  transition={{ type: "spring", stiffness: 280, damping: 24 }}
-                  className="relative overflow-hidden cursor-pointer group"
-                  style={{}}
-                >
+          {/* Arquitetura Financeira — ativo institucional visual */}
+          <Reveal className="mb-8">
+            <Link href="/modelo-de-negocio">
+              <motion.div
+                whileHover={{ y: -3, scale: 1.003 }}
+                transition={{ type: "spring", stiffness: 280, damping: 24 }}
+                className="relative overflow-hidden cursor-pointer group"
+                style={{}}
+              >
                   <img
                     src="/arquitetura.png"
                     alt="A Arquitetura Financeira da extraGO — infraestrutura de 4 fontes de receita"
@@ -325,6 +326,7 @@ export default function InvestidoresParceirosPage() {
               </Link>
             </Reveal>
 
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
             <div className="divide-y divide-white/6">
               {ADVANTAGES.map((adv, i) => (
                 <Reveal key={i} delay={i * 0.04}>
@@ -447,18 +449,16 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             08b · 4 MOTORES DE RECEITA
         ═══════════════════════════════ */}
-        <section id="camadas" className="px-5 sm:px-10 py-6 sm:py-20">
-          <div className="max-w-6xl mx-auto">
-
-            <Reveal className="mb-8">
-              <img
-                src="/motores-receita-card.png"
-                alt="Os 4 Motores de Receita da extraGO"
-                className="w-full h-auto block"
-                style={{ display: "block", objectFit: "contain", width: "100%" }}
-              />
-            </Reveal>
-
+        <section id="camadas" className="py-6 sm:py-20">
+          <Reveal className="mb-8">
+            <img
+              src="/motores-receita-card.png"
+              alt="Os 4 Motores de Receita da extraGO"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
             {/* CTA → dedicated model page */}
             <Reveal delay={0.15} className="flex justify-center">
               <Link href="/modelo-de-negocio">

@@ -32,9 +32,9 @@ export default function ReferralsPage() {
         <Divider />
 
         {/* Como funciona */}
-        <section className="px-5 sm:px-10 py-10 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section className="py-10 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Como funciona" color={GC} icon={<Layers size={10} />} />
               <h2 className="font-black text-slate-900 mb-3" style={{ fontSize: "clamp(20px,3vw,34px)" }}>
                 Estrutura Operacional do Programa
@@ -44,16 +44,15 @@ export default function ReferralsPage() {
                 Toda vez que um indicado realiza um extra pago na plataforma, o indicador recebe automaticamente sua comissão proporcional.
               </p>
             </Reveal>
-
-            <Reveal className="mb-8">
-              <img
-                src={indicacoesCardImg}
-                alt="Camada 2 — Programa de Indicações Multinível"
-                className="w-full h-auto block"
-                style={{ display: "block", objectFit: "contain", width: "100%" }}
-              />
-            </Reveal>
           </div>
+          <Reveal className="mb-8">
+            <img
+              src={indicacoesCardImg}
+              alt="Camada 2 — Programa de Indicações Multinível"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
         </section>
 
         {/* ── Referral Network Visual ── */}

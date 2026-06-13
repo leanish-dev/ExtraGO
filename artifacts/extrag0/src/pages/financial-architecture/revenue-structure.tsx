@@ -95,9 +95,9 @@ export default function RevenueStructurePage() {
         <Divider />
 
         {/* Distribuição visual */}
-        <section className="px-5 sm:px-10 py-10 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section className="py-10 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Distribuição da Receita" color={GA} icon={<BarChart3 size={10} />} />
               <h2 className="font-black text-slate-900 mb-3" style={{ fontSize: "clamp(20px,3vw,34px)" }}>
                 Estrutura Operacional Financeira
@@ -107,16 +107,15 @@ export default function RevenueStructurePage() {
                 para manter equilíbrio entre crescimento, sustentabilidade e retorno.
               </p>
             </Reveal>
-
-            <Reveal className="mb-8">
-              <img
-                src={distribuicaoReceitaCardImg}
-                alt="Distribuição da Receita — Alocação da Receita Operacional"
-                className="w-full h-auto block"
-                style={{ display: "block", objectFit: "contain", width: "100%" }}
-              />
-            </Reveal>
           </div>
+          <Reveal className="mb-8">
+            <img
+              src={distribuicaoReceitaCardImg}
+              alt="Distribuição da Receita — Alocação da Receita Operacional"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
         </section>
 
         {/* Estrutura de Capital — 30% Investidores */}

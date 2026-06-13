@@ -112,9 +112,9 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 1 ── */}
-        <section id="camada-1" className="px-5 sm:px-10 py-6 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section id="camada-1" className="py-6 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Camada 1" color={GA} icon={<Zap size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
                 Intermediação por Performance
@@ -124,19 +124,20 @@ export default function ModeloDeNegocioPage() {
                 Cinco níveis progressivos — do Iniciante ao Elite — com taxas que variam de <strong>20% a 10%</strong>.
               </p>
             </Reveal>
+          </div>
 
-            <Reveal className="mb-6">
-              <img
-                src={intermediacaoCardImg}
-                alt="Camada 1 — Intermediação por Performance: Iniciante 20%, Júnior 18%, Intermediário 15%, Sênior 12%, Elite 10%"
-                className="w-full h-auto block"
-                style={{ display: "block", objectFit: "contain", width: "100%" }}
-              />
-            </Reveal>
+          <Reveal className="mb-6">
+            <img
+              src={intermediacaoCardImg}
+              alt="Camada 1 — Intermediação por Performance: Iniciante 20%, Júnior 18%, Intermediário 15%, Sênior 12%, Elite 10%"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
 
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
             <WhyBlock text="A Camada 1 é a base da monetização. Cada extra concluído gera receita direta para a plataforma. O sistema de progressão de taxas incentiva qualidade e cria retenção natural: profissionais que constroem reputação pagam menos e permanecem na plataforma por mais tempo — alinhando o sucesso da plataforma com o sucesso do profissional." />
             <ImpactBlock text="Receita diretamente proporcional ao volume de extras concluídos — quanto mais a plataforma cresce, mais esta camada produz. Estimada como a maior fonte de receita no early stage. A estrutura de taxas progressivas garante retenção orgânica sem custo de aquisição adicional." />
-
             <div className="flex flex-wrap gap-3">
               <SectionCTA href="/financial-architecture/performance" label="Entender esta camada" />
               <SectionCTA href="/financial-architecture/performance" label="Ver funcionamento completo" variant="outline" />
@@ -147,9 +148,9 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 2 ── */}
-        <section id="camada-2" className="px-5 sm:px-10 py-6 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section id="camada-2" className="py-6 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Camada 2" color={GC} icon={<Network size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
                 Programa de Indicações Multinível
@@ -159,19 +160,20 @@ export default function ModeloDeNegocioPage() {
                 recebe comissões recorrentes sobre o valor bruto das transações.
               </p>
             </Reveal>
+          </div>
 
-            <Reveal className="mb-6">
-              <img
-                src={indicacoesCardImg}
-                alt="Camada 2 — Programa de Indicações Multinível: Indicador 2%, Agente de Captação 3%, Embaixador Regional 5%"
-                className="w-full h-auto block"
-                style={{ display: "block", objectFit: "contain", width: "100%" }}
-              />
-            </Reveal>
+          <Reveal className="mb-6">
+            <img
+              src={indicacoesCardImg}
+              alt="Camada 2 — Programa de Indicações Multinível: Indicador 2%, Agente de Captação 3%, Embaixador Regional 5%"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
 
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
             <WhyBlock text="Transforma cada usuário em um agente de crescimento. Em vez de depender exclusivamente de marketing pago, a plataforma cria uma rede de incentivo onde cada novo profissional traz mais profissionais — reduzindo o CAC estruturalmente e criando crescimento orgânico exponencial com efeitos de rede autossustentáveis." />
             <ImpactBlock text="Reduz o custo de aquisição de clientes (CAC) de forma estrutural. A rede de indicações torna o crescimento autossustentável, aumenta o LTV por usuário e cria barreiras de saída para quem está ativo na rede de referrals. Cada Embaixador Regional potencialmente move centenas de profissionais novos para a plataforma." />
-
             <div className="flex flex-wrap gap-3">
               <SectionCTA href="/financial-architecture/referrals" label="Explorar detalhes" />
               <SectionCTA href="/financial-architecture/referrals" label="Ver documentação completa" variant="outline" />
@@ -271,9 +273,9 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── ESTRUTURA FINANCEIRA ── */}
-        <section id="financeiro" className="px-5 sm:px-10 py-6 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section id="financeiro" className="py-6 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Estrutura Financeira da Receita Operacional" color={GA} icon={<BarChart3 size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
                 Distribuição da Receita Operacional
@@ -283,19 +285,20 @@ export default function ModeloDeNegocioPage() {
                 garantindo sustentabilidade, crescimento e retorno para fundadores e investidores.
               </p>
             </Reveal>
+          </div>
 
-            <Reveal className="mb-6">
-              <img
-                src={distribuicaoReceitaCardImg}
-                alt="Distribuição da Receita Operacional: 25% Caixa, 20% Fundadores e Investidores, 20% Marketing, 10% Tecnologia, 10% Operações, 10% Fundo de Crescimento, 5% Representantes"
-                className="w-full h-auto block"
-                style={{ display: "block", objectFit: "contain", width: "100%" }}
-              />
-            </Reveal>
+          <Reveal className="mb-6">
+            <img
+              src={distribuicaoReceitaCardImg}
+              alt="Distribuição da Receita Operacional: 25% Caixa, 20% Fundadores e Investidores, 20% Marketing, 10% Tecnologia, 10% Operações, 10% Fundo de Crescimento, 5% Representantes"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
 
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
             <WhyBlock text="A distribuição estratégica da receita garante que crescimento, tecnologia, expansão e retorno para fundadores e investidores coexistam de forma equilibrada — sem depender de capital externo contínuo para sustentar a operação. Cada percentual foi calculado para que a extraGO financie seu próprio crescimento a partir da receita gerada." />
             <ImpactBlock text="20% da receita operacional vai diretamente para fundadores e investidores — automaticamente e em proporção ao crescimento da plataforma. Quanto mais a extraGO cresce, maior é o retorno distribuído. A reserva de caixa de 25% garante solidez operacional mesmo em cenários adversos, protegendo o investimento a longo prazo." />
-
             <div className="flex flex-wrap gap-3">
               <SectionCTA href="/financial-architecture/revenue-structure" label="Ver estrutura completa" />
               <SectionCTA href="/financial-architecture/revenue-structure" label="Explorar detalhes" variant="outline" />
@@ -391,9 +394,9 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── COMO OS MOTORES SE CONECTAM ── */}
-        <section id="motores" className="px-5 sm:px-10 py-6 sm:py-20">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-10 text-center">
+        <section id="motores" className="py-6 sm:py-20">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-10">
+            <Reveal className="text-center">
               <Pill label="Arquitetura de Receita" color={GA} icon={<Layers size={10} />} />
               <h2 className="font-black leading-tight mb-3 text-slate-900" style={{ fontSize: "clamp(24px,3.8vw,44px)" }}>
                 Como os Motores se Conectam
@@ -402,16 +405,18 @@ export default function ModeloDeNegocioPage() {
                 Cada camada de receita alimenta as demais — criando um ecossistema integrado onde o crescimento em uma frente impulsiona todas as outras.
               </p>
             </Reveal>
+          </div>
 
-            <Reveal className="mb-10">
-              <img
-                src={motoresReceitaCardImg}
-                alt="Os 4 Motores de Receita da extraGO"
-                className="w-full h-auto block"
-                style={{ display: "block", objectFit: "contain", width: "100%" }}
-              />
-            </Reveal>
+          <Reveal className="mb-10">
+            <img
+              src={motoresReceitaCardImg}
+              alt="Os 4 Motores de Receita da extraGO"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
 
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
             {/* Flow — horizontal on desktop, vertical on mobile */}
             <div className="mb-10">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-6">
