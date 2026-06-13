@@ -61,16 +61,16 @@ function NavItemLink({
     <Link href={href}>
       <div
         className={`relative flex flex-col items-center cursor-pointer ${className}`}
-        style={{ padding: "6px clamp(4px,1vw,10px)" }}
+        style={{ padding: "4px clamp(3px,0.7vw,7px)" }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
         <div style={{ color: col, marginBottom: 2, transition: "color 0.15s", lineHeight: 0 }}>{icon}</div>
-        <span style={{ fontSize: "clamp(9px,1.8vw,11px)", fontWeight: 600, color: col, whiteSpace: "nowrap", transition: "color 0.15s" }}>
+        <span style={{ fontSize: "clamp(8px,1.5vw,10px)", fontWeight: 600, color: col, whiteSpace: "nowrap", transition: "color 0.15s" }}>
           {label}
         </span>
         {active && (
-          <span className="absolute bottom-0 left-2 right-2 rounded-full" style={{ height: 2.5, background: `linear-gradient(90deg,${G},${C})` }} />
+          <span className="absolute bottom-0 left-1 right-1 rounded-full" style={{ height: 2, background: `linear-gradient(90deg,${G},${C})` }} />
         )}
       </div>
     </Link>
@@ -282,11 +282,11 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
           style={{ height: 1, background: "linear-gradient(90deg, transparent 0%, rgba(0,201,167,0.35) 30%, rgba(22,163,74,0.40) 50%, rgba(0,201,167,0.35) 70%, transparent 100%)" }}
         />
 
-        <div className="w-full h-full flex items-center px-2 sm:px-3" style={{ gap: 0 }}>
+        <div className="w-full h-full flex items-center px-0 sm:px-1" style={{ gap: 0 }}>
 
           {/* ── LEFT: Logo ── */}
           <Link href={logoHref} aria-label="extraGO – página inicial">
-            <div className="flex items-center flex-shrink-0" style={{ marginRight: "clamp(4px,1vw,12px)" }}>
+            <div className="flex items-center flex-shrink-0" style={{ marginRight: "clamp(2px,0.4vw,6px)" }}>
               <img
                 src={logoMain}
                 alt="extraGO"
@@ -335,90 +335,34 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
             /* ── CENTRE (public): Nav links with icons ── */
             <nav
               className="flex items-center"
-              style={{ flex: "1 1 0", minWidth: 0, gap: "clamp(0px,0.8vw,8px)" }}
+              style={{ flex: "1 1 auto", overflow: "visible", gap: "clamp(0px,0.6vw,6px)" }}
             >
               {/* Investidores — mobile + desktop */}
               <NavItemLink href="/investidores-parceiros" icon={<TrendingUp size={17} />} label="Investidores" active={active("/investidores-parceiros")} className="flex" />
 
-              {/* Arquitetura Financeira — mobile + desktop, primary visual highlight */}
+              {/* Arquitetura Financeira — mobile + desktop, plain green style */}
               <div ref={faAnchorRef} className="fa-root relative flex flex-col items-center">
                 <button
                   onClick={() => setFaOpen(o => !o)}
-                  className="relative flex items-center gap-1.5 cursor-pointer border-none"
-                  style={{
-                    padding: "6px clamp(8px,1.4vw,14px)",
-                    borderRadius: 20,
-                    background: faOpen
-                      ? `linear-gradient(135deg,${G},${C})`
-                      : (active("/modelo-de-negocio") || active("/financial-architecture"))
-                        ? `linear-gradient(135deg,${G}cc,${C}cc)`
-                        : `linear-gradient(135deg,rgba(22,163,74,0.18),rgba(0,201,167,0.12))`,
-                    border: faOpen
-                      ? "1px solid transparent"
-                      : `1px solid rgba(22,163,74,0.45)`,
-                    boxShadow: faOpen
-                      ? `0 0 18px rgba(22,163,74,0.45)`
-                      : `0 0 10px rgba(22,163,74,0.18)`,
-                    transition: "background 0.18s, box-shadow 0.18s, border-color 0.18s",
-                  }}
-                  onMouseEnter={e => {
-                    if (!faOpen) {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.background = `linear-gradient(135deg,rgba(22,163,74,0.30),rgba(0,201,167,0.22))`;
-                      el.style.boxShadow = `0 0 16px rgba(22,163,74,0.30)`;
-                    }
-                  }}
-                  onMouseLeave={e => {
-                    if (!faOpen) {
-                      const el = e.currentTarget as HTMLElement;
-                      el.style.background = (active("/modelo-de-negocio") || active("/financial-architecture"))
-                        ? `linear-gradient(135deg,${G}cc,${C}cc)`
-                        : `linear-gradient(135deg,rgba(22,163,74,0.18),rgba(0,201,167,0.12))`;
-                      el.style.boxShadow = `0 0 10px rgba(22,163,74,0.18)`;
-                    }
-                  }}
+                  className="relative flex flex-col items-center cursor-pointer"
+                  style={{ background: "none", border: "none", padding: "4px clamp(3px,0.7vw,7px)", boxShadow: "none" }}
                 >
-                  <Layers
-                    size={14}
-                    style={{
-                      color: faOpen
-                        ? "#fff"
-                        : (active("/modelo-de-negocio") || active("/financial-architecture"))
-                          ? "#fff"
-                          : ACTIVE_G,
-                      transition: "color 0.15s",
-                      flexShrink: 0,
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontSize: "clamp(9px,1.8vw,11px)",
-                      fontWeight: 800,
-                      color: faOpen
-                        ? "#fff"
-                        : (active("/modelo-de-negocio") || active("/financial-architecture"))
-                          ? "#fff"
-                          : ACTIVE_G,
-                      whiteSpace: "nowrap",
-                      transition: "color 0.15s",
-                      letterSpacing: "0.02em",
-                    }}
-                  >
-                    Arq. Financeira
-                  </span>
-                  <motion.span
-                    animate={{ rotate: faOpen ? 180 : 0 }}
-                    transition={{ duration: 0.18 }}
-                    style={{
-                      color: faOpen ? "#fff" : ACTIVE_G,
-                      display: "flex",
-                      alignItems: "center",
-                      transition: "color 0.15s",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <ChevronDown size={11} />
-                  </motion.span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 3, lineHeight: 0, marginBottom: 2 }}>
+                    <Layers size={14} style={{ color: ACTIVE_G, flexShrink: 0 }} />
+                    <span style={{ fontSize: "clamp(8px,1.5vw,10px)", fontWeight: 600, color: ACTIVE_G, whiteSpace: "nowrap" }}>
+                      Arq. Financeira
+                    </span>
+                    <motion.span
+                      animate={{ rotate: faOpen ? 180 : 0 }}
+                      transition={{ duration: 0.18 }}
+                      style={{ color: ACTIVE_G, display: "flex", alignItems: "center", flexShrink: 0 }}
+                    >
+                      <ChevronDown size={11} />
+                    </motion.span>
+                  </div>
+                  {(active("/modelo-de-negocio") || active("/financial-architecture")) && (
+                    <span className="absolute bottom-0 left-1 right-1 rounded-full" style={{ height: 2, background: `linear-gradient(90deg,${G},${C})` }} />
+                  )}
                 </button>
                 <FADropdown open={faOpen} anchorRef={faAnchorRef} onClose={() => setFaOpen(false)} />
               </div>
