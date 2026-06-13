@@ -5,6 +5,10 @@ import motoresReceitaCardImg from "@assets/Motores-receita-arqfin_1781330517476.
 import intermediacaoCardImg from "@assets/Intermediação-card-arqfin_1781330517374.png";
 import indicacoesCardImg from "@assets/Indicações-Multinível-card-arqfin_1781330517245.png";
 import distribuicaoReceitaCardImg from "@assets/Distribuição-da-Receita-card-arqfin_1781330533244.png";
+import heroArqImg from "@assets/Hero-arquitetura-main_1781335479652.png";
+import assProfissionaisArqImg from "@assets/Assinaturas-Profissionais-arqfin_1781335479672.png";
+import assEmpresariaisArqImg from "@assets/Assinaturas-Empresariais-arqfin_1781335479732.png";
+import representantesArqImg from "@assets/Representantes-arqfin_1781335479562.png";
 import {
   Zap, Network, BadgeCheck, Building2,
   DollarSign, MapPin, TrendingUp, Globe,
@@ -79,34 +83,16 @@ export default function ModeloDeNegocioPage() {
 
       <main className="relative z-10 flex-1">
 
-        {/* ── INTRO ── */}
-        <section className="px-5 sm:px-10 py-6 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <p className="text-slate-600 text-[15px] leading-relaxed max-w-3xl mb-8">
-                A extraGO conecta empresas e profissionais por meio de uma plataforma de contratação sob demanda.
-                Sua arquitetura financeira é formada por <strong className="text-slate-800">múltiplas camadas independentes de receita</strong>,
-                garantindo sustentabilidade, escalabilidade e impacto real na infraestrutura de mão de obra do Brasil.
-              </p>
-            </Reveal>
-
-            {/* Key metrics */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-12">
-              {[
-                { value: "10%", label: "Menor taxa — nível Elite", color: GA },
-                { value: "20%", label: "Maior taxa — Iniciante", color: GC },
-                { value: "7", label: "Camadas documentadas", color: PURPLE },
-                { value: "27", label: "Representantes estaduais", color: AMBER },
-              ].map((m, i) => (
-                <Reveal key={i} delay={i * 0.07}>
-                  <GCard className="p-4 sm:p-5 text-center" accent={m.color}>
-                    <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(22px,3vw,36px)", color: m.color }}>{m.value}</p>
-                    <p className="text-[11px] text-slate-500 leading-snug">{m.label}</p>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
-          </div>
+        {/* ── HERO ── */}
+        <section className="py-2">
+          <Reveal>
+            <img
+              src={heroArqImg}
+              alt="Múltiplas Fontes de Receita. Crescimento Sem Limites. — Arquitetura Financeira extraGO"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
         </section>
 
         <Divider />
@@ -184,9 +170,9 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 3 ── */}
-        <section id="camada-3" className="px-5 sm:px-10 py-6 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section id="camada-3" className="py-6 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Camada 3" color={PURPLE} icon={<BadgeCheck size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
                 Assinaturas Profissionais
@@ -195,31 +181,20 @@ export default function ModeloDeNegocioPage() {
                 Planos para profissionais que buscam visibilidade, ferramentas avançadas e crescimento acelerado dentro do ecossistema extraGO.
               </p>
             </Reveal>
+          </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              {[
-                { name: "FREE", price: "Gratuito", color: "#64748b", features: ["Acesso às funcionalidades essenciais da plataforma"] },
-                { name: "extraGO PRO", price: "R$ 19,90/mês", color: PURPLE, features: ["Destaque nas buscas", "Estatísticas avançadas", "Selo PRO", "Notificações prioritárias"] },
-                { name: "extraGO PREMIUM", price: "R$ 49,90/mês", color: GC, features: ["Todos os benefícios PRO", "Perfil destacado", "Relatórios avançados", "Atendimento prioritário"] },
-                { name: "extraGO ELITE", price: "R$ 99,90/mês", color: GA, features: ["Todos os benefícios PREMIUM", "Máxima prioridade", "Benefícios exclusivos", "Recursos avançados"] },
-              ].map((plan, i) => (
-                <Reveal key={i} delay={i * 0.07}>
-                  <GCard className="p-4 sm:p-5 h-full" accent={plan.color} glow={i === 3}>
-                    <p className="text-[10px] font-black tracking-widest uppercase mb-2" style={{ color: plan.color }}>{plan.name}</p>
-                    <p className="font-black text-[15px] sm:text-[17px] mb-3" style={{ color: plan.color }}>{plan.price}</p>
-                    <div className="space-y-1.5">
-                      {plan.features.map((f, j) => (
-                        <CheckItem key={j} text={f} color={plan.color} />
-                      ))}
-                    </div>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
+          <Reveal className="mb-6">
+            <img
+              src={assProfissionaisArqImg}
+              alt="Assinaturas Profissionais — FREE Gratuito, extraGO PRO R$19,90/mês, PREMIUM R$49,90/mês, ELITE R$99,90/mês"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
 
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
             <WhyBlock text="Cria previsibilidade financeira independente do volume de extras. O MRR (Monthly Recurring Revenue) estabiliza a receita da plataforma e permite planejamento de longo prazo, reduzindo a exposição à sazonalidade operacional e complementando a receita transacional da Camada 1." />
             <ImpactBlock text="Receita mensal recorrente (MRR) que escala diretamente com a base de usuários. Cada novo profissional que assina um plano aumenta o MRR sem custo marginal significativo — criando alavancagem financeira real. Com 10.000 assinantes no plano médio, a Camada 3 gera mais de R$ 350.000/mês de receita previsível." />
-
             <div className="flex flex-wrap gap-3">
               <SectionCTA href="/financial-architecture/professional-plans" label="Ver funcionamento completo" />
               <SectionCTA href="/financial-architecture/professional-plans" label="Explorar detalhes" variant="outline" />
@@ -230,9 +205,9 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 4 ── */}
-        <section id="camada-4" className="px-5 sm:px-10 py-6 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section id="camada-4" className="py-6 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Camada 4" color={AMBER} icon={<Building2 size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
                 Assinaturas Empresariais
@@ -242,27 +217,20 @@ export default function ModeloDeNegocioPage() {
                 Quatro planos que atendem desde pequenas empresas a grandes organizações nacionais.
               </p>
             </Reveal>
+          </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              {[
-                { tier: "Starter", price: "R$ 99,90/mês", color: "#64748b", ideal: "Ideal para pequenas empresas." },
-                { tier: "Business", price: "R$ 299,90/mês", color: AMBER, ideal: "Ideal para empresas com demanda recorrente." },
-                { tier: "Corporate", price: "R$ 799,90/mês", color: GC, ideal: "Ideal para operações maiores." },
-                { tier: "Enterprise", price: "Sob consulta", color: GA, ideal: "Soluções personalizadas para grandes organizações." },
-              ].map((plan, i) => (
-                <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-4 sm:p-5 h-full" accent={plan.color}>
-                    <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: plan.color }}>{plan.tier}</p>
-                    <p className="font-black text-[16px] sm:text-[18px] mb-2" style={{ color: plan.color }}>{plan.price}</p>
-                    <p className="text-[12px] text-slate-400 leading-snug">{plan.ideal}</p>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
+          <Reveal className="mb-6">
+            <img
+              src={assEmpresariaisArqImg}
+              alt="Assinaturas Empresariais — Starter R$99,90/mês, Business R$299,90/mês, Corporate R$799,90/mês, Enterprise sob consulta"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
 
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
             <WhyBlock text="Posiciona a extraGO como uma solução SaaS B2B — criando receita recorrente de alto ticket. Empresas com planos ativos têm maior retenção, maior volume de contratações e maior LTV. Ao resolver a dor operacional das empresas com ferramentas de gestão, a plataforma se torna indispensável no dia a dia corporativo." />
             <ImpactBlock text="Receita recorrente B2B com tickets superiores às assinaturas profissionais. A combinação das Camadas 3 e 4 cria um MRR robusto que sustenta a operação independente do volume transacional. Uma única empresa no plano Corporate equivale a mais de 16 profissionais no plano PRO." />
-
             <div className="flex flex-wrap gap-3">
               <SectionCTA href="/financial-architecture/business-plans" label="Entender esta camada" />
               <SectionCTA href="/financial-architecture/business-plans" label="Ver documentação completa" variant="outline" />
@@ -352,9 +320,9 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── REPRESENTANTES ESTADUAIS ── */}
-        <section id="representantes" className="px-5 sm:px-10 py-6 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section id="representantes" className="py-6 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Rede de Representantes Estaduais" color={AMBER} icon={<MapPin size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
                 Representantes Estaduais
@@ -365,25 +333,20 @@ export default function ModeloDeNegocioPage() {
                 <strong className="text-slate-700"> 5% da receita operacional</strong> é destinado ao Fundo Nacional de Representantes.
               </p>
             </Reveal>
+          </div>
 
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              {[
-                { value: "1", label: "Representante Oficial por Estado", color: AMBER },
-                { value: "27", label: "Estados brasileiros com representação", color: GA },
-                { value: "5%", label: "Da receita destinada ao Fundo Nacional", color: GC },
-              ].map((m, i) => (
-                <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-4 sm:p-6 text-center" accent={m.color} glow>
-                    <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(26px,3.5vw,42px)", color: m.color }}>{m.value}</p>
-                    <p className="text-[11px] sm:text-[12px] text-slate-500 leading-snug">{m.label}</p>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
+          <Reveal className="mb-6">
+            <img
+              src={representantesArqImg}
+              alt="Rede de Representantes Estaduais — 1 Representante Oficial por Estado, 27 Estados, 5% da receita ao Fundo Nacional"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
 
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
             <WhyBlock text="Uma rede de representantes regionais cria presença local escalável sem necessidade de escritórios físicos em cada estado. Cada representante é responsável pelo desenvolvimento comercial, parcerias e crescimento da rede em sua região — atuando como extensão da plataforma no território, com conhecimento e relacionamentos que a tecnologia sozinha não substitui." />
             <ImpactBlock text="27 multiplicadores de mercado financiados pela própria receita operacional. A rede de representantes acelera a penetração estadual e cria defensabilidade regional de difícil replicação. Cada representante ativo potencialmente ativa dezenas de empresas e centenas de profissionais em seu estado." />
-
             <div className="flex flex-wrap gap-3">
               <SectionCTA href="/financial-architecture/state-representatives" label="Ver documentação completa" />
               <SectionCTA href="/financial-architecture/state-representatives" label="Explorar detalhes" variant="outline" />

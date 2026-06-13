@@ -4,6 +4,7 @@ import {
   FABackground, FAHeader, FANavBar, GCard, Pill, Reveal, Divider,
   CheckItem, GA, GC, PageHero,
 } from "./_shared";
+import representantesArqImg from "@assets/Representantes-arqfin_1781335479562.png";
 
 const PURPLE = "#7c3aed";
 const AMBER = "#d97706";
@@ -58,9 +59,9 @@ export default function StateRepresentativesPage() {
         <Divider />
 
         {/* Estrutura */}
-        <section className="px-5 sm:px-10 py-10 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-6">
+        <section className="py-10 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+            <Reveal>
               <Pill label="Estrutura Operacional" color={AMBER} icon={<Layers size={10} />} />
               <h2 className="font-black text-slate-900 mb-3" style={{ fontSize: "clamp(20px,3vw,34px)" }}>
                 O Representante Estadual e sua Equipe
@@ -70,44 +71,15 @@ export default function StateRepresentativesPage() {
                 Ele pode estruturar uma equipe de até quatro colaboradores, cada um com uma função estratégica específica.
               </p>
             </Reveal>
-
-            {/* Metrics */}
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              {[
-                { value: "1", label: "Representante Estadual por Estado", color: AMBER },
-                { value: "27", label: "Estados Brasileiros + DF", color: GA },
-                { value: "4", label: "Colaboradores Máximos por Estado", color: GC },
-              ].map((m, i) => (
-                <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-4 sm:p-6 text-center" accent={m.color} glow>
-                    <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(26px,3.5vw,44px)", color: m.color }}>{m.value}</p>
-                    <p className="text-[11px] sm:text-[12px] text-slate-500 leading-snug">{m.label}</p>
-                  </GCard>
-                </Reveal>
-              ))}
-            </div>
-
-            {/* Equipe regional */}
-            <Reveal className="mb-8">
-              <h3 className="font-bold text-slate-700 text-[16px] mb-4">Estrutura da Equipe Regional</h3>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {TEAM_ROLES.map((role, i) => (
-                  <GCard key={i} className="p-5" accent={role.color}>
-                    <div className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                        style={{ background: `${role.color}12`, border: `1px solid ${role.color}22` }}>
-                        <span style={{ color: role.color }}>{role.icon}</span>
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-800 text-[13px] mb-1.5">{role.role}</p>
-                        <p className="text-[12px] text-slate-500 leading-relaxed">{role.desc}</p>
-                      </div>
-                    </div>
-                  </GCard>
-                ))}
-              </div>
-            </Reveal>
           </div>
+          <Reveal className="mb-8">
+            <img
+              src={representantesArqImg}
+              alt="Rede de Representantes Estaduais — 1 Representante Oficial por Estado, 27 Estados, 5% da receita ao Fundo Nacional"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
         </section>
 
         {/* ── Brazil Network Visual ── */}

@@ -4,6 +4,7 @@ import {
   FABackground, FAHeader, FANavBar, GCard, Pill, Reveal, Divider,
   CheckItem, GA, GC, PageHero,
 } from "./_shared";
+import assEmpresariaisArqImg from "@assets/Assinaturas-Empresariais-arqfin_1781335479732.png";
 
 const PURPLE = "#7c3aed";
 const AMBER = "#d97706";
@@ -92,6 +93,18 @@ export default function BusinessPlansPage() {
         />
 
         <Divider />
+
+        {/* Visual institucional */}
+        <section className="py-2">
+          <Reveal className="mb-4">
+            <img
+              src={assEmpresariaisArqImg}
+              alt="Assinaturas Empresariais — Starter R$99,90/mês, Business R$299,90/mês, Corporate R$799,90/mês, Enterprise sob consulta"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
+        </section>
 
         {/* Planos */}
         <section className="px-5 sm:px-10 py-10 sm:py-16">

@@ -8,6 +8,8 @@ import oMercadoImg from "@assets/O-mercado-section_1781247644534.png";
 import oProblemaImg from "@assets/O-problema-section-investidores_1781247644565.png";
 import estruturaCapitalImg from "@assets/Estrutura-de-capital-section_1781247644390.png";
 import porQueAgoraImg from "@assets/Por-Que-Agora-section_1781247644506.png";
+import assProfissionaisArqImg from "@assets/Assinaturas-Profissionais-arqfin_1781335479672.png";
+import assEmpresariaisInvestImg from "@assets/AssinaturasEmpresariais-invest_1781335479696.png";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 import { Reveal, GCardDark as GCard, Pill, Divider, CountUp } from "@/lib/institutional-components";
 import {
@@ -378,63 +380,35 @@ export default function InvestidoresParceirosPage() {
               </div>
             </Reveal>
 
-            {/* Camada 3 — Assinaturas Profissionais */}
-            <Reveal className="mb-4" delay={0.10}>
-              <GCard className="p-5 sm:p-6" accent="#a855f7">
-                <p className="text-[10px] font-black tracking-widest uppercase mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Camada 3 — Assinaturas Profissionais (MRR)</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                  {[
-                    { name: "FREE",            price: "Gratuito",    color: "#64748b", icon: <Lock size={15} /> },
-                    { name: "extraGO PRO",     price: "R$ 19,90/mês",color: G,         icon: <BadgeCheck size={15} /> },
-                    { name: "extraGO PREMIUM", price: "R$ 49,90/mês",color: C,         icon: <Rocket size={15} /> },
-                    { name: "extraGO ELITE",   price: "R$ 99,90/mês",color: "#a855f7", icon: <Crown size={15} /> },
-                  ].map((plan, i) => (
-                    <div key={i} className="flex flex-col gap-1.5 py-3 px-3 rounded-xl border"
-                      style={{ background: `${plan.color}08`, borderColor: `${plan.color}22` }}>
-                      <div className="flex items-center gap-1.5">
-                        <span style={{ color: plan.color }}>{plan.icon}</span>
-                        <span className="text-[10px] font-black" style={{ color: plan.color }}>{plan.name}</span>
-                      </div>
-                      <span className="text-[13px] font-black text-[rgba(255,255,255,0.90)]">{plan.price}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-start gap-2.5">
-                  <TrendingUp size={13} className="text-purple-400 flex-shrink-0 mt-0.5" />
-                  <p className="text-[11px] text-[rgba(255,255,255,0.68)] leading-relaxed">
-                    Receita mensal recorrente (MRR) que escala proporcionalmente com a base de usuários — criando previsibilidade financeira independente do volume de extras.
-                  </p>
-                </div>
-              </GCard>
-            </Reveal>
+          </div>
+        </section>
 
-            {/* Camada 4 — Assinaturas Empresariais */}
-            <Reveal className="mb-4" delay={0.14}>
-              <GCard className="p-5 sm:p-6" accent="#f59e0b">
-                <p className="text-[10px] font-black tracking-widest uppercase mb-4" style={{ color: "rgba(255,255,255,0.58)" }}>Camada 4 — Assinaturas Empresariais (MRR B2B)</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                  {[
-                    { tier: "Starter",    price: "R$ 99,90/mês",   color: "#64748b" },
-                    { tier: "Business",   price: "R$ 299,90/mês",  color: "#f59e0b" },
-                    { tier: "Corporate",  price: "R$ 799,90/mês",  color: C         },
-                    { tier: "Enterprise", price: "Sob consulta",   color: G         },
-                  ].map((plan, i) => (
-                    <div key={i} className="flex flex-col gap-1.5 py-3 px-3 rounded-xl border"
-                      style={{ background: `${plan.color}08`, borderColor: `${plan.color}22` }}>
-                      <span className="text-[10px] font-black" style={{ color: plan.color }}>{plan.tier}</span>
-                      <span className="text-[13px] font-black text-[rgba(255,255,255,0.90)]">{plan.price}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-start gap-2.5">
-                  <Building2 size={13} style={{ color: "#f59e0b", flexShrink: 0, marginTop: 2 }} />
-                  <p className="text-[11px] text-[rgba(255,255,255,0.68)] leading-relaxed">
-                    Receita recorrente B2B com tickets superiores. Uma empresa no plano Corporate equivale a mais de 16 profissionais no plano PRO — criando alavancagem financeira real.
-                  </p>
-                </div>
-              </GCard>
-            </Reveal>
+        {/* Camada 3 — Assinaturas Profissionais */}
+        <section className="py-2">
+          <Reveal className="mb-2">
+            <img
+              src={assProfissionaisArqImg}
+              alt="Assinaturas Profissionais — FREE Gratuito, extraGO PRO R$19,90/mês, PREMIUM R$49,90/mês, ELITE R$99,90/mês"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
+        </section>
 
+        {/* Camada 4 — Assinaturas Empresariais */}
+        <section className="py-2">
+          <Reveal className="mb-4">
+            <img
+              src={assEmpresariaisInvestImg}
+              alt="Assinaturas Empresariais — Starter R$99,90/mês, Business R$299,90/mês, Corporate R$799,90/mês, Enterprise sob consulta"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+            />
+          </Reveal>
+        </section>
+
+        <section className="px-5 sm:px-10 pb-5 sm:pb-16">
+          <div className="max-w-6xl mx-auto">
             {/* Estrutura Financeira */}
             <Reveal delay={0.18}>
               <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
