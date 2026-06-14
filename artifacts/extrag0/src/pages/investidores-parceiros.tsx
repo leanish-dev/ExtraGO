@@ -42,13 +42,13 @@ function Background() {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center top",
-          filter: "saturate(1.30) contrast(1.05)",
+          filter: "saturate(1.55) contrast(1.12) brightness(1.04)",
         }}
       />
-      {/* Overlay — dark enough for white text WCAG AA */}
+      {/* Overlay — preserves art depth while keeping white text readable */}
       <div
         className="absolute inset-0"
-        style={{ background: "rgba(4,10,22,0.76)" }}
+        style={{ background: "rgba(4,10,22,0.54)" }}
       />
     </div>
   );
@@ -295,12 +295,12 @@ export default function InvestidoresParceirosPage() {
             </Reveal>
             <div className="flex flex-col items-center gap-0">
               {[
-                { label: "Mercado Informal",         color: "rgba(255,255,255,0.32)", dim: true  },
-                { label: "Falta de Reputação",        color: "rgba(255,255,255,0.28)", dim: true  },
-                { label: "Falta de Tecnologia",       color: "rgba(255,255,255,0.24)", dim: true  },
-                { label: "Falta de Pagamentos",       color: "rgba(255,255,255,0.22)", dim: true  },
-                { label: "extraGO",                   color: G,                        dim: false, highlight: true },
-                { label: "Rede Nacional",             color: C,                        dim: false  },
+                { label: "Mercado Informal",         dim: true  },
+                { label: "Falta de Reputação",        dim: true  },
+                { label: "Falta de Tecnologia",       dim: true  },
+                { label: "Falta de Pagamentos",       dim: true  },
+                { label: "extraGO",                   dim: false, highlight: true },
+                { label: "Rede Nacional",             dim: false  },
               ].map((step, i) => (
                 <Reveal key={i} delay={i * 0.06}>
                   <div className="flex flex-col items-center">
@@ -309,15 +309,23 @@ export default function InvestidoresParceirosPage() {
                         padding: step.highlight ? "10px 32px" : "6px 22px",
                         borderRadius: "6px",
                         fontSize: step.highlight ? "clamp(13px,2vw,16px)" : "clamp(11px,1.6vw,13px)",
-                        fontWeight: step.highlight ? 900 : 500,
-                        color: step.color,
+                        fontWeight: step.highlight ? 900 : step.dim ? 600 : 700,
                         letterSpacing: step.highlight ? "0.04em" : "0.01em",
-                        background: step.highlight ? `${G}14` : "transparent",
+                        background: step.highlight
+                          ? `${G}14`
+                          : step.dim
+                          ? `linear-gradient(90deg, rgba(124,252,0,0.62), rgba(0,229,255,0.52))`
+                          : i === 5
+                          ? `linear-gradient(90deg, ${C}, rgba(124,252,0,0.80))`
+                          : `${G}14`,
+                        WebkitBackgroundClip: step.highlight ? undefined : "text",
+                        WebkitTextFillColor: step.highlight ? undefined : "transparent",
+                        color: step.highlight ? G : undefined,
                         border: step.highlight ? `1px solid ${G}35` : "none",
-                        opacity: step.dim ? 0.72 : 1,
+                        opacity: step.dim ? 0.88 : 1,
                         transition: "all 0.3s ease",
                         textTransform: step.highlight ? "uppercase" : "none",
-                        textShadow: step.highlight ? `0 0 20px ${G}60` : "0 1px 10px rgba(0,0,0,0.60)",
+                        textShadow: step.highlight ? `0 0 20px ${G}60` : undefined,
                       }}
                     >
                       {step.label}

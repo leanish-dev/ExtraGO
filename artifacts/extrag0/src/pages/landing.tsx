@@ -624,18 +624,23 @@ export default function LandingPage() {
             >
               {[
                 { label: "Profissional", color: "#7CFC00" },
-                { label: "Indica", color: "rgba(255,255,255,0.20)", isConnector: true },
+                { label: "Indica", isConnector: true },
                 { label: "Nova Rede", color: "#00e5ff" },
-                { label: "Gera Receita", color: "rgba(255,255,255,0.20)", isConnector: true },
+                { label: "Gera Receita", isConnector: true },
                 { label: "Ecossistema", color: "#a855f7" },
               ].map((node, i) =>
                 node.isConnector ? (
                   <div key={i} className="flex items-center" style={{ margin: "0 8px" }}>
                     <svg width="40" height="12" viewBox="0 0 40 12" fill="none">
-                      <path d="M 0,6 L 32,6" stroke="rgba(255,255,255,0.22)" strokeWidth="1" strokeDasharray="3 2" className="dash-flow" />
-                      <path d="M 32,2 L 40,6 L 32,10" fill="none" stroke="rgba(255,255,255,0.32)" strokeWidth="1.2" />
+                      <path d="M 0,6 L 32,6" stroke="rgba(0,229,255,0.32)" strokeWidth="1" strokeDasharray="3 2" className="dash-flow" />
+                      <path d="M 32,2 L 40,6 L 32,10" fill="none" stroke="rgba(124,252,0,0.45)" strokeWidth="1.2" />
                     </svg>
-                    <span style={{ fontSize: "9px", fontWeight: 700, color: "rgba(255,255,255,0.28)", letterSpacing: "0.12em", textTransform: "uppercase", marginLeft: "6px" }}>{node.label}</span>
+                    <span style={{
+                      fontSize: "9px", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", marginLeft: "6px",
+                      background: "linear-gradient(90deg, #7CFC00, #00e5ff)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}>{node.label}</span>
                   </div>
                 ) : (
                   <div key={i} className="flex flex-col items-center" style={{ margin: "0 4px" }}>
@@ -650,7 +655,12 @@ export default function LandingPage() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.45 }}
-              style={{ fontSize: "12px", color: "rgba(255,255,255,0.40)", marginTop: "20px", letterSpacing: "0.02em" }}
+              style={{
+                fontSize: "12px", marginTop: "20px", letterSpacing: "0.02em", fontWeight: 600,
+                background: "linear-gradient(90deg, rgba(124,252,0,0.80), rgba(0,229,255,0.70))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
               Crescimento orgânico e autossustentável — sem custo de aquisição adicional.
             </motion.p>
