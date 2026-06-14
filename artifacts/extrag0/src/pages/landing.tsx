@@ -826,46 +826,16 @@ export default function LandingPage() {
         </section>
 
                 {/* ══════════════════════════════════════════
-            CTA FINAL
+            CTA FINAL — banner institucional
         ══════════════════════════════════════════ */}
-        <section className="px-5 pb-16 sm:pb-20">
-          <div className="max-w-3xl mx-auto text-center">
-            <ScrollSection>
-              <div className="relative rounded-3xl overflow-hidden p-8 sm:p-12">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/12 via-[#08111a] to-secondary/10" />
-                <div className="absolute inset-0 border border-primary/18 rounded-3xl" />
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-                <div className="relative">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary mb-6 tracking-wide">
-                    <Clock size={11} /> Cadastro em menos de 2 minutos
-                  </div>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                    A workforce do futuro<br />
-                    <span className="neon-text-gradient">começa aqui</span>
-                  </h2>
-                  <p className="text-muted-foreground mb-8 text-base max-w-md mx-auto leading-relaxed">
-                    Empresas líderes e profissionais de elite escolhem a extraGO para transformar como o trabalho acontece.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Link href="/register?role=company">
-                      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                        <Button size="lg" className="bg-secondary text-black hover:bg-secondary/90 neon-glow-cyan rounded-full font-bold px-8 border-none">
-                          <Briefcase size={18} className="mr-2" /> Contratar Profissionais
-                        </Button>
-                      </motion.div>
-                    </Link>
-                    <Link href="/register?role=freelancer">
-                      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                        <Button size="lg" className="bg-primary text-black hover:bg-primary/90 neon-glow rounded-full font-bold px-8 border-none">
-                          <Users size={18} className="mr-2" /> Encontrar Extras
-                        </Button>
-                      </motion.div>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </ScrollSection>
-          </div>
+        <section className="w-full">
+          <img
+            src="/landing-end.png"
+            alt="extraGO — Para freelancers, empresas, investidores e indicadores"
+            className="w-full h-auto block"
+            style={{ display: "block" }}
+            draggable={false}
+          />
         </section>
         </div>{/* /bg wrapper */}
       </main>

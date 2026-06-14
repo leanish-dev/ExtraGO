@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Loader2, Eye, EyeOff, ArrowLeft, Mail, ArrowRight, CheckCircle,
-  Shield, Zap, Users, LogIn,
+  LogIn,
 } from "lucide-react";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 
@@ -26,12 +26,6 @@ const forgotSchema = z.object({
 
 type View = "login" | "forgot" | "forgot-success";
 
-const TRUST_BADGES = [
-  { icon: <Zap size={13} />, text: "Match instantâneo" },
-  { icon: <Shield size={13} />, text: "100% seguro" },
-  { icon: <Users size={13} />, text: "+12.000 ativos" },
-  { icon: <CheckCircle size={13} />, text: "Verificado" },
-];
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -79,24 +73,18 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "#050b10" }}>
 
-      {/* ── Landing-style background ── */}
+      {/* ── Background — Login-bg.png ── */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
-          src="/landing-page-bg-darkblue.webp"
+          src="/login-bg.png"
           alt=""
           className="w-full h-full object-cover"
-          style={{ opacity: 0.35 }}
+          style={{ opacity: 0.72 }}
         />
         <div className="absolute inset-0" style={{
-          background: "linear-gradient(180deg, rgba(5,11,16,0.72) 0%, rgba(5,11,16,0.88) 60%, rgba(5,11,16,0.97) 100%)"
+          background: "linear-gradient(180deg, rgba(5,11,16,0.42) 0%, rgba(5,11,16,0.58) 55%, rgba(5,11,16,0.82) 100%)"
         }} />
       </div>
-
-      {/* ── Ambient glows (matching landing) ── */}
-      <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] rounded-full pointer-events-none z-0"
-        style={{ background: "radial-gradient(circle, rgba(124,252,0,0.06) 0%, transparent 70%)", filter: "blur(80px)" }} />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full pointer-events-none z-0"
-        style={{ background: "radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 70%)", filter: "blur(80px)" }} />
 
       {/* ── Institutional navbar ── */}
       <div className="relative z-50">
@@ -215,21 +203,6 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* Trust badges */}
-                <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {TRUST_BADGES.map((b, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 + i * 0.07 }}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-white/6 bg-white/3 text-xs font-semibold text-white/65 backdrop-blur-sm"
-                    >
-                      <span className="text-primary flex-shrink-0">{b.icon}</span>
-                      {b.text}
-                    </motion.div>
-                  ))}
-                </div>
               </motion.div>
             )}
 
