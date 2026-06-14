@@ -19,7 +19,7 @@ import {
   Lightbulb, Users, Repeat, RefreshCw,
 } from "lucide-react";
 import {
-  FABackground, FAHeader, FANavBar,
+  FABackground, FANavBar,
   GCard, Pill, Reveal, Divider, SectionCTA, CheckItem, GA, GC,
 } from "./financial-architecture/_shared";
 
@@ -79,10 +79,6 @@ export default function ModeloDeNegocioPage() {
       <FABackground />
 
       <FANavBar back="/investidores-parceiros" backLabel="← Investidores & Parceiros" />
-
-      <div className="relative z-10">
-        <FAHeader />
-      </div>
 
       <main className="relative z-10 flex-1">
 

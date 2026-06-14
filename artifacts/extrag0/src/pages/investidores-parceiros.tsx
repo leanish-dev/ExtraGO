@@ -6,6 +6,7 @@ import logoMain from "@assets/Logo-no-text_1781338757912.png";
 import modeloExpansaoImg from "@assets/Modelo-Expansão_1781338758063.png";
 import visaoLongoPrazoImg from "@assets/Visão-Longo-Prazo_1781338758036.png";
 import investidoresHeroImg from "@assets/Investidores-page-hero2_1781247644596.png";
+import fundadoresCardsImg from "@assets/Fundadores-cards_1781418740153.png";
 import oMercadoImg from "@assets/O-mercado-section_1781247644534.png";
 import oProblemaImg from "@assets/O-problema-section-investidores_1781247644565.png";
 import estruturaCapitalImg from "@assets/Estrutura-de-capital-section_1781247644390.png";
@@ -649,40 +650,15 @@ export default function InvestidoresParceirosPage() {
               </p>
             </Reveal>
 
-            <div className="grid sm:grid-cols-3 gap-5">
-              {TEAM.map((m, i) => (
-                <Reveal key={i} delay={i * 0.1}>
-                  <motion.div
-                    whileHover={{ y: -6 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                    className="rounded-2xl overflow-hidden border h-full flex flex-col"
-                    style={{
-                      background: "rgba(7,16,32,0.88)",
-                      borderColor: `${m.color}18`,
-                      backdropFilter: "blur(22px)",
-                    }}>
-                    <div className="h-[1.5px]" style={{ background: `linear-gradient(90deg,transparent,${m.color},transparent)` }} />
-                    <div className="p-6 flex flex-col items-center text-center flex-1">
-                      <div className="relative mb-4 flex-shrink-0" style={{ width: 72, height: 72 }}>
-                        <div className="absolute inset-0 rounded-full blur-xl opacity-22 scale-110" style={{ background: m.color }} />
-                        <img src={m.photo} alt={m.name}
-                          className="relative rounded-full object-cover"
-                          style={{ width: 72, height: 72, border: `2px solid ${m.color}38` }}
-                          onError={e => {
-                            (e.target as HTMLImageElement).src =
-                              `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=071e3d&color=7CFC00&size=80`;
-                          }} />
-                        <span className="absolute -bottom-1 -right-1 text-[9px] font-black px-1.5 py-0.5 rounded-full text-black"
-                          style={{ background: m.color }}>{m.equity}</span>
-                      </div>
-                      <h3 className="font-bold text-[14px] leading-tight mb-0.5">{m.name}</h3>
-                      <p className="text-[11px] font-bold tracking-wide mb-3" style={{ color: m.color }}>{m.role}</p>
-                      <p className="text-[11px] text-[rgba(255,255,255,0.68)] leading-relaxed">{m.bio}</p>
-                    </div>
-                  </motion.div>
-                </Reveal>
-              ))}
-            </div>
+            <Reveal>
+              <img
+                src={fundadoresCardsImg}
+                alt="Fundadores extraGO — Leonardo Scheffel da Rosa (CEO & Founder), Jean Carlos Dick (CMO & Co-Founder), Qaialla Pereira (CCO & Co-Founder)"
+                className="w-full h-auto block"
+                style={{ display: "block", objectFit: "contain", width: "100%" }}
+                draggable={false}
+              />
+            </Reveal>
           </div>
         </section>
 
