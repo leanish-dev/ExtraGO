@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useUpdateUser } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import { toast } from "sonner";
 import {
   User, Building2, CreditCard, Star, CheckCircle, AlertCircle, Camera, Loader2,
   Shield, Award, Plus, Trash2, Globe, MapPin, Briefcase, Zap, ChevronDown, ChevronUp,
-  Edit3, Save, X, BookOpen, Languages, TrendingUp, Lock, Crown, Trophy
+  Edit3, Save, X, BookOpen, Languages, TrendingUp, Lock, Crown, Trophy, ArrowRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -528,54 +529,51 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {/* Marketplace Stats card — freelancers only */}
+          {/* Progression strip — freelancers only */}
           {user?.role === "freelancer" && (() => {
             const FEE_MAP: Record<string, number> = { bronze: 20, silver: 18, gold: 15, elite: 12, diamond: 10 };
-            const NEXT_LEVEL_MAP: Record<string, { label: string; jobsNeeded: number } | null> = {
-              bronze: { label: "Júnior", jobsNeeded: 20 },
-              silver: { label: "Intermediário", jobsNeeded: 100 },
-              gold: { label: "Sênior", jobsNeeded: 300 },
-              elite: { label: "Elite", jobsNeeded: 600 },
+            const NEXT_LEVEL_MAP: Record<string, { label: string; jobsNeeded: number; prevThreshold: number } | null> = {
+              bronze: { label: "Júnior", jobsNeeded: 20, prevThreshold: 0 },
+              silver: { label: "Intermediário", jobsNeeded: 100, prevThreshold: 20 },
+              gold:   { label: "Sênior", jobsNeeded: 300, prevThreshold: 100 },
+              elite:  { label: "Elite", jobsNeeded: 600, prevThreshold: 300 },
               diamond: null,
             };
             const currentFee = FEE_MAP[user?.level ?? "bronze"] ?? 20;
             const nextLvl = NEXT_LEVEL_MAP[user?.level ?? "bronze"];
             const jobsDone = user?.completedJobs ?? 0;
             const jobsToNext = nextLvl ? Math.max(0, nextLvl.jobsNeeded - jobsDone) : 0;
-            const marketValue = jobsDone * 280;
-            const netRate = (100 - currentFee) / 100;
+            const progressPct = nextLvl
+              ? Math.min(100, Math.max(0, ((jobsDone - nextLvl.prevThreshold) / (nextLvl.jobsNeeded - nextLvl.prevThreshold)) * 100))
+              : 100;
             return (
-              <div className="mt-4 rounded-2xl border border-primary/15 overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(0,229,255,0.03) 100%)" }}>
-                <div className="px-4 py-3 border-b border-white/6 flex items-center gap-2">
-                  <span className="text-primary text-[11px] font-bold uppercase tracking-widest">📊 Marketplace Stats</span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-white/6">
-                  <div className="p-3 text-center">
-                    <p className="text-lg font-bold text-green-400">{currentFee}%</p>
-                    <p className="text-[10px] text-muted-foreground">Taxa atual</p>
+              <div className="mt-4 space-y-3">
+                {/* Progression bar */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5 text-xs">
+                    <span className="text-muted-foreground">{jobsDone} extras concluídos · taxa {currentFee}%</span>
+                    {nextLvl
+                      ? <span className="text-primary font-semibold">+{jobsToNext} para {nextLvl.label}</span>
+                      : <span className="text-primary font-bold">Nível máximo conquistado</span>
+                    }
                   </div>
-                  <div className="p-3 text-center">
-                    <p className="text-lg font-bold text-primary">{netRate * 100}%</p>
-                    <p className="text-[10px] text-muted-foreground">Você fica</p>
-                  </div>
-                  <div className="p-3 text-center">
-                    <p className="text-lg font-bold text-yellow-400">R${marketValue.toLocaleString("pt-BR")}</p>
-                    <p className="text-[10px] text-muted-foreground">Valor gerado</p>
-                  </div>
-                  <div className="p-3 text-center">
-                    {nextLvl ? (
-                      <>
-                        <p className="text-lg font-bold text-cyan-400">+{jobsToNext}</p>
-                        <p className="text-[10px] text-muted-foreground">para {nextLvl.label}</p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-lg font-bold text-primary">👑</p>
-                        <p className="text-[10px] text-muted-foreground">Nível máximo</p>
-                      </>
-                    )}
+                  <div className="h-2 rounded-full bg-white/5 overflow-hidden border border-white/4">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.max(progressPct, 1.5)}%` }}
+                      transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
+                      className="h-full rounded-full"
+                      style={{ background: "linear-gradient(90deg, hsl(88,100%,44%), hsl(88,100%,56%))", boxShadow: "0 0 8px rgba(124,252,0,0.25)" }}
+                    />
                   </div>
                 </div>
+                <Link href="/app/career">
+                  <button className="w-full text-xs text-primary/70 hover:text-primary border border-primary/12 hover:border-primary/25 rounded-xl px-4 py-2.5 transition-all text-left flex items-center gap-2 group">
+                    <TrendingUp size={12} className="flex-shrink-0" />
+                    <span>Ver jornada de carreira completa</span>
+                    <ArrowRight size={11} className="ml-auto group-hover:translate-x-0.5 transition-transform" />
+                  </button>
+                </Link>
               </div>
             );
           })()}

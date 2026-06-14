@@ -331,47 +331,45 @@ function PostCard({ post, onDelete }: { post: FeedPost; onDelete: (id: number) =
             </div>
           )}
 
-          {/* Engagement bar */}
-          <div className="flex items-center gap-1 pt-3 border-t border-white/6">
+          {/* Engagement bar — professional, understated */}
+          <div className="flex items-center gap-3 pt-3 border-t border-white/5">
             <motion.button
-              whileTap={{ scale: 0.88 }}
-              onClick={handleLike}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all flex-1 justify-center ${
-                liked ? "text-red-400 bg-red-400/10" : "text-muted-foreground hover:text-red-400 hover:bg-red-400/8"
-              }`}
-            >
-              <Heart size={14} className={liked ? "fill-red-400" : ""} />
-              <span>{likesCount}</span>
-            </motion.button>
-
-            <motion.button
-              whileTap={{ scale: 0.88 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setShowComments(v => !v)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-muted-foreground hover:text-secondary hover:bg-secondary/8 transition-all flex-1 justify-center"
+              className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-secondary transition-colors"
             >
-              <MessageCircle size={14} />
+              <MessageCircle size={13} />
               <span>Comentar</span>
             </motion.button>
 
-            <motion.button
-              whileTap={{ scale: 0.88 }}
-              onClick={handleSave}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all flex-1 justify-center ${
-                saved ? "text-yellow-400 bg-yellow-400/10" : "text-muted-foreground hover:text-yellow-400 hover:bg-yellow-400/8"
-              }`}
-            >
-              <Bookmark size={14} className={saved ? "fill-yellow-400" : ""} />
-              <span>{savesCount}</span>
-            </motion.button>
+            <div className="flex items-center gap-3 ml-auto">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={handleLike}
+                className={`flex items-center gap-1 text-xs transition-colors ${liked ? "text-red-400" : "text-muted-foreground/60 hover:text-red-400/70"}`}
+              >
+                <Heart size={12} className={liked ? "fill-red-400" : ""} />
+                <span>{likesCount}</span>
+              </motion.button>
 
-            <motion.button
-              whileTap={{ scale: 0.88 }}
-              onClick={handleRepost}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-muted-foreground hover:text-primary hover:bg-primary/8 transition-all flex-1 justify-center"
-            >
-              <Repeat2 size={14} />
-              <span>{repostsCount}</span>
-            </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={handleSave}
+                className={`flex items-center gap-1 text-xs transition-colors ${saved ? "text-yellow-400" : "text-muted-foreground/60 hover:text-yellow-400/70"}`}
+              >
+                <Bookmark size={12} className={saved ? "fill-yellow-400" : ""} />
+                <span>{savesCount}</span>
+              </motion.button>
+
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={handleRepost}
+                className="flex items-center gap-1 text-xs text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors"
+              >
+                <Repeat2 size={11} />
+                <span>{repostsCount}</span>
+              </motion.button>
+            </div>
           </div>
         </div>
       </motion.div>

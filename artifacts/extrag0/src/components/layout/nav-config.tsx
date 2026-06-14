@@ -2,7 +2,7 @@ import React from "react";
 import {
   LayoutDashboard, Briefcase, FileText, Wallet, Trophy, Globe, Rss,
   User as UserIcon, Settings, Mail, Home, LogOut, BarChart3, Users,
-  CreditCard, LineChart, Activity, TrendingUp, FileBarChart, MapPin,
+  CreditCard, LineChart, Activity, TrendingUp, MapPin,
 } from "lucide-react";
 
 export type Role = "company" | "freelancer" | "admin";
@@ -61,31 +61,6 @@ export const APP_NAV_SECTIONS: NavSection[] = [
         label: "Minha Carreira", href: "/app/career", icon: <TrendingUp size={16} />,
         unlocked: ["freelancer", "admin"], locked: ["company"],
         lockMessage: "A progressão de carreira é exclusiva para profissionais.",
-      },
-    ],
-  },
-  {
-    title: "ÁREA EMPRESARIAL",
-    items: [
-      {
-        label: "Gestão de Extras", href: "/app/jobs", icon: <Briefcase size={16} />,
-        unlocked: ["company", "admin"], locked: ["freelancer"],
-        lockMessage: "Disponível para contas empresariais.",
-      },
-      {
-        label: "Buscar Profissionais", href: "/app/network", icon: <Users size={16} />,
-        unlocked: ["company", "admin"], locked: ["freelancer"],
-        lockMessage: "Disponível para contas empresariais.",
-      },
-      {
-        label: "Centro Financeiro Empresarial", href: "/app/wallet", icon: <CreditCard size={16} />,
-        unlocked: ["company", "admin"], locked: ["freelancer"],
-        lockMessage: "Disponível para contas empresariais.",
-      },
-      {
-        label: "Relatórios", href: "/app/dashboard", icon: <FileBarChart size={16} />,
-        unlocked: ["company", "admin"], locked: ["freelancer"],
-        lockMessage: "Disponível para contas empresariais.",
       },
     ],
   },

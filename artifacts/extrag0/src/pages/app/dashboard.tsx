@@ -545,12 +545,15 @@ function FreelancerDashboard() {
         {/* CAREER HERO — the single most important element on this page */}
         <CareerHero stats={stats} isLoading={statsLoading} />
 
-        {/* Candidaturas + Atividade */}
+        {/* Operações + Atividade */}
         <div className="grid lg:grid-cols-2 gap-5">
-          {/* Candidaturas recentes */}
+          {/* Status das missões */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-semibold">Candidaturas Recentes</h2>
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
+                <h2 className="text-sm font-bold uppercase tracking-widest text-white/70">Missões em Curso</h2>
+              </div>
               <Link href="/app/applications">
                 <motion.button whileHover={{ x: 2 }} className="text-xs text-primary font-semibold flex items-center gap-1">
                   Ver todas <ArrowRight size={12} />
@@ -558,38 +561,39 @@ function FreelancerDashboard() {
               </Link>
             </div>
             {appsLoading ? (
-              <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="rounded-xl h-16 skeleton" />)}</div>
+              <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="rounded-xl h-14 skeleton" />)}</div>
             ) : pendingApps.length === 0 ? (
-              <EmptyState
-                icon={<FileText size={24} />}
-                title="Nenhuma candidatura"
-                description="Busque extras e candidate-se agora."
-                actionLabel="Buscar Extras"
-                actionHref="/app/jobs"
-                className="py-10"
-              />
+              <div className="rounded-2xl border border-white/5 p-6 flex flex-col items-center text-center gap-3" style={{ background: "rgba(255,255,255,0.012)" }}>
+                <Briefcase size={22} className="text-muted-foreground/30" />
+                <div>
+                  <p className="text-sm font-semibold">Nenhuma missão ativa</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Busque extras e candidate-se agora</p>
+                </div>
+                <Link href="/app/jobs">
+                  <button className="text-xs text-primary border border-primary/25 px-3 py-1.5 rounded-full hover:bg-primary/8 transition-all font-semibold">
+                    Buscar Extras
+                  </button>
+                </Link>
+              </div>
             ) : (
-              <div className="space-y-2">
+              <div className="divide-y divide-white/4 rounded-2xl border border-white/5 overflow-hidden" style={{ background: "rgba(255,255,255,0.012)" }}>
                 <AnimatePresence>
                   {pendingApps.map((app, i) => (
                     <motion.div
                       key={app.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: i * 0.06 }}
-                      className="rounded-xl p-4 flex items-center gap-3 border border-white/5 hover:border-yellow-400/18 transition-all"
-                      style={{ background: "rgba(255,255,255,0.018)" }}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.05 }}
+                      className="flex items-center gap-3 px-4 py-3"
                     >
-                      <div className="w-9 h-9 rounded-xl bg-yellow-400/8 border border-yellow-400/18 flex items-center justify-center flex-shrink-0">
-                        <Clock size={14} className="text-yellow-400" />
+                      <div className="w-1.5 h-full self-stretch flex-shrink-0 flex items-center">
+                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold truncate">{app.job?.title ?? "Extra"}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">Aguardando avaliação</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Aguardando resposta</p>
                       </div>
-                      <span className="text-[10px] font-bold text-yellow-400 bg-yellow-400/8 border border-yellow-400/20 px-2 py-0.5 rounded-full flex-shrink-0">
-                        Pendente
-                      </span>
+                      <span className="text-[10px] font-bold text-yellow-400/80 flex-shrink-0 tracking-wide">PEND.</span>
                     </motion.div>
                   ))}
                 </AnimatePresence>

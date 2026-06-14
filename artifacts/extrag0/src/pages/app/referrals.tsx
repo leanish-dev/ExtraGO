@@ -310,9 +310,9 @@ export default function ReferralsPage() {
         />
         <div className="absolute inset-0 flex items-end p-4 pb-5">
           <div>
-            <span className="text-[10px] text-primary font-bold uppercase tracking-widest">Sistema de Indicações</span>
+            <span className="text-[10px] text-primary font-bold uppercase tracking-widest">Rede de Expansão</span>
             <h1 className="text-lg sm:text-xl font-bold text-white leading-tight mt-0.5">
-              Indique e ganhe <span className="text-primary">comissões</span> para sempre
+              Expanda sua rede. <span className="text-primary">Cresça junto.</span>
             </h1>
           </div>
         </div>
@@ -355,7 +355,7 @@ export default function ReferralsPage() {
           className="rounded-2xl border border-white/6 p-5 relative overflow-hidden"
           style={{ background: "rgba(255,255,255,0.015)" }}
         >
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Jornada de Indicador</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Progressão na Rede</p>
           <div className="flex items-stretch gap-0 relative">
             {/* connector line */}
             <div className="absolute top-7 left-[calc(16.67%+1px)] right-[calc(16.67%+1px)] h-px bg-white/10 z-0" />
@@ -376,7 +376,7 @@ export default function ReferralsPage() {
                     {tier.label}
                   </p>
                   <p className={`text-[10px] mt-0.5 font-bold ${isActive ? "text-primary/70" : isPast ? "text-green-400/70" : "text-muted-foreground/30"}`}>
-                    {tier.rate}% comissão
+                    {tier.rate}% retorno
                   </p>
                   {isActive && (
                     <span className="text-[8px] font-bold text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded-full mt-1">Atual</span>
