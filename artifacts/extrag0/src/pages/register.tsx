@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { Briefcase, Users, CheckCircle, Loader2, Eye, EyeOff, Sparkles, ArrowRight, Gift, UserPlus } from "lucide-react";
+import { Briefcase, Users, CheckCircle, Loader2, Eye, EyeOff, ArrowRight, Gift, UserPlus } from "lucide-react";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
 
 const formSchema = z.object({
@@ -141,9 +141,6 @@ export default function RegisterPage() {
 
           {/* Header */}
           <div className="mb-7 text-center">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/12 border border-primary/25 text-xs font-bold text-primary mb-4">
-              <Sparkles size={10} /> MARKETPLACE #1 DE HOSPITALIDADE
-            </div>
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/12 border border-primary/22 text-primary mb-4 mx-auto">
               <UserPlus size={24} />
             </div>
