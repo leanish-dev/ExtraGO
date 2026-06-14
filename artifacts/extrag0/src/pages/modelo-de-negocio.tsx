@@ -30,18 +30,18 @@ const ROSE = "#e11d48";
 /* ─── reusable "Por que existe" block ─── */
 function WhyBlock({ text }: { text: string }) {
   return (
-    <Reveal delay={0.15} className="mb-4">
-      <GCard className="p-5 sm:p-6" accent={GA}>
+    <Reveal delay={0.15} className="mb-3">
+      <GCard className="p-5 sm:p-6" accent={GA} bgVariant="layer">
         <div className="flex items-start gap-4">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: `${GA}14`, border: `1px solid ${GA}25` }}>
+            style={{ background: `${GA}18`, border: `1px solid ${GA}35` }}>
             <Lightbulb size={16} style={{ color: GA }} />
           </div>
           <div>
             <p className="text-[11px] font-black tracking-[0.14em] uppercase mb-2" style={{ color: GA }}>
               Por que esta camada existe?
             </p>
-            <p className="text-[13px] text-slate-600 leading-relaxed">{text}</p>
+            <p className="text-[13px] text-slate-700 leading-relaxed">{text}</p>
           </div>
         </div>
       </GCard>
@@ -52,18 +52,18 @@ function WhyBlock({ text }: { text: string }) {
 /* ─── reusable "Impacto para Investidores" block ─── */
 function ImpactBlock({ text }: { text: string }) {
   return (
-    <Reveal delay={0.20} className="mb-6">
-      <GCard className="p-5 sm:p-6" accent={GC} glow>
+    <Reveal delay={0.20} className="mb-5">
+      <GCard className="p-5 sm:p-6" accent={GC} glow bgVariant="impact">
         <div className="flex items-start gap-4">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: `${GC}14`, border: `1px solid ${GC}25` }}>
+            style={{ background: `${GC}18`, border: `1px solid ${GC}35` }}>
             <TrendingUp size={16} style={{ color: GC }} />
           </div>
           <div>
             <p className="text-[11px] font-black tracking-[0.14em] uppercase mb-2" style={{ color: GC }}>
               Impacto para Investidores
             </p>
-            <p className="text-[13px] text-slate-600 leading-relaxed">{text}</p>
+            <p className="text-[13px] text-slate-700 leading-relaxed">{text}</p>
           </div>
         </div>
       </GCard>
@@ -97,8 +97,8 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 1 ── */}
-        <section id="camada-1" className="py-6 sm:py-16">
-          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+        <section id="camada-1" className="py-3 sm:py-8">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-3">
             <Reveal>
               <Pill label="Camada 1" color={GA} icon={<Zap size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
@@ -111,7 +111,7 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
           </div>
 
-          <Reveal className="mb-6">
+          <Reveal className="mb-2">
             <img
               src={intermediacaoCardImg}
               alt="Camada 1 — Intermediação por Performance: Iniciante 20%, Júnior 18%, Intermediário 15%, Sênior 12%, Elite 10%"
@@ -133,8 +133,8 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 2 ── */}
-        <section id="camada-2" className="py-6 sm:py-16">
-          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+        <section id="camada-2" className="py-3 sm:py-8">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-3">
             <Reveal>
               <Pill label="Camada 2" color={GC} icon={<Network size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
@@ -147,7 +147,7 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
           </div>
 
-          <Reveal className="mb-6">
+          <Reveal className="mb-2">
             <img
               src={indicacoesCardImg}
               alt="Camada 2 — Programa de Indicações Multinível: Indicador 2%, Agente de Captação 3%, Embaixador Regional 5%"
@@ -169,8 +169,8 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 3 ── */}
-        <section id="camada-3" className="py-6 sm:py-16">
-          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+        <section id="camada-3" className="py-3 sm:py-8">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-3">
             <Reveal>
               <Pill label="Camada 3" color={PURPLE} icon={<BadgeCheck size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
@@ -182,7 +182,7 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
           </div>
 
-          <Reveal className="mb-6">
+          <Reveal className="mb-2">
             <img
               src={assProfissionaisArqImg}
               alt="Assinaturas Profissionais — FREE Gratuito, extraGO PRO R$19,90/mês, PREMIUM R$49,90/mês, ELITE R$99,90/mês"
@@ -204,8 +204,8 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── CAMADA 4 ── */}
-        <section id="camada-4" className="py-6 sm:py-16">
-          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+        <section id="camada-4" className="py-3 sm:py-8">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-3">
             <Reveal>
               <Pill label="Camada 4" color={AMBER} icon={<Building2 size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
@@ -218,7 +218,7 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
           </div>
 
-          <Reveal className="mb-6">
+          <Reveal className="mb-2">
             <img
               src={assEmpresariaisArqImg}
               alt="Assinaturas Empresariais — Starter R$99,90/mês, Business R$299,90/mês, Corporate R$799,90/mês, Enterprise sob consulta"
@@ -240,8 +240,8 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── ESTRUTURA FINANCEIRA ── */}
-        <section id="financeiro" className="py-6 sm:py-16">
-          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+        <section id="financeiro" className="py-3 sm:py-8">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-3">
             <Reveal>
               <Pill label="Estrutura Financeira da Receita Operacional" color={GA} icon={<BarChart3 size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
@@ -254,7 +254,7 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
           </div>
 
-          <Reveal className="mb-6">
+          <Reveal className="mb-2">
             <img
               src={distribuicaoReceitaCardImg}
               alt="Distribuição da Receita Operacional: 25% Caixa, 20% Fundadores e Investidores, 20% Marketing, 10% Tecnologia, 10% Operações, 10% Fundo de Crescimento, 5% Representantes"
@@ -311,8 +311,8 @@ export default function ModeloDeNegocioPage() {
         <Divider />
 
         {/* ── REPRESENTANTES ESTADUAIS ── */}
-        <section id="representantes" className="py-6 sm:py-16">
-          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+        <section id="representantes" className="py-3 sm:py-8">
+          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-3">
             <Reveal>
               <Pill label="Rede de Representantes Estaduais" color={AMBER} icon={<MapPin size={10} />} />
               <h2 className="font-black leading-tight mb-2 text-slate-900" style={{ fontSize: "clamp(22px,3.5vw,40px)" }}>
@@ -326,7 +326,7 @@ export default function ModeloDeNegocioPage() {
             </Reveal>
           </div>
 
-          <Reveal className="mb-6">
+          <Reveal className="mb-2">
             <img
               src={representantesArqImg}
               alt="Rede de Representantes Estaduais — 1 Representante Oficial por Estado, 27 Estados, 5% da receita ao Fundo Nacional"
@@ -404,7 +404,7 @@ export default function ModeloDeNegocioPage() {
 
               {/* Connection summary */}
               <Reveal delay={0.3}>
-                <GCard className="p-5 sm:p-8" accent={GA} glow>
+                <GCard className="p-5 sm:p-8" accent={GA} glow bgVariant="flywheel">
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
                       <p className="text-[11px] font-black tracking-[0.14em] uppercase mb-3" style={{ color: GA }}>Fluxo de Valor Completo</p>
@@ -495,10 +495,10 @@ export default function ModeloDeNegocioPage() {
             </div>
 
             <Reveal delay={0.25}>
-              <GCard className="p-5 sm:p-8" accent={GA} glow>
+              <GCard className="p-5 sm:p-8" accent={GA} glow bgVariant="flywheel">
                 <div className="flex items-start gap-4 sm:gap-6">
                   <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${GA}14`, border: `1px solid ${GA}25` }}>
+                    style={{ background: `${GA}18`, border: `1px solid ${GA}35` }}>
                     <Repeat size={20} style={{ color: GA }} />
                   </div>
                   <div>

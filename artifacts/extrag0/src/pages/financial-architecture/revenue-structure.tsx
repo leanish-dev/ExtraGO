@@ -207,7 +207,7 @@ export default function RevenueStructurePage() {
                 },
               ].map((col, i) => (
                 <Reveal key={i} delay={i * 0.1}>
-                  <GCard className="p-5 sm:p-6 h-full" accent={col.color}>
+                  <GCard className="p-5 sm:p-6 h-full" accent={col.color} bgVariant="default">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center"
                         style={{ background: `${col.color}12`, border: `1px solid ${col.color}22` }}>

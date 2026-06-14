@@ -216,7 +216,7 @@ export default function PerformancePage() {
                 },
               ].map((col, i) => (
                 <Reveal key={i} delay={i * 0.1}>
-                  <GCard className="p-5 sm:p-6 h-full" accent={col.color}>
+                  <GCard className="p-5 sm:p-6 h-full" accent={col.color} bgVariant="default">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-8 h-8 rounded-lg flex items-center justify-center"
                         style={{ background: `${col.color}12`, border: `1px solid ${col.color}22` }}>
@@ -271,7 +271,7 @@ export default function PerformancePage() {
             </div>
 
             <Reveal>
-              <GCard className="p-5 sm:p-7" accent={GA}>
+              <GCard className="p-5 sm:p-7" accent={GA} bgVariant="default">
                 <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Potencial de Crescimento — Escalabilidade</p>
                 <p className="text-slate-700 text-[14px] leading-relaxed mb-3">
                   Um profissional Elite que realiza <strong>50 extras por mês</strong> com valor médio de R$ 200,00 recebe <strong>R$ 1.000,00 a mais por mês</strong> do
@@ -303,7 +303,7 @@ export default function PerformancePage() {
               </p>
             </Reveal>
             <Reveal delay={0.1}>
-              <GCard className="p-5 sm:p-7" accent={GC}>
+              <GCard className="p-5 sm:p-7" accent={GC} bgVariant="default">
                 <div className="grid sm:grid-cols-2 gap-4">
                   {[
                     "A Camada 1 é a espinha dorsal da monetização direta da plataforma",

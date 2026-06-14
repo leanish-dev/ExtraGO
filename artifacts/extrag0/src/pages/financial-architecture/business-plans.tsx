@@ -218,7 +218,7 @@ export default function BusinessPlansPage() {
 
               <Reveal delay={0.1}>
                 <div className="space-y-4">
-                  <GCard className="p-5 sm:p-6" accent={GC}>
+                  <GCard className="p-5 sm:p-6" accent={GC} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Para Profissionais</p>
                     <div className="space-y-2">
                       {[
@@ -230,7 +230,7 @@ export default function BusinessPlansPage() {
                     </div>
                   </GCard>
 
-                  <GCard className="p-5 sm:p-6" accent={GA}>
+                  <GCard className="p-5 sm:p-6" accent={GA} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Para Investidores</p>
                     <div className="space-y-2">
                       {[
@@ -242,7 +242,7 @@ export default function BusinessPlansPage() {
                     </div>
                   </GCard>
 
-                  <GCard className="p-5 sm:p-6" accent={ROSE}>
+                  <GCard className="p-5 sm:p-6" accent={ROSE} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Escalabilidade</p>
                     <p className="text-[13px] text-slate-600 leading-relaxed">
                       Com 500 empresas no plano Business e 100 no Corporate, a extraGO gera

@@ -134,24 +134,46 @@ export function Divider({ color = "rgba(255,255,255,0.05)" }: { color?: string }
   return <div className="w-full h-px" style={{ background: color }} />;
 }
 
+const ARQFIN_BG: Record<string, string> = {
+  impact:   "/arqfin-bg3.png",
+  layer:    "/arqfin-bg1.png",
+  flywheel: "/arqfin-bg2.png",
+  default:  "/arqfin-bg4.png",
+};
+
+const ARQFIN_OVERLAY: Record<string, string> = {
+  impact:   "rgba(255,248,235,0.38)",
+  layer:    "rgba(255,252,248,0.30)",
+  flywheel: "rgba(255,246,220,0.45)",
+  default:  "rgba(255,252,248,0.28)",
+};
+
 /** Light glass card — for use on light-background pages (e.g. financial-architecture). */
 export function GCard({
   children,
   className = "",
   accent = "",
   glow = false,
+  bgVariant,
 }: {
   children: ReactNode;
   className?: string;
   accent?: string;
   glow?: boolean;
+  bgVariant?: "impact" | "layer" | "flywheel" | "default";
 }) {
+  const hasBg = !!bgVariant;
+  const overlay = bgVariant ? ARQFIN_OVERLAY[bgVariant] : undefined;
+  const bgImg = bgVariant ? ARQFIN_BG[bgVariant] : undefined;
+
   return (
     <div
       className={`relative rounded-2xl border overflow-hidden ${className}`}
       style={{
-        background: "var(--gcard-bg, rgba(255,255,255,0.88))",
-        backdropFilter: "blur(20px) saturate(150%)",
+        background: hasBg
+          ? `linear-gradient(${overlay}, ${overlay}), url(${bgImg}) center/cover no-repeat`
+          : "var(--gcard-bg, rgba(255,255,255,0.88))",
+        backdropFilter: hasBg ? undefined : "blur(20px) saturate(150%)",
         borderColor: accent ? `${accent}30` : "rgba(0,0,0,0.08)",
         boxShadow:
           glow && accent

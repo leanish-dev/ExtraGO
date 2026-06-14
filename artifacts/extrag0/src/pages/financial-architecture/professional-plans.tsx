@@ -219,7 +219,7 @@ export default function ProfessionalPlansPage() {
 
               <Reveal delay={0.1}>
                 <div className="space-y-4">
-                  <GCard className="p-5 sm:p-6" accent={GA}>
+                  <GCard className="p-5 sm:p-6" accent={GA} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Para Profissionais</p>
                     <div className="space-y-2">
                       {[
@@ -231,7 +231,7 @@ export default function ProfessionalPlansPage() {
                     </div>
                   </GCard>
 
-                  <GCard className="p-5 sm:p-6" accent={GC}>
+                  <GCard className="p-5 sm:p-6" accent={GC} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Para Empresas</p>
                     <div className="space-y-2">
                       {[
@@ -243,7 +243,7 @@ export default function ProfessionalPlansPage() {
                     </div>
                   </GCard>
 
-                  <GCard className="p-5 sm:p-6" accent={AMBER}>
+                  <GCard className="p-5 sm:p-6" accent={AMBER} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Para Investidores</p>
                     <div className="space-y-2">
                       {[

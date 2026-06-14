@@ -181,7 +181,7 @@ export default function ReferralsPage() {
                     </div>
                   </GCard>
 
-                  <GCard className="p-5 sm:p-6" accent={AMBER}>
+                  <GCard className="p-5 sm:p-6" accent={AMBER} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Para Investidores</p>
                     <div className="space-y-2">
                       {[
@@ -193,7 +193,7 @@ export default function ReferralsPage() {
                     </div>
                   </GCard>
 
-                  <GCard className="p-5 sm:p-6" accent={ROSE}>
+                  <GCard className="p-5 sm:p-6" accent={ROSE} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Escalabilidade</p>
                     <p className="text-[13px] text-slate-600 leading-relaxed">
                       Com 10.000 profissionais ativos realizando em média 10 extras por mês de R$200,00,
@@ -219,7 +219,7 @@ export default function ReferralsPage() {
               </h2>
             </Reveal>
             <Reveal>
-              <GCard className="p-5 sm:p-7" accent={GA}>
+              <GCard className="p-5 sm:p-7" accent={GA} bgVariant="default">
                 <div className="grid sm:grid-cols-2 gap-4">
                   {[
                     "Complementa a Camada 1 criando incentivos além da taxa",
