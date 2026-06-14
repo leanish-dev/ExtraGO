@@ -896,19 +896,23 @@ export default function ProfilePage() {
                     <div className="flex-shrink-0">
                       <ReputationRing score={rep} size={80} />
                     </div>
-                    <div className="flex-1 space-y-2">
-                      {[5,4,3,2,1].map(stars => {
-                        const pct = stars <= Math.round(rep) ? Math.round(Math.random() * 30 + 50) : Math.round(Math.random() * 20);
-                        return (
-                          <div key={stars} className="flex items-center gap-2">
-                            <span className="text-[10px] text-muted-foreground w-4 text-right">{stars}</span>
-                            <Star size={9} className="text-yellow-400 fill-yellow-400 flex-shrink-0" />
-                            <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                              <div className="h-full bg-yellow-400/70 rounded-full" style={{ width: `${pct}%` }} />
-                            </div>
+                    <div className="flex-1 flex flex-col justify-center gap-1.5">
+                      {rep > 0 ? (
+                        <>
+                          <p className="text-2xl font-black text-yellow-400 leading-none">{rep.toFixed(1)}</p>
+                          <div className="flex gap-0.5">
+                            {[1,2,3,4,5].map(s => (
+                              <Star key={s} size={11}
+                                className={s <= Math.round(rep) ? "text-yellow-400 fill-yellow-400" : "text-white/20"} />
+                            ))}
                           </div>
-                        );
-                      })}
+                          <p className="text-[10px] text-muted-foreground">Nota média consolidada</p>
+                        </>
+                      ) : (
+                        <p className="text-[11px] text-muted-foreground leading-snug">
+                          Nenhuma avaliação<br />recebida ainda.
+                        </p>
+                      )}
                     </div>
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-3">Baseado em avaliações reais de empresas contratantes</p>

@@ -638,8 +638,8 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             10 · TEAM
         ═══════════════════════════════ */}
-        <section id="equipe" className="px-5 sm:px-10 py-5 sm:py-16">
-          <div className="max-w-5xl mx-auto">
+        <section id="equipe" className="py-5 sm:py-16">
+          <div className="px-5 sm:px-10 max-w-5xl mx-auto">
             <Reveal className="text-center mb-8">
               <Pill label="Liderança" color={C} icon={<Users size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
@@ -649,17 +649,16 @@ export default function InvestidoresParceirosPage() {
                 Uma equipe de fundadores com experiência complementar em tecnologia, marketing, operações e expansão comercial.
               </p>
             </Reveal>
-
-            <Reveal>
-              <img
-                src={fundadoresCardsImg}
-                alt="Fundadores extraGO — Leonardo Scheffel da Rosa (CEO & Founder), Jean Carlos Dick (CMO & Co-Founder), Qaialla Pereira (CCO & Co-Founder)"
-                className="w-full h-auto block"
-                style={{ display: "block", objectFit: "contain", width: "100%" }}
-                draggable={false}
-              />
-            </Reveal>
           </div>
+          <Reveal>
+            <img
+              src={fundadoresCardsImg}
+              alt="Fundadores extraGO — Leonardo Scheffel da Rosa (CEO & Founder), Jean Carlos Dick (CMO & Co-Founder), Qaialla Pereira (CCO & Co-Founder)"
+              className="w-full h-auto block"
+              style={{ display: "block", objectFit: "contain", width: "100%" }}
+              draggable={false}
+            />
+          </Reveal>
         </section>
 
         <Divider />
