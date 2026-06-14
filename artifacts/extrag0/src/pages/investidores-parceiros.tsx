@@ -202,6 +202,13 @@ export default function InvestidoresParceirosPage() {
         </section>
 
 
+        <style>{`
+          @keyframes dash-flow { from { stroke-dashoffset: 12; } to { stroke-dashoffset: 0; } }
+          @keyframes node-breath { 0%, 100% { opacity: 0.60; } 50% { opacity: 1; } }
+          .dash-flow { animation: dash-flow 1.4s linear infinite; }
+          .node-breath { animation: node-breath 2.6s ease-in-out infinite; }
+        `}</style>
+
         {/* ═══════════════════════════════
             TRANSITION 1 — Por Que a extraGO Existe
             Hero → The Market
@@ -210,82 +217,26 @@ export default function InvestidoresParceirosPage() {
           <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.010) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.010) 1px,transparent 1px)", backgroundSize: "72px 72px" }} />
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,229,255,0.028) 0%, transparent 65%)" }} />
 
-          <div className="relative z-10 max-w-6xl mx-auto px-5 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-            <Reveal className="flex-1">
-              <div style={{ color: "rgba(0,229,255,0.45)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "16px", display: "flex", alignItems: "center", gap: "10px" }}>
-                <div style={{ width: "28px", height: "1px", background: "rgba(0,229,255,0.28)" }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(4,10,22,0.58) 0%, transparent 72%)" }} />
+          <div className="relative z-10 max-w-4xl mx-auto px-5 text-center">
+            <Reveal>
+              <div style={{ color: "rgba(0,229,255,0.50)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "16px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
+                <div style={{ width: "28px", height: "1px", background: "rgba(0,229,255,0.30)" }} />
                 Por Que a extraGO Existe
+                <div style={{ width: "28px", height: "1px", background: "rgba(0,229,255,0.30)" }} />
               </div>
-              <h2 style={{ fontSize: "clamp(22px,3.6vw,44px)", fontWeight: 900, lineHeight: 1.16, color: "#fff", marginBottom: "18px" }}>
+              <h2 style={{ fontSize: "clamp(22px,3.6vw,44px)", fontWeight: 900, lineHeight: 1.16, color: "#fff", marginBottom: "18px", textShadow: "0 2px 28px rgba(0,0,0,0.85)" }}>
                 O problema não é conectar pessoas.<br />
                 <span style={{ background: `linear-gradient(90deg,${C},${G})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>O problema é a ausência<br />de infraestrutura.</span>
               </h2>
-              <p style={{ fontSize: "14px", lineHeight: 1.75, maxWidth: "480px", color: "rgba(255,255,255,0.62)", marginBottom: "20px" }}>
+              <p style={{ fontSize: "14px", lineHeight: 1.78, maxWidth: "520px", color: "rgba(255,255,255,0.75)", textShadow: "0 1px 14px rgba(0,0,0,0.60)", marginBottom: "16px", marginLeft: "auto", marginRight: "auto" }}>
                 Milhões de profissionais e milhares de empresas movimentam diariamente a economia do trabalho flexível no Brasil.
               </p>
-              <p style={{ fontSize: "14px", lineHeight: 1.75, maxWidth: "480px", color: "rgba(255,255,255,0.55)" }}>
+              <p style={{ fontSize: "14px", lineHeight: 1.78, maxWidth: "520px", color: "rgba(255,255,255,0.65)", textShadow: "0 1px 12px rgba(0,0,0,0.55)", marginLeft: "auto", marginRight: "auto" }}>
                 A extraGO está construindo a camada de infraestrutura que faltava para conectar esse mercado em escala nacional.
               </p>
             </Reveal>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.88 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.2, ease: [0.19, 1, 0.22, 1] }}
-              className="flex-shrink-0"
-              style={{ width: "clamp(220px,38vw,340px)" }}
-            >
-              <svg viewBox="0 0 320 360" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "auto" }}>
-                <defs>
-                  <filter id="inv-glow">
-                    <feGaussianBlur stdDeviation="2.8" result="blur" />
-                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                  </filter>
-                </defs>
-                <path d="M 120,20 L 144,14 L 164,20 L 180,32 L 196,48 L 208,66 L 214,86 L 216,106 L 214,126 L 208,144 L 200,158 L 198,172 L 205,186 L 200,200 L 188,212 L 174,222 L 160,234 L 148,248 L 136,258 L 120,264 L 104,258 L 90,246 L 78,232 L 68,218 L 58,202 L 50,184 L 44,164 L 38,142 L 34,118 L 32,94 L 34,72 L 42,52 L 54,36 L 70,24 Z"
-                  stroke="rgba(0,229,255,0.14)" strokeWidth="1" fill="rgba(0,229,255,0.018)" />
-                <path d="M 130,55 Q 172,72 204,90" stroke="rgba(0,229,255,0.18)" strokeWidth="0.8" strokeDasharray="4 3" />
-                <path d="M 130,55 Q 104,88 92,128" stroke="rgba(0,229,255,0.16)" strokeWidth="0.8" strokeDasharray="4 3" />
-                <path d="M 204,90 Q 200,116 196,142" stroke="rgba(0,229,255,0.18)" strokeWidth="0.8" strokeDasharray="4 3" />
-                <path d="M 92,128 Q 128,142 158,148" stroke={`${G}28`} strokeWidth="0.8" strokeDasharray="4 3" />
-                <path d="M 158,148 Q 178,144 196,142" stroke={`${G}22`} strokeWidth="0.8" strokeDasharray="4 3" />
-                <path d="M 158,148 Q 152,178 146,202" stroke={`${G}24`} strokeWidth="0.8" strokeDasharray="4 3" />
-                <path d="M 146,202 Q 132,222 124,242" stroke="rgba(0,229,255,0.18)" strokeWidth="0.8" strokeDasharray="4 3" />
-                <path d="M 92,128 Q 84,162 78,190" stroke="rgba(0,229,255,0.14)" strokeWidth="0.8" strokeDasharray="4 3" />
-                <path d="M 78,190 Q 100,214 124,242" stroke="rgba(0,229,255,0.14)" strokeWidth="0.8" strokeDasharray="4 3" />
-                <circle cx="130" cy="55" r="5.5" fill="rgba(0,229,255,0.14)" />
-                <circle cx="130" cy="55" r="2.5" fill={C} filter="url(#inv-glow)" />
-                <circle cx="204" cy="90" r="4" fill="rgba(0,229,255,0.10)" />
-                <circle cx="204" cy="90" r="2" fill={C} filter="url(#inv-glow)" />
-                <circle cx="92" cy="128" r="4" fill="rgba(0,229,255,0.10)" />
-                <circle cx="92" cy="128" r="2" fill={C} filter="url(#inv-glow)" />
-                <circle cx="158" cy="148" r="6" fill={`${G}20`} />
-                <circle cx="158" cy="148" r="3" fill={G} filter="url(#inv-glow)" />
-                <circle cx="196" cy="142" r="3.5" fill="rgba(0,229,255,0.10)" />
-                <circle cx="196" cy="142" r="1.8" fill={C} filter="url(#inv-glow)" />
-                <circle cx="146" cy="202" r="6" fill={`${G}20`} />
-                <circle cx="146" cy="202" r="3" fill={G} filter="url(#inv-glow)" />
-                <circle cx="124" cy="242" r="4" fill="rgba(0,229,255,0.10)" />
-                <circle cx="124" cy="242" r="2" fill={C} filter="url(#inv-glow)" />
-                <circle cx="78" cy="190" r="3.5" fill="rgba(0,229,255,0.10)" />
-                <circle cx="78" cy="190" r="1.8" fill={C} filter="url(#inv-glow)" />
-                <text x="138" y="52" fontSize="7.5" fill="rgba(255,255,255,0.40)" fontFamily="system-ui,sans-serif" fontWeight="600">Manaus</text>
-                <text x="210" y="88" fontSize="7.5" fill="rgba(255,255,255,0.36)" fontFamily="system-ui,sans-serif" fontWeight="600">Fortaleza</text>
-                <text x="62" y="126" fontSize="7.5" fill="rgba(255,255,255,0.36)" fontFamily="system-ui,sans-serif" fontWeight="600">Cuiabá</text>
-                <text x="162" y="146" fontSize="7.5" fill="rgba(255,255,255,0.44)" fontFamily="system-ui,sans-serif" fontWeight="600">Brasília</text>
-                <text x="152" y="200" fontSize="7.5" fill="rgba(255,255,255,0.46)" fontFamily="system-ui,sans-serif" fontWeight="600">São Paulo</text>
-                <text x="88" y="248" fontSize="7.5" fill="rgba(255,255,255,0.36)" fontFamily="system-ui,sans-serif" fontWeight="600">Porto Alegre</text>
-                <circle cx="158" cy="148" r="12" fill="none" stroke={`${G}16`} strokeWidth="1">
-                  <animate attributeName="r" values="10;20" dur="3s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.35;0" dur="3s" repeatCount="indefinite" />
-                </circle>
-                <circle cx="146" cy="202" r="12" fill="none" stroke={`${G}14`} strokeWidth="1">
-                  <animate attributeName="r" values="10;20" dur="3.5s" repeatCount="indefinite" begin="1.2s" />
-                  <animate attributeName="opacity" values="0.28;0" dur="3.5s" repeatCount="indefinite" begin="1.2s" />
-                </circle>
-              </svg>
-            </motion.div>
           </div>
         </div>
 
@@ -331,14 +282,15 @@ export default function InvestidoresParceirosPage() {
             TRANSITION 2 — Problem → Solution Cascade
             Mercado Fragmentado → Ecossistema extraGO
         ═══════════════════════════════ */}
-        <div className="relative overflow-hidden" style={{ padding: "clamp(44px,7vw,88px) 20px" }}>
+        <div className="relative overflow-hidden" style={{ padding: "clamp(28px,4.5vw,56px) 20px" }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 80% at 50% 50%, rgba(124,252,0,0.022) 0%, transparent 65%)" }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(4,10,22,0.48) 0%, transparent 70%)" }} />
           <div className="relative z-10 max-w-2xl mx-auto text-center">
             <Reveal>
-              <div style={{ color: "rgba(124,252,0,0.42)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "28px", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
-                <div style={{ width: "36px", height: "1px", background: "rgba(124,252,0,0.25)" }} />
+              <div style={{ color: "rgba(124,252,0,0.50)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "20px", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
+                <div style={{ width: "36px", height: "1px", background: "rgba(124,252,0,0.28)" }} />
                 A Jornada da Transformação
-                <div style={{ width: "36px", height: "1px", background: "rgba(124,252,0,0.25)" }} />
+                <div style={{ width: "36px", height: "1px", background: "rgba(124,252,0,0.28)" }} />
               </div>
             </Reveal>
             <div className="flex flex-col items-center gap-0">
@@ -354,31 +306,33 @@ export default function InvestidoresParceirosPage() {
                   <div className="flex flex-col items-center">
                     <div
                       style={{
-                        padding: step.highlight ? "10px 32px" : "7px 24px",
+                        padding: step.highlight ? "10px 32px" : "6px 22px",
                         borderRadius: "6px",
                         fontSize: step.highlight ? "clamp(13px,2vw,16px)" : "clamp(11px,1.6vw,13px)",
                         fontWeight: step.highlight ? 900 : 500,
                         color: step.color,
                         letterSpacing: step.highlight ? "0.04em" : "0.01em",
-                        background: step.highlight ? `${G}12` : "transparent",
-                        border: step.highlight ? `1px solid ${G}28` : "none",
-                        opacity: step.dim ? 0.75 : 1,
+                        background: step.highlight ? `${G}14` : "transparent",
+                        border: step.highlight ? `1px solid ${G}35` : "none",
+                        opacity: step.dim ? 0.72 : 1,
                         transition: "all 0.3s ease",
                         textTransform: step.highlight ? "uppercase" : "none",
+                        textShadow: step.highlight ? `0 0 20px ${G}60` : "0 1px 10px rgba(0,0,0,0.60)",
                       }}
                     >
                       {step.label}
                     </div>
                     {i < 5 && (
-                      <svg width="2" height="28" viewBox="0 0 2 28" fill="none" style={{ display: "block", margin: "0" }}>
-                        <line x1="1" y1="0" x2="1" y2="28"
-                          stroke={i >= 3 ? `${G}45` : "rgba(255,255,255,0.10)"}
+                      <svg width="2" height={i === 4 ? "28" : "22"} viewBox={i === 4 ? "0 0 2 28" : "0 0 2 22"} fill="none" style={{ display: "block", margin: "0" }}>
+                        <line x1="1" y1="0" x2={i === 4 ? "1" : "1"} y2={i === 4 ? "22" : "22"}
+                          stroke={i >= 3 ? `${G}55` : "rgba(255,255,255,0.14)"}
                           strokeWidth="1"
                           strokeDasharray={i < 4 ? "3 3" : "none"}
+                          className={i < 4 ? "dash-flow" : undefined}
                         />
                         {i === 4 && (
                           <>
-                            <path d="M -3,22 L 1,28 L 5,22" fill="none" stroke={`${G}60`} strokeWidth="1.2" />
+                            <path d="M -3,22 L 1,28 L 5,22" fill="none" stroke={`${G}65`} strokeWidth="1.2" />
                           </>
                         )}
                       </svg>
@@ -508,17 +462,18 @@ export default function InvestidoresParceirosPage() {
             TRANSITION 3 — Como a Infraestrutura Gera Valor
             Before Business Model
         ═══════════════════════════════ */}
-        <div className="relative overflow-hidden" style={{ padding: "clamp(44px,7vw,88px) 20px" }}>
+        <div className="relative overflow-hidden" style={{ padding: "clamp(28px,4.5vw,56px) 20px" }}>
           <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.010) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.010) 1px,transparent 1px)", backgroundSize: "80px 80px" }} />
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 60% at 50% 50%, rgba(0,229,255,0.025) 0%, transparent 65%)" }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(4,10,22,0.50) 0%, transparent 72%)" }} />
           <div className="relative z-10 max-w-5xl mx-auto">
-            <Reveal className="text-center mb-10">
-              <div style={{ color: "rgba(0,229,255,0.45)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "14px", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
-                <div style={{ width: "36px", height: "1px", background: "rgba(0,229,255,0.28)" }} />
+            <Reveal className="text-center mb-7">
+              <div style={{ color: "rgba(0,229,255,0.52)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
+                <div style={{ width: "36px", height: "1px", background: "rgba(0,229,255,0.30)" }} />
                 Como a Infraestrutura Gera Valor
-                <div style={{ width: "36px", height: "1px", background: "rgba(0,229,255,0.28)" }} />
+                <div style={{ width: "36px", height: "1px", background: "rgba(0,229,255,0.30)" }} />
               </div>
-              <h2 style={{ fontSize: "clamp(20px,3.2vw,38px)", fontWeight: 900, lineHeight: 1.18, color: "#fff" }}>
+              <h2 style={{ fontSize: "clamp(20px,3.2vw,38px)", fontWeight: 900, lineHeight: 1.18, color: "#fff", textShadow: "0 2px 24px rgba(0,0,0,0.80)" }}>
                 Cada camada da plataforma alimenta<br />
                 <span style={{ background: `linear-gradient(90deg,${G},${C})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>a próxima.</span>
               </h2>
@@ -535,7 +490,7 @@ export default function InvestidoresParceirosPage() {
                 <React.Fragment key={i}>
                   <Reveal delay={i * 0.08}>
                     <div className="flex flex-col items-center text-center" style={{ minWidth: "clamp(80px,10vw,120px)" }}>
-                      <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: node.color, boxShadow: `0 0 14px ${node.color}80`, marginBottom: "10px" }} />
+                      <div className="node-breath" style={{ width: "10px", height: "10px", borderRadius: "50%", background: node.color, boxShadow: `0 0 16px ${node.color}90`, marginBottom: "10px" }} />
                       <span style={{ fontSize: "clamp(10px,1.2vw,13px)", fontWeight: 700, color: node.color, lineHeight: 1.3, marginBottom: "5px" }}>{node.label}</span>
                       <span style={{ fontSize: "clamp(8px,0.9vw,10px)", color: "rgba(255,255,255,0.36)", lineHeight: 1.4 }}>{node.sublabel}</span>
                     </div>
@@ -543,8 +498,8 @@ export default function InvestidoresParceirosPage() {
                   {i < arr.length - 1 && (
                     <div className="flex-1" style={{ minWidth: "20px", maxWidth: "60px" }}>
                       <svg width="100%" height="20" viewBox="0 0 60 20" fill="none" preserveAspectRatio="none">
-                        <line x1="0" y1="10" x2="48" y2="10" stroke="rgba(255,255,255,0.10)" strokeWidth="1" strokeDasharray="3 2" />
-                        <path d="M 48,5 L 58,10 L 48,15" fill="none" stroke="rgba(255,255,255,0.20)" strokeWidth="1.2" />
+                        <line x1="0" y1="10" x2="48" y2="10" stroke="rgba(255,255,255,0.18)" strokeWidth="1" strokeDasharray="3 2" className="dash-flow" />
+                        <path d="M 48,5 L 58,10 L 48,15" fill="none" stroke="rgba(255,255,255,0.30)" strokeWidth="1.2" />
                       </svg>
                     </div>
                   )}
@@ -564,8 +519,8 @@ export default function InvestidoresParceirosPage() {
                   <div className="flex flex-col items-center">
                     <div style={{ fontSize: "13px", fontWeight: 700, color: node.color, padding: "6px 20px" }}>{node.label}</div>
                     {i < arr.length - 1 && (
-                      <svg width="2" height="22" viewBox="0 0 2 22" fill="none">
-                        <line x1="1" y1="0" x2="1" y2="22" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeDasharray="3 2" />
+                      <svg width="2" height="18" viewBox="0 0 2 18" fill="none">
+                        <line x1="1" y1="0" x2="1" y2="18" stroke="rgba(255,255,255,0.18)" strokeWidth="1" strokeDasharray="3 2" className="dash-flow" />
                       </svg>
                     )}
                   </div>
