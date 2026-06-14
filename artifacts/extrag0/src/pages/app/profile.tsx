@@ -16,7 +16,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CATEGORIES, CATEGORY_NAMES } from "@/lib/categories";
 
 import { apiFetch } from "@/lib/api-fetch";
-import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS, LEVEL_COLORS } from "@/components/level-badge";
+import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS, LEVEL_COLORS, UserBadge, UserBadgeIcon, CorporateBadge, CorporateBadgeIcon, CORPORATE_ROLE_LABELS } from "@/components/level-badge";
 
 const LANGUAGE_OPTIONS = ["Português", "Inglês", "Espanhol", "Francês", "Alemão", "Italiano", "Mandarim", "Japonês", "Árabe"];
 const REGION_OPTIONS = ["São Paulo - SP", "Rio de Janeiro - RJ", "Belo Horizonte - MG", "Curitiba - PR", "Porto Alegre - RS", "Salvador - BA", "Fortaleza - CE", "Recife - PE", "Brasília - DF", "Manaus - AM", "Todo o Brasil"];
@@ -450,9 +450,12 @@ export default function ProfilePage() {
                 {user?.role === "freelancer" && (
                   <LevelBadge level={user?.level} size="md" />
                 )}
-                {user?.adminRole === "super_admin" && (
+                {(user as any)?.corporateRole && (
+                  <CorporateBadge role={(user as any).corporateRole} size="md" />
+                )}
+                {user?.role === "admin" && !(user as any)?.corporateRole && (
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-400/12 border border-amber-400/30 text-amber-400">
-                    <Crown size={11} /> CEO
+                    <Crown size={11} /> Admin
                   </span>
                 )}
                 {user?.isVerified ? (
@@ -488,20 +491,39 @@ export default function ProfilePage() {
 
           {/* Inline stats — no boxes */}
           {user?.role === "freelancer" && (
-            <div className="flex items-center gap-5 mt-4 text-xs flex-wrap">
+            <div className="flex items-center gap-4 mt-4 text-xs flex-wrap">
+              <div className="flex items-center gap-2">
+                <UserBadgeIcon user={user as any} size="md" />
+                <div>
+                  <p className="text-muted-foreground font-medium leading-none mb-0.5">Nível</p>
+                  <p className={`font-bold text-sm ${LEVEL_COLORS[user?.level ?? "bronze"]?.text ?? "text-primary"}`}>{LEVEL_LABELS[user?.level ?? "bronze"]}</p>
+                </div>
+              </div>
+              <div className="w-px h-8 bg-white/8" />
               <div>
                 <p className="text-muted-foreground font-medium leading-none mb-1">Extras feitos</p>
                 <p className="font-bold text-primary text-base">{user?.completedJobs ?? 0}</p>
               </div>
-              <div className="w-px h-6 bg-white/8" />
+              <div className="w-px h-8 bg-white/8" />
               <div>
                 <p className="text-muted-foreground font-medium leading-none mb-1">Reputação</p>
                 <p className="font-bold text-yellow-400 text-base">{(user?.reputationScore ?? 0).toFixed(1)} ★</p>
               </div>
-              <div className="w-px h-6 bg-white/8" />
+            </div>
+          )}
+          {(user as any)?.corporateRole && (
+            <div className="flex items-center gap-4 mt-4 text-xs flex-wrap">
+              <div className="flex items-center gap-2">
+                <CorporateBadgeIcon role={(user as any).corporateRole} size="md" />
+                <div>
+                  <p className="text-muted-foreground font-medium leading-none mb-0.5">Cargo</p>
+                  <p className="font-bold text-sm text-yellow-400">{CORPORATE_ROLE_LABELS[(user as any).corporateRole] ?? (user as any).corporateRole}</p>
+                </div>
+              </div>
+              <div className="w-px h-8 bg-white/8" />
               <div>
-                <p className="text-muted-foreground font-medium leading-none mb-1">Nível</p>
-                <p className={`font-bold text-base ${LEVEL_COLORS[user?.level ?? "bronze"]?.text ?? "text-primary"}`}>{LEVEL_LABELS[user?.level ?? "bronze"]}</p>
+                <p className="text-muted-foreground font-medium leading-none mb-0.5">Permissão</p>
+                <p className="font-bold text-sm text-amber-400">Super Admin</p>
               </div>
             </div>
           )}

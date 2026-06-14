@@ -287,3 +287,40 @@ export const LEVEL_IMAGES: Record<string, string> = {
   elite:  FL_BADGE_SRC,
   diamond: FL_BADGE_SRC,
 };
+
+/* ─────────────────────────────────────────────────────────────────────────
+   UNIVERSAL BADGE — shows corporate badge if user has corporateRole,
+   otherwise shows level badge. Use this everywhere a user badge is needed.
+───────────────────────────────────────────────────────────────────────────*/
+
+/** Icon-only: corporate or level depending on user data */
+export function UserBadgeIcon({
+  user,
+  size = "sm",
+  className = "",
+}: {
+  user?: { level?: string; corporateRole?: string | null } | null;
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  className?: string;
+}) {
+  if (user?.corporateRole) {
+    return <CorporateBadgeIcon role={user.corporateRole} size={size} className={className} />;
+  }
+  return <LevelBadgeIcon level={user?.level ?? "bronze"} size={size} className={className} />;
+}
+
+/** Pill with image + label: corporate or level depending on user data */
+export function UserBadge({
+  user,
+  size = "sm",
+  className = "",
+}: {
+  user?: { level?: string; corporateRole?: string | null } | null;
+  size?: "xs" | "sm" | "md" | "lg";
+  className?: string;
+}) {
+  if (user?.corporateRole) {
+    return <CorporateBadge role={user.corporateRole} size={size} className={className} />;
+  }
+  return <LevelBadge level={user?.level ?? "bronze"} size={size} className={className} />;
+}

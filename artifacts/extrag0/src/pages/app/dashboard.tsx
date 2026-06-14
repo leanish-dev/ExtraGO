@@ -14,7 +14,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { formatDistanceToNow, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import dashboardBanner from "@assets/file_00000000a88071f79bcf2c132d090401_1779868066995.png";
-import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS } from "@/components/level-badge";
+import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS, UserBadge, UserBadgeIcon } from "@/components/level-badge";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -217,14 +217,14 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
           transition={{ delay: 0.15, duration: 0.5, type: "spring", stiffness: 180 }}
           className="flex-shrink-0 mt-1"
         >
-          <LevelBadgeIcon level={currentLevel} size="xl" />
+          <UserBadgeIcon user={user} size="xl" />
         </motion.div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-muted-foreground font-medium">{greeting} 👋</p>
+          <p className="text-xs text-muted-foreground font-medium">{greeting}</p>
           <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate">{firstName}</h1>
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            <LevelBadge level={currentLevel} size="sm" />
+            <UserBadge user={user} size="sm" />
             {user?.isVerified && (
               <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/8 border border-primary/18 px-2 py-0.5 rounded-full">
                 <CheckCircle size={8} /> Verificado

@@ -77,6 +77,7 @@ export function formatUser(user: any) {
     name: user.name,
     role: user.role,
     adminRole: user.adminRole ?? null,
+    corporateRole: user.corporateRole ?? null,
     avatarUrl: user.avatarUrl ?? null,
     bio: user.bio ?? null,
     phone: user.phone ?? null,

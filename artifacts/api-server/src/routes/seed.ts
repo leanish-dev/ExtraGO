@@ -282,14 +282,32 @@ router.post("/setup/seed", async (_req, res) => {
       name: "Leonardo Scheffel",
       role: "admin",
       adminRole: "super_admin",
+      corporateRole: "ceo",
       bio: "CEO e co-fundador da plataforma extraGO.",
       isVerified: true,
       isBanned: false,
       profileCompletion: 100,
-      level: "elite",
+      level: "diamond",
       referralCode: "CEO2024LS",
     });
     results.push(`Super Admin CEO (leonardoscheffel2000): id=${leo2Id}`);
+
+    // Jean Dick — CMO / Super Admin
+    const jeanDickId = await upsertUser({
+      email: "jeandick2000@gmail.com",
+      passwordHash: hashPassword("Extrago27@"),
+      name: "Jean Dick",
+      role: "admin",
+      adminRole: "super_admin",
+      corporateRole: "cmo",
+      bio: "CMO e co-fundador da plataforma extraGO. Responsável pela estratégia de marketing e crescimento nacional.",
+      isVerified: true,
+      isBanned: false,
+      profileCompletion: 100,
+      level: "diamond",
+      referralCode: "CMO2024JD",
+    });
+    results.push(`Super Admin CMO (jeandick2000): id=${jeanDickId}`);
 
     // 5. Super Admin: extrago.ceo@yahoo.com (CEO)
     const ceoyahooId = await upsertUser({

@@ -13,7 +13,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api-fetch";
 import { AnimatedCounter } from "@/components/animated-counter";
-import { LevelBadge } from "@/components/level-badge";
+import { LevelBadge, LevelBadgeIcon } from "@/components/level-badge";
 
 function StatBadge({ value, label, color = "text-primary" }: { value: React.ReactNode; label: string; color?: string }) {
   return (
@@ -182,7 +182,8 @@ export default function FreelancerProfilePage() {
                 )}
               </div>
               <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                <LevelBadge level={user.level ?? "bronze"} size="sm" />
+                <LevelBadgeIcon level={user.level ?? "bronze"} size="lg" />
+                <LevelBadge level={user.level ?? "bronze"} size="md" />
                 {user.categories && user.categories.length > 0 && (
                   <span className="text-xs text-muted-foreground truncate">{user.categories[0]}</span>
                 )}

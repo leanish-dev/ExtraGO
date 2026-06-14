@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useGetMyReferral, useGetReferralLeaderboard } from "@workspace/api-client-react";
 import { useAuth } from "@/hooks/use-auth";
-import { LevelBadgeIcon } from "@/components/level-badge";
+import { LevelBadgeIcon, ReferralBadge, ReferralBadgeIcon } from "@/components/level-badge";
 import {
   Trophy, Users, Copy, Share2, Star, Crown, TrendingUp, Gift,
   Zap, Lock, CheckCircle, Percent, Info, Smartphone, Link2,
@@ -358,18 +358,19 @@ export default function ReferralsPage() {
           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Jornada de Indicador</p>
           <div className="flex items-stretch gap-0 relative">
             {/* connector line */}
-            <div className="absolute top-5 left-[calc(16.67%+1px)] right-[calc(16.67%+1px)] h-px bg-white/10 z-0" />
+            <div className="absolute top-7 left-[calc(16.67%+1px)] right-[calc(16.67%+1px)] h-px bg-white/10 z-0" />
             {REFERRAL_TIERS.map((tier, i) => {
               const isActive = i === currentReferralTierIdx;
               const isPast = i < currentReferralTierIdx;
+              const tierKey = tier.key === "indicador" ? "indicador" : tier.key === "agente" ? "agente_captacao" : "embaixador_regional";
               return (
                 <div key={tier.key} className="flex-1 flex flex-col items-center text-center relative z-10">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg mb-2 transition-all border ${
-                    isActive ? "border-primary/40 bg-primary/10 shadow-[0_0_16px_rgba(124,252,0,0.20)]" :
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-2 transition-all border ${
+                    isActive ? "border-primary/40 bg-primary/10 shadow-[0_0_20px_rgba(124,252,0,0.25)]" :
                     isPast ? "border-green-400/25 bg-green-400/8" :
                     "border-white/8 bg-white/3 opacity-40"
                   }`}>
-                    {tier.emoji}
+                    <ReferralBadgeIcon tier={tierKey} size="lg" />
                   </div>
                   <p className={`text-xs font-bold leading-tight ${isActive ? "text-primary" : isPast ? "text-green-400" : "text-muted-foreground/50"}`}>
                     {tier.label}
@@ -381,7 +382,7 @@ export default function ReferralsPage() {
                     <span className="text-[8px] font-bold text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded-full mt-1">Atual</span>
                   )}
                   {isPast && (
-                    <span className="text-[8px] font-bold text-green-400 bg-green-400/8 border border-green-400/15 px-1.5 py-0.5 rounded-full mt-1">✓</span>
+                    <span className="text-[8px] font-bold text-green-400 bg-green-400/8 border border-green-400/15 px-1.5 py-0.5 rounded-full mt-1">Conquistado</span>
                   )}
                 </div>
               );

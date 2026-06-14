@@ -26,6 +26,7 @@ export const usersTable = pgTable("users", {
   name: text("name").notNull(),
   role: roleEnum("role").notNull().default("freelancer"),
   adminRole: text("admin_role"),
+  corporateRole: text("corporate_role"),
   avatarUrl: text("avatar_url"),
   bannerUrl: text("banner_url"),
   bio: text("bio"),

@@ -12,7 +12,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 import { apiFetch } from "@/lib/api-fetch";
-import { LevelBadge } from "@/components/level-badge";
+import { LevelBadge, LevelBadgeIcon } from "@/components/level-badge";
 
 interface PostAuthor {
   id: number;
@@ -253,6 +253,9 @@ function PostCard({ post, onDelete }: { post: FeedPost; onDelete: (id: number) =
             <Avatar user={post.author} size={42} />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
+                {post.author?.level && (
+                  <LevelBadgeIcon level={post.author.level} size="md" className="flex-shrink-0" />
+                )}
                 <p className="font-bold text-sm">{post.author?.name ?? "Usuário"}</p>
                 {post.author?.isVerified && (
                   <CheckCircle size={13} className="text-primary flex-shrink-0" />

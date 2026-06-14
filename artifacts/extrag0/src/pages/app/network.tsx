@@ -8,7 +8,7 @@ import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api-fetch";
-import { LevelBadge } from "@/components/level-badge";
+import { LevelBadge, LevelBadgeIcon } from "@/components/level-badge";
 
 function UserCard({ user, type }: { user: any; type: "freelancer" | "company" }) {
   const { user: me } = useAuth();
@@ -103,7 +103,10 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
           {/* Secondary info row */}
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             {type === "freelancer" && user.level && (
-              <LevelBadge level={user.level} size="xs" />
+              <>
+                <LevelBadgeIcon level={user.level} size="md" />
+                <LevelBadge level={user.level} size="sm" />
+              </>
             )}
             {type === "freelancer" && categories.length > 1 && (
               <span className="text-[10px] px-1.5 py-0.5 rounded-full border border-white/8 text-muted-foreground">

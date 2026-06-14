@@ -221,53 +221,67 @@ export default function CareerPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.5 }}
           className={`relative glass-card rounded-2xl border overflow-hidden ${colors.border} ${currentLevelData?.glow ?? ""}`}
         >
-          <div className="absolute inset-0 opacity-[0.04]" style={{
-            backgroundImage: "radial-gradient(circle at 70% 50%, white 0%, transparent 65%)"
-          }} />
+          {/* Ambient radial glow matching level color */}
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ backgroundImage: "radial-gradient(circle at 50% 0%, rgba(124,252,0,0.06) 0%, transparent 65%)" }} />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-56 h-24 pointer-events-none"
+            style={{ background: "radial-gradient(ellipse, rgba(124,252,0,0.09) 0%, transparent 70%)", filter: "blur(20px)" }} />
+
           <div className="relative p-6">
-            <div className="flex items-start gap-4">
-              {/* Badge large */}
-              <div className="flex-shrink-0">
+            {/* Badge centered as hero focal point */}
+            <div className="flex flex-col items-center text-center mb-5">
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.12, duration: 0.6, type: "spring", stiffness: 150 }}
+                className="relative mb-3"
+              >
+                {/* Pulsing ring behind badge */}
+                <motion.div
+                  animate={{ scale: [1, 1.12, 1], opacity: [0.35, 0.1, 0.35] }}
+                  transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                  className={`absolute inset-0 rounded-full border-2 ${colors.border}`}
+                  style={{ margin: "-8px" }}
+                />
                 <LevelBadgeIcon level={level} size="xl" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-white/50 uppercase tracking-widest font-semibold mb-0.5">Sua carreira</p>
-                <h2 className="text-xl font-extrabold truncate">{name}</h2>
-                <p className={`text-2xl font-black tracking-wide mt-0.5 ${colors.text}`}>
-                  {currentLevelData?.label ?? "Iniciante"}
-                </p>
-                <div className="flex items-center gap-3 mt-2">
-                  <span className="text-xs text-white/50">Taxa atual</span>
-                  <span className={`text-sm font-bold ${colors.text}`}>{currentLevelData?.feePercent ?? 20}%</span>
-                </div>
-                <p className="text-xs text-white/60 mt-1">
-                  Você mantém{" "}
-                  <span className="text-primary font-bold text-sm">{keepPercent}%</span>{" "}
-                  dos seus ganhos
-                </p>
-              </div>
-              {/* Reputation ring */}
-              <div className="flex-shrink-0 flex flex-col items-center gap-1">
-                <ReputationRingSmall score={reputationScore} size={60} />
-                <span className="text-[9px] text-white/40 uppercase tracking-widest">Reputação</span>
+              </motion.div>
+              <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Nível Atual</p>
+              <p className={`text-3xl font-black tracking-wide leading-tight ${colors.text}`}>
+                {currentLevelData?.label ?? "Iniciante"}
+              </p>
+              <p className="text-sm text-white/55 mt-1 font-medium">{name}</p>
+
+              <div className="flex items-center gap-3 mt-3">
+                {isVerified && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/8 border border-primary/20 px-2.5 py-1 rounded-full">
+                    <CheckCircle size={9} /> Verificado
+                  </span>
+                )}
+                <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border ${colors.bg} ${colors.text} ${colors.border}`}>
+                  Taxa {currentLevelData?.feePercent ?? 20}% — você fica {keepPercent}%
+                </span>
               </div>
             </div>
 
-            {/* Stats row */}
-            <div className="mt-5 grid grid-cols-3 gap-3">
-              {[
-                { label: "Extras", value: completedJobs },
-                { label: "Avaliação", value: `${reputationScore.toFixed(1)}★` },
-                { label: "Verificado", value: isVerified ? "✓ Sim" : "Não" },
-              ].map(s => (
-                <div key={s.label} className="rounded-xl bg-white/[0.04] border border-white/8 p-3 text-center">
-                  <p className="text-base font-bold">{s.value}</p>
-                  <p className="text-[10px] text-white/45 mt-0.5">{s.label}</p>
-                </div>
-              ))}
+            {/* Stats strip — reputation + extras + rating inline */}
+            <div className="flex items-center justify-center gap-6 pt-4 border-t border-white/6">
+              <div className="text-center">
+                <ReputationRingSmall score={reputationScore} size={52} />
+                <p className="text-[9px] text-white/35 uppercase tracking-widest mt-1">Reputação</p>
+              </div>
+              <div className="w-px h-14 bg-white/8" />
+              <div className="text-center">
+                <p className={`text-2xl font-black ${colors.text}`}>{completedJobs}</p>
+                <p className="text-[9px] text-white/35 uppercase tracking-widest mt-0.5">Extras feitos</p>
+              </div>
+              <div className="w-px h-14 bg-white/8" />
+              <div className="text-center">
+                <p className="text-2xl font-black text-yellow-400">{reputationScore.toFixed(1)}</p>
+                <p className="text-[9px] text-white/35 uppercase tracking-widest mt-0.5">Avaliação</p>
+              </div>
             </div>
           </div>
         </motion.div>

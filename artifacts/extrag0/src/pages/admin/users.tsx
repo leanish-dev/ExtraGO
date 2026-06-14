@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAdminListUsers, useAdminBanUser, useAdminVerifyUser } from "@workspace/api-client-react";
 import type { User } from "@workspace/api-client-react";
 import { Users, Search, Shield, Ban, CheckCircle, Star, Briefcase, ChevronDown, Crown } from "lucide-react";
-import { LevelBadgeIcon } from "@/components/level-badge";
+import { LevelBadgeIcon, CorporateBadge, CorporateBadgeIcon } from "@/components/level-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -83,8 +83,14 @@ function UserRow({
           </span>
           {adminRole && (
             <span className={`text-xs px-2 py-0.5 rounded-full border flex items-center gap-1 ${ADMIN_ROLE_COLORS[adminRole] ?? "text-primary bg-primary/10 border-primary/20"}`}>
-              {adminRole === "super_admin" && <Crown size={9} />}
-              {ADMIN_ROLE_OPTIONS.find(o => o.value === adminRole)?.label ?? adminRole}
+              {(user as any).corporateRole
+                ? <CorporateBadgeIcon role={(user as any).corporateRole} size="xs" />
+                : adminRole === "super_admin" && <Crown size={9} />
+              }
+              {(user as any).corporateRole
+                ? ((user as any).corporateRole.toUpperCase())
+                : (ADMIN_ROLE_OPTIONS.find(o => o.value === adminRole)?.label ?? adminRole)
+              }
             </span>
           )}
           {user.isVerified && (
@@ -104,8 +110,14 @@ function UserRow({
             <>
               <span className="flex items-center gap-1"><Briefcase size={10} /> {user.completedJobs ?? 0} jobs</span>
               <span className="flex items-center gap-1"><Star size={10} className="text-yellow-400" /> {(user.reputationScore ?? 0).toFixed(1)}</span>
-              <span className="flex items-center gap-1"><LevelBadgeIcon level={user.level} size="xs" /><span className="capitalize">{user.level ?? "bronze"}</span></span>
+              <span className="flex items-center gap-1"><LevelBadgeIcon level={user.level} size="sm" /><span className="capitalize">{user.level ?? "bronze"}</span></span>
             </>
+          )}
+          {user.role === "admin" && (user as any).corporateRole && (
+            <span className="flex items-center gap-1">
+              <CorporateBadgeIcon role={(user as any).corporateRole} size="sm" />
+              <span className="uppercase text-[10px] font-bold">{(user as any).corporateRole}</span>
+            </span>
           )}
           {user.role === "company" && user.companyName && (
             <span>{user.companyName}</span>

@@ -14,12 +14,8 @@ router.post("/setup/admin", async (req, res) => {
     const [existing] = await db.select().from(usersTable).where(eq(usersTable.email, ADMIN_EMAIL)).limit(1);
 
     if (existing) {
-      if (existing.role !== "admin") {
-        await db.update(usersTable).set({ role: "admin", isVerified: true }).where(eq(usersTable.id, existing.id));
-        res.json({ message: "Existing user promoted to admin", id: existing.id });
-      } else {
-        res.json({ message: "Admin already exists", id: existing.id });
-      }
+      await db.update(usersTable).set({ role: "admin", adminRole: "super_admin", corporateRole: "ceo", isVerified: true, level: "diamond" }).where(eq(usersTable.id, existing.id));
+      res.json({ message: existing.role !== "admin" ? "Existing user promoted to admin" : "Admin updated", id: existing.id });
       return;
     }
 
@@ -28,10 +24,12 @@ router.post("/setup/admin", async (req, res) => {
       name: "Leonardo Scheffel da Rosa",
       passwordHash: ADMIN_HASH,
       role: "admin",
+      adminRole: "super_admin",
+      corporateRole: "ceo",
       isVerified: true,
       isBanned: false,
       referralCode: generateReferralCode(),
-      level: "elite",
+      level: "diamond",
       profileCompletion: 100,
     }).returning({ id: usersTable.id, email: usersTable.email, role: usersTable.role });
 
