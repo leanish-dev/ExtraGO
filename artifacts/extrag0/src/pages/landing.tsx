@@ -408,6 +408,109 @@ export default function LandingPage() {
           />
 
         {/* ══════════════════════════════════════════
+            TRANSITION 1 — Infrastructure Bridge
+            Hero → Painel em Tempo Real
+        ══════════════════════════════════════════ */}
+        <div className="relative overflow-hidden" style={{ padding: "clamp(40px,7vw,88px) 0" }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.012) 1px,transparent 1px)", backgroundSize: "64px 64px" }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 70% at 50% 50%, rgba(124,252,0,0.035) 0%, transparent 68%)" }} />
+          <div className="relative z-10 max-w-5xl mx-auto px-5 flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
+              className="flex-1 text-center lg:text-left"
+            >
+              <div className="inline-flex items-center gap-2 mb-4" style={{ color: "rgba(0,229,255,0.48)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase" }}>
+                <div style={{ width: "28px", height: "1px", background: "rgba(0,229,255,0.30)" }} />
+                Infraestrutura Nacional
+                <div style={{ width: "28px", height: "1px", background: "rgba(0,229,255,0.30)" }} />
+              </div>
+              <h2 style={{ fontSize: "clamp(22px,3.4vw,40px)", fontWeight: 900, lineHeight: 1.18, marginBottom: "16px", color: "#fff" }}>
+                A infraestrutura que conecta<br />
+                <span style={{ background: "linear-gradient(90deg,#7CFC00,#00e5ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>empresas e profissionais</span><br />
+                em escala nacional.
+              </h2>
+              <p style={{ fontSize: "13px", lineHeight: 1.75, maxWidth: "400px", color: "rgba(255,255,255,0.55)", margin: "0 auto 0 0" }} className="mx-auto lg:mx-0">
+                Uma rede de dados, reputação e operações que cresce com cada novo usuário — conectando o Brasil de Norte a Sul em tempo real.
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.90 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.85, delay: 0.18, ease: [0.19, 1, 0.22, 1] }}
+              className="flex-shrink-0"
+              style={{ width: "clamp(200px,36vw,300px)" }}
+            >
+              <svg viewBox="0 0 300 340" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "auto" }}>
+                <defs>
+                  <radialGradient id="lg-node-g" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#7CFC00" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#7CFC00" stopOpacity="0" />
+                  </radialGradient>
+                  <radialGradient id="lg-node-c" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#00e5ff" stopOpacity="0" />
+                  </radialGradient>
+                  <filter id="lg-glow">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
+                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
+                </defs>
+                {/* Brazil wireframe outline */}
+                <path d="M 112,18 L 135,14 L 155,18 L 172,28 L 188,42 L 198,58 L 204,76 L 206,94 L 204,112 L 198,128 L 192,140 L 190,152 L 195,164 L 192,178 L 182,188 L 170,196 L 158,206 L 148,218 L 140,230 L 128,238 L 115,242 L 100,238 L 88,228 L 78,216 L 70,204 L 62,190 L 56,176 L 50,160 L 44,142 L 40,124 L 38,106 L 36,88 L 38,70 L 44,54 L 54,40 L 68,28 L 84,20 Z"
+                  stroke="rgba(0,229,255,0.18)" strokeWidth="1" fill="rgba(0,229,255,0.025)" />
+                {/* Connection lines */}
+                <path d="M 122,48 Q 160,65 190,82" stroke="rgba(0,229,255,0.22)" strokeWidth="0.8" strokeDasharray="4 3" />
+                <path d="M 122,48 Q 100,80 88,118" stroke="rgba(0,229,255,0.18)" strokeWidth="0.8" strokeDasharray="4 3" />
+                <path d="M 190,82 Q 185,105 184,130" stroke="rgba(0,229,255,0.20)" strokeWidth="0.8" strokeDasharray="4 3" />
+                <path d="M 88,118 Q 120,130 148,138" stroke="rgba(124,252,0,0.18)" strokeWidth="0.8" strokeDasharray="4 3" />
+                <path d="M 148,138 Q 165,138 184,130" stroke="rgba(124,252,0,0.16)" strokeWidth="0.8" strokeDasharray="4 3" />
+                <path d="M 148,138 Q 145,165 138,186" stroke="rgba(124,252,0,0.18)" strokeWidth="0.8" strokeDasharray="4 3" />
+                <path d="M 138,186 Q 125,205 118,222" stroke="rgba(0,229,255,0.18)" strokeWidth="0.8" strokeDasharray="4 3" />
+                <path d="M 88,118 Q 82,152 76,178" stroke="rgba(0,229,255,0.15)" strokeWidth="0.8" strokeDasharray="4 3" />
+                <path d="M 76,178 Q 96,195 118,222" stroke="rgba(0,229,255,0.15)" strokeWidth="0.8" strokeDasharray="4 3" />
+                {/* City nodes — green (major hubs) */}
+                <circle cx="122" cy="48" r="5" fill="rgba(124,252,0,0.15)" />
+                <circle cx="122" cy="48" r="2.5" fill="#7CFC00" filter="url(#lg-glow)" />
+                <circle cx="190" cy="82" r="4" fill="rgba(0,229,255,0.12)" />
+                <circle cx="190" cy="82" r="2" fill="#00e5ff" filter="url(#lg-glow)" />
+                <circle cx="88" cy="118" r="4" fill="rgba(0,229,255,0.12)" />
+                <circle cx="88" cy="118" r="2" fill="#00e5ff" filter="url(#lg-glow)" />
+                <circle cx="148" cy="138" r="5.5" fill="rgba(124,252,0,0.18)" />
+                <circle cx="148" cy="138" r="2.8" fill="#7CFC00" filter="url(#lg-glow)" />
+                <circle cx="184" cy="130" r="3.5" fill="rgba(0,229,255,0.10)" />
+                <circle cx="184" cy="130" r="1.8" fill="#00e5ff" filter="url(#lg-glow)" />
+                <circle cx="138" cy="186" r="5.5" fill="rgba(124,252,0,0.18)" />
+                <circle cx="138" cy="186" r="2.8" fill="#7CFC00" filter="url(#lg-glow)" />
+                <circle cx="118" cy="222" r="4" fill="rgba(0,229,255,0.12)" />
+                <circle cx="118" cy="222" r="2" fill="#00e5ff" filter="url(#lg-glow)" />
+                <circle cx="76" cy="178" r="3.5" fill="rgba(0,229,255,0.10)" />
+                <circle cx="76" cy="178" r="1.8" fill="#00e5ff" filter="url(#lg-glow)" />
+                {/* City labels */}
+                <text x="130" y="46" fontSize="7" fill="rgba(255,255,255,0.42)" fontFamily="system-ui,sans-serif" fontWeight="600">Manaus</text>
+                <text x="196" y="80" fontSize="7" fill="rgba(255,255,255,0.38)" fontFamily="system-ui,sans-serif" fontWeight="600">Fortaleza</text>
+                <text x="62" y="116" fontSize="7" fill="rgba(255,255,255,0.38)" fontFamily="system-ui,sans-serif" fontWeight="600">Cuiabá</text>
+                <text x="150" y="133" fontSize="7" fill="rgba(255,255,255,0.42)" fontFamily="system-ui,sans-serif" fontWeight="600">Brasília</text>
+                <text x="154" y="184" fontSize="7" fill="rgba(255,255,255,0.45)" fontFamily="system-ui,sans-serif" fontWeight="600">São Paulo</text>
+                <text x="84" y="227" fontSize="7" fill="rgba(255,255,255,0.38)" fontFamily="system-ui,sans-serif" fontWeight="600">Porto Alegre</text>
+                {/* Pulse rings on key nodes */}
+                <circle cx="148" cy="138" r="10" fill="none" stroke="rgba(124,252,0,0.12)" strokeWidth="1">
+                  <animate attributeName="r" values="8;16" dur="2.8s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.3;0" dur="2.8s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="138" cy="186" r="10" fill="none" stroke="rgba(124,252,0,0.10)" strokeWidth="1">
+                  <animate attributeName="r" values="8;16" dur="3.2s" repeatCount="indefinite" begin="1s" />
+                  <animate attributeName="opacity" values="0.25;0" dur="3.2s" repeatCount="indefinite" begin="1s" />
+                </circle>
+              </svg>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* ══════════════════════════════════════════
             PAINEL EM TEMPO REAL
         ══════════════════════════════════════════ */}
         <section className="px-5 pb-8">
@@ -553,6 +656,72 @@ export default function LandingPage() {
             </Link>
           </ScrollSection>
         </section>
+
+        {/* ══════════════════════════════════════════
+            TRANSITION 2 — Network Effect Bridge
+            Simples como deve ser → Sistema de Indicações
+        ══════════════════════════════════════════ */}
+        <div className="relative overflow-hidden" style={{ padding: "clamp(36px,6vw,72px) 20px" }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 50%, rgba(124,252,0,0.028) 0%, transparent 65%)" }} />
+          <div className="relative z-10 max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: [0.19, 1, 0.22, 1] }}
+            >
+              <div className="inline-flex items-center gap-2 mb-5" style={{ color: "rgba(124,252,0,0.45)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase" }}>
+                <div style={{ width: "32px", height: "1px", background: "rgba(124,252,0,0.28)" }} />
+                Efeito de Rede
+                <div style={{ width: "32px", height: "1px", background: "rgba(124,252,0,0.28)" }} />
+              </div>
+              <h2 style={{ fontSize: "clamp(20px,3vw,36px)", fontWeight: 900, lineHeight: 1.2, color: "#fff", marginBottom: "18px" }}>
+                Cada nova conexão fortalece<br />
+                <span style={{ background: "linear-gradient(90deg,#7CFC00,#00e5ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>todo o ecossistema.</span>
+              </h2>
+            </motion.div>
+            {/* Flow visual — horizontal expansion lines */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, delay: 0.25 }}
+              className="flex items-center justify-center gap-0 mt-4 flex-wrap"
+            >
+              {[
+                { label: "Profissional", color: "#7CFC00" },
+                { label: "Indica", color: "rgba(255,255,255,0.20)", isConnector: true },
+                { label: "Nova Rede", color: "#00e5ff" },
+                { label: "Gera Receita", color: "rgba(255,255,255,0.20)", isConnector: true },
+                { label: "Ecossistema", color: "#a855f7" },
+              ].map((node, i) =>
+                node.isConnector ? (
+                  <div key={i} className="flex items-center" style={{ margin: "0 8px" }}>
+                    <svg width="40" height="12" viewBox="0 0 40 12" fill="none">
+                      <path d="M 0,6 L 32,6" stroke="rgba(255,255,255,0.14)" strokeWidth="1" strokeDasharray="3 2" />
+                      <path d="M 32,2 L 40,6 L 32,10" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="1.2" />
+                    </svg>
+                    <span style={{ fontSize: "9px", fontWeight: 700, color: "rgba(255,255,255,0.28)", letterSpacing: "0.12em", textTransform: "uppercase", marginLeft: "6px" }}>{node.label}</span>
+                  </div>
+                ) : (
+                  <div key={i} className="flex flex-col items-center" style={{ margin: "0 4px" }}>
+                    <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: node.color, boxShadow: `0 0 10px ${node.color}88` }} />
+                    <span style={{ fontSize: "10px", fontWeight: 700, color: node.color, marginTop: "6px", letterSpacing: "0.04em" }}>{node.label}</span>
+                  </div>
+                )
+              )}
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.45 }}
+              style={{ fontSize: "12px", color: "rgba(255,255,255,0.40)", marginTop: "20px", letterSpacing: "0.02em" }}
+            >
+              Crescimento orgânico e autossustentável — sem custo de aquisição adicional.
+            </motion.p>
+          </div>
+        </div>
 
         {/* ══════════════════════════════════════════
             SEÇÃO DE INDICAÇÕES — Banner + Simulador
