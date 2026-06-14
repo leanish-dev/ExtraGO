@@ -4,6 +4,14 @@
 
 ---
 
+## Objetivo
+
+Este documento é a fonte permanente de identidade estratégica da extraGO.
+Qualquer agente, engenheiro ou parceiro que trabalhe no projeto deve ler este arquivo primeiro.
+Ele define quem somos, o que fazemos, por que existimos e para onde vamos.
+
+---
+
 ## Visão
 
 Ser a infraestrutura operacional que conecta toda a força de trabalho avulsa e eventual do Brasil — empresas, profissionais, representantes, parceiros e investidores — em um único ecossistema nacional integrado.
@@ -33,6 +41,18 @@ A extraGO **É**:
 
 ---
 
+## Narrativa Institucional
+
+A extraGO nasce do diagnóstico de que o mercado de trabalho eventual no Brasil é fragmentado, informal e ineficiente. Milhões de profissionais buscam oportunidades sem reputação portável. Milhares de empresas contratam sem histórico, sem segurança e sem escala.
+
+A extraGO resolve os dois lados: cria uma identidade profissional permanente para freelancers (com níveis, reputação e histórico financeiro) e oferece às empresas um pool qualificado, verificado e rastreável.
+
+O modelo vai além do matching: cada transação gera dados de reputação, cada pagamento fortalece o ecossistema financeiro, cada indicação expande a rede organicamente. O resultado é um flywheel de crescimento auto-sustentável — quanto mais participantes, mais valioso para todos.
+
+A extraGO não compete com portais de vagas. Compete com a informalidade.
+
+---
+
 ## Inspirações Estratégicas
 
 | Empresa | O que a extraGO absorve |
@@ -56,6 +76,20 @@ A extraGO captura valor em **todos os lados** do mercado de trabalho eventual:
 5. **Investidores** participam de um ecossistema com múltiplos flywheels
 
 O modelo cria **interdependência**: a combinação de marketplace + reputação + pagamentos + indicações + governança torna a substituição extremamente custosa para todos os participantes.
+
+### Por que agora?
+
+- Crescimento do trabalho gig no Brasil (+40% pós-pandemia)
+- PIX como infraestrutura de pagamento instantâneo disponível
+- Demanda por qualificação e reputação portável em ascensão
+- Inexistência de um player dominante no segmento de força de trabalho eventual
+
+### Barreiras de entrada após escala
+
+- Rede de reputação acumulada (anos de histórico)
+- 27 representantes estaduais com território e incentivo financeiro
+- Efeito de rede bilateral (mais profissionais → mais empresas → ciclo)
+- Dados proprietários de matching e performance por setor/região
 
 ---
 
@@ -116,3 +150,52 @@ Mais Indicações → Rede cresce organicamente
 | **Representante** | Negócio próprio com suporte nacional | Território, comissão, ferramentas |
 | **Investidor** | Retorno, tese clara, equipe, escalabilidade | Flywheel comprovável, modelo robusto |
 | **Indicador** | Renda passiva sobre a rede construída | Comissão recorrente, leaderboard |
+
+---
+
+## Diretrizes Permanentes
+
+- A identidade extraGO é sempre **infraestrutura**, nunca portal ou job board
+- Toda comunicação deve reforçar escala nacional, confiança e progressão
+- O posicionamento é premium e institucional — austero, não minimalista
+- A terminologia oficial é **Extra** (não "vaga", não "job")
+- Trabalhadores são **Profissionais** ou **Freelancers** (não "candidatos")
+- Contratantes são **Empresas** (não "clientes" ou "empregadores")
+
+---
+
+## Regras Obrigatórias
+
+1. Nunca usar "marketplace de hospitalidade" em nenhum contexto público
+2. Nunca usar o slogan "#1 de hospitalidade" ou variantes
+3. Nunca posicionar como produto de hospitalidade — o alcance é multi-setorial
+4. Nunca apresentar a plataforma como apenas um job board
+5. Toda tela, copy e comunicação deve ser consistente com a narrativa de infraestrutura
+
+---
+
+## Boas Práticas
+
+- Ao criar novas features, verificar se reforçam um dos 6 pilares do ecossistema
+- Ao redigir copy, usar a frase oficial como âncora de posicionamento
+- Ao apresentar para investidores, usar os dados do flywheel como estrutura
+- Ao descrever o produto, começar sempre pelo problema de mercado (informalidade)
+
+---
+
+## Restrições
+
+- Não alterar o posicionamento sem aprovação dos fundadores
+- Não criar novos slogans sem alinhamento com a identidade oficial
+- Não descrever a extraGO como "app de freelas" — escopo é infraestrutura nacional
+
+---
+
+## Checklist de Validação
+
+- [ ] O posicionamento de infraestrutura está presente na tela/feature?
+- [ ] A terminologia oficial (Extra, Profissional, Empresa) está correta?
+- [ ] A narrativa é consistente com a Visão 2030?
+- [ ] Os 6 pilares do ecossistema são respeitados?
+- [ ] A frase oficial pode ser usada como tagline da feature?
+- [ ] Não há referência a "vaga", "job board" ou "hospitalidade" no conteúdo?

@@ -1,92 +1,13 @@
 # extraGO — PRODUCT ROADMAP
 
-> Status: documento vivo — atualizar conforme itens forem concluídos.
+> **Status:** Documento vivo — atualizar conforme itens forem concluídos ou priorizados.
+> **Última revisão:** Junho 2026
 
 ---
 
-## Itens em Progresso / Planejados
+## Objetivo
 
-### 1. Visual & UX Professionalization
-Refinar a identidade visual em toda a plataforma para estar alinhada com o posicionamento de infraestrutura nacional. Eliminar overlays excessivos, padronizar tipografia, substituir padrões de card repetitivo por storytelling visual.
-
-**Status:** Em progresso
-
----
-
-### 2. Test Data Isolation
-Garantir que mock data, seed data e métricas artificiais sejam visíveis apenas para `TEST_ACCOUNTS`. Todos os demais usuários devem ver dados reais ou empty states. Ver `TEST_DATA_POLICY.md`.
-
-**Status:** Política documentada, implementação de guards pendente
-
----
-
-### 3. Company Financial Center
-Centro financeiro completo para empresas: histórico de depósitos, saldo disponível, reservado e pendente, extrato de pagamentos por extra, dashboard financeiro corporativo.
-
-**Status:** Planejado
-
----
-
-### 4. Level & Reputation Progression
-Motor de progressão automático: calcular nível do freelancer com base em extras concluídos + avaliações + tempo na plataforma. Notificar ao subir de nível. Exibir progresso até o próximo nível.
-
-**Status:** Planejado
-
----
-
-### 5. Brazil National Operations Center
-Centro de operações com visão geográfica em tempo real: distribuição de extras por estado, freelancers ativos por região, heatmap de demanda, representantes por estado.
-
-**Status:** Parcialmente implementado (mapa admin)
-
----
-
-### 6. Smooth Page Transitions
-Transições de página fluidas entre rotas — entrada/saída com fade ou slide. Manter identidade de movimento consistente com a landing page.
-
-**Status:** Planejado
-
----
-
-### 7. Distinct Hero Sections
-Cada área da plataforma (freelancer, empresa, admin) deve ter um hero/header distinto que reforce o posicionamento daquela audiência. Evitar dashboard genérico como primeira tela.
-
-**Status:** Planejado
-
----
-
-### 8. Admin Mobile Responsiveness
-Painel administrativo totalmente responsivo em mobile/tablet. Tabelas adaptadas, ações acessíveis em telas pequenas.
-
-**Status:** Planejado
-
----
-
-### 9. System Health Monitoring
-Dashboard de ops com health check de todos os serviços críticos: banco de dados, API, SSE, jobs em fila. Alertas visuais de degradação.
-
-**Status:** Parcialmente implementado (página Ops no admin)
-
----
-
-### 10. Real-Time Referral Activity
-Feed de atividade em tempo real das indicações: novo indicado se cadastrou, indicado concluiu primeiro extra, comissão recebida. Notificação push in-app.
-
-**Status:** Planejado
-
----
-
-### 11. Profile Menu & Notifications Fix
-Garantir que o menu de perfil e o centro de notificações funcionem corretamente em todas as plataformas (mobile/desktop) e roles (freelancer/company/admin).
-
-**Status:** Planejado
-
----
-
-### 12. Ecosystem Integration
-Integrações com plataformas complementares: escolas de qualificação, plataformas de background check, sistemas de ERP para empresas grandes.
-
-**Status:** Futuro
+Registrar as prioridades estratégicas do produto, marcos de expansão e visão de longo prazo. Este documento orienta decisões de priorização e garante alinhamento entre produto, tecnologia e negócio.
 
 ---
 
@@ -96,3 +17,259 @@ Integrações com plataformas complementares: escolas de qualificação, platafo
 2. **Mobile first** — maioria dos profissionais acessa via smartphone
 3. **Confiança antes de funcionalidade** — reputação e pagamentos são críticos
 4. **Expansão pela rede** — indicações e representantes antes de paid marketing
+5. **Infraestrutura antes de features periféricas** — core sólido sustenta o flywheel
+
+---
+
+## Status dos Itens
+
+| Status | Significado |
+|---|---|
+| ✅ Concluído | Feature implementada e validada |
+| 🔄 Em progresso | Trabalho ativo em andamento |
+| 📋 Planejado | Priorizado para próxima sprint |
+| 🔮 Futuro | Roadmap de médio/longo prazo |
+| ⏸ Pausado | Deprioritizado temporariamente |
+
+---
+
+## Fase 1 — Fundação (atual)
+
+### ✅ 1. Plataforma Core
+MVP completo com as funcionalidades essenciais de todos os perfis:
+- Autenticação (login, cadastro, sessão)
+- Área do Freelancer (dashboard, extras, candidaturas, wallet, indicações)
+- Área da Empresa (dashboard, publicação de extras, gestão de candidatos, wallet)
+- Admin (dashboard, usuários, extras, saques, analytics, ops, mapa, representantes)
+- Landing institucional com posicionamento de infraestrutura
+- Página de investidores completa
+- Sistema de badges de nível (sprite-based)
+- Notificações SSE em tempo real
+- Wallet com fluxo de depósito (empresa) e saque PIX (freelancer)
+
+---
+
+### ✅ 2. Identidade Visual
+Refinamento da identidade visual alinhada com posicionamento de infraestrutura nacional:
+- Landing page aprovada como fonte visual canônica
+- UnifiedNavbar (única navbar em toda a plataforma)
+- AppBackground (fundo fixo área autenticada)
+- Terminologia oficial (Extra, Profissional, Empresa)
+- Eliminação de overlays excessivos
+
+---
+
+### ✅ 3. Test Data Isolation
+Política documentada e helpers implementados:
+- `canUseMockData()` — isolamento de dados de demonstração
+- `isMasterAccount()` — proteção de contas master
+- Contas de teste oficiais registradas
+
+---
+
+### 🔄 4. Motor de Progressão de Nível
+Calcular nível do freelancer automaticamente com base em extras concluídos + avaliações + tempo na plataforma:
+- Notificação ao subir de nível
+- Exibir progresso até o próximo nível com barra visual
+- Histórico de progressão
+
+**Critérios de progressão definidos em `BUSINESS_MODEL.md`**
+
+---
+
+### 📋 5. Centro Financeiro para Empresas
+Dashboard financeiro corporativo completo:
+- Histórico completo de depósitos
+- Saldo disponível, reservado e pendente em destaque
+- Extrato de pagamentos por extra concluído
+- Relatório exportável (CSV/PDF)
+
+---
+
+### 📋 6. Transições de Página Fluidas
+Transições de rota com fade ou slide:
+- Entrada/saída consistente com a linguagem visual da landing
+- Performance otimizada (não bloquear interação)
+- Respeitar preferências de `prefers-reduced-motion`
+
+---
+
+### 📋 7. Hero Sections Distintas por Perfil
+Cada área da plataforma tem um hero/header que reforça o posicionamento daquela audiência:
+- Freelancer: foco em progressão, renda, reputação
+- Empresa: foco em eficiência, confiança, pool qualificado
+- Admin: foco em escala nacional, operações, controle
+
+---
+
+### 📋 8. Admin Mobile Responsiveness
+Painel administrativo totalmente responsivo:
+- Tabelas adaptadas para cards/lista em mobile
+- Ações acessíveis em telas pequenas
+- Drawer de navegação em mobile
+
+---
+
+### 📋 9. Perfil Menu & Notificações
+Garantir funcionamento correto em todas as plataformas e roles:
+- Menu de perfil (avatar dropdown) funcional em mobile e desktop
+- Centro de notificações com marcação de leitura em tempo real
+- Badge de contador de não lidos
+
+---
+
+### 📋 10. Feed de Atividade de Indicações (Real-Time)
+Atividade em tempo real da rede de indicações:
+- Novo indicado se cadastrou
+- Indicado concluiu primeiro extra
+- Comissão recebida (valor + quem gerou)
+- Notificação push in-app
+
+---
+
+## Fase 2 — Expansão Nacional
+
+### 🔮 11. Onboarding por Representante Estadual
+Fluxo de captação regional:
+- Landing page personalizada por estado
+- Onboarding guiado com representante como padrinho
+- Métricas de performance do representante em tempo real
+
+---
+
+### 🔮 12. Motor de Matching Inteligente
+Matching automático empresa ↔ profissional:
+- Baseado em histórico, avaliações, localização, disponibilidade
+- Score de compatibilidade visível para ambos os lados
+- Sugestões proativas ("Extras para você esta semana")
+
+---
+
+### 🔮 13. Verificação de Identidade
+Background check integrado:
+- CPF, antecedentes criminais, validação de documentos
+- Badge "Verificado" com data e método
+- Integração com parceiros de background check
+
+---
+
+### 🔮 14. Avaliações Bilaterais Completas
+Sistema de reputação bilateral:
+- Freelancer avalia empresa e vice-versa
+- Score público de reputação
+- Histórico de avaliações no perfil
+
+---
+
+### 🔮 15. Centro Nacional de Operações — Fase 2
+Expansão do mapa e ops:
+- Distribuição de extras em tempo real por geolocalização
+- Heatmap de demanda por setor (gastronomia, hotelaria, eventos)
+- Alertas de concentração de demanda
+
+---
+
+## Fase 3 — Infraestrutura Financeira
+
+### 🔮 16. Produtos Financeiros Próprios
+Expansão do ecossistema financeiro:
+- Antecipação de recebíveis para freelancers (desconto sobre próximos extras)
+- Crédito para empresas (contratação parcelada)
+- Cartão extraGO (futura possibilidade)
+
+---
+
+### 🔮 17. Assinaturas Profissionais e Empresariais
+Planos pagos com benefícios diferenciados:
+- Freelancer PRO: maior visibilidade no feed, analytics avançados, badge verificado
+- Empresa Premium: pool premium, reporting, posting ilimitado
+
+---
+
+### 🔮 18. Integrações Ecossistema
+Integrações com plataformas complementares:
+- Escolas de qualificação (certificados verificados)
+- Sistemas de ERP para empresas grandes
+- Plataformas de background check
+- Parceiros de benefícios para freelancers
+
+---
+
+## Visão de Expansão
+
+```
+2026 (Fase 1 — Fundação)
+├── SP, RJ, MG, ES operacionais
+├── 100.000 usuários cadastrados
+├── Motor de progressão ativo
+└── Wallet e PIX consolidados
+
+2027 (Fase 2 — Expansão Nacional)
+├── 27 representantes estaduais ativos
+├── Cobertura nacional completa
+├── Motor de matching inteligente
+└── Verificação de identidade
+
+2028-2030 (Fase 3 — Infraestrutura)
+├── Produtos financeiros próprios
+├── Maior rede de trabalho eventual do Brasil
+├── Parceria com ERPs e sistemas corporativos
+└── Dados proprietários de matching como ativo
+```
+
+---
+
+## Marcos Estratégicos
+
+| Marco | Métrica | Fase |
+|---|---|---|
+| Primeiros 1.000 extras concluídos | Volume transacional real | Fase 1 |
+| 10 representantes estaduais ativos | Cobertura regional inicial | Fase 1-2 |
+| 100.000 usuários cadastrados | Escala de rede | Fase 2 |
+| 27 representantes (cobertura nacional) | Infraestrutura nacional | Fase 2 |
+| R$ 1M em volume transacional mensal | Validação do modelo | Fase 2 |
+| Produtos financeiros próprios | Diferenciação como infraestrutura | Fase 3 |
+
+---
+
+## Diretrizes Permanentes
+
+- Prioridade sempre ao que sustenta o flywheel (matching + reputação + pagamentos)
+- Expansão pela rede — indicações e representantes têm custo de aquisição ≈ 0
+- Nunca sacrificar confiança por velocidade de entrega
+- Mobile first em toda nova feature
+
+---
+
+## Regras Obrigatórias
+
+1. Atualizar o status dos itens neste documento quando concluídos
+2. Qualquer nova feature planejada deve ser adicionada aqui antes de implementar
+3. Features de Fase 3 não entram em desenvolvimento enquanto Fase 1 tiver itens pendentes
+4. Todo item concluído deve ter o checklist de validação dos docs relevantes marcado
+
+---
+
+## Boas Práticas
+
+- Vincular novos itens do roadmap ao(s) pilar(es) do ecossistema que reforçam
+- Itens de UX/mobile devem ser priorizados junto com a feature correspondente
+- Não criar features para "parecer completo" — cada feature serve ao flywheel
+
+---
+
+## Restrições
+
+- Não iniciar Fase 2 sem validar motor de progressão e wallet consolidados
+- Não lançar produtos financeiros sem estrutura legal adequada
+- Não implementar matching automático sem dados reais suficientes para treinar
+
+---
+
+## Checklist de Validação
+
+- [ ] O item implementado foi marcado como ✅ Concluído neste doc?
+- [ ] A feature reforça pelo menos um dos 6 pilares do ecossistema?
+- [ ] O impacto no flywheel de receita está claro?
+- [ ] Mobile foi considerado no escopo da feature?
+- [ ] O item está alinhado com a fase correta (não queimando etapas)?
