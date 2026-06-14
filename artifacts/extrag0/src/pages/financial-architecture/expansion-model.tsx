@@ -133,7 +133,7 @@ export default function ExpansionModelPage() {
                 },
               ].map((item, i) => (
                 <Reveal key={i} delay={i * 0.09}>
-                  <GCard className="p-5 h-full" accent={item.color}>
+                  <GCard className="p-5 h-full" accent={item.color} bgVariant="default">
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
                       style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
                       <span style={{ color: item.color }}>{item.icon}</span>
@@ -166,7 +166,7 @@ export default function ExpansionModelPage() {
                 { value: "5%", label: "Da receita no Fundo Nacional de Representantes", color: AMBER },
               ].map((m, i) => (
                 <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-5 text-center" accent={m.color} glow>
+                  <GCard className="p-5 text-center" accent={m.color} glow bgVariant="default">
                     <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(28px,4vw,48px)", color: m.color }}>{m.value}</p>
                     <p className="text-[12px] text-slate-500 leading-snug">{m.label}</p>
                   </GCard>
@@ -176,7 +176,7 @@ export default function ExpansionModelPage() {
 
             <div className="grid sm:grid-cols-2 gap-5 mb-8">
               <Reveal>
-                <GCard className="p-5 sm:p-7 h-full" accent={GA}>
+                <GCard className="p-5 sm:p-7 h-full" accent={GA} bgVariant="default">
                   <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Benefícios para Investidores</p>
                   <div className="space-y-2">
                     {[
@@ -191,7 +191,7 @@ export default function ExpansionModelPage() {
               </Reveal>
 
               <Reveal delay={0.1}>
-                <GCard className="p-5 sm:p-7 h-full" accent={GC}>
+                <GCard className="p-5 sm:p-7 h-full" accent={GC} bgVariant="default">
                   <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Visão de Longo Prazo</p>
                   <p className="text-[13px] text-slate-600 leading-relaxed mb-3">
                     Assim como o Uber transformou o transporte, o Airbnb transformou a hospedagem e o LinkedIn transformou
@@ -219,7 +219,7 @@ export default function ExpansionModelPage() {
               </h2>
             </Reveal>
             <Reveal>
-              <GCard className="p-5 sm:p-7" accent={GA}>
+              <GCard className="p-5 sm:p-7" accent={GA} bgVariant="default">
                 <div className="grid sm:grid-cols-2 gap-3">
                   {[
                     "Cada novo estado aumenta o volume de transações da Camada 1",

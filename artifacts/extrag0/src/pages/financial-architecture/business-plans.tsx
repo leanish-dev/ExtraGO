@@ -119,7 +119,7 @@ export default function BusinessPlansPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
               {plans.map((plan, i) => (
                 <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-5 sm:p-6 h-full" accent={plan.color} glow={plan.flagship}>
+                  <GCard className="p-5 sm:p-6 h-full" accent={plan.color} glow={plan.flagship} bgVariant="default">
                     {plan.flagship && (
                       <span className="absolute top-3 right-3 text-[9px] font-black px-2 py-0.5 rounded-full"
                         style={{ background: `${plan.color}14`, border: `1px solid ${plan.color}28`, color: plan.color }}>
@@ -198,7 +198,7 @@ export default function BusinessPlansPage() {
 
             <div className="grid sm:grid-cols-2 gap-5 mb-8">
               <Reveal>
-                <GCard className="p-5 sm:p-7 h-full" accent={AMBER}>
+                <GCard className="p-5 sm:p-7 h-full" accent={AMBER} bgVariant="default">
                   <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-4">Benefícios para Empresas</p>
                   <div className="space-y-3">
                     {[
@@ -278,7 +278,7 @@ export default function BusinessPlansPage() {
                 { sector: "Construção Civil", plan: "Business / Corporate", color: ROSE, example: "Construtoras e incorporadoras que precisam de mão de obra especializada para fases específicas de obras sem vínculo empregatício permanente." },
               ].map((item, i) => (
                 <Reveal key={i} delay={i * 0.07}>
-                  <GCard className="p-4 sm:p-5 h-full" accent={item.color}>
+                  <GCard className="p-4 sm:p-5 h-full" accent={item.color} bgVariant="default">
                     <p className="text-[10px] font-black tracking-widest uppercase mb-1" style={{ color: item.color }}>{item.sector}</p>
                     <p className="text-[11px] font-semibold text-slate-500 mb-3">Plano recomendado: {item.plan}</p>
                     <p className="text-[12px] text-slate-600 leading-relaxed">{item.example}</p>
@@ -288,7 +288,7 @@ export default function BusinessPlansPage() {
             </div>
 
             <Reveal>
-              <GCard className="p-5 sm:p-7" accent={GA}>
+              <GCard className="p-5 sm:p-7" accent={GA} bgVariant="default">
                 <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Papel no Ecossistema extraGO</p>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {[

@@ -131,7 +131,7 @@ export default function StateRepresentativesPage() {
 
             <div className="grid sm:grid-cols-2 gap-5 mb-8">
               <Reveal>
-                <GCard className="p-5 sm:p-7 h-full" accent={AMBER}>
+                <GCard className="p-5 sm:p-7 h-full" accent={AMBER} bgVariant="default">
                   <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-4">Responsabilidades Oficiais</p>
                   <div className="space-y-3">
                     {[
@@ -152,7 +152,7 @@ export default function StateRepresentativesPage() {
 
               <Reveal delay={0.1}>
                 <div className="space-y-4">
-                  <GCard className="p-5 sm:p-6" accent={GA}>
+                  <GCard className="p-5 sm:p-6" accent={GA} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Benefícios do Representante</p>
                     <div className="space-y-2">
                       {[
@@ -166,7 +166,7 @@ export default function StateRepresentativesPage() {
                     </div>
                   </GCard>
 
-                  <GCard className="p-5 sm:p-6" accent={GC}>
+                  <GCard className="p-5 sm:p-6" accent={GC} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Critérios de Seleção</p>
                     <p className="text-[12px] text-slate-600 leading-relaxed mb-2">
                       O processo de seleção de Representantes Estaduais considera:
@@ -205,7 +205,7 @@ export default function StateRepresentativesPage() {
 
             <div className="grid sm:grid-cols-2 gap-5 mb-8">
               <Reveal>
-                <GCard className="p-5 sm:p-7" accent={GA} glow>
+                <GCard className="p-5 sm:p-7" accent={GA} glow bgVariant="default">
                   <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-4">Critérios de Distribuição do Fundo</p>
                   <div className="space-y-3">
                     {[
@@ -232,7 +232,7 @@ export default function StateRepresentativesPage() {
 
               <Reveal delay={0.1}>
                 <div className="space-y-4">
-                  <GCard className="p-5 sm:p-6" accent={AMBER}>
+                  <GCard className="p-5 sm:p-6" accent={AMBER} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Potencial de Ganhos</p>
                     <p className="text-[13px] text-slate-600 leading-relaxed mb-3">
                       Em uma plataforma com <strong>R$ 10.000.000,00/mês</strong> de receita operacional,
@@ -244,7 +244,7 @@ export default function StateRepresentativesPage() {
                     </p>
                   </GCard>
 
-                  <GCard className="p-5 sm:p-6" accent={PURPLE}>
+                  <GCard className="p-5 sm:p-6" accent={PURPLE} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Escalabilidade do Fundo</p>
                     <div className="space-y-2">
                       {[
@@ -339,7 +339,7 @@ export default function StateRepresentativesPage() {
               </h2>
             </Reveal>
             <Reveal>
-              <GCard className="p-5 sm:p-7" accent={GA}>
+              <GCard className="p-5 sm:p-7" accent={GA} bgVariant="default">
                 <div className="grid sm:grid-cols-2 gap-3">
                   {[
                     "Os Representantes são o braço operacional da expansão nacional",

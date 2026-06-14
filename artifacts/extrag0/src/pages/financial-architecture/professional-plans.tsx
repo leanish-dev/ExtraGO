@@ -116,7 +116,7 @@ export default function ProfessionalPlansPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
               {plans.map((plan, i) => (
                 <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-5 sm:p-6 h-full" accent={plan.color} glow={plan.flagship}>
+                  <GCard className="p-5 sm:p-6 h-full" accent={plan.color} glow={plan.flagship} bgVariant="default">
                     {plan.flagship && (
                       <span className="absolute top-3 right-3 text-[9px] font-black px-2 py-0.5 rounded-full"
                         style={{ background: `${plan.color}14`, border: `1px solid ${plan.color}28`, color: plan.color }}>
@@ -199,7 +199,7 @@ export default function ProfessionalPlansPage() {
 
             <div className="grid sm:grid-cols-2 gap-5 mb-8">
               <Reveal>
-                <GCard className="p-5 sm:p-7 h-full" accent={PURPLE}>
+                <GCard className="p-5 sm:p-7 h-full" accent={PURPLE} bgVariant="default">
                   <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Objetivo Estratégico</p>
                   <div className="space-y-3">
                     {[
@@ -280,7 +280,7 @@ export default function ProfessionalPlansPage() {
                 { scenario: "Mix de 10.000 assinantes", mrr: "R$ 350.000+", color: AMBER },
               ].map((item, i) => (
                 <Reveal key={i} delay={i * 0.07}>
-                  <GCard className="p-4 sm:p-5 text-center" accent={item.color}>
+                  <GCard className="p-4 sm:p-5 text-center" accent={item.color} bgVariant="default">
                     <p className="text-[10px] font-bold text-slate-400 mb-2 leading-snug">{item.scenario}</p>
                     <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(16px,2vw,22px)", color: item.color }}>{item.mrr}</p>
                     <p className="text-[10px] text-slate-400">MRR estimado</p>
@@ -290,7 +290,7 @@ export default function ProfessionalPlansPage() {
             </div>
 
             <Reveal>
-              <GCard className="p-5 sm:p-7" accent={GA}>
+              <GCard className="p-5 sm:p-7" accent={GA} bgVariant="default">
                 <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Papel no Ecossistema extraGO</p>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {[

@@ -145,7 +145,7 @@ export default function RevenueStructurePage() {
             <div className="grid sm:grid-cols-2 gap-5 mb-8">
               {DISTRIBUTION.map((item, i) => (
                 <Reveal key={i} delay={(i % 2) * 0.1}>
-                  <GCard className="p-5 h-full" accent={item.color}>
+                  <GCard className="p-5 h-full" accent={item.color} bgVariant="default">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                         style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
@@ -243,7 +243,7 @@ export default function RevenueStructurePage() {
               </p>
             </Reveal>
             <Reveal delay={0.1}>
-              <GCard className="p-5 sm:p-7" accent={GA}>
+              <GCard className="p-5 sm:p-7" accent={GA} bgVariant="default">
                 <div className="grid sm:grid-cols-2 gap-3">
                   {[
                     "A estrutura pode ser ajustada em resposta ao crescimento acelerado",

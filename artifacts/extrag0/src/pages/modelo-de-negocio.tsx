@@ -388,7 +388,7 @@ export default function ModeloDeNegocioPage() {
                           <ChevronRight size={12} className="text-slate-300" />
                         </div>
                       )}
-                      <GCard className="p-4 sm:p-5 h-full text-center" accent={step.color}>
+                      <GCard className="p-4 sm:p-5 h-full text-center" accent={step.color} bgVariant="default">
                         <div className="w-8 h-8 rounded-xl flex items-center justify-center mx-auto mb-3"
                           style={{ background: `${step.color}14`, border: `1px solid ${step.color}25` }}>
                           <span style={{ color: step.color }}>{step.icon}</span>
@@ -482,7 +482,7 @@ export default function ModeloDeNegocioPage() {
                 },
               ].map((item, i) => (
                 <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-5 h-full" accent={item.color}>
+                  <GCard className="p-5 h-full" accent={item.color} bgVariant="default">
                     <div className="w-8 h-8 rounded-xl flex items-center justify-center mb-3"
                       style={{ background: `${item.color}14`, border: `1px solid ${item.color}22` }}>
                       <span style={{ color: item.color }}>{item.icon}</span>

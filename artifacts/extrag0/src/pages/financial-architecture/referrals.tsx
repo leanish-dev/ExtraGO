@@ -120,7 +120,7 @@ export default function ReferralsPage() {
                 { icon: <BarChart3 size={16} />, color: PURPLE, title: "Reconhecimento Regional", desc: "Posição oficial reconhecida pela extraGO como referência e liderança dentro de sua região de atuação." },
               ].map((item, i) => (
                 <Reveal key={i} delay={i * 0.09}>
-                  <GCard className="p-5" accent={item.color}>
+                  <GCard className="p-5" accent={item.color} bgVariant="default">
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
                       style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
                       <span style={{ color: item.color }}>{item.icon}</span>
@@ -148,7 +148,7 @@ export default function ReferralsPage() {
 
             <div className="grid sm:grid-cols-2 gap-5 mb-8">
               <Reveal>
-                <GCard className="p-5 sm:p-7 h-full" accent={GA}>
+                <GCard className="p-5 sm:p-7 h-full" accent={GA} bgVariant="default">
                   <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Objetivos Principais</p>
                   <div className="space-y-3">
                     {[
@@ -169,7 +169,7 @@ export default function ReferralsPage() {
 
               <Reveal delay={0.1}>
                 <div className="space-y-4">
-                  <GCard className="p-5 sm:p-6" accent={GC}>
+                  <GCard className="p-5 sm:p-6" accent={GC} bgVariant="default">
                     <p className="text-[11px] font-black tracking-widest uppercase text-slate-400 mb-3">Para Usuários</p>
                     <div className="space-y-2">
                       {[

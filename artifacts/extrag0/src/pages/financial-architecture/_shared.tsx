@@ -120,7 +120,7 @@ export function InfoGrid({ items }: { items: { label: string; value: string; col
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {items.map((item, i) => (
-        <GCard key={i} className="p-4 text-center" accent={item.color || GA}>
+        <GCard key={i} className="p-4 text-center" accent={item.color || GA} bgVariant="default">
           <p className="font-black leading-none mb-1 text-[24px] sm:text-[32px]" style={{ color: item.color || GA }}>{item.value}</p>
           <p className="text-[11px] text-slate-500 leading-snug">{item.label}</p>
         </GCard>

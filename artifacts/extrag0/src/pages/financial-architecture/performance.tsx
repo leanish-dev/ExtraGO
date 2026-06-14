@@ -156,7 +156,7 @@ export default function PerformancePage() {
                 { icon: <BarChart3 size={18} />, color: GC, title: "Fortalecimento da Reputação", desc: "O histórico acumulado, avaliações e nível constroem uma reputação digital duradoura e verificável dentro do ecossistema extraGO." },
               ].map((item, i) => (
                 <Reveal key={i} delay={i * 0.08}>
-                  <GCard className="p-5 h-full" accent={item.color}>
+                  <GCard className="p-5 h-full" accent={item.color} bgVariant="default">
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
                       style={{ background: `${item.color}12`, border: `1px solid ${item.color}22` }}>
                       <span style={{ color: item.color }}>{item.icon}</span>
@@ -260,7 +260,7 @@ export default function PerformancePage() {
                 { level: "Elite", fee: 10, net: 180, color: GA },
               ].map((item, i) => (
                 <Reveal key={i} delay={i * 0.07}>
-                  <GCard className="p-4 text-center" accent={item.color} glow={i === 4}>
+                  <GCard className="p-4 text-center" accent={item.color} glow={i === 4} bgVariant="default">
                     <p className="text-[9px] font-black tracking-widest uppercase mb-1" style={{ color: item.color }}>{item.level}</p>
                     <p className="font-black text-[11px] text-slate-400 mb-1">Taxa: {item.fee}%</p>
                     <p className="font-black leading-none mb-1" style={{ fontSize: "clamp(18px,2.5vw,26px)", color: item.color }}>R$ {item.net}</p>
