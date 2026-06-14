@@ -473,35 +473,36 @@ export default function ProfilePage() {
             )}
           </div>
 
-          {/* Profile strength */}
-          <div className="mt-4 p-4 rounded-2xl bg-white/3 border border-white/8">
-            <div className="flex justify-between text-xs mb-2">
-              <span className="text-muted-foreground font-medium">Força do Perfil</span>
-              <span className={`font-bold ${completionColor}`}>{completion}%</span>
+          {/* Profile completion — subtle strip, not a card */}
+          <div className="mt-4 flex items-center gap-3">
+            <div className="flex-1 h-1.5 rounded-full bg-white/6 overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-700"
+                style={{ width: `${completion}%`, background: completion >= 80 ? "hsl(88,100%,49%)" : completion >= 50 ? "hsl(45,100%,50%)" : "hsl(180,100%,50%)" }}
+              />
             </div>
-            <Progress value={completion} glow={completion >= 80} />
-            {completion < 80 && (
-              <p className="text-[10px] text-muted-foreground mt-1.5">
-                {completion < 40 ? "Complete seu perfil para aumentar suas chances de contratação" :
-                 completion < 60 ? "Quase lá! Adicione mais informações ao perfil" :
-                 "Perfil quase completo! Adicione experiências e habilidades"}
-              </p>
-            )}
+            <span className={`text-[10px] font-bold flex-shrink-0 ${completion >= 80 ? "text-primary" : completion >= 50 ? "text-yellow-400" : "text-secondary"}`}>
+              {completion}% completo
+            </span>
           </div>
 
-          {/* Stats bar */}
+          {/* Inline stats — no boxes */}
           {user?.role === "freelancer" && (
-            <div className="grid grid-cols-3 gap-3 mt-4">
-              {[
-                { label: "Extras Feitos", value: user?.completedJobs ?? 0, color: "text-primary" },
-                { label: "Reputação", value: `${(user?.reputationScore ?? 0).toFixed(1)} ★`, color: "text-yellow-400" },
-                { label: "Nível", value: LEVEL_LABELS[user?.level ?? "bronze"], color: LEVEL_COLORS[user?.level ?? "bronze"]?.text ?? "text-primary" },
-              ].map((item, i) => (
-                <div key={i} className="text-center p-3 rounded-xl bg-white/3 border border-white/6">
-                  <p className={`text-base font-bold ${item.color}`}>{item.value}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">{item.label}</p>
-                </div>
-              ))}
+            <div className="flex items-center gap-5 mt-4 text-xs flex-wrap">
+              <div>
+                <p className="text-muted-foreground font-medium leading-none mb-1">Extras feitos</p>
+                <p className="font-bold text-primary text-base">{user?.completedJobs ?? 0}</p>
+              </div>
+              <div className="w-px h-6 bg-white/8" />
+              <div>
+                <p className="text-muted-foreground font-medium leading-none mb-1">Reputação</p>
+                <p className="font-bold text-yellow-400 text-base">{(user?.reputationScore ?? 0).toFixed(1)} ★</p>
+              </div>
+              <div className="w-px h-6 bg-white/8" />
+              <div>
+                <p className="text-muted-foreground font-medium leading-none mb-1">Nível</p>
+                <p className={`font-bold text-base ${LEVEL_COLORS[user?.level ?? "bronze"]?.text ?? "text-primary"}`}>{LEVEL_LABELS[user?.level ?? "bronze"]}</p>
+              </div>
             </div>
           )}
 

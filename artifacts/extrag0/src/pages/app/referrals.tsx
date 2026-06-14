@@ -320,27 +320,76 @@ export default function ReferralsPage() {
 
       <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-4">
 
-        {/* Stats grid */}
+        {/* Compact stats strip — replaces the 8-card grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.04 }}
+          className="grid grid-cols-3 gap-3"
+        >
+          {[
+            { label: "Indicações", value: referral?.totalInvited ?? 0, color: "text-primary", sub: `${activeReferrals} ativos` },
+            { label: "Conversão", value: `${conversionRate}%`, color: "text-secondary", sub: `${referral?.totalConverted ?? 0} convertidos` },
+            { label: "Ganhos Totais", value: `R$${(referral?.totalRewardEarned ?? 0).toFixed(0)}`, color: "text-yellow-400", sub: `~R$${monthlyEarnings.toFixed(0)}/mês` },
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.06 + i * 0.05 }}
+              className="rounded-2xl border border-white/6 p-4 text-center"
+              style={{ background: "rgba(255,255,255,0.018)" }}
+            >
+              <p className={`text-2xl font-black leading-none tabular-nums ${item.color}`}>{item.value}</p>
+              <p className="text-[11px] font-bold text-foreground mt-1.5">{item.label}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{item.sub}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Referral Tier Journey */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.04 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3"
+          transition={{ duration: 0.4, delay: 0.08 }}
+          className="rounded-2xl border border-white/6 p-5 relative overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.015)" }}
         >
-          {STATS.map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.08 + i * 0.06 }}
-              whileHover={{ y: -2 }}
-              className={`glass-card rounded-xl p-3.5 border text-center ${stat.bg}`}
-            >
-              <div className={`flex justify-center mb-1.5 ${stat.color}`}>{stat.icon}</div>
-              <p className={`text-xl font-bold leading-none tabular-nums ${stat.color}`}>{stat.value}</p>
-              <p className="text-[10px] text-muted-foreground mt-1.5 font-semibold uppercase tracking-wide leading-tight">{stat.label}</p>
-            </motion.div>
-          ))}
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Jornada de Indicador</p>
+          <div className="flex items-stretch gap-0 relative">
+            {/* connector line */}
+            <div className="absolute top-5 left-[calc(16.67%+1px)] right-[calc(16.67%+1px)] h-px bg-white/10 z-0" />
+            {REFERRAL_TIERS.map((tier, i) => {
+              const isActive = i === currentReferralTierIdx;
+              const isPast = i < currentReferralTierIdx;
+              return (
+                <div key={tier.key} className="flex-1 flex flex-col items-center text-center relative z-10">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg mb-2 transition-all border ${
+                    isActive ? "border-primary/40 bg-primary/10 shadow-[0_0_16px_rgba(124,252,0,0.20)]" :
+                    isPast ? "border-green-400/25 bg-green-400/8" :
+                    "border-white/8 bg-white/3 opacity-40"
+                  }`}>
+                    {tier.emoji}
+                  </div>
+                  <p className={`text-xs font-bold leading-tight ${isActive ? "text-primary" : isPast ? "text-green-400" : "text-muted-foreground/50"}`}>
+                    {tier.label}
+                  </p>
+                  <p className={`text-[10px] mt-0.5 font-bold ${isActive ? "text-primary/70" : isPast ? "text-green-400/70" : "text-muted-foreground/30"}`}>
+                    {tier.rate}% comissão
+                  </p>
+                  {isActive && (
+                    <span className="text-[8px] font-bold text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded-full mt-1">Atual</span>
+                  )}
+                  {isPast && (
+                    <span className="text-[8px] font-bold text-green-400 bg-green-400/8 border border-green-400/15 px-1.5 py-0.5 rounded-full mt-1">✓</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-muted-foreground mt-4 leading-relaxed">
+            <strong className="text-foreground">{REFERRAL_TIERS[currentReferralTierIdx].reqs}</strong>
+          </p>
         </motion.div>
 
         {/* Current level hero */}

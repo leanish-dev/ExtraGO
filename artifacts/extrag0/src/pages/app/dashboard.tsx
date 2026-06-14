@@ -1,25 +1,20 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React from "react";
 import { useTilt } from "@/hooks/use-tilt";
 import { useAuth } from "@/hooks/use-auth";
 import { useGetCompanyStats, useGetFreelancerStats, useListJobs, useListApplications, useListTransactions } from "@workspace/api-client-react";
 import type { Application, Transaction } from "@workspace/api-client-react";
-import { Briefcase, DollarSign, Star, TrendingUp, Clock, CheckCircle, Users, FileText, ArrowRight, Wallet, Zap, Plus, Activity, Rss, Heart, MessageCircle } from "lucide-react";
+import { Briefcase, DollarSign, Star, Clock, CheckCircle, Users, FileText, ArrowRight, Wallet, Plus, Activity } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/ui/empty";
-import { SkeletonStatCard, SkeletonListRow } from "@/components/ui/skeleton";
+import { SkeletonListRow } from "@/components/ui/skeleton";
 import { LiveActivityFeed } from "@/components/live-activity-feed";
-import { ProfileCompletionBanner } from "@/components/profile-completion-banner";
-import { OnboardingWizard } from "@/components/onboarding-wizard";
 import { AnimatedCounter } from "@/components/animated-counter";
-import { useLivePlatformStats } from "@/hooks/use-live-platform-stats";
 import { motion, AnimatePresence } from "framer-motion";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import dashboardBanner from "@assets/file_00000000a88071f79bcf2c132d090401_1779868066995.png";
-import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS, LEVEL_COLORS } from "@/components/level-badge";
-import { isTestAccount } from "@/lib/test-accounts";
+import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS } from "@/components/level-badge";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -29,108 +24,40 @@ function getGreeting() {
   return "Boa noite";
 }
 
-type StatColor = "primary" | "secondary" | "yellow" | "green";
-
-const STAT_COLOR_MAP: Record<StatColor, { container: string; icon: string; valueColor: string }> = {
-  primary: {
-    container: "from-primary/8 to-primary/2 border-primary/12",
-    icon: "bg-primary/12 border-primary/20 text-primary",
-    valueColor: "text-primary",
-  },
-  secondary: {
-    container: "from-secondary/8 to-secondary/2 border-secondary/12",
-    icon: "bg-secondary/12 border-secondary/20 text-secondary",
-    valueColor: "text-secondary",
-  },
-  yellow: {
-    container: "from-yellow-400/10 to-yellow-400/2 border-yellow-400/14",
-    icon: "bg-yellow-400/14 border-yellow-400/22 text-yellow-400",
-    valueColor: "text-yellow-400",
-  },
-  green: {
-    container: "from-green-500/10 to-green-500/2 border-green-500/14",
-    icon: "bg-green-500/14 border-green-500/22 text-green-500",
-    valueColor: "text-green-400",
-  },
-};
-
-const SPARKLINE_HEIGHTS = [35, 55, 40, 70, 45, 85, 60, 75, 50, 90, 65, 80];
-const SPARKLINE_FLAT = Array(12).fill(20);
-
-function SparklineBars({ color, flat = false }: { color: string; flat?: boolean }) {
-  const colorMap: Record<string, string> = {
-    primary: "rgba(124,252,0,0.45)",
-    secondary: "rgba(0,229,255,0.45)",
-    yellow: "rgba(250,204,21,0.45)",
-    green: "rgba(34,197,94,0.45)",
-  };
-  const barColor = colorMap[color] ?? colorMap.primary;
-  const heights = flat ? SPARKLINE_FLAT : SPARKLINE_HEIGHTS;
-  return (
-    <div className="flex items-end gap-[2px] h-8 mt-3 overflow-hidden opacity-35">
-      {heights.map((h, i) => (
-        <div
-          key={i}
-          className={flat ? "flex-1 rounded-sm" : "sparkline-bar flex-1 rounded-sm"}
-          style={{
-            height: `${h}%`,
-            background: barColor,
-            animationDelay: flat ? undefined : `${i * 0.04}s`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function StatCard({ icon, label, value, sub, trend, color = "primary", isLoading, delay = 0, showSparkline = false }: {
-  icon: React.ReactNode;
-  label: string;
-  value: string | number;
-  sub?: string;
-  trend?: string;
-  color?: StatColor;
-  isLoading?: boolean;
-  delay?: number;
-  showSparkline?: boolean;
-}) {
-  const numValue = typeof value === "number" ? value : parseFloat(String(value).replace(/[^0-9.]/g, "")) || 0;
-  const c = STAT_COLOR_MAP[color];
-  const { ref: tiltRef, handleMouseMove, handleMouseLeave } = useTilt(6);
-  if (isLoading) return <SkeletonStatCard />;
+/* ── Section Banner ── */
+function SectionBanner() {
   return (
     <motion.div
-      ref={tiltRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      initial={{ opacity: 0, y: 20, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.5, delay, ease: [0.19, 1, 0.22, 1] }}
-      className={`glass-card rounded-2xl p-4 sm:p-5 bg-gradient-to-br ${c.container} border cursor-default tilt-card card-shimmer-hover`}
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
+      className="relative w-full overflow-hidden"
+      style={{ borderRadius: "0 0 20px 20px" }}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <p className="text-[10px] text-muted-foreground mb-2 font-bold uppercase tracking-wider">{label}</p>
-          <p className="text-2xl sm:text-3xl font-bold text-foreground leading-none">
-            {typeof value === "string" && value.startsWith("R$") ? (
-              <>R$ <AnimatedCounter value={numValue} decimals={2} /></>
-            ) : (
-              <AnimatedCounter value={numValue} decimals={typeof value === "string" && value.includes(".") ? 1 : 0} suffix={typeof value === "string" && value.endsWith("★") ? " ★" : ""} />
-            )}
-          </p>
-          {sub && <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{sub}</p>}
-          {trend && <p className="text-xs text-green-400 mt-1 font-semibold">{trend}</p>}
-        </div>
-        <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 ${c.icon}`}
-          style={color === "primary" ? { boxShadow: "0 0 10px rgba(124,252,0,0.14)" } :
-                 color === "secondary" ? { boxShadow: "0 0 10px rgba(0,229,255,0.14)" } : undefined}>
-          {icon}
-        </div>
-      </div>
-      <SparklineBars color={color} flat={!showSparkline} />
+      <img
+        src={dashboardBanner}
+        alt="Dashboard extraGO"
+        className="w-full object-cover"
+        style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }}
+      />
+      <div
+        className="absolute inset-0 opacity-[0.32] bg-cover bg-center mix-blend-screen pointer-events-none"
+        style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)" }}
+      />
+      <div
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.15) 60%, rgba(7,10,13,0.85) 100%)" }}
+      />
     </motion.div>
   );
 }
+
+const STATUS_BADGE: Record<string, { label: string; class: string }> = {
+  open: { label: "Aberta", class: "bg-primary/20 text-primary border-primary/30" },
+  in_progress: { label: "Em andamento", class: "bg-secondary/20 text-secondary border-secondary/30" },
+  completed: { label: "Concluída", class: "bg-green-500/20 text-green-400 border-green-500/30" },
+  cancelled: { label: "Cancelada", class: "bg-destructive/20 text-destructive border-destructive/30" },
+};
 
 const APP_STATUS_LABELS: Record<string, { label: string; color: string }> = {
   pending: { label: "Pendente", color: "text-yellow-400" },
@@ -173,25 +100,20 @@ function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }
   });
 
   const loading = isLoading || appsLoading || txsLoading;
-
   type FeedItem = { ts: number; node: React.ReactNode };
   const items: FeedItem[] = [];
 
   apps.slice(0, 5).forEach((app: Application) => {
     const statusInfo = APP_STATUS_LABELS[app.status ?? "pending"] ?? APP_STATUS_LABELS.pending;
     const ts = app.appliedAt ? new Date(app.appliedAt).getTime() : 0;
-    const timeStr = app.appliedAt
-      ? formatDistanceToNow(new Date(app.appliedAt), { addSuffix: true, locale: ptBR })
-      : "";
+    const timeStr = app.appliedAt ? formatDistanceToNow(new Date(app.appliedAt), { addSuffix: true, locale: ptBR }) : "";
     items.push({
       ts,
       node: (
         <ActivityFeedItem
           key={`app-${app.id}`}
           type="application"
-          title={role === "company"
-            ? `${app.freelancer?.name ?? "Profissional"} se candidatou`
-            : `Candidatura ${statusInfo.label.toLowerCase()}`}
+          title={role === "company" ? `${app.freelancer?.name ?? "Profissional"} se candidatou` : `Candidatura ${statusInfo.label.toLowerCase()}`}
           sub={app.job?.title ?? "Extra"}
           time={timeStr}
           icon={<FileText size={13} />}
@@ -204,9 +126,7 @@ function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }
   txs.slice(0, 5).forEach((tx: Transaction) => {
     const ts = tx.createdAt ? new Date(tx.createdAt).getTime() : 0;
     const isCredit = tx.type === "credit";
-    const timeStr = tx.createdAt
-      ? formatDistanceToNow(new Date(tx.createdAt), { addSuffix: true, locale: ptBR })
-      : "";
+    const timeStr = tx.createdAt ? formatDistanceToNow(new Date(tx.createdAt), { addSuffix: true, locale: ptBR }) : "";
     items.push({
       ts,
       node: (
@@ -227,22 +147,16 @@ function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }
   const topItems = items.slice(0, 6);
 
   return (
-    <div className="glass-card rounded-2xl p-5 border border-white/6">
+    <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.015)" }}>
       <div className="flex items-center gap-2 mb-4">
+        <Activity size={14} className="text-muted-foreground" />
         <h2 className="font-semibold text-sm flex-1">Atividade Recente</h2>
         <span className="live-dot" />
       </div>
       {loading ? (
-        <div className="space-y-1">
-          {[1,2,3].map(i => <SkeletonListRow key={i} />)}
-        </div>
+        <div className="space-y-1">{[1,2,3].map(i => <SkeletonListRow key={i} />)}</div>
       ) : topItems.length === 0 ? (
-        <EmptyState
-          icon={<Clock size={22} />}
-          title="Nenhuma atividade ainda"
-          description="Suas candidaturas e transações aparecerão aqui."
-          className="py-8"
-        />
+        <EmptyState icon={<Clock size={22} />} title="Nenhuma atividade ainda" description="Suas candidaturas e transações aparecerão aqui." className="py-8" />
       ) : (
         <div>{topItems.map((item, i) => <React.Fragment key={i}>{item.node}</React.Fragment>)}</div>
       )}
@@ -250,113 +164,255 @@ function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }
   );
 }
 
-const STATUS_BADGE: Record<string, { label: string; class: string }> = {
-  open: { label: "Aberta", class: "bg-primary/20 text-primary border-primary/30" },
-  in_progress: { label: "Em andamento", class: "bg-secondary/20 text-secondary border-secondary/30" },
-  completed: { label: "Concluída", class: "bg-green-500/20 text-green-400 border-green-500/30" },
-  cancelled: { label: "Cancelada", class: "bg-destructive/20 text-destructive border-destructive/30" },
+/* ─────────────────────────────────────────────────────────────────────────
+   CAREER HERO — replaces: greeting + platform stats + 4 stat cards +
+   level progress card + 3 quick action cards + feed preview widget
+──────────────────────────────────────────────────────────────────────────*/
+const LEVEL_FEES: Record<string, number> = { bronze: 20, silver: 18, gold: 15, elite: 12, diamond: 10 };
+const LEVEL_NEXT: Record<string, { key: string; label: string; threshold: number; prevThreshold: number; fee: number } | null> = {
+  bronze:  { key: "silver",  label: "Júnior",        threshold: 20,  prevThreshold: 0,   fee: 18 },
+  silver:  { key: "gold",    label: "Intermediário",  threshold: 100, prevThreshold: 20,  fee: 15 },
+  gold:    { key: "elite",   label: "Sênior",         threshold: 300, prevThreshold: 100, fee: 12 },
+  elite:   { key: "diamond", label: "Elite",          threshold: 600, prevThreshold: 300, fee: 10 },
+  diamond: null,
 };
 
-/* ── Section Banner ── */
-function SectionBanner() {
+function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
+  const { user } = useAuth();
+  const currentLevel = user?.level ?? "bronze";
+  const currentFee = LEVEL_FEES[currentLevel] ?? 20;
+  const nextInfo = LEVEL_NEXT[currentLevel] ?? null;
+  const completed = user?.completedJobs ?? 0;
+  const isMax = currentLevel === "diamond";
+
+  const remaining = nextInfo ? Math.max(0, nextInfo.threshold - completed) : 0;
+  const progress = nextInfo
+    ? Math.min(100, Math.max(0, ((completed - nextInfo.prevThreshold) / (nextInfo.threshold - nextInfo.prevThreshold)) * 100))
+    : 100;
+
+  // Savings estimate: avg R$250 extra × 4/month × fee delta
+  const savingsPerExtra = nextInfo ? ((currentFee - nextInfo.fee) / 100) * 250 : 0;
+  const monthlySavings = Math.round(savingsPerExtra * 4);
+
+  const greeting = getGreeting();
+  const firstName = user?.name?.split(" ")[0] ?? "Profissional";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
+      className="relative rounded-2xl overflow-hidden border border-primary/12 p-5 sm:p-6"
+      style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.035) 0%, rgba(0,229,255,0.015) 50%, rgba(124,252,0,0.025) 100%)" }}
+    >
+      {/* Ambient top glow */}
+      <div className="absolute top-0 left-6 w-40 h-12 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, rgba(124,252,0,0.10) 0%, transparent 70%)", filter: "blur(18px)" }} />
+
+      {/* Row 1: Badge + Identity + Fee */}
+      <div className="relative flex items-start gap-4 mb-5">
+        <motion.div
+          initial={{ scale: 0.75, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.15, duration: 0.5, type: "spring", stiffness: 180 }}
+          className="flex-shrink-0 mt-1"
+        >
+          <LevelBadgeIcon level={currentLevel} size="xl" />
+        </motion.div>
+
+        <div className="flex-1 min-w-0">
+          <p className="text-xs text-muted-foreground font-medium">{greeting} 👋</p>
+          <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate">{firstName}</h1>
+          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+            <LevelBadge level={currentLevel} size="sm" />
+            {user?.isVerified && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/8 border border-primary/18 px-2 py-0.5 rounded-full">
+                <CheckCircle size={8} /> Verificado
+              </span>
+            )}
+            {(user?.reputationScore ?? 0) > 0 && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-yellow-400">
+                <Star size={9} className="fill-yellow-400" /> {(user?.reputationScore ?? 0).toFixed(1)}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="flex-shrink-0 text-right">
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-0.5">Taxa atual</p>
+          <p className="text-3xl sm:text-4xl font-black text-primary leading-none">{currentFee}%</p>
+          {nextInfo && (
+            <p className="text-[10px] text-muted-foreground mt-1">→ <span className="text-foreground font-semibold">{nextInfo.fee}%</span> no próximo</p>
+          )}
+        </div>
+      </div>
+
+      {/* Row 2: Progress (if not max) */}
+      {!isMax && nextInfo && (
+        <div className="relative space-y-2 mb-5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground">{completed} extras concluídos</span>
+            <span className="font-semibold text-foreground">
+              {remaining === 0
+                ? <span className="text-primary font-bold">✓ Pronto para subir de nível!</span>
+                : <>{remaining} para <span className="text-foreground">{nextInfo.label}</span></>
+              }
+            </span>
+          </div>
+          <div className="h-3 rounded-full bg-white/6 overflow-hidden border border-white/4">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.max(progress, 1.5)}%` }}
+              transition={{ duration: 1.4, delay: 0.3, ease: [0.19, 1, 0.22, 1] }}
+              className="h-full rounded-full relative overflow-hidden"
+              style={{ background: "linear-gradient(90deg, hsl(88,100%,44%), hsl(88,100%,56%))", boxShadow: "0 0 10px rgba(124,252,0,0.30)" }}
+            >
+              <div className="absolute inset-0 opacity-25"
+                style={{ background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%)", animation: "shimmer 2.5s ease-in-out infinite" }} />
+            </motion.div>
+          </div>
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] text-muted-foreground">{Math.round(progress)}% do caminho para {nextInfo.label}</p>
+            {monthlySavings > 0 && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.9 }}
+                className="text-[10px] font-bold text-primary bg-primary/8 border border-primary/18 px-2.5 py-1 rounded-full"
+              >
+                Economize ~R${monthlySavings}/mês
+              </motion.span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {isMax && (
+        <div className="relative flex items-center gap-2 text-sm mb-5">
+          <div className="w-5 h-5 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center flex-shrink-0">
+            <CheckCircle size={10} className="text-primary" />
+          </div>
+          <span className="text-sm font-bold text-primary">Nível Elite — taxa mínima de 10% conquistada para sempre</span>
+        </div>
+      )}
+
+      {/* Row 3: Inline stats + Actions */}
+      <div className="relative pt-4 border-t border-white/6 flex items-center justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-5 text-xs">
+          {!isLoading && (
+            <>
+              <div>
+                <p className="text-muted-foreground font-medium leading-none mb-1">Ganhos totais</p>
+                <p className="font-bold text-foreground">R$<AnimatedCounter value={(stats?.totalEarned ?? 0) / 100} decimals={0} /></p>
+              </div>
+              <div className="w-px h-7 bg-white/8" />
+              <div>
+                <p className="text-muted-foreground font-medium leading-none mb-1">Extras feitos</p>
+                <p className="font-bold text-primary"><AnimatedCounter value={completed} /></p>
+              </div>
+            </>
+          )}
+        </div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link href="/app/jobs">
+            <Button size="sm" className="bg-primary text-black hover:bg-primary/90 border-none font-bold rounded-xl text-xs h-9 px-4 neon-glow gap-1.5">
+              <Briefcase size={12} /> Buscar Extras
+            </Button>
+          </Link>
+          <Link href="/app/wallet">
+            <Button size="sm" variant="outline" className="border-white/12 hover:border-white/25 rounded-xl text-xs h-9 px-3 font-semibold gap-1.5">
+              <Wallet size={12} /> Carteira
+            </Button>
+          </Link>
+          <Link href="/app/referrals">
+            <Button size="sm" variant="outline" className="border-white/12 hover:border-yellow-400/25 rounded-xl text-xs h-9 px-3 font-semibold gap-1.5 hidden sm:flex">
+              <Star size={12} /> Indicações
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   COMPANY HERO — replaces: greeting + platform stats + 4 stat cards
+──────────────────────────────────────────────────────────────────────────*/
+function CompanyHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
+  const { user } = useAuth();
+  const greeting = getGreeting();
+  const displayName = (user as any)?.companyName || user?.name?.split(" ")[0] || "Empresa";
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-      className="relative w-full overflow-hidden"
-      style={{ borderRadius: "0 0 20px 20px" }}
+      className="relative rounded-2xl overflow-hidden border border-secondary/12 p-5 sm:p-6"
+      style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.03) 0%, rgba(124,252,0,0.015) 100%)" }}
     >
-      <img
-        src={dashboardBanner}
-        alt="Dashboard extraGO"
-        className="w-full object-cover"
-        style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }}
-      />
-      {/* bg-dashboard.webp — cinematic city/metrics art layer */}
-      <div
-        className="absolute inset-0 opacity-[0.32] bg-cover bg-center mix-blend-screen pointer-events-none"
-        style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)" }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.15) 60%, rgba(7,10,13,0.85) 100%)"
-        }}
-      />
-    </motion.div>
-  );
-}
+      <div className="absolute top-0 right-8 w-32 h-12 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, rgba(0,229,255,0.09) 0%, transparent 70%)", filter: "blur(18px)" }} />
 
-/* ── Greeting Header ── */
-function GreetingHeader({ name, subtitle, badge, action }: {
-  name: string;
-  subtitle: string;
-  badge?: React.ReactNode;
-  action?: React.ReactNode;
-}) {
-  const greeting = getGreeting();
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
-      className="flex items-start justify-between gap-4"
-    >
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-muted-foreground font-medium mb-0.5">{greeting} 👋</p>
-        <h1 className="text-[22px] sm:text-[26px] font-bold tracking-tight leading-tight">{name}</h1>
-        <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
-        {badge && <div className="mt-2.5">{badge}</div>}
-      </div>
-      {action && <div className="flex-shrink-0 mt-1">{action}</div>}
-    </motion.div>
-  );
-}
+      <div className="relative flex items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <p className="text-xs text-muted-foreground font-medium">{greeting} 👋</p>
+          <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate">{displayName}</h1>
+          {user?.isVerified && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/8 border border-primary/18 px-2 py-0.5 rounded-full mt-2">
+              <CheckCircle size={8} /> Empresa Verificada
+            </span>
+          )}
 
-function PlatformStatsBanner() {
-  const { data: stats, isLoading } = useLivePlatformStats();
-
-  if (isLoading) return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-      {[1,2,3,4].map(i => <div key={i} className="glass-card rounded-xl p-3 h-16 skeleton" />)}
-    </div>
-  );
-
-  const items = [
-    { label: "Ativos (24h)", value: stats?.activeUsers24h ?? 0, color: "text-primary", dot: "bg-primary" },
-    { label: "Extras Hoje", value: stats?.jobsToday ?? 0, color: "text-secondary", dot: "bg-secondary" },
-    { label: "Em Andamento", value: stats?.jobsInProgress ?? 0, color: "text-green-400", dot: "bg-green-400" },
-    { label: "Total Extras", value: stats?.totalFreelancers ?? 0, color: "text-yellow-400", dot: "bg-yellow-400" },
-  ];
-
-  return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-      {items.map((item, i) => (
-        <motion.div
-          key={item.label}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: i * 0.07 }}
-          className="glass-card rounded-xl p-3 flex items-center gap-2.5 border border-white/5"
-        >
-          <div className="flex-1 min-w-0">
-            <p className="text-[10px] text-muted-foreground truncate font-bold uppercase tracking-wide">{item.label}</p>
-            <p className={`text-xl font-bold leading-tight mt-0.5 ${item.color}`}>
-              <AnimatedCounter value={item.value} />
-            </p>
+          {/* Inline stats — no cards, just data */}
+          <div className="flex items-center gap-5 mt-4 text-xs flex-wrap">
+            <div>
+              <p className="text-muted-foreground font-medium leading-none mb-1">Extras abertos</p>
+              <p className="font-bold text-secondary text-lg leading-none">
+                {isLoading ? "—" : <AnimatedCounter value={stats?.activeJobs ?? 0} />}
+              </p>
+            </div>
+            <div className="w-px h-8 bg-white/8" />
+            <div>
+              <p className="text-muted-foreground font-medium leading-none mb-1">Profissionais</p>
+              <p className="font-bold text-foreground text-lg leading-none">
+                {isLoading ? "—" : <AnimatedCounter value={stats?.totalWorkers ?? 0} />}
+              </p>
+            </div>
+            <div className="w-px h-8 bg-white/8" />
+            <div>
+              <p className="text-muted-foreground font-medium leading-none mb-1">Investido</p>
+              <p className="font-bold text-foreground text-lg leading-none">
+                {isLoading ? "—" : <>R$<AnimatedCounter value={(stats?.totalSpent ?? 0) / 100} decimals={0} /></>}
+              </p>
+            </div>
+            <div className="w-px h-8 bg-white/8 hidden sm:block" />
+            <div className="hidden sm:block">
+              <p className="text-muted-foreground font-medium leading-none mb-1">Publicados</p>
+              <p className="font-bold text-foreground text-lg leading-none">
+                {isLoading ? "—" : <AnimatedCounter value={stats?.totalJobsPosted ?? 0} />}
+              </p>
+            </div>
           </div>
-          <span className={`w-1.5 h-1.5 rounded-full ${item.dot} animate-pulse flex-shrink-0 opacity-80`} />
-        </motion.div>
-      ))}
-    </div>
+        </div>
+
+        <Link href="/app/jobs/new">
+          <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+            <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl text-sm px-4 h-10 gap-1.5 flex-shrink-0">
+              <Plus size={15} /> Novo Extra
+            </Button>
+          </motion.div>
+        </Link>
+      </div>
+    </motion.div>
   );
 }
 
-/* ── Company Dashboard ── */
+/* ─────────────────────────────────────────────────────────────────────────
+   COMPANY DASHBOARD
+──────────────────────────────────────────────────────────────────────────*/
 function CompanyDashboard() {
   const { user } = useAuth();
-  const testAccount = isTestAccount(user?.email);
   const { data: stats, isLoading: statsLoading } = useGetCompanyStats(user?.id ?? 0, {
     query: { queryKey: ["company-stats", user?.id], enabled: !!user?.id, refetchInterval: 30000, refetchIntervalInBackground: false },
   });
@@ -365,135 +421,99 @@ function CompanyDashboard() {
 
   return (
     <div className="page-enter pb-20 lg:pb-6 relative">
-      {/* ── Full-page background art ── */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          opacity: 0.09,
-          mixBlendMode: "screen",
-          filter: "blur(2px)",
-        }}
+        style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.07, mixBlendMode: "screen", filter: "blur(2px)" }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
       <SectionBanner />
 
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
-        <OnboardingWizard />
+        {/* Hero: greeting + inline stats + CTA */}
+        <CompanyHero stats={stats} isLoading={statsLoading} />
 
-        <GreetingHeader
-          name={user?.name?.split(" ")[0] ?? "Empresa"}
-          subtitle="Acompanhe seus extras e contratações."
-          action={
-            <Link href="/app/jobs/new">
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl text-sm px-4 h-10 gap-1.5">
-                  <Plus size={15} /> Novo Extra
-                </Button>
-              </motion.div>
+        {/* Extras recentes */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-semibold">Extras Recentes</h2>
+            <Link href="/app/jobs">
+              <motion.button whileHover={{ x: 2 }} className="text-xs text-primary hover:text-primary/80 font-semibold flex items-center gap-1 transition-colors">
+                Ver todos <ArrowRight size={12} />
+              </motion.button>
             </Link>
-          }
-        />
-
-        <ProfileCompletionBanner />
-        <PlatformStatsBanner />
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <StatCard icon={<Briefcase size={18} />} label="Extras Abertos" value={stats?.activeJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} showSparkline={testAccount} />
-          <StatCard icon={<Users size={18} />} label="Profissionais" value={stats?.totalWorkers ?? 0} color="secondary" isLoading={statsLoading} delay={0.1} showSparkline={testAccount} />
-          <StatCard icon={<CheckCircle size={18} />} label="Extras Publicados" value={stats?.totalJobsPosted ?? 0} color="green" isLoading={statsLoading} delay={0.15} showSparkline={testAccount} />
-          <StatCard icon={<DollarSign size={18} />} label="Gasto Total" value={`R$ ${((stats?.totalSpent ?? 0) / 100).toFixed(2)}`} sub="histórico" color="yellow" isLoading={statsLoading} delay={0.2} showSparkline={testAccount} />
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-6">
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-semibold">Extras Recentes</h2>
-              <Link href="/app/jobs">
-                <motion.button
-                  whileHover={{ x: 2 }}
-                  className="text-xs text-primary hover:text-primary/80 font-semibold flex items-center gap-1 transition-colors"
-                >
-                  Ver todas <ArrowRight size={12} />
-                </motion.button>
-              </Link>
-            </div>
-            {jobsLoading ? (
-              <div className="space-y-2.5">
-                {[1,2,3].map(i => <div key={i} className="glass-card rounded-xl h-16 skeleton" />)}
-              </div>
-            ) : recentJobs.length === 0 ? (
-              <div className="glass-card rounded-2xl">
-                <EmptyState
-                  icon={<Briefcase size={28} />}
-                  title="Nenhum extra ativo"
-                  description="Publique seu primeiro extra e encontre os melhores profissionais."
-                  actionLabel="Publicar primeiro extra"
-                  actionHref="/app/jobs/new"
-                />
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {recentJobs.map((job, i) => {
-                  const s = STATUS_BADGE[job.status ?? "open"] ?? STATUS_BADGE.open;
-                  return (
-                    <motion.div
-                      key={job.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.35, delay: i * 0.06 }}
-                      whileHover={{ x: 2 }}
-                    >
-                      <Link href={`/app/jobs`}>
-                        <div className="glass-card rounded-xl p-4 cursor-pointer flex items-center gap-4 border border-white/5 hover:border-primary/18 transition-all group">
-                          <div className="w-9 h-9 rounded-xl bg-primary/8 border border-primary/18 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/14 transition-colors">
-                            <Briefcase size={15} className="text-primary" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-sm truncate group-hover:text-primary transition-colors">{job.title}</p>
-                            <p className="text-xs text-muted-foreground mt-0.5">{job.location} · {job.date ? format(new Date(job.date), "dd MMM", { locale: ptBR }) : ""}</p>
-                          </div>
-                          <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${s.class}`}>{s.label}</span>
-                            <span className="text-[10px] text-muted-foreground">{job.workersApproved}/{job.workersNeeded} vagas</span>
-
-                          </div>
-                        </div>
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            )}
           </div>
 
-          <div className="space-y-4">
-            <ActivityFeed role="company" />
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { href: "/app/applications", icon: <Users size={16} />, label: "Candidaturas", sub: "Aprovar ou recusar", color: "text-secondary", bg: "bg-secondary/6 border-secondary/14 hover:border-secondary/28" },
-                { href: "/app/wallet", icon: <DollarSign size={16} />, label: "Carteira", sub: "Pagamentos e histórico", color: "text-green-400", bg: "bg-green-500/6 border-green-500/14 hover:border-green-500/28" },
-              ].map((action) => (
-                <Link key={action.href} href={action.href}>
+          {jobsLoading ? (
+            <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="rounded-xl h-16 skeleton" />)}</div>
+          ) : recentJobs.length === 0 ? (
+            <EmptyState
+              icon={<Briefcase size={28} />}
+              title="Nenhum extra ativo"
+              description="Publique seu primeiro extra e encontre os melhores profissionais."
+              actionLabel="Publicar primeiro extra"
+              actionHref="/app/jobs/new"
+            />
+          ) : (
+            <div className="space-y-2">
+              {recentJobs.map((job, i) => {
+                const s = STATUS_BADGE[job.status ?? "open"] ?? STATUS_BADGE.open;
+                return (
                   <motion.div
-                    whileHover={{ y: -2, scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    className={`glass-card rounded-xl p-4 cursor-pointer flex flex-col gap-3 group border transition-all h-full ${action.bg}`}
+                    key={job.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.35, delay: i * 0.06 }}
+                    whileHover={{ x: 2 }}
                   >
-                    <div className={`w-9 h-9 rounded-xl border border-white/8 flex items-center justify-center ${action.color} opacity-75 group-hover:opacity-100 transition-opacity`}>
-                      {action.icon}
-                    </div>
-                    <div>
-                      <p className={`text-sm font-bold ${action.color}`}>{action.label}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{action.sub}</p>
-                    </div>
+                    <Link href="/app/jobs">
+                      <div className="rounded-xl p-4 cursor-pointer flex items-center gap-4 border border-white/5 hover:border-primary/18 transition-all group" style={{ background: "rgba(255,255,255,0.018)" }}>
+                        <div className="w-9 h-9 rounded-xl bg-primary/8 border border-primary/18 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/14 transition-colors">
+                          <Briefcase size={15} className="text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm truncate group-hover:text-primary transition-colors">{job.title}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{job.location} · {job.date ? format(new Date(job.date), "dd MMM", { locale: ptBR }) : ""}</p>
+                        </div>
+                        <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${s.class}`}>{s.label}</span>
+                          <span className="text-[10px] text-muted-foreground">{job.workersApproved}/{job.workersNeeded} vagas</span>
+                        </div>
+                      </div>
+                    </Link>
                   </motion.div>
-                </Link>
-              ))}
+                );
+              })}
             </div>
+          )}
+        </div>
+
+        {/* Activity + quick links */}
+        <div className="grid lg:grid-cols-3 gap-5">
+          <div className="lg:col-span-2">
+            <ActivityFeed role="company" />
+          </div>
+          <div className="space-y-3">
+            {[
+              { href: "/app/applications", icon: <Users size={16} />, label: "Candidaturas", sub: "Aprovar ou recusar profissionais", color: "text-secondary", border: "hover:border-secondary/25" },
+              { href: "/app/wallet", icon: <DollarSign size={16} />, label: "Carteira", sub: "Pagamentos e histórico", color: "text-primary", border: "hover:border-primary/25" },
+            ].map((action) => (
+              <Link key={action.href} href={action.href}>
+                <motion.div
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`rounded-xl p-4 cursor-pointer flex items-center gap-3 border border-white/6 ${action.border} transition-all`}
+                  style={{ background: "rgba(255,255,255,0.018)" }}
+                >
+                  <div className={`w-9 h-9 rounded-xl border border-white/8 flex items-center justify-center ${action.color}`}>
+                    {action.icon}
+                  </div>
+                  <div>
+                    <p className={`text-sm font-bold ${action.color}`}>{action.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{action.sub}</p>
+                  </div>
+                </motion.div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
@@ -501,175 +521,35 @@ function CompanyDashboard() {
   );
 }
 
-/* ── Freelancer Dashboard ── */
+/* ─────────────────────────────────────────────────────────────────────────
+   FREELANCER DASHBOARD
+──────────────────────────────────────────────────────────────────────────*/
 function FreelancerDashboard() {
   const { user } = useAuth();
-  const testAccount = isTestAccount(user?.email);
   const { data: stats, isLoading: statsLoading } = useGetFreelancerStats(user?.id ?? 0, {
     query: { queryKey: ["freelancer-stats", user?.id], enabled: !!user?.id, refetchInterval: 30000, refetchIntervalInBackground: false },
   });
   const { data: myApps, isLoading: appsLoading } = useListApplications({ status: "pending" });
   const pendingApps = myApps?.slice(0, 4) ?? [];
 
-  const levelMap: Record<string, { next: string; threshold: number }> = {
-    bronze: { next: "Júnior", threshold: 20 },
-    silver: { next: "Intermediário", threshold: 100 },
-    gold: { next: "Sênior", threshold: 300 },
-    elite: { next: "Elite", threshold: 600 },
-    diamond: { next: "Elite", threshold: 600 },
-  };
-  const currentLevel = user?.level ?? "bronze";
-  const levelInfo = levelMap[currentLevel] ?? levelMap.bronze;
-  const progress = Math.min(100, ((user?.completedJobs ?? 0) / levelInfo.threshold) * 100);
-
-  const quickActions = [
-    { href: "/app/jobs", icon: <Briefcase size={16} />, label: "Buscar Extras", sub: "Ver oportunidades", iconBg: "bg-primary/8 border-primary/18 text-primary", hoverBorder: "hover:border-primary/30", color: "text-primary" },
-    { href: "/app/wallet", icon: <Wallet size={16} />, label: "Carteira", sub: "Saldo e PIX", iconBg: "bg-secondary/8 border-secondary/18 text-secondary", hoverBorder: "hover:border-secondary/30", color: "text-secondary" },
-    { href: "/app/referrals", icon: <Star size={16} />, label: "Indicações", sub: "Ganhe bônus", iconBg: "bg-yellow-400/8 border-yellow-400/18 text-yellow-400", hoverBorder: "hover:border-yellow-400/30", color: "text-yellow-400" },
-  ];
-
   return (
     <div className="page-enter pb-20 lg:pb-6 relative">
-      {/* ── Full-page background art ── */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          opacity: 0.09,
-          mixBlendMode: "screen",
-          filter: "blur(2px)",
-        }}
+        style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.07, mixBlendMode: "screen", filter: "blur(2px)" }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
       <SectionBanner />
 
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
-        <OnboardingWizard />
+        {/* CAREER HERO — the single most important element on this page */}
+        <CareerHero stats={stats} isLoading={statsLoading} />
 
-        <GreetingHeader
-          name={user?.name?.split(" ")[0] ?? "Profissional"}
-          subtitle="Aqui está seu desempenho na plataforma."
-          badge={
-            <div className="flex items-center gap-2 flex-wrap">
-              <LevelBadge level={currentLevel} size="sm" />
-              {user?.reputationScore != null && user.reputationScore > 0 && (
-                <span className="text-[11px] text-yellow-400 flex items-center gap-1 font-semibold">
-                  <Star size={10} className="fill-yellow-400" />
-                  {(user.reputationScore ?? 0).toFixed(1)}
-                </span>
-              )}
-            </div>
-          }
-        />
-
-        <ProfileCompletionBanner />
-        <PlatformStatsBanner />
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <StatCard icon={<CheckCircle size={18} />} label="Extras Feitos" value={user?.completedJobs ?? 0} color="primary" isLoading={statsLoading} delay={0.05} showSparkline={testAccount} />
-          <StatCard icon={<Star size={18} />} label="Reputação" value={(user?.reputationScore ?? 0)} sub="/ 5.0" color="yellow" isLoading={statsLoading} delay={0.1} showSparkline={testAccount} />
-          <StatCard icon={<DollarSign size={18} />} label="Ganhos Totais" value={`R$ ${((stats?.totalEarned ?? 0) / 100).toFixed(2)}`} color="green" isLoading={statsLoading} delay={0.15} showSparkline={testAccount} />
-          <StatCard icon={<TrendingUp size={18} />} label="Concluídos" value={stats?.completedJobs ?? 0} color="secondary" isLoading={statsLoading} delay={0.2} showSparkline={testAccount} />
-        </div>
-
-        {/* Level progress */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.22 }}
-          className="glass-card rounded-2xl p-5 border border-primary/10 relative overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/4 to-transparent pointer-events-none" />
-          <div className="relative flex items-center justify-between mb-4">
-            <div>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">Progresso de Nível</p>
-              <p className="font-bold text-base flex items-center gap-2">
-                <LevelBadge level={currentLevel} size="sm" />
-                <span className="text-muted-foreground text-sm font-normal">→ {levelInfo.next}</span>
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-primary leading-none">{user?.completedJobs ?? 0}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">de {levelInfo.threshold} extras</p>
-            </div>
-          </div>
-          <Progress value={progress} glow={currentLevel === "diamond"} />
-          <p className="text-xs text-muted-foreground mt-2">
-            {Math.max(0, levelInfo.threshold - (user?.completedJobs ?? 0))} extras para o próximo nível
-          </p>
-        </motion.div>
-
-        {/* Quick actions */}
-        <div className="grid grid-cols-3 gap-3">
-          {quickActions.map((action, i) => (
-            <Link key={action.href} href={action.href}>
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.28 + i * 0.07 }}
-                whileHover={{ y: -3, scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                className={`glass-card rounded-xl p-4 cursor-pointer flex flex-col gap-3 group border ${action.hoverBorder} border-white/6 transition-all`}
-              >
-                <div className={`w-9 h-9 rounded-xl border flex items-center justify-center ${action.iconBg} transition-all group-hover:scale-105`}>
-                  {action.icon}
-                </div>
-                <div>
-                  <p className={`text-xs font-bold ${action.color} leading-tight`}>{action.label}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">{action.sub}</p>
-                </div>
-              </motion.div>
-            </Link>
-          ))}
-        </div>
-
-        {/* Feed preview widget */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.32 }}
-          className="glass-card rounded-2xl p-5 border border-white/8 bg-gradient-to-br from-secondary/5 to-transparent"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center">
-                <Rss size={14} className="text-secondary" />
-              </div>
-              <div>
-                <p className="text-sm font-bold">Feed da Comunidade</p>
-                <p className="text-[10px] text-muted-foreground">Conecte-se com outros profissionais</p>
-              </div>
-            </div>
-            <Link href="/app/feed">
-              <motion.button whileHover={{ x: 2 }} className="text-xs text-secondary font-semibold flex items-center gap-1">
-                Ver tudo <ArrowRight size={12} />
-              </motion.button>
-            </Link>
-          </div>
-          <div className="flex gap-3 p-3 rounded-xl bg-white/3 border border-white/6">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-black font-bold text-xs flex-shrink-0">
-              Eu
-            </div>
-            <Link href="/app/feed" className="flex-1">
-              <div className="px-3 py-2 rounded-lg bg-white/4 border border-white/8 text-xs text-muted-foreground cursor-pointer hover:border-white/18 transition-colors">
-                Compartilhe algo com a comunidade...
-              </div>
-            </Link>
-          </div>
-          <div className="flex gap-4 mt-3 text-[10px] text-muted-foreground font-medium">
-            <div className="flex items-center gap-1.5"><Heart size={11} className="text-red-400" /> Curtir</div>
-            <div className="flex items-center gap-1.5"><MessageCircle size={11} className="text-secondary" /> Comentar</div>
-            <div className="flex items-center gap-1.5"><Rss size={11} className="text-primary" /> Repostar</div>
-          </div>
-        </motion.div>
-
-        {/* Pending applications + activity */}
+        {/* Candidaturas + Atividade */}
         <div className="grid lg:grid-cols-2 gap-5">
+          {/* Candidaturas recentes */}
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-semibold">Candidaturas Recentes</h2>
               <Link href="/app/applications">
                 <motion.button whileHover={{ x: 2 }} className="text-xs text-primary font-semibold flex items-center gap-1">
@@ -678,20 +558,16 @@ function FreelancerDashboard() {
               </Link>
             </div>
             {appsLoading ? (
-              <div className="space-y-2">
-                {[1,2,3].map(i => <div key={i} className="glass-card rounded-xl h-16 skeleton" />)}
-              </div>
+              <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="rounded-xl h-16 skeleton" />)}</div>
             ) : pendingApps.length === 0 ? (
-              <div className="glass-card rounded-2xl">
-                <EmptyState
-                  icon={<FileText size={24} />}
-                  title="Nenhuma candidatura"
-                  description="Busque extras e candidate-se agora."
-                  actionLabel="Buscar Extras"
-                  actionHref="/app/jobs"
-                  className="py-10"
-                />
-              </div>
+              <EmptyState
+                icon={<FileText size={24} />}
+                title="Nenhuma candidatura"
+                description="Busque extras e candidate-se agora."
+                actionLabel="Buscar Extras"
+                actionHref="/app/jobs"
+                className="py-10"
+              />
             ) : (
               <div className="space-y-2">
                 <AnimatePresence>
@@ -701,7 +577,8 @@ function FreelancerDashboard() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: i * 0.06 }}
-                      className="glass-card rounded-xl p-4 flex items-center gap-3 border border-white/5 hover:border-yellow-400/18 transition-all"
+                      className="rounded-xl p-4 flex items-center gap-3 border border-white/5 hover:border-yellow-400/18 transition-all"
+                      style={{ background: "rgba(255,255,255,0.018)" }}
                     >
                       <div className="w-9 h-9 rounded-xl bg-yellow-400/8 border border-yellow-400/18 flex items-center justify-center flex-shrink-0">
                         <Clock size={14} className="text-yellow-400" />
@@ -722,37 +599,14 @@ function FreelancerDashboard() {
 
           <ActivityFeed role="freelancer" />
         </div>
-
-        {/* Motivational tip */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="glass-card rounded-2xl p-4 border border-primary/10 bg-gradient-to-r from-primary/5 to-transparent flex items-center gap-4"
-        >
-          <div className="w-10 h-10 rounded-xl bg-primary/12 border border-primary/20 flex items-center justify-center flex-shrink-0">
-            <Zap size={18} className="text-primary" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-primary">Dica do Dia</p>
-            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-              Complete seu perfil 100% para aparecer primeiro nas buscas das empresas e aumentar suas chances de contratação.
-            </p>
-          </div>
-          <Link href="/app/profile">
-            <motion.div whileHover={{ x: 2 }}>
-              <ArrowRight size={16} className="text-primary flex-shrink-0" />
-            </motion.div>
-          </Link>
-        </motion.div>
       </div>
     </div>
   );
 }
 
-export default function DashboardPage() {
+/* ── Root export ── */
+export default function Dashboard() {
   const { user } = useAuth();
-  if (!user) return null;
-  if (user.role === "company") return <CompanyDashboard />;
+  if (user?.role === "company") return <CompanyDashboard />;
   return <FreelancerDashboard />;
 }

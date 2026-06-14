@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, UserPlus, UserMinus, CheckCircle, Shield, Users, Loader2, Building2 } from "lucide-react";
+import { Search, UserPlus, UserMinus, CheckCircle, Shield, Users, Loader2, Building2, Star } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
@@ -42,28 +42,40 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
   const displayName = type === "company" ? (user.companyName || user.name) : user.name;
   const subName = type === "company" ? user.name : (user.categories?.[0] || "Freelancer");
 
+  const categories: string[] = user.categories ?? [];
+  const rep: number = user.reputationScore ?? 0;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card rounded-2xl p-4 border border-white/6 hover:border-white/12 transition-all"
+      className="rounded-2xl p-4 border border-white/6 hover:border-white/14 transition-all group"
+      style={{ background: "rgba(255,255,255,0.018)" }}
     >
       <div className="flex items-start gap-3">
         <Link href={type === "freelancer" ? `/app/freelancers/${user.id}` : `/app/companies/${user.id}`}>
-          <div className="flex-shrink-0 cursor-pointer">
+          <div className="flex-shrink-0 cursor-pointer relative">
             {user.avatarUrl ? (
               <img
                 src={user.avatarUrl}
                 alt={displayName}
-                className="w-12 h-12 rounded-xl object-cover border-2 border-white/8"
+                className="w-12 h-12 rounded-xl object-cover border border-white/10 group-hover:border-primary/25 transition-colors"
               />
             ) : (
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold text-black border-2 border-white/8 ${
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold text-black border border-white/10 group-hover:border-primary/25 transition-colors ${
                 type === "company"
                   ? "bg-gradient-to-br from-secondary to-primary"
                   : "bg-gradient-to-br from-primary to-secondary"
               }`}>
                 {displayName?.charAt(0).toUpperCase()}
+              </div>
+            )}
+            {user.isVerified && (
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#080A0D] border border-white/10 flex items-center justify-center">
+                {type === "company"
+                  ? <Shield size={9} className="text-primary" />
+                  : <CheckCircle size={9} className="text-primary" />
+                }
               </div>
             )}
           </div>
@@ -73,24 +85,39 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
           <Link href={type === "freelancer" ? `/app/freelancers/${user.id}` : `/app/companies/${user.id}`}>
             <div className="cursor-pointer">
               <div className="flex items-center gap-1.5 flex-wrap">
-                <p className="text-sm font-bold truncate hover:text-primary transition-colors">{displayName}</p>
-                {user.isVerified && (
-                  type === "company"
-                    ? <Shield size={12} className="text-primary flex-shrink-0" />
-                    : <CheckCircle size={12} className="text-primary flex-shrink-0" />
+                <p className="text-sm font-bold truncate group-hover:text-primary transition-colors">{displayName}</p>
+                {type === "freelancer" && rep > 0 && (
+                  <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-yellow-400">
+                    <Star size={9} className="fill-yellow-400" /> {rep.toFixed(1)}
+                  </span>
                 )}
               </div>
-              <p className="text-xs text-muted-foreground truncate mt-0.5">{subName}</p>
+
+              {/* Primary identity line */}
+              <p className="text-xs text-muted-foreground truncate mt-0.5">
+                {type === "freelancer" && categories.length > 0 ? categories[0] : subName}
+              </p>
             </div>
           </Link>
 
+          {/* Secondary info row */}
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             {type === "freelancer" && user.level && (
               <LevelBadge level={user.level} size="xs" />
             )}
+            {type === "freelancer" && categories.length > 1 && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full border border-white/8 text-muted-foreground">
+                +{categories.length - 1}
+              </span>
+            )}
             <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
-              <Users size={9} /> {user.followersCount ?? 0} seguidores
+              <Users size={9} /> {user.followersCount ?? 0}
             </span>
+            {type === "freelancer" && user.completedJobs != null && user.completedJobs > 0 && (
+              <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+                <CheckCircle size={9} className="text-primary/60" /> {user.completedJobs} extras
+              </span>
+            )}
           </div>
         </div>
 
