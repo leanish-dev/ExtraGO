@@ -82,7 +82,7 @@ export default function LoginPage() {
       {/* ── Landing-style background ── */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <img
-          src="/landing-page-bg-darkblue.png"
+          src="/landing-page-bg-darkblue.webp"
           alt=""
           className="w-full h-full object-cover"
           style={{ opacity: 0.35 }}

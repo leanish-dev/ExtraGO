@@ -15,7 +15,7 @@ export function FABackground() {
     <div
       className="fixed inset-0 z-0 pointer-events-none"
       style={{
-        backgroundImage: "url(/fa-sub-bg.png)",
+        backgroundImage: "url(/fa-sub-bg.webp)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -29,7 +29,7 @@ export function FAHeader() {
   return (
     <div className="relative z-10 w-full overflow-hidden">
       <img
-        src="/fa-header.png"
+        src="/fa-header.webp"
         alt="Arquitetura Financeira da extraGO"
         style={{
           width: "100%",

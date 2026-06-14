@@ -575,7 +575,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               className="fixed left-0 top-0 bottom-0 z-[70] flex flex-col"
               style={{
                 width: "min(300px, 88vw)",
-                backgroundImage: "url(/drawer-bg.png)",
+                backgroundImage: "url(/drawer-bg.webp)",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",

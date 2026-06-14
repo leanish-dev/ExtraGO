@@ -37,7 +37,7 @@ function Background() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/landing-page-bg.png)",
+          backgroundImage: "url(/landing-page-bg.webp)",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center top",
@@ -80,17 +80,17 @@ const FINANCIAL = [
 
 const TEAM = [
   {
-    name: "Leonardo Scheffel da Rosa", role: "CEO & Founder", photo: "/team-leonardo.jpg",
+    name: "Leonardo Scheffel da Rosa", role: "CEO & Founder", photo: "/team-leonardo.webp",
     color: G, equity: "Fundador",
     bio: "Responsável pela visão estratégica, produto, operações e expansão nacional da extraGO. Experiência em gestão operacional, hotelaria, liderança de equipes e desenvolvimento de negócios.",
   },
   {
-    name: "Jean Carlos Dick", role: "CMO & Co-Founder", photo: "/team-jean.jpg",
+    name: "Jean Carlos Dick", role: "CMO & Co-Founder", photo: "/team-jean.webp",
     color: C, equity: "Co-Fundador",
     bio: "Fundador da MyAds. Responsável por branding, marketing, growth, aquisição de usuários e posicionamento estratégico da marca.",
   },
   {
-    name: "Qaialla Pereira", role: "CCO & Co-Founder", photo: "/team-qaialla.jpg",
+    name: "Qaialla Pereira", role: "CCO & Co-Founder", photo: "/team-qaialla.webp",
     color: "#a855f7", equity: "Co-Fundadora",
     bio: "Responsável pela expansão comercial, parcerias estratégicas, relacionamento corporativo e desenvolvimento de mercado.",
   },
@@ -231,7 +231,7 @@ export default function InvestidoresParceirosPage() {
             }}
           >
             <img
-              src="/banner-page.png"
+              src="/banner-page.webp"
               alt="extraGO — Infraestrutura nacional conectando empresas e profissionais"
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
               draggable={false}
@@ -299,7 +299,7 @@ export default function InvestidoresParceirosPage() {
                 style={{}}
               >
                   <img
-                    src="/arquitetura.png"
+                    src="/arquitetura.webp"
                     alt="A Arquitetura Financeira da extraGO — infraestrutura de 4 fontes de receita"
                     className="w-full block h-auto"
                     style={{
@@ -371,14 +371,14 @@ export default function InvestidoresParceirosPage() {
             {/* Camada 1 */}
             <Reveal className="mb-4">
               <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                <img src="/camada1-card.png" alt="Camada 1 — Intermediação por Performance" className="w-full h-auto block" />
+                <img src="/camada1-card.webp" alt="Camada 1 — Intermediação por Performance" className="w-full h-auto block" />
               </div>
             </Reveal>
 
             {/* Camada 2 */}
             <Reveal className="mb-4" delay={0.06}>
               <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                <img src="/camada2-indicacoes-card.png" alt="Camada 2 — Sistema de Indicações Multinível" className="w-full h-auto block" />
+                <img src="/camada2-indicacoes-card.webp" alt="Camada 2 — Sistema de Indicações Multinível" className="w-full h-auto block" />
               </div>
             </Reveal>
 
@@ -414,7 +414,7 @@ export default function InvestidoresParceirosPage() {
             {/* Estrutura Financeira */}
             <Reveal delay={0.18}>
               <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                <img src="/estrutura-finan-card.png" alt="Estrutura Financeira — Alocação da Receita Operacional" className="w-full h-auto block" />
+                <img src="/estrutura-finan-card.webp" alt="Estrutura Financeira — Alocação da Receita Operacional" className="w-full h-auto block" />
               </div>
             </Reveal>
           </div>
@@ -428,7 +428,7 @@ export default function InvestidoresParceirosPage() {
         <section id="camadas" className="py-6 sm:py-20">
           <Reveal className="mb-8">
             <img
-              src="/motores-receita-card.png"
+              src="/motores-receita-card.webp"
               alt="Os 4 Motores de Receita da extraGO"
               className="w-full h-auto block"
               style={{ display: "block", objectFit: "contain", width: "100%" }}
@@ -475,7 +475,7 @@ export default function InvestidoresParceirosPage() {
           {/* Background — Brazil map network */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
-              style={{ backgroundImage: "url(/sec-infraestrutura.png)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 0.88, filter: "saturate(1.75) contrast(1.12)" }} />
+              style={{ backgroundImage: "url(/sec-infraestrutura.webp)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 0.88, filter: "saturate(1.75) contrast(1.12)" }} />
             <div className="absolute inset-0"
               style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.52) 0%,rgba(5,12,26,0.08) 50%,rgba(5,12,26,0.52) 100%)" }} />
           </div>
@@ -732,7 +732,7 @@ export default function InvestidoresParceirosPage() {
                 {/* City skyline background */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-escala-nacional.png)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.90, filter: "saturate(1.70) contrast(1.12)" }} />
+                    style={{ backgroundImage: "url(/sec-escala-nacional.webp)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.90, filter: "saturate(1.70) contrast(1.12)" }} />
                   <div className="absolute inset-0"
                     style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.08) 0%,rgba(5,12,26,0.38) 35%,rgba(124,252,0,0.05) 100%)" }} />
                 </div>
@@ -811,7 +811,7 @@ export default function InvestidoresParceirosPage() {
                 {/* sec-faca-parte image embedded inside the card */}
                 <div className="absolute inset-0">
                   <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-faca-parte.png)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.88, filter: "saturate(1.70) contrast(1.10)" }} />
+                    style={{ backgroundImage: "url(/sec-faca-parte.webp)", backgroundSize: "cover", backgroundPosition: "center 35%", opacity: 0.88, filter: "saturate(1.70) contrast(1.10)" }} />
                   <div className="absolute inset-0"
                     style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.68) 0%,rgba(5,12,26,0.32) 40%,rgba(5,12,26,0.50) 100%)" }} />
                   {/* Green atmosphere wash */}

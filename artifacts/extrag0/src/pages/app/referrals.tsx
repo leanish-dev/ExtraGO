@@ -275,7 +275,7 @@ export default function ReferralsPage() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage: "url(/images/backgrounds/bg-referral-page.png)",
+          backgroundImage: "url(/images/backgrounds/bg-referral-page.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
@@ -302,7 +302,7 @@ export default function ReferralsPage() {
         />
         <div
           className="absolute inset-0 opacity-[0.30] bg-cover bg-center mix-blend-screen pointer-events-none"
-          style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.png)" }}
+          style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.webp)" }}
         />
         <div
           className="absolute inset-0"
@@ -352,7 +352,7 @@ export default function ReferralsPage() {
         >
           <div
             className="absolute inset-0 opacity-[0.07] bg-cover bg-right mix-blend-screen pointer-events-none blur-[1px]"
-            style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.png)" }}
+            style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.webp)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/4 via-transparent to-cyan-500/4 pointer-events-none" />
           <div className="flex items-start gap-4 relative">
@@ -417,7 +417,7 @@ export default function ReferralsPage() {
         >
           <div
             className="absolute inset-0 opacity-[0.05] bg-cover bg-left mix-blend-screen pointer-events-none"
-            style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.png)" }}
+            style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.webp)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 pointer-events-none" />
 

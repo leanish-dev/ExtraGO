@@ -11,7 +11,7 @@ function AppBackground() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url('/app-background.png')",
+          backgroundImage: "url('/app-background.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",

@@ -115,7 +115,7 @@ function ReferralSimulator() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: "url(/indicacoes-counter-bg.png)",
+          backgroundImage: "url(/indicacoes-counter-bg.webp)",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -276,7 +276,7 @@ export default function LandingPage() {
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage: "url(/landing-page-bg-darkblue.png)",
+            backgroundImage: "url(/landing-page-bg-darkblue.webp)",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -299,7 +299,7 @@ export default function LandingPage() {
             className="w-full relative z-0"
           >
             <img
-              src="/landing-hero2.png"
+              src="/landing-hero2.webp"
               alt="extraGO — O ecossistema que conecta talentos, empresas e oportunidades em todo o Brasil"
               className="w-full block"
               style={{
@@ -398,7 +398,7 @@ export default function LandingPage() {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              backgroundImage: "url(/images/backgrounds/bg-main.png)",
+              backgroundImage: "url(/images/backgrounds/bg-main.webp)",
               backgroundSize: "cover",
               backgroundPosition: "center top",
               backgroundRepeat: "no-repeat",
@@ -560,7 +560,7 @@ export default function LandingPage() {
         <section
           className="relative"
           style={{
-            backgroundImage: "url(/indicacoes-bg-sec.jpg)",
+            backgroundImage: "url(/indicacoes-bg-sec.webp)",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -616,7 +616,7 @@ export default function LandingPage() {
                     }}
                   >
                     <img
-                      src="/simulacao-indicacoes.png"
+                      src="/simulacao-indicacoes.webp"
                       alt="Simulação de Indicações extraGO"
                       className="w-full h-auto block"
                       style={{ display: "block", maxWidth: "100%" }}
@@ -662,7 +662,7 @@ export default function LandingPage() {
                   }}
                 >
                   <img
-                    src="/arquitetura.png"
+                    src="/arquitetura.webp"
                     alt="A Arquitetura Financeira da extraGO — 4 fontes independentes de receita"
                     className="w-full block"
                     style={{
@@ -766,7 +766,7 @@ export default function LandingPage() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: "url('/images/backgrounds/bg-mobile-hero.png')",
+            backgroundImage: "url('/images/backgrounds/bg-mobile-hero.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center 40%",
             backgroundRepeat: "no-repeat",
