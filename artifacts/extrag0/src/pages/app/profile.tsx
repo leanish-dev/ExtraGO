@@ -55,10 +55,10 @@ function ReputationRing({ score, size = 80 }: { score: number; size?: number }) 
 function SectionCard({ title, icon, children, defaultOpen = true }: { title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="glass-card rounded-2xl border border-white/8 overflow-hidden">
+    <div className="card-profile-section overflow-hidden">
       <button
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center justify-between p-5 hover:bg-white/2 transition-colors"
+        className="w-full flex items-center justify-between p-5 hover:bg-white/[0.025] transition-colors relative"
       >
         <div className="flex items-center gap-2 text-sm font-semibold">
           {icon}
@@ -113,8 +113,11 @@ function ExperienceSection({ userId }: { userId: number }) {
         <p className="text-sm text-muted-foreground">Nenhuma experiência adicionada ainda.</p>
       ) : (
         experiences.map((exp: any) => (
-          <div key={exp.id} className="flex gap-3 p-3 rounded-xl bg-white/3 border border-white/6">
-            <div className="w-8 h-8 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
+          <div key={exp.id} className="flex gap-3 p-3 rounded-xl border border-secondary/14 relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg, rgba(20,184,166,0.055) 0%, rgba(8,17,26,0.85) 100%)" }}>
+            {/* Timeline left accent */}
+            <div className="absolute left-0 top-3 bottom-3 w-[2px] rounded-r-full" style={{ background: "linear-gradient(180deg, rgba(20,184,166,0.6), rgba(20,184,166,0.15))" }} />
+            <div className="w-8 h-8 rounded-lg bg-secondary/12 border border-secondary/22 flex items-center justify-center flex-shrink-0 ml-1">
               <Briefcase size={14} className="text-secondary" />
             </div>
             <div className="flex-1 min-w-0">

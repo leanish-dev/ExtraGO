@@ -727,9 +727,17 @@ export default function GovernancePage() {
                   return (
                     <div
                       key={section.sectionId}
-                      className="rounded-2xl p-5 space-y-5"
-                      style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${isUnlocked ? "rgba(124,252,0,0.20)" : "rgba(255,255,255,0.07)"}` }}
+                      className="rounded-2xl p-5 space-y-5 relative overflow-hidden"
+                      style={{
+                        background: isUnlocked
+                          ? "linear-gradient(135deg, rgba(124,252,0,0.055) 0%, rgba(8,17,26,0.92) 100%)"
+                          : "linear-gradient(135deg, rgba(236,72,153,0.03) 0%, rgba(8,17,26,0.88) 100%)",
+                        border: `1px solid ${isUnlocked ? "rgba(124,252,0,0.22)" : "rgba(236,72,153,0.12)"}`,
+                      }}
                     >
+                      {/* Top accent stripe */}
+                      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                        style={{ background: isUnlocked ? "linear-gradient(90deg,transparent,rgba(124,252,0,0.4),transparent)" : "linear-gradient(90deg,transparent,rgba(236,72,153,0.22),transparent)" }} />
                       <div className="flex items-center gap-2">
                         {section.icon}
                         <h3 className="text-sm font-bold">{section.title}</h3>
@@ -765,9 +773,16 @@ export default function GovernancePage() {
                   const isUnlocked = unlockedSections.has("thresholds");
                   return (
                     <div
-                      className="rounded-2xl p-5 space-y-4"
-                      style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${isUnlocked ? "rgba(124,252,0,0.20)" : "rgba(255,255,255,0.07)"}` }}
+                      className="rounded-2xl p-5 space-y-4 relative overflow-hidden"
+                      style={{
+                        background: isUnlocked
+                          ? "linear-gradient(135deg, rgba(124,252,0,0.055) 0%, rgba(8,17,26,0.92) 100%)"
+                          : "linear-gradient(135deg, rgba(236,72,153,0.03) 0%, rgba(8,17,26,0.88) 100%)",
+                        border: `1px solid ${isUnlocked ? "rgba(124,252,0,0.22)" : "rgba(236,72,153,0.12)"}`,
+                      }}
                     >
+                      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                        style={{ background: isUnlocked ? "linear-gradient(90deg,transparent,rgba(124,252,0,0.4),transparent)" : "linear-gradient(90deg,transparent,rgba(236,72,153,0.22),transparent)" }} />
                       <div className="flex items-center gap-2">
                         <Shield size={16} className="text-primary" />
                         <h3 className="text-sm font-bold">Requisitos de Evolução</h3>
@@ -1514,14 +1529,16 @@ export default function GovernancePage() {
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {[
-                    { label: "Saldo Plataforma", value: walletMetrics?.balance ?? 0, icon: <Wallet size={16} />, accent: "text-primary" },
-                    { label: "Total em Taxas", value: walletMetrics?.totalFeesCollected ?? 0, icon: <DollarSign size={16} />, accent: "text-emerald-400" },
-                    { label: "Total Recebido", value: walletMetrics?.totalEarned ?? 0, icon: <TrendingUp size={16} />, accent: "text-cyan-400" },
-                    { label: "Total Sacado", value: walletMetrics?.totalWithdrawn ?? 0, icon: <BarChart2 size={16} />, accent: "text-blue-400" },
-                    { label: "Comissões Pagas", value: walletMetrics?.referralCommissionsPaid ?? 0, icon: <Percent size={16} />, accent: "text-purple-400" },
-                    { label: "Saques Pendentes", value: walletMetrics?.pendingWithdrawals ?? 0, icon: <AlertTriangle size={16} />, accent: "text-yellow-400" },
-                  ].map(({ label, value, icon, accent }) => (
-                    <div key={label} className="p-4 rounded-2xl space-y-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                    { label: "Saldo Plataforma", value: walletMetrics?.balance ?? 0, icon: <Wallet size={16} />, accent: "text-primary", bg: "rgba(124,252,0,0.05)", border: "rgba(124,252,0,0.14)", stripe: "#7cfc00" },
+                    { label: "Total em Taxas", value: walletMetrics?.totalFeesCollected ?? 0, icon: <DollarSign size={16} />, accent: "text-emerald-400", bg: "rgba(52,211,153,0.05)", border: "rgba(52,211,153,0.14)", stripe: "#34d399" },
+                    { label: "Total Recebido", value: walletMetrics?.totalEarned ?? 0, icon: <TrendingUp size={16} />, accent: "text-cyan-400", bg: "rgba(0,229,255,0.045)", border: "rgba(0,229,255,0.14)", stripe: "#00e5ff" },
+                    { label: "Total Sacado", value: walletMetrics?.totalWithdrawn ?? 0, icon: <BarChart2 size={16} />, accent: "text-blue-400", bg: "rgba(59,130,246,0.045)", border: "rgba(59,130,246,0.14)", stripe: "#3b82f6" },
+                    { label: "Comissões Pagas", value: walletMetrics?.referralCommissionsPaid ?? 0, icon: <Percent size={16} />, accent: "text-purple-400", bg: "rgba(139,92,246,0.045)", border: "rgba(139,92,246,0.14)", stripe: "#8b5cf6" },
+                    { label: "Saques Pendentes", value: walletMetrics?.pendingWithdrawals ?? 0, icon: <AlertTriangle size={16} />, accent: "text-yellow-400", bg: "rgba(245,158,11,0.045)", border: "rgba(245,158,11,0.14)", stripe: "#f59e0b" },
+                  ].map(({ label, value, icon, accent, bg, border, stripe }) => (
+                    <div key={label} className="p-4 rounded-2xl space-y-2 relative overflow-hidden" style={{ background: bg, border: `1px solid ${border}` }}>
+                      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                        style={{ background: `linear-gradient(90deg,transparent,${stripe}55,transparent)` }} />
                       <div className={`flex items-center gap-1.5 ${accent}`}>{icon}<span className="text-[10px] font-bold uppercase tracking-wider">{label}</span></div>
                       <p className="text-lg font-bold tabular-nums">{currFormat(value)}</p>
                     </div>

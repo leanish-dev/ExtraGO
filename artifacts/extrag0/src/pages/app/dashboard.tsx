@@ -119,8 +119,17 @@ function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }
   const topItems = items.slice(0, 6);
 
   return (
-    <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.055)" }}>
-      <div className="flex items-center gap-2 mb-4">
+    <div className="card-activity-feed p-5">
+      {/* Career diamond watermark top-right */}
+      <div className="absolute top-2 right-3 pointer-events-none select-none opacity-[0.11]">
+        <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
+          <polygon points="28,4 52,28 28,52 4,28" stroke="#22c55e" strokeWidth="1.5" fill="none"/>
+          <polygon points="28,12 44,28 28,44 12,28" stroke="#22c55e" strokeWidth="1" fill="none" opacity="0.6"/>
+          <polygon points="28,20 36,28 28,36 20,28" stroke="#7cfc00" strokeWidth="0.8" fill="none" opacity="0.4"/>
+          <circle cx="28" cy="28" r="2.5" fill="#22c55e" opacity="0.5"/>
+        </svg>
+      </div>
+      <div className="flex items-center gap-2 mb-4 relative">
         <Activity size={14} className="text-muted-foreground" />
         <h2 className="font-semibold text-sm flex-1">Atividade Recente</h2>
         <Link href="/app/feed" className="text-[11px] text-muted-foreground hover:text-primary transition-colors font-medium mr-1.5">Ver tudo</Link>
@@ -342,6 +351,35 @@ function CompanyHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
       <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(20,184,166,0.50), rgba(0,229,255,0.22), transparent)" }} />
       <div className="absolute top-0 right-8 w-40 h-14 pointer-events-none"
         style={{ background: "radial-gradient(ellipse, rgba(20,184,166,0.18) 0%, transparent 70%)", filter: "blur(20px)" }} />
+      {/* Corporate badge watermark */}
+      <div className="absolute right-4 -bottom-2 pointer-events-none select-none"
+        style={{
+          width: 110, height: 110,
+          backgroundImage: "url(/badges/corporate-badges.png)",
+          backgroundSize: "400% auto",
+          backgroundPosition: "0% center",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.14,
+          mixBlendMode: "screen",
+        }}
+      />
+      {/* Circuit/grid SVG pattern top-right */}
+      <div className="absolute top-0 right-0 pointer-events-none select-none opacity-[0.07]">
+        <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
+          <line x1="20" y1="0" x2="20" y2="80" stroke="#14b8a6" strokeWidth="0.8"/>
+          <line x1="50" y1="0" x2="50" y2="80" stroke="#14b8a6" strokeWidth="0.8"/>
+          <line x1="80" y1="0" x2="80" y2="80" stroke="#14b8a6" strokeWidth="0.8"/>
+          <line x1="110" y1="0" x2="110" y2="80" stroke="#14b8a6" strokeWidth="0.8"/>
+          <line x1="0" y1="20" x2="120" y2="20" stroke="#14b8a6" strokeWidth="0.8"/>
+          <line x1="0" y1="50" x2="120" y2="50" stroke="#14b8a6" strokeWidth="0.8"/>
+          <circle cx="20" cy="20" r="2" fill="#14b8a6"/>
+          <circle cx="50" cy="50" r="2" fill="#00e5ff"/>
+          <circle cx="80" cy="20" r="1.5" fill="#14b8a6"/>
+          <circle cx="110" cy="50" r="1.5" fill="#00e5ff"/>
+          <circle cx="20" cy="50" r="1.5" fill="#14b8a6" opacity="0.6"/>
+          <circle cx="80" cy="50" r="2" fill="#14b8a6"/>
+        </svg>
+      </div>
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
@@ -462,7 +500,8 @@ function CompanyDashboard() {
                     whileHover={{ x: 2 }}
                   >
                     <Link href="/app/jobs">
-                      <div className="rounded-xl p-4 cursor-pointer flex items-center gap-4 border border-white/5 hover:border-primary/18 transition-all group" style={{ background: "rgba(255,255,255,0.060)" }}>
+                      <div className="rounded-xl p-4 cursor-pointer flex items-center gap-4 border border-white/8 hover:border-primary/22 transition-all group relative overflow-hidden"
+                        style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.05) 0%, rgba(8,17,26,0.85) 60%, rgba(0,229,255,0.03) 100%)" }}>
                         <div className="w-9 h-9 rounded-xl bg-primary/8 border border-primary/18 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/14 transition-colors">
                           <Briefcase size={15} className="text-primary" />
                         </div>

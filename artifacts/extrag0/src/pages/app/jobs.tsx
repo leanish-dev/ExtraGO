@@ -179,20 +179,42 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
         <div className="p-6 space-y-6">
           <div className="grid grid-cols-2 gap-3">
             {[
-              { icon: <MapPin size={13} className="text-primary" />, label: "Local", value: job.location },
-              { icon: <Clock size={13} className="text-secondary" />, label: "Horário", value: `${job.startTime}–${job.endTime}` },
-              { icon: <Briefcase size={13} className="text-muted-foreground" />, label: "Data", value: job.date ? format(new Date(job.date), "dd MMM yyyy", { locale: ptBR }) : "—" },
-              { icon: <Users size={13} className="text-muted-foreground" />, label: "Vagas", value: `${job.workersApproved}/${job.workersNeeded}` },
+              {
+                icon: <MapPin size={13} className="text-primary" />, label: "Local", value: job.location,
+                bg: "rgba(124,252,0,0.045)", border: "rgba(124,252,0,0.14)", accent: "#7cfc00",
+                watermark: <MapPin size={40} />,
+              },
+              {
+                icon: <Clock size={13} className="text-secondary" />, label: "Horário", value: `${job.startTime}–${job.endTime}`,
+                bg: "rgba(0,229,255,0.045)", border: "rgba(0,229,255,0.14)", accent: "#00e5ff",
+                watermark: <Clock size={40} />,
+              },
+              {
+                icon: <Briefcase size={13} className="text-muted-foreground" />, label: "Data", value: job.date ? format(new Date(job.date), "dd MMM yyyy", { locale: ptBR }) : "—",
+                bg: "rgba(139,92,246,0.04)", border: "rgba(139,92,246,0.12)", accent: "#8b5cf6",
+                watermark: <Briefcase size={40} />,
+              },
+              {
+                icon: <Users size={13} className="text-muted-foreground" />, label: "Vagas", value: `${job.workersApproved}/${job.workersNeeded}`,
+                bg: "rgba(245,158,11,0.04)", border: "rgba(245,158,11,0.12)", accent: "#f59e0b",
+                watermark: <Users size={40} />,
+              },
             ].map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.06 }}
-                className="p-3 rounded-xl bg-white/3 border border-white/6 hover:border-white/10 transition-colors"
+                className="p-3 rounded-xl relative overflow-hidden transition-colors hover:brightness-110"
+                style={{ background: item.bg, border: `1px solid ${item.border}` }}
               >
-                <div className="flex items-center gap-1.5 mb-2">{item.icon}<span className="text-[9px] text-muted-foreground uppercase tracking-widest font-bold">{item.label}</span></div>
-                <p className="text-sm font-semibold">{item.value}</p>
+                {/* Contextual icon watermark */}
+                <div className="absolute right-1 bottom-0 pointer-events-none select-none"
+                  style={{ color: item.accent, opacity: 0.07 }}>
+                  {item.watermark}
+                </div>
+                <div className="relative flex items-center gap-1.5 mb-2">{item.icon}<span className="text-[9px] text-muted-foreground uppercase tracking-widest font-bold">{item.label}</span></div>
+                <p className="relative text-sm font-semibold">{item.value}</p>
               </motion.div>
             ))}
           </div>

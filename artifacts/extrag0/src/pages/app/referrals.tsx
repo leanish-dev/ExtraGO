@@ -231,17 +231,17 @@ export default function ReferralsPage() {
           className="grid grid-cols-3 gap-3"
         >
           {[
-            { label: "Indicações", value: referral?.totalInvited ?? 0, color: "text-primary", sub: `${activeReferrals} ativos` },
-            { label: "Conversão", value: `${conversionRate}%`, color: "text-secondary", sub: `${referral?.totalConverted ?? 0} convertidos` },
-            { label: "Ganhos Totais", value: `R$${(referral?.totalRewardEarned ?? 0).toFixed(0)}`, color: "text-yellow-400", sub: `~R$${monthlyEarnings.toFixed(0)}/mês` },
+            { label: "Indicações", value: referral?.totalInvited ?? 0, color: "text-primary", sub: `${activeReferrals} ativos`, border: "border-primary/18", bg: "rgba(124,252,0,0.05)" },
+            { label: "Conversão", value: `${conversionRate}%`, color: "text-secondary", sub: `${referral?.totalConverted ?? 0} convertidos`, border: "border-secondary/18", bg: "rgba(0,229,255,0.05)" },
+            { label: "Ganhos Totais", value: `R$${(referral?.totalRewardEarned ?? 0).toFixed(0)}`, color: "text-yellow-400", sub: `~R$${monthlyEarnings.toFixed(0)}/mês`, border: "border-yellow-400/18", bg: "rgba(245,158,11,0.05)" },
           ].map((item, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.06 + i * 0.05 }}
-              className="rounded-2xl border border-white/6 p-4 text-center"
-              style={{ background: "rgba(255,255,255,0.060)" }}
+              className={`card-referral-stat border ${item.border} p-4 text-center`}
+              style={{ background: item.bg }}
             >
               <p className={`text-2xl font-black leading-none tabular-nums ${item.color}`}>{item.value}</p>
               <p className="text-[11px] font-bold text-foreground mt-1.5">{item.label}</p>
@@ -255,9 +255,31 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
-          className="rounded-2xl border border-white/6 p-5 relative overflow-hidden"
-          style={{ background: "rgba(255,255,255,0.055)" }}
+          className="rounded-2xl border border-amber-500/12 p-5 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.06) 0%, rgba(8,17,26,0.90) 55%, rgba(239,68,68,0.04) 100%)" }}
         >
+          {/* Referral network tree SVG watermark */}
+          <div className="absolute right-3 bottom-2 pointer-events-none select-none opacity-[0.09]">
+            <svg width="90" height="80" viewBox="0 0 90 80" fill="none">
+              <circle cx="45" cy="14" r="6" stroke="#f59e0b" strokeWidth="1.5"/>
+              <circle cx="18" cy="50" r="5" stroke="#f59e0b" strokeWidth="1.2"/>
+              <circle cx="45" cy="50" r="5" stroke="#f59e0b" strokeWidth="1.2"/>
+              <circle cx="72" cy="50" r="5" stroke="#f59e0b" strokeWidth="1.2"/>
+              <circle cx="8" cy="74" r="3.5" stroke="#f59e0b" strokeWidth="1"/>
+              <circle cx="28" cy="74" r="3.5" stroke="#f59e0b" strokeWidth="1"/>
+              <circle cx="62" cy="74" r="3.5" stroke="#f59e0b" strokeWidth="1"/>
+              <circle cx="82" cy="74" r="3.5" stroke="#f59e0b" strokeWidth="1"/>
+              <line x1="45" y1="20" x2="18" y2="45" stroke="#f59e0b" strokeWidth="1" opacity="0.7"/>
+              <line x1="45" y1="20" x2="45" y2="45" stroke="#f59e0b" strokeWidth="1" opacity="0.7"/>
+              <line x1="45" y1="20" x2="72" y2="45" stroke="#f59e0b" strokeWidth="1" opacity="0.7"/>
+              <line x1="18" y1="55" x2="8" y2="70" stroke="#f59e0b" strokeWidth="0.8" opacity="0.5"/>
+              <line x1="18" y1="55" x2="28" y2="70" stroke="#f59e0b" strokeWidth="0.8" opacity="0.5"/>
+              <line x1="72" y1="55" x2="62" y2="70" stroke="#f59e0b" strokeWidth="0.8" opacity="0.5"/>
+              <line x1="72" y1="55" x2="82" y2="70" stroke="#f59e0b" strokeWidth="0.8" opacity="0.5"/>
+            </svg>
+          </div>
+          {/* Top stripe */}
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.45), transparent)" }} />
           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Progressão na Rede</p>
           <div className="flex items-stretch gap-0 relative">
             {/* connector line */}
@@ -378,12 +400,23 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="glass-card rounded-2xl p-5 border border-white/6 relative overflow-hidden"
+          className="rounded-2xl p-5 border border-primary/14 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.06) 0%, rgba(8,17,26,0.92) 50%, rgba(0,229,255,0.04) 100%)" }}
         >
-          <div
-            className="absolute inset-0 opacity-[0.05] bg-cover bg-left mix-blend-screen pointer-events-none"
-            style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.webp)" }}
-          />
+          {/* Top stripe */}
+          <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.45), rgba(0,229,255,0.22), transparent)" }} />
+          {/* Social share node SVG — bottom right */}
+          <div className="absolute right-3 bottom-3 pointer-events-none select-none opacity-[0.09]">
+            <svg width="80" height="70" viewBox="0 0 80 70" fill="none">
+              <circle cx="40" cy="10" r="7" stroke="#7cfc00" strokeWidth="1.5"/>
+              <circle cx="12" cy="55" r="6" stroke="#7cfc00" strokeWidth="1.2"/>
+              <circle cx="68" cy="55" r="6" stroke="#00e5ff" strokeWidth="1.2"/>
+              <line x1="40" y1="17" x2="14" y2="49" stroke="#7cfc00" strokeWidth="1" opacity="0.7"/>
+              <line x1="40" y1="17" x2="66" y2="49" stroke="#00e5ff" strokeWidth="1" opacity="0.7"/>
+              <line x1="18" y1="55" x2="62" y2="55" stroke="#7cfc00" strokeWidth="0.8" opacity="0.35"/>
+              <circle cx="40" cy="35" r="3" fill="#7cfc00" opacity="0.25"/>
+            </svg>
+          </div>
           <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 pointer-events-none" />
 
           <div className="flex items-center justify-between mb-3 relative">

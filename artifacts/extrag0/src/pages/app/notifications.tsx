@@ -29,6 +29,14 @@ const TYPE_GROUPS: Record<string, string> = {
   system: "Sistema",
 };
 
+function getNotifCardClass(type: string | null | undefined, isRead: boolean): string {
+  const group = TYPE_GROUPS[type ?? "system"] ?? "Sistema";
+  const base = "notif-card";
+  if (group === "Vagas") return `${base} notif-card-jobs`;
+  if (group === "Pagamentos") return `${base} notif-card-payment`;
+  return `${base} notif-card-system`;
+}
+
 export default function NotificationsPage() {
   const { data: notifs = [], isLoading, refetch } = useListNotifications(undefined, {
     query: {
@@ -111,8 +119,8 @@ export default function NotificationsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.04 }}
             onClick={() => !notif.isRead && handleMarkOne(notif.id!)}
-            className={`w-full text-left glass-card rounded-xl p-4 flex items-start gap-3 transition-all ${
-              !notif.isRead ? "border-primary/20 bg-primary/5 hover:bg-primary/8" : "opacity-60 hover:opacity-80"
+            className={`w-full text-left glass-card rounded-xl p-4 flex items-start gap-3 transition-all ${getNotifCardClass(notif.type, notif.isRead ?? false)} ${
+              !notif.isRead ? "hover:opacity-95" : "opacity-55 hover:opacity-70"
             }`}
           >
             <span className="text-xl flex-shrink-0 mt-0.5">{TYPE_ICONS[notif.type ?? "system"] ?? "🔔"}</span>

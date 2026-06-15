@@ -1047,9 +1047,24 @@
   /* ── Module user/item cards (list-level tint) ── */
   .user-card-network {
     background: rgba(59,130,246,0.055); border: 1px solid rgba(59,130,246,0.12);
+    position: relative; overflow: hidden;
     transition: background 0.2s ease, border-color 0.2s ease;
   }
   .user-card-network:hover { background: rgba(59,130,246,0.090); border-color: rgba(59,130,246,0.22); }
+  /* Connected node dot-grid watermark — bottom-right corner fade */
+  .user-card-network::after {
+    content: '';
+    position: absolute; bottom: 0; right: 0;
+    width: 88px; height: 88px;
+    background-image:
+      radial-gradient(circle, rgba(59,130,246,0.30) 1.5px, transparent 1.5px),
+      radial-gradient(circle, rgba(139,92,246,0.18) 1px, transparent 1px);
+    background-size: 18px 18px, 9px 9px;
+    background-position: 6px 6px, 3px 3px;
+    -webkit-mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 68%);
+    mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 68%);
+    pointer-events: none;
+  }
 
   .job-card-extras {
     background: rgba(139,92,246,0.055); border: 1px solid rgba(139,92,246,0.12);
@@ -1064,6 +1079,131 @@
   .mod-icon-extras     { background: rgba(139,92,246,0.14);  border: 1px solid rgba(139,92,246,0.28);  color: #8b5cf6; }
   .mod-icon-referral   { background: rgba(245,158,11,0.14);  border: 1px solid rgba(245,158,11,0.28);  color: #f59e0b; }
   .mod-icon-governance { background: rgba(236,72,153,0.14);  border: 1px solid rgba(236,72,153,0.28);  color: #ec4899; }
+
+  /* ── Balance card mini — enriched with fintech wave pattern ── */
+  .balance-card-mini {
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    position: relative; overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s var(--ease-smooth);
+  }
+  .balance-card-mini:hover {
+    border-color: rgba(255, 255, 255, 0.13);
+    transform: translateY(-1px);
+  }
+  /* Subtle dot-grid watermark on mini cards */
+  .balance-card-mini::after {
+    content: '';
+    position: absolute; bottom: -2px; right: -2px;
+    width: 60px; height: 60px;
+    background-image: radial-gradient(circle, rgba(20,184,166,0.22) 1px, transparent 1px);
+    background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── Activity feed card (Dashboard) ── */
+  .card-activity-feed {
+    background: rgba(255,255,255,0.052);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 1rem;
+    position: relative; overflow: hidden;
+  }
+  /* Diamond pattern watermark top-right */
+  .card-activity-feed::before {
+    content: '';
+    position: absolute; top: -8px; right: -8px;
+    width: 100px; height: 100px;
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        rgba(34,197,94,0.06) 0px, rgba(34,197,94,0.06) 1px,
+        transparent 1px, transparent 14px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        rgba(34,197,94,0.04) 0px, rgba(34,197,94,0.04) 1px,
+        transparent 1px, transparent 14px
+      );
+    -webkit-mask-image: radial-gradient(ellipse at 100% 0%, black 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 100% 0%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── Referral stats card (compact stats row) ── */
+  .card-referral-stat {
+    border-radius: 1rem;
+    position: relative; overflow: hidden;
+    transition: transform 0.2s var(--ease-smooth), border-color 0.2s ease;
+  }
+  .card-referral-stat:hover { transform: translateY(-2px); }
+  /* Growth vine dot pattern — bottom-left fade */
+  .card-referral-stat::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 64px; height: 64px;
+    background-image: radial-gradient(circle, rgba(245,158,11,0.25) 1.5px, transparent 1.5px);
+    background-size: 12px 12px;
+    background-position: 4px 4px;
+    -webkit-mask-image: radial-gradient(ellipse at 0% 100%, black 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 0% 100%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── Profile section card — enriched glass ── */
+  .card-profile-section {
+    background: rgba(255,255,255,0.058);
+    backdrop-filter: blur(20px) saturate(155%);
+    -webkit-backdrop-filter: blur(20px) saturate(155%);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 1rem;
+    position: relative; overflow: hidden;
+  }
+  /* Diagonal career path lines — top-right fade */
+  .card-profile-section::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 120px; height: 80px;
+    background-image:
+      repeating-linear-gradient(
+        -55deg,
+        rgba(124,252,0,0.05) 0px, rgba(124,252,0,0.05) 1px,
+        transparent 1px, transparent 18px
+      );
+    -webkit-mask-image: radial-gradient(ellipse at 100% 0%, black 0%, transparent 72%);
+    mask-image: radial-gradient(ellipse at 100% 0%, black 0%, transparent 72%);
+    pointer-events: none;
+  }
+
+  /* ── Notification card type accents ── */
+  .notif-card {
+    position: relative; overflow: hidden;
+    border-left: 3px solid transparent;
+  }
+  .notif-card-jobs    { border-left-color: rgba(139,92,246,0.55); background: rgba(139,92,246,0.035) !important; }
+  .notif-card-payment { border-left-color: rgba(34,197,94,0.55);  background: rgba(34,197,94,0.035) !important; }
+  .notif-card-system  { border-left-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.038) !important; }
+  /* Unread indicator stripe on right side */
+  .notif-card::after {
+    content: '';
+    position: absolute; bottom: 0; right: 0;
+    width: 48px; height: 48px;
+    pointer-events: none;
+  }
+  .notif-card-jobs::after {
+    background-image: radial-gradient(circle, rgba(139,92,246,0.18) 1.5px, transparent 1.5px);
+    background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+  }
+  .notif-card-payment::after {
+    background-image: radial-gradient(circle, rgba(34,197,94,0.18) 1.5px, transparent 1.5px);
+    background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+  }
 
   /* ── Module accent top-stripe (1px top border glow for secondary cards) ── */
   .stripe-career::before     { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(34,197,94,0.55), rgba(124,252,0,0.25), transparent); }
