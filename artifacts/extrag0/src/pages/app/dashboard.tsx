@@ -13,8 +13,7 @@ import { AnimatedCounter } from "@/components/animated-counter";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatDistanceToNow, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import dashboardBanner from "@assets/file_00000000a88071f79bcf2c132d090401_1779868066995.png";
-import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS, UserBadge, UserBadgeIcon } from "@/components/level-badge";
+import { LevelBadgeIcon, UserBadge, UserBadgeIcon } from "@/components/level-badge";
 
 function getGreeting() {
   const h = new Date().getHours();
@@ -24,33 +23,6 @@ function getGreeting() {
   return "Boa noite";
 }
 
-/* ── Section Banner ── */
-function SectionBanner() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-      className="relative w-full overflow-hidden"
-      style={{ borderRadius: "0 0 20px 20px" }}
-    >
-      <img
-        src={dashboardBanner}
-        alt="Dashboard extraGO"
-        className="w-full object-cover"
-        style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }}
-      />
-      <div
-        className="absolute inset-0 opacity-[0.32] bg-cover bg-center mix-blend-screen pointer-events-none"
-        style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)" }}
-      />
-      <div
-        className="absolute inset-0"
-        style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.15) 60%, rgba(7,10,13,0.85) 100%)" }}
-      />
-    </motion.div>
-  );
-}
 
 const STATUS_BADGE: Record<string, { label: string; class: string }> = {
   open: { label: "Aberta", class: "bg-primary/20 text-primary border-primary/30" },
@@ -427,7 +399,6 @@ function CompanyDashboard() {
         style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.07, mixBlendMode: "screen", filter: "blur(2px)" }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
-      <SectionBanner />
 
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         {/* Hero: greeting + inline stats + CTA */}
@@ -554,7 +525,6 @@ function FreelancerDashboard() {
         style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.07, mixBlendMode: "screen", filter: "blur(2px)" }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
-      <SectionBanner />
 
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         {/* CAREER HERO — the single most important element on this page */}

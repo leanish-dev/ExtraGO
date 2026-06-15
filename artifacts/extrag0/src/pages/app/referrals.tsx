@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useGetMyReferral, useGetReferralLeaderboard } from "@workspace/api-client-react";
 import { useAuth } from "@/hooks/use-auth";
 import { LevelBadgeIcon, ReferralBadge, ReferralBadgeIcon } from "@/components/level-badge";
@@ -13,7 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/ui/empty";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import referralsBanner from "@assets/file_00000000b14c720e9386ccbf24ee87f8_1779868067153.png";
+import { ReferralSimulator } from "@/components/referral-simulator";
 
 const FacebookIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -119,85 +119,6 @@ const RANK_STYLES = [
   "bg-orange-400/15 text-orange-400 border border-orange-400/25",
 ];
 
-function SimuladorGanhos({ activeReferrals, rate }: { activeReferrals: number; rate: number }) {
-  const [jobsPerMonth, setJobsPerMonth] = useState(3);
-  const [avgValue, setAvgValue] = useState(280);
-  const [refs, setRefs] = useState(Math.max(1, activeReferrals));
-
-  const monthly = refs * jobsPerMonth * avgValue * rate;
-  const annual = monthly * 12;
-  const projection3y = annual * 3;
-
-  return (
-    <div className="space-y-5">
-      <div className="grid sm:grid-cols-3 gap-4">
-        <div>
-          <div className="flex justify-between text-[11px] mb-2">
-            <span className="text-muted-foreground font-medium">Indicados Ativos</span>
-            <span className="font-bold text-primary">{refs}</span>
-          </div>
-          <input
-            type="range" min={1} max={50} value={refs}
-            onChange={e => setRefs(Number(e.target.value))}
-            className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
-            style={{ accentColor: "hsl(88, 100%, 49%)" }}
-          />
-          <div className="flex justify-between text-[10px] text-muted-foreground/50 mt-1">
-            <span>1</span><span>50</span>
-          </div>
-        </div>
-        <div>
-          <div className="flex justify-between text-[11px] mb-2">
-            <span className="text-muted-foreground font-medium">Extras/mês por indicado</span>
-            <span className="font-bold text-secondary">{jobsPerMonth}</span>
-          </div>
-          <input
-            type="range" min={1} max={10} value={jobsPerMonth}
-            onChange={e => setJobsPerMonth(Number(e.target.value))}
-            className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
-            style={{ accentColor: "hsl(180, 100%, 50%)" }}
-          />
-          <div className="flex justify-between text-[10px] text-muted-foreground/50 mt-1">
-            <span>1</span><span>10</span>
-          </div>
-        </div>
-        <div>
-          <div className="flex justify-between text-[11px] mb-2">
-            <span className="text-muted-foreground font-medium">Valor médio do extra</span>
-            <span className="font-bold text-yellow-400">R${avgValue}</span>
-          </div>
-          <input
-            type="range" min={100} max={600} step={50} value={avgValue}
-            onChange={e => setAvgValue(Number(e.target.value))}
-            className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
-            style={{ accentColor: "hsl(45, 100%, 50%)" }}
-          />
-          <div className="flex justify-between text-[10px] text-muted-foreground/50 mt-1">
-            <span>R$100</span><span>R$600</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-3">
-        <div className="rounded-xl border border-primary/15 bg-primary/5 p-3 text-center">
-          <p className="text-[10px] text-muted-foreground mb-1">Por Mês</p>
-          <p className="text-lg font-bold text-primary">R${monthly.toFixed(0)}</p>
-        </div>
-        <div className="rounded-xl border border-secondary/15 bg-secondary/5 p-3 text-center">
-          <p className="text-[10px] text-muted-foreground mb-1">Por Ano</p>
-          <p className="text-lg font-bold text-secondary">R${annual.toFixed(0)}</p>
-        </div>
-        <div className="rounded-xl border border-yellow-400/15 bg-yellow-400/5 p-3 text-center">
-          <p className="text-[10px] text-muted-foreground mb-1">3 Anos</p>
-          <p className="text-lg font-bold text-yellow-400">R${projection3y.toFixed(0)}</p>
-        </div>
-      </div>
-      <p className="text-[10px] text-muted-foreground/55 text-center">
-        Comissão de {Math.round(rate * 100)}% sobre cada extra concluído pelos seus indicados ativos. Sem limite de ganhos.
-      </p>
-    </div>
-  );
-}
 
 export default function ReferralsPage() {
   const { user } = useAuth();
@@ -286,39 +207,21 @@ export default function ReferralsPage() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/65 via-transparent to-[#070a0d]/55 pointer-events-none" />
 
-      {/* Banner header */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-        className="relative w-full overflow-hidden"
-        style={{ borderRadius: "0 0 20px 20px" }}
-      >
-        <img
-          src={referralsBanner}
-          alt="Indicações extraGO"
-          className="w-full object-cover"
-          style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.30] bg-cover bg-center mix-blend-screen pointer-events-none"
-          style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.webp)" }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.25) 55%, rgba(7,10,13,0.92) 100%)" }}
-        />
-        <div className="absolute inset-0 flex items-end p-4 pb-5">
-          <div>
-            <span className="text-[10px] text-primary font-bold uppercase tracking-widest">Rede de Expansão</span>
-            <h1 className="text-lg sm:text-xl font-bold text-white leading-tight mt-0.5">
-              Expanda sua rede. <span className="text-primary">Cresça junto.</span>
-            </h1>
-          </div>
-        </div>
-      </motion.div>
-
       <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-4">
+
+        {/* Page identity bar — replaces decorative banner */}
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="flex items-center gap-3"
+        >
+          <div className="w-1 h-8 rounded-full flex-shrink-0" style={{ background: "linear-gradient(180deg, #7CFC00, #00e5ff)" }} />
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-primary">Rede de Expansão</p>
+            <h1 className="text-base font-black leading-tight">Expanda sua rede. <span className="text-primary">Cresça junto.</span></h1>
+          </div>
+        </motion.div>
 
         {/* Compact stats strip — replaces the 8-card grid */}
         <motion.div
@@ -878,13 +781,12 @@ export default function ReferralsPage() {
           style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.03) 0%, rgba(0,229,255,0.02) 100%)" }}
         >
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(124,252,0,0.06) 0%, transparent 70%)", filter: "blur(30px)" }} />
-          <h2 className="font-bold mb-1 flex items-center gap-2 text-sm">
+          <h2 className="font-bold mb-4 flex items-center gap-2 text-sm">
             <DollarSign size={14} className="text-primary" />
             Simulador de Ganhos com Indicações
           </h2>
-          <p className="text-[11px] text-muted-foreground mb-5">Calcule quanto você pode ganhar com sua rede de indicados</p>
 
-          <SimuladorGanhos activeReferrals={activeReferrals} rate={referralRate} />
+          <ReferralSimulator variant="app" showCta={true} />
         </motion.div>
 
         {/* Leaderboard */}

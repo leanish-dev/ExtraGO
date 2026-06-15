@@ -17,8 +17,6 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
-import walletBanner from "@assets/file_0000000034c4720eab761e343da632dc_1780134462859.png";
-
 const PAGE_SIZE = 20;
 
 type TxFilter = "all" | "credit" | "debit" | "withdrawal" | "commission";
@@ -258,18 +256,6 @@ export default function WalletPage() {
         }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
-
-      {/* Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-        className="relative w-full overflow-hidden"
-        style={{ borderRadius: "0 0 20px 20px" }}
-      >
-        <img src={walletBanner} alt="Carteira extraGO" className="w-full object-cover" style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }} />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.2) 60%, rgba(7,10,13,0.88) 100%)" }} />
-      </motion.div>
 
       <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-5">
 
