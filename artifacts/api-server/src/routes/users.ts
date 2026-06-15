@@ -6,14 +6,20 @@ import { UpdateUserBody, RateUserBody, ListFreelancersQueryParams } from "@works
 import { recalculateReputation } from "../lib/ecosystem";
 
 const router = Router();
+const TEST_ACCOUNTS_USERS = ["teste.f@extrago.com", "teste.e@extrago.com"];
 
 // GET /users/freelancers
 router.get("/users/freelancers", requireAuth, async (req, res) => {
   const parsed = ListFreelancersQueryParams.safeParse(req.query);
   const { category, search } = parsed.data ?? {};
+  const requestingUser = (req as any).user;
+  const canSeeDemoData = TEST_ACCOUNTS_USERS.includes((requestingUser?.email ?? "").toLowerCase());
+
+  const baseConditions: any[] = [eq(usersTable.role, "freelancer")];
+  if (!canSeeDemoData) baseConditions.push(eq(usersTable.isDemo, false));
 
   let query = db.select().from(usersTable)
-    .where(eq(usersTable.role, "freelancer"))
+    .where(and(...baseConditions))
     .$dynamic();
 
   if (category) {
@@ -46,9 +52,14 @@ router.get("/users/freelancers", requireAuth, async (req, res) => {
 // GET /users/companies
 router.get("/users/companies", requireAuth, async (req, res) => {
   const search = req.query.search as string | undefined;
+  const requestingUser = (req as any).user;
+  const canSeeDemoData = TEST_ACCOUNTS_USERS.includes((requestingUser?.email ?? "").toLowerCase());
+
+  const baseConditions: any[] = [eq(usersTable.role, "company")];
+  if (!canSeeDemoData) baseConditions.push(eq(usersTable.isDemo, false));
 
   let query = db.select().from(usersTable)
-    .where(eq(usersTable.role, "company"))
+    .where(and(...baseConditions))
     .$dynamic();
 
   if (search) {

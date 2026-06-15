@@ -2,7 +2,7 @@ import React from "react";
 import {
   LayoutDashboard, Briefcase, FileText, Wallet, Trophy, Globe, Rss,
   User as UserIcon, Settings, Mail, Home, LogOut, BarChart3, Users,
-  CreditCard, LineChart, Activity, TrendingUp, MapPin,
+  CreditCard, LineChart, Activity, TrendingUp, MapPin, Shield,
 } from "lucide-react";
 
 export type Role = "company" | "freelancer" | "admin";
@@ -83,6 +83,7 @@ export const APP_NAV_SECTIONS: NavSection[] = [
       { label: "Mapa Brasil", href: "/admin/map", icon: <MapPin size={16} />, unlocked: ["admin"] },
       { label: "Representantes", href: "/admin/representatives", icon: <Globe size={16} />, unlocked: ["admin"] },
       { label: "Centro Nacional de Operações", href: "/admin/ops", icon: <Activity size={16} />, unlocked: ["admin"] },
+      { label: "Centro de Governança", href: "/admin/governance", icon: <Shield size={16} />, unlocked: ["admin"] },
     ],
   },
   {

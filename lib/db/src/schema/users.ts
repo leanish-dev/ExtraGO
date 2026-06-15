@@ -49,6 +49,8 @@ export const usersTable = pgTable("users", {
   referredById: integer("referred_by_id"),
   // Embaixador Regional (5% referral tier) requires explicit platform approval
   ambassadorApproved: boolean("ambassador_approved").notNull().default(false),
+  // Demo/seed accounts — content from these users is filtered out for non-test accounts
+  isDemo: boolean("is_demo").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

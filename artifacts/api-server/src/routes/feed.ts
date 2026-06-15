@@ -16,9 +16,13 @@ const CreateCommentBody = z.object({
   content: z.string().min(1).max(500),
 });
 
+const TEST_ACCOUNTS_FEED = ["teste.f@extrago.com", "teste.e@extrago.com"];
+
 // GET /feed
 router.get("/feed", requireAuth, async (req, res) => {
   const userId = (req as any).user.id;
+  const requestingUser = (req as any).user;
+  const canSeeDemoData = TEST_ACCOUNTS_FEED.includes((requestingUser?.email ?? "").toLowerCase());
   const page = parseInt((req.query.page as string) ?? "1") || 1;
   const limit = 20;
   const offset = (page - 1) * limit;
@@ -43,8 +47,17 @@ router.get("/feed", requireAuth, async (req, res) => {
     .offset(offset)
     .$dynamic();
 
+  const whereConditions: any[] = [];
+  if (!canSeeDemoData) {
+    whereConditions.push(sql`(${usersTable.isDemo} IS FALSE OR ${usersTable.isDemo} IS NULL)`);
+  }
   if (postType && postType !== "all") {
-    query = query.where(eq(postsTable.postType, postType as any));
+    whereConditions.push(eq(postsTable.postType, postType as any));
+  }
+  if (whereConditions.length === 1) {
+    query = query.where(whereConditions[0]);
+  } else if (whereConditions.length > 1) {
+    query = query.where(and(...whereConditions));
   }
 
   const rows = await query;

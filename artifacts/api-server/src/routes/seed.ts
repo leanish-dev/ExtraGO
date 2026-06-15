@@ -16,7 +16,7 @@ import {
   postsTable,
   userFollowsTable,
 } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { hashPassword, generateReferralCode } from "../lib/auth";
 
 const router = Router();
@@ -976,6 +976,15 @@ router.post("/setup/seed", async (_req, res) => {
     await ensureFollow(fl2Id, marceloId);
 
     results.push("Social follows created");
+
+    // ─── MARK DEMO/SEED ACCOUNTS ──────────────────────────────────────────
+    // Idempotent: marks all fictional seed users with isDemo=true so the
+    // backend can filter them out for real (non-test) accounts.
+    await db.update(usersTable).set({ isDemo: true }).where(
+      sql`${usersTable.email} LIKE '%@seed.extrago.com'
+          OR ${usersTable.email} IN ('teste.freelancer@extrago.com', 'teste.empresa@extrago.com')`
+    );
+    results.push("Demo users marked with isDemo=true");
 
     // ─── FINAL SUMMARY ────────────────────────────────────────────────────
 

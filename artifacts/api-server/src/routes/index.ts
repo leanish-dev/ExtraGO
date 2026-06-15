@@ -14,6 +14,7 @@ import profileSectionsRouter from "./profile-sections";
 import chatRouter from "./chat";
 import setupRouter from "./setup";
 import seedRouter from "./seed";
+import governanceRouter from "./governance";
 
 const router: IRouter = Router();
 
@@ -36,5 +37,6 @@ router.use(profileSectionsRouter);
 router.use(chatRouter);
 router.use(setupRouter);
 router.use(seedRouter);
+router.use(governanceRouter);
 
 export default router;

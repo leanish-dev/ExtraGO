@@ -7,3 +7,4 @@ export * from "./ratings";
 export * from "./messages";
 export * from "./sessions";
 export * from "./representatives";
+export * from "./config";

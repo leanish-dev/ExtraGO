@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageCircle, Send, Search, ArrowLeft, Check,
-  CheckCheck, Image, X, Loader2
+  CheckCheck, Image, X, Loader2, Share2, ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -72,8 +72,9 @@ function TypingIndicator() {
   );
 }
 
-function MessageBubble({ msg, isMine, showAvatar, senderName }: {
+function MessageBubble({ msg, isMine, showAvatar, senderName, onForward }: {
   msg: Message; isMine: boolean; showAvatar?: boolean; senderName?: string;
+  onForward?: (msg: Message) => void;
 }) {
   const time = msg.createdAt ? format(new Date(msg.createdAt), "HH:mm") : "";
   const isImage = msg.type === "image";
@@ -100,12 +101,23 @@ function MessageBubble({ msg, isMine, showAvatar, senderName }: {
             style={{ maxHeight: 200 }}
           />
         ) : (
-          <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed break-words ${
-            isMine
-              ? "bg-primary text-black rounded-br-sm font-medium"
-              : "bg-white/8 border border-white/8 text-foreground rounded-bl-sm"
-          }`}>
-            {msg.content}
+          <div className="relative group/bubble">
+            <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed break-words ${
+              isMine
+                ? "bg-primary text-black rounded-br-sm font-medium"
+                : "bg-white/8 border border-white/8 text-foreground rounded-bl-sm"
+            }`}>
+              {msg.content}
+            </div>
+            {onForward && (
+              <button
+                onClick={() => onForward(msg)}
+                title="Encaminhar"
+                className={`absolute top-1/2 -translate-y-1/2 ${isMine ? "-left-7" : "-right-7"} opacity-0 group-hover/bubble:opacity-100 transition-opacity w-6 h-6 rounded-full bg-white/10 border border-white/8 flex items-center justify-center text-muted-foreground/60 hover:text-foreground hover:bg-white/20`}
+              >
+                <Share2 size={10} />
+              </button>
+            )}
           </div>
         )}
         <div className={`flex items-center gap-1 ${isMine ? "flex-row-reverse" : "flex-row"}`}>
@@ -118,6 +130,73 @@ function MessageBubble({ msg, isMine, showAvatar, senderName }: {
         </div>
       </div>
     </motion.div>
+  );
+}
+
+function ForwardModal({ msg, conversations, onClose, onSend }: {
+  msg: Message; conversations: Conversation[];
+  onClose: () => void; onSend: (convId: number) => Promise<void>;
+}) {
+  const [sending, setSending] = useState(false);
+  const handleSelect = async (convId: number) => {
+    setSending(true);
+    try { await onSend(convId); } finally { setSending(false); }
+  };
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(4,6,8,0.85)", backdropFilter: "blur(6px)" }}
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.94, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.94, y: 12 }}
+        className="w-full max-w-sm rounded-2xl overflow-hidden"
+        style={{ background: "rgba(12,18,22,0.98)", border: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-white/6">
+          <div className="flex items-center gap-2">
+            <Share2 size={14} className="text-primary" />
+            <h3 className="text-sm font-bold">Encaminhar mensagem</h3>
+          </div>
+          <button onClick={onClose} className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-white/6">
+            <X size={14} />
+          </button>
+        </div>
+        <div className="px-5 py-3 border-b border-white/6">
+          <div className="text-xs text-muted-foreground/80 bg-white/4 border border-white/6 rounded-xl px-3 py-2 line-clamp-2">
+            {msg.content.slice(0, 120)}{msg.content.length > 120 ? "…" : ""}
+          </div>
+        </div>
+        <div className="px-5 py-3">
+          <p className="text-[10px] font-semibold text-muted-foreground/50 uppercase tracking-wider mb-2">Enviar para</p>
+          {conversations.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">Nenhuma outra conversa disponível.</p>
+          ) : (
+            <div className="space-y-1 max-h-56 overflow-y-auto -mx-1 px-1">
+              {conversations.map(conv => {
+                const other = conv.otherUser;
+                const name = other?.role === "company" ? (other.companyName || other.name) : other?.name ?? "Usuário";
+                return (
+                  <button key={conv.id} onClick={() => handleSelect(conv.id)} disabled={sending}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/6 text-left transition-colors disabled:opacity-50"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/40 to-secondary/30 flex items-center justify-center text-[11px] font-bold flex-shrink-0">
+                      {name?.charAt(0).toUpperCase() ?? "?"}
+                    </div>
+                    <p className="text-sm font-medium flex-1 truncate">{name}</p>
+                    {sending
+                      ? <Loader2 size={12} className="animate-spin text-primary flex-shrink-0" />
+                      : <ChevronRight size={12} className="text-muted-foreground/40 flex-shrink-0" />}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -173,6 +252,7 @@ export default function ChatPage() {
   const [sseConnected, setSseConnected] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<Set<number>>(new Set());
   const [imageUploading, setImageUploading] = useState(false);
+  const [forwardingMessage, setForwardingMessage] = useState<Message | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -387,6 +467,17 @@ export default function ChatPage() {
     }
   };
 
+  const handleForward = async (convId: number): Promise<void> => {
+    if (!forwardingMessage) return;
+    await apiFetch(`/api/chat/conversations/${convId}/messages`, {
+      method: "POST",
+      body: JSON.stringify({ content: `↩ Encaminhado: ${forwardingMessage.content}` }),
+    });
+    toast.success("Mensagem encaminhada");
+    setForwardingMessage(null);
+    fetchConversations(true);
+  };
+
   const filteredConvs = conversations.filter(c => {
     if (!searchQuery.trim()) return true;
     const name = c.otherUser?.role === "company"
@@ -553,6 +644,7 @@ export default function ChatPage() {
                         return (
                           <MessageBubble key={msg.id} msg={msg} isMine={isMine}
                             showAvatar={showAvatar} senderName={otherName}
+                            onForward={msg.type !== "image" ? setForwardingMessage : undefined}
                           />
                         );
                       })}
@@ -601,6 +693,18 @@ export default function ChatPage() {
               </>
             )}
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Forward Modal */}
+      <AnimatePresence>
+        {forwardingMessage && (
+          <ForwardModal
+            msg={forwardingMessage}
+            conversations={conversations.filter(c => c.id !== activeConvId)}
+            onClose={() => setForwardingMessage(null)}
+            onSend={handleForward}
+          />
         )}
       </AnimatePresence>
     </div>

@@ -555,18 +555,29 @@ router.get("/admin/ops", requireAdmin, async (req, res) => {
 
   const [platformWallet] = await db.select({ balance: walletsTable.balance }).from(walletsTable).where(eq(walletsTable.userId, 0));
 
+  const approvedToday = allApps.filter(a =>
+    ["approved", "completed", "counter_accepted"].includes(a.status)
+  ).length;
+
   res.json({
     openJobs: openJobs.length,
     jobsInProgress: inProgressJobs.length,
     pendingApplications: allApps.length,
     pendingWithdrawals: pendingWith.length,
-    pendingWithdrawalAmount: pendingWith.reduce((s, t) => s + t.amount, 0),
+    pendingWithdrawalAmount: pendingWithdrawalsAmount,
+    pendingWithdrawalsAmount,
     pendingDeposits: pendingDeposits.length,
     pendingDepositAmount: pendingDeposits.reduce((s, d) => s + d.amount, 0),
     unreadNotifications: 0,
     platformWalletBalance: platformWallet?.balance ?? 0,
     activeFreelancers24h,
     activeCompanies24h,
+    totalUsers: allUsers.length,
+    newUsersToday,
+    appsToday: allApps.length,
+    approvedToday,
+    todayPayments,
+    todayWithdrawals,
   });
 });
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { db, usersTable, jobsTable, applicationsTable, transactionsTable, walletsTable, ratingsTable } from "@workspace/db";
+import { db, usersTable, jobsTable, applicationsTable, transactionsTable, walletsTable, ratingsTable, stateRepresentativesTable } from "@workspace/db";
 import { eq, sql, and, desc } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { calculateLevel, getLevelProgress, LEVEL_FEE, LEVEL_LABELS } from "../lib/ecosystem";
@@ -11,11 +11,12 @@ router.get("/stats/platform", async (req, res) => {
   const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const todayStr = new Date().toISOString().slice(0, 10);
 
-  const [freelancers, companies, allJobs, allTransactions] = await Promise.all([
+  const [freelancers, companies, allJobs, allTransactions, repsResult] = await Promise.all([
     db.select().from(usersTable).where(eq(usersTable.role, "freelancer")),
     db.select().from(usersTable).where(eq(usersTable.role, "company")),
     db.select().from(jobsTable),
     db.select().from(transactionsTable).where(eq(transactionsTable.type, "credit")),
+    db.select({ id: stateRepresentativesTable.id }).from(stateRepresentativesTable),
   ]);
 
   const activeJobs = allJobs.filter(j => j.status === "open" || j.status === "in_progress").length;
@@ -48,6 +49,7 @@ router.get("/stats/platform", async (req, res) => {
     jobsToday,
     jobsByCategory,
     recentActivity,
+    activeRepresentatives: repsResult.length,
   });
 });
 
