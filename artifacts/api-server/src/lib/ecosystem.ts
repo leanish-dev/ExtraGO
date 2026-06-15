@@ -1,5 +1,6 @@
 import { db, usersTable, walletsTable, transactionsTable, notificationsTable, depositRequestsTable, stateRepresentativesTable, applicationsTable, ratingsTable } from "@workspace/db";
 import { eq, sql, and } from "drizzle-orm";
+import { loadSplitConfig, calculateReferralRate as calcRefRate, type SplitConfig } from "./split-engine";
 
 // Official 5-tier level system. Internal enum keys map to public labels:
 // bronze=Iniciante, silver=Júnior, gold=Intermediário, elite=Sênior, diamond=Elite
@@ -231,6 +232,9 @@ export async function completeJobCascade(
   jobValue: number,
   jobLocation?: string,
 ) {
+  // Load governance split config BEFORE the transaction — must not run inside tx
+  const splitCfg: SplitConfig = await loadSplitConfig();
+
   const result = await db.transaction(async (tx) => {
     // --- 1. Strict company funds check before any mutations ---
     const [companyWalletCheck] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, companyId));
@@ -253,7 +257,7 @@ export async function completeJobCascade(
 
     if (!freelancer) throw new Error("Freelancer not found");
 
-    const feeRate = LEVEL_FEE[freelancer.level as string] ?? 0.20;
+    const feeRate = splitCfg.platformFeeByLevel[freelancer.level as string] ?? LEVEL_FEE[freelancer.level as string] ?? 0.20;
     const platformFee = Math.round(jobValue * feeRate);
     const freelancerEarnings = Math.round(jobValue - platformFee);
 
@@ -333,7 +337,7 @@ export async function completeJobCascade(
       const activeReferrals = referred.filter(r => (r.cj ?? 0) >= 1).length;
       const networkExtras = referred.reduce((s, r) => s + (r.cj ?? 0), 0);
       const [refUser] = await tx.select().from(usersTable).where(eq(usersTable.id, freelancer.referredById));
-      const refRate = referralRate(activeReferrals, networkExtras, refUser?.ambassadorApproved ?? false);
+      const refRate = calcRefRate(splitCfg, activeReferrals, networkExtras, refUser?.ambassadorApproved ?? false);
       referralCommission = Math.round(freelancerEarnings * refRate);
       if (referralCommission > 0) {
         let [refWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.userId, freelancer.referredById));

@@ -7,7 +7,8 @@ import {
   Shield, Settings, Users, Award, Save, RotateCcw, ChevronRight,
   Crown, AlertTriangle, Loader2, CheckCircle, Trash2, Search,
   Lock, Unlock, RefreshCw, Star, TrendingUp, Edit2, X, UserCog,
-  Percent, DollarSign, Plus, Info,
+  Percent, DollarSign, Plus, Info, Layers, Wallet, Tag, BarChart2,
+  Server, Archive, GripVertical, ToggleLeft, ToggleRight, Circle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,6 +59,56 @@ interface UserOverride {
   customFee: number | null;
   customReferralRate: number | null;
   governanceNotes: string | null;
+}
+
+interface SplitConfig {
+  platformFeeByLevel: Record<string, number>;
+  representativeRate: number;
+  investorRate: number;
+  reserveFundRate: number;
+  escrowRules: { enabled: boolean; autoReleaseHours: number; disputeWindowHours: number };
+  withdrawalRules: { minAmountCents: number; maxAmountCents: number; processingDays: number };
+  asaasConfig: { enabled: boolean; environment: string; webhookEnabled: boolean };
+  referralThresholds: { agent: number; ambassador: number };
+}
+
+interface FinancialConfig {
+  config: SplitConfig;
+  defaults: SplitConfig;
+  description: Record<string, string>;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  icon: string | null;
+  displayOrder: number;
+  status: "active" | "archived";
+  rules: Record<string, any> | null;
+}
+
+interface PlatformWalletMetrics {
+  balance: number;
+  totalEarned: number;
+  totalWithdrawn: number;
+  totalFeesCollected: number;
+  referralCommissionsPaid: number;
+  pendingWithdrawals: number;
+}
+
+interface LedgerEntry {
+  id: number;
+  walletId: number;
+  type: string;
+  amount: number;
+  balanceBefore: number;
+  balanceAfter: number;
+  description: string | null;
+  referenceId: number | null;
+  referenceType: string | null;
+  createdAt: string;
 }
 
 const PREDEFINED_BADGES = [
@@ -159,7 +210,7 @@ function ConfirmDialog({
 
 export default function GovernancePage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"config" | "team" | "badges" | "users">("config");
+  const [activeTab, setActiveTab] = useState<"config" | "users" | "team" | "badges" | "financial" | "categories" | "wallet">("config");
 
   // Config state
   const [config, setConfig] = useState<PlatformConfig | null>(null);
@@ -193,6 +244,29 @@ export default function GovernancePage() {
   const [selectedUser, setSelectedUser] = useState<UserOverride | null>(null);
   const [searchResults, setSearchResults] = useState<UserOverride[]>([]);
   const [searching, setSearching] = useState(false);
+
+  // Financial governance state
+  const [financialConfig, setFinancialConfig] = useState<FinancialConfig | null>(null);
+  const [localFinancial, setLocalFinancial] = useState<Partial<SplitConfig>>({});
+  const [financialLoading, setFinancialLoading] = useState(false);
+  const [financialSaving, setFinancialSaving] = useState(false);
+  const [financialUnlocked, setFinancialUnlocked] = useState<Set<string>>(new Set());
+
+  // Categories state
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [catForm, setCatForm] = useState({ name: "", description: "", icon: "", displayOrder: "0" });
+  const [catSaving, setCatSaving] = useState(false);
+  const [editingCat, setEditingCat] = useState<Category | null>(null);
+  const [showArchived, setShowArchived] = useState(false);
+
+  // Platform wallet state
+  const [walletMetrics, setWalletMetrics] = useState<PlatformWalletMetrics | null>(null);
+  const [walletLoading, setWalletLoading] = useState(false);
+  const [ledgerEntries, setLedgerEntries] = useState<LedgerEntry[]>([]);
+  const [ledgerLoading, setLedgerLoading] = useState(false);
+  const [ledgerPage, setLedgerPage] = useState(1);
+  const [ledgerTotal, setLedgerTotal] = useState(0);
 
   const isCEO = CEO_EMAILS.includes((user?.email ?? "").toLowerCase());
 
@@ -233,6 +307,44 @@ export default function GovernancePage() {
     finally { setOverridesLoading(false); }
   }, []);
 
+  const fetchFinancial = useCallback(async () => {
+    setFinancialLoading(true);
+    try {
+      const data: FinancialConfig = await apiFetch("/api/admin/governance/financial");
+      setFinancialConfig(data);
+      setLocalFinancial({ ...data.config });
+    } catch { /* noop */ }
+    finally { setFinancialLoading(false); }
+  }, []);
+
+  const fetchCategories = useCallback(async () => {
+    setCategoriesLoading(true);
+    try {
+      const data: Category[] = await apiFetch(`/api/admin/governance/categories?includeArchived=${showArchived}`);
+      setCategories(data);
+    } catch { /* noop */ }
+    finally { setCategoriesLoading(false); }
+  }, [showArchived]);
+
+  const fetchWallet = useCallback(async () => {
+    setWalletLoading(true);
+    try {
+      const data = await apiFetch("/api/admin/governance/platform-wallet");
+      setWalletMetrics(data.metrics);
+    } catch { /* noop */ }
+    finally { setWalletLoading(false); }
+  }, []);
+
+  const fetchLedger = useCallback(async () => {
+    setLedgerLoading(true);
+    try {
+      const data = await apiFetch(`/api/admin/governance/ledger?page=${ledgerPage}&limit=20`);
+      setLedgerEntries(data.entries);
+      setLedgerTotal(data.pagination.total);
+    } catch { /* noop */ }
+    finally { setLedgerLoading(false); }
+  }, [ledgerPage]);
+
   useEffect(() => {
     if (!isCEO) return;
     fetchConfig();
@@ -243,7 +355,10 @@ export default function GovernancePage() {
     if (activeTab === "team") fetchAdmins();
     if (activeTab === "badges") fetchBadges();
     if (activeTab === "users") fetchOverrides();
-  }, [activeTab, isCEO, fetchAdmins, fetchBadges, fetchOverrides]);
+    if (activeTab === "financial") fetchFinancial();
+    if (activeTab === "categories") fetchCategories();
+    if (activeTab === "wallet") { fetchWallet(); fetchLedger(); }
+  }, [activeTab, isCEO, fetchAdmins, fetchBadges, fetchOverrides, fetchFinancial, fetchCategories, fetchWallet, fetchLedger]);
 
   const handleSaveConfig = async () => {
     setConfirmOpen(false);
@@ -373,6 +488,67 @@ export default function GovernancePage() {
     }
   };
 
+  const handleSaveFinancial = async () => {
+    setFinancialSaving(true);
+    try {
+      await apiFetch("/api/admin/governance/financial", {
+        method: "PUT",
+        body: JSON.stringify({
+          representativeRate: localFinancial.representativeRate,
+          investorRate: localFinancial.investorRate,
+          reserveFundRate: localFinancial.reserveFundRate,
+          escrowRules: localFinancial.escrowRules,
+          withdrawalRules: localFinancial.withdrawalRules,
+        }),
+      });
+      toast.success("Configuração financeira salva");
+      setFinancialUnlocked(new Set());
+      fetchFinancial();
+    } catch {
+      toast.error("Erro ao salvar configuração financeira");
+    } finally {
+      setFinancialSaving(false);
+    }
+  };
+
+  const handleSaveCategory = async () => {
+    if (!catForm.name.trim()) { toast.error("Nome da categoria é obrigatório"); return; }
+    setCatSaving(true);
+    try {
+      if (editingCat) {
+        await apiFetch(`/api/admin/governance/categories/${editingCat.id}`, {
+          method: "PUT",
+          body: JSON.stringify(catForm),
+        });
+        toast.success("Categoria atualizada");
+      } else {
+        await apiFetch("/api/admin/governance/categories", {
+          method: "POST",
+          body: JSON.stringify(catForm),
+        });
+        toast.success("Categoria criada");
+      }
+      setCatForm({ name: "", description: "", icon: "", displayOrder: "0" });
+      setEditingCat(null);
+      fetchCategories();
+    } catch {
+      toast.error("Erro ao salvar categoria");
+    } finally {
+      setCatSaving(false);
+    }
+  };
+
+  const handleArchiveCategory = async (id: number) => {
+    try {
+      await apiFetch(`/api/admin/governance/categories/${id}`, { method: "DELETE" });
+      toast.success("Categoria arquivada");
+      fetchCategories();
+    } catch {
+      toast.error("Erro ao arquivar categoria");
+    }
+  };
+
+  const currFormat = (v: number) => `R$ ${(v / 100).toFixed(2).replace(".", ",")}`;
   const pctFormat = (v: number) => `${(v * 100).toFixed(0)}%`;
   const hasConfigChanges = config && JSON.stringify(localConfig) !== JSON.stringify(config.config);
   const filteredAdmins = admins.filter(a =>
@@ -441,7 +617,10 @@ export default function GovernancePage() {
       {/* Tabs */}
       <div className="flex gap-1 p-1 rounded-xl overflow-x-auto" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
         {[
-          { id: "config", label: "Configurações", icon: <Settings size={14} /> },
+          { id: "config", label: "Config", icon: <Settings size={14} /> },
+          { id: "financial", label: "Financeiro", icon: <Layers size={14} /> },
+          { id: "categories", label: "Categorias", icon: <Tag size={14} /> },
+          { id: "wallet", label: "Carteira", icon: <Wallet size={14} /> },
           { id: "users", label: "Usuários", icon: <UserCog size={14} /> },
           { id: "team", label: "Equipe", icon: <Users size={14} /> },
           { id: "badges", label: "Badges", icon: <Award size={14} /> },
@@ -449,7 +628,7 @@ export default function GovernancePage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
               activeTab === tab.id
                 ? "bg-primary text-black"
                 : "text-muted-foreground hover:text-foreground hover:bg-white/4"
@@ -980,6 +1159,371 @@ export default function GovernancePage() {
                   </div>
                 ))}
               </div>
+            )}
+          </motion.div>
+        )}
+
+        {/* FINANCIAL TAB */}
+        {activeTab === "financial" && (
+          <motion.div key="financial" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-4">
+            {financialLoading ? (
+              <div className="flex justify-center py-16"><Loader2 size={22} className="animate-spin text-primary/60" /></div>
+            ) : (
+              <>
+                {/* Split Rates */}
+                {[
+                  {
+                    sectionId: "split",
+                    icon: <Layers size={16} className="text-primary" />,
+                    title: "Distribuição da Taxa da Plataforma",
+                    subtitle: "como a taxa coletada é distribuída internamente",
+                    fields: [
+                      { key: "representativeRate", label: "Comissão do Representante Estadual" },
+                      { key: "investorRate", label: "Participação de Investidores Parceiros" },
+                      { key: "reserveFundRate", label: "Fundo de Reserva Operacional" },
+                    ],
+                    sliderProps: { min: 0, max: 0.20, step: 0.005, format: pctFormat },
+                  },
+                  {
+                    sectionId: "escrow",
+                    icon: <Server size={16} className="text-primary" />,
+                    title: "Escrow — Custódia de Pagamentos",
+                    subtitle: "comportamento do sistema de custódia",
+                    fields: [
+                      { key: "escrow.autoReleaseHours", label: "Liberação automática após (horas)" },
+                      { key: "escrow.disputeWindowHours", label: "Janela de disputa (horas)" },
+                    ],
+                    sliderProps: { min: 1, max: 168, step: 1, format: (v: number) => `${v}h` },
+                  },
+                  {
+                    sectionId: "withdrawal",
+                    icon: <DollarSign size={16} className="text-primary" />,
+                    title: "Regras de Saque PIX",
+                    subtitle: "limites e prazos de processamento",
+                    fields: [
+                      { key: "withdrawal.minAmount", label: "Valor mínimo (R$)", min: 100, max: 5000, step: 50, format: (v: number) => `R$ ${v}` },
+                      { key: "withdrawal.processingDays", label: "Prazo de processamento (dias úteis)", min: 1, max: 14, step: 1, format: (v: number) => `${v}d` },
+                    ],
+                    sliderProps: { min: 100, max: 5000, step: 50, format: (v: number) => `R$ ${v}` },
+                  },
+                ].map(({ sectionId, icon, title, subtitle, fields, sliderProps }) => {
+                  const unlocked = financialUnlocked.has(sectionId);
+                  return (
+                    <div key={sectionId} className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {icon}
+                          <div>
+                            <h3 className="text-sm font-bold">{title}</h3>
+                            <p className="text-[11px] text-muted-foreground">{subtitle}</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setFinancialUnlocked(prev => {
+                              const next = new Set(prev);
+                              if (next.has(sectionId)) next.delete(sectionId);
+                              else next.add(sectionId);
+                              return next;
+                            });
+                          }}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
+                            unlocked
+                              ? "border-yellow-500/40 bg-yellow-500/10 text-yellow-400"
+                              : "border-white/10 bg-white/4 text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {unlocked ? <Unlock size={11} /> : <Lock size={11} />}
+                          {unlocked ? "Bloqueado" : "Editar"}
+                        </button>
+                      </div>
+                      <div className="space-y-3">
+                        {sectionId === "split" && fields.map(({ key, label }) => (
+                          <SliderField
+                            key={key}
+                            label={label}
+                            value={(localFinancial as any)[key] ?? 0}
+                            min={sliderProps.min}
+                            max={sliderProps.max}
+                            step={sliderProps.step}
+                            format={sliderProps.format}
+                            locked={!unlocked}
+                            onChange={v => setLocalFinancial(f => ({ ...f, [key]: v }))}
+                          />
+                        ))}
+                        {sectionId === "escrow" && (
+                          <div className="space-y-3">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Escrow ativo</span>
+                              <button
+                                disabled={!unlocked}
+                                onClick={() => setLocalFinancial(f => ({
+                                  ...f,
+                                  escrowRules: { ...(f.escrowRules ?? { autoReleaseHours: 48, disputeWindowHours: 24 }), enabled: !(f.escrowRules?.enabled ?? false) },
+                                }))}
+                                className={`${!unlocked ? "opacity-40 cursor-not-allowed" : ""}`}
+                              >
+                                {localFinancial.escrowRules?.enabled
+                                  ? <ToggleRight size={24} className="text-primary" />
+                                  : <ToggleLeft size={24} className="text-muted-foreground" />}
+                              </button>
+                            </div>
+                            {["autoReleaseHours", "disputeWindowHours"].map(k => (
+                              <SliderField
+                                key={k}
+                                label={k === "autoReleaseHours" ? "Liberação automática (h)" : "Janela de disputa (h)"}
+                                value={(localFinancial.escrowRules as any)?.[k] ?? (k === "autoReleaseHours" ? 48 : 24)}
+                                min={1} max={168} step={1}
+                                format={v => `${v}h`}
+                                locked={!unlocked}
+                                onChange={v => setLocalFinancial(f => ({
+                                  ...f,
+                                  escrowRules: { ...(f.escrowRules ?? { enabled: false, autoReleaseHours: 48, disputeWindowHours: 24 }), [k]: v },
+                                }))}
+                              />
+                            ))}
+                          </div>
+                        )}
+                        {sectionId === "withdrawal" && (
+                          <div className="space-y-3">
+                            <SliderField
+                              label="Valor mínimo de saque"
+                              value={Math.round((localFinancial.withdrawalRules?.minAmountCents ?? 5000) / 100)}
+                              min={5} max={500} step={5}
+                              format={v => `R$ ${v}`}
+                              locked={!unlocked}
+                              onChange={v => setLocalFinancial(f => ({
+                                ...f,
+                                withdrawalRules: { ...(f.withdrawalRules ?? { minAmountCents: 5000, maxAmountCents: 1000000, processingDays: 3 }), minAmountCents: v * 100 },
+                              }))}
+                            />
+                            <SliderField
+                              label="Prazo de processamento (dias úteis)"
+                              value={localFinancial.withdrawalRules?.processingDays ?? 3}
+                              min={1} max={14} step={1}
+                              format={v => `${v}d`}
+                              locked={!unlocked}
+                              onChange={v => setLocalFinancial(f => ({
+                                ...f,
+                                withdrawalRules: { ...(f.withdrawalRules ?? { minAmountCents: 5000, maxAmountCents: 1000000, processingDays: 3 }), processingDays: v },
+                              }))}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Asaas Status — read-only */}
+                <div className="p-5 rounded-2xl space-y-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Server size={16} className="text-muted-foreground" />
+                    <h3 className="text-sm font-bold">Status Asaas</h3>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/8 text-muted-foreground border border-white/10">Somente leitura</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {[
+                      {
+                        label: "Integração",
+                        value: localFinancial.asaasConfig?.enabled ? "Ativa" : "Desativada",
+                        ok: localFinancial.asaasConfig?.enabled,
+                      },
+                      {
+                        label: "Ambiente",
+                        value: localFinancial.asaasConfig?.environment === "production" ? "Produção" : "Sandbox",
+                        ok: localFinancial.asaasConfig?.environment === "production",
+                      },
+                      {
+                        label: "Webhook",
+                        value: localFinancial.asaasConfig?.webhookEnabled ? "Configurado" : "Pendente",
+                        ok: localFinancial.asaasConfig?.webhookEnabled,
+                      },
+                    ].map(({ label, value, ok }) => (
+                      <div key={label} className="p-3 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">{label}</p>
+                        <div className="flex items-center justify-center gap-1.5">
+                          <Circle size={7} className={ok ? "text-emerald-400 fill-emerald-400" : "text-red-400 fill-red-400"} />
+                          <span className="text-xs font-bold">{value}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground/60 text-center">
+                    A integração Asaas é configurada via variáveis de ambiente pelo time de engenharia.
+                  </p>
+                </div>
+
+                {/* Save button */}
+                {financialUnlocked.size > 0 && (
+                  <div className="flex justify-end">
+                    <Button onClick={handleSaveFinancial} disabled={financialSaving} className="h-10 px-6 bg-primary text-black font-bold hover:bg-primary/90">
+                      {financialSaving ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Save size={14} className="mr-1.5" />}
+                      Salvar Configuração Financeira
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+          </motion.div>
+        )}
+
+        {/* CATEGORIES TAB */}
+        {activeTab === "categories" && (
+          <motion.div key="categories" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-4">
+            {/* Add / Edit Form */}
+            <div className="p-5 rounded-2xl space-y-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center gap-2">
+                <Tag size={16} className="text-primary" />
+                <h3 className="text-sm font-bold">{editingCat ? "Editar Categoria" : "Nova Categoria"}</h3>
+                {editingCat && (
+                  <button onClick={() => { setEditingCat(null); setCatForm({ name: "", description: "", icon: "", displayOrder: "0" }); }}
+                    className="ml-auto text-muted-foreground hover:text-foreground transition-colors">
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Input placeholder="Nome da categoria *" value={catForm.name} onChange={e => setCatForm(f => ({ ...f, name: e.target.value }))} className="bg-white/5 border-white/10 h-10" />
+                <Input placeholder="Ícone (ex: briefcase, star)" value={catForm.icon} onChange={e => setCatForm(f => ({ ...f, icon: e.target.value }))} className="bg-white/5 border-white/10 h-10" />
+                <Input placeholder="Descrição" value={catForm.description} onChange={e => setCatForm(f => ({ ...f, description: e.target.value }))} className="bg-white/5 border-white/10 h-10" />
+                <Input placeholder="Ordem de exibição" type="number" value={catForm.displayOrder} onChange={e => setCatForm(f => ({ ...f, displayOrder: e.target.value }))} className="bg-white/5 border-white/10 h-10" />
+              </div>
+              <Button onClick={handleSaveCategory} disabled={catSaving} className="h-10 px-6 bg-primary text-black font-bold hover:bg-primary/90">
+                {catSaving ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Save size={14} className="mr-1.5" />}
+                {editingCat ? "Salvar Edição" : "Criar Categoria"}
+              </Button>
+            </div>
+
+            {/* List */}
+            <div className="p-4 rounded-2xl space-y-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  {categories.length} categoria{categories.length !== 1 ? "s" : ""}
+                </p>
+                <button
+                  onClick={() => setShowArchived(v => !v)}
+                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Archive size={12} />
+                  {showArchived ? "Ocultar arquivadas" : "Ver arquivadas"}
+                </button>
+              </div>
+              {categoriesLoading ? (
+                <div className="flex justify-center py-8"><Loader2 size={18} className="animate-spin text-primary/60" /></div>
+              ) : categories.length === 0 ? (
+                <div className="text-center py-8 text-sm text-muted-foreground">Nenhuma categoria cadastrada</div>
+              ) : (
+                <div className="space-y-2">
+                  {categories.map(cat => (
+                    <div key={cat.id} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                      <GripVertical size={14} className="text-muted-foreground/40 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-bold">{cat.name}</span>
+                          {cat.icon && <span className="text-[10px] text-muted-foreground">{cat.icon}</span>}
+                          {cat.status === "archived" && (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/8 text-muted-foreground border border-white/10">Arquivada</span>
+                          )}
+                        </div>
+                        {cat.description && <p className="text-xs text-muted-foreground truncate mt-0.5">{cat.description}</p>}
+                        <p className="text-[10px] text-muted-foreground/50">{cat.slug} · ordem {cat.displayOrder}</p>
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button
+                          onClick={() => { setEditingCat(cat); setCatForm({ name: cat.name, description: cat.description ?? "", icon: cat.icon ?? "", displayOrder: String(cat.displayOrder) }); }}
+                          className="text-muted-foreground/50 hover:text-primary transition-colors p-1"
+                        >
+                          <Edit2 size={13} />
+                        </button>
+                        {cat.status === "active" && (
+                          <button onClick={() => handleArchiveCategory(cat.id)} className="text-muted-foreground/50 hover:text-destructive transition-colors p-1">
+                            <Archive size={13} />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* WALLET / LEDGER TAB */}
+        {activeTab === "wallet" && (
+          <motion.div key="wallet" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-4">
+            {/* Metrics */}
+            {walletLoading ? (
+              <div className="flex justify-center py-16"><Loader2 size={22} className="animate-spin text-primary/60" /></div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {[
+                    { label: "Saldo Plataforma", value: walletMetrics?.balance ?? 0, icon: <Wallet size={16} />, accent: "text-primary" },
+                    { label: "Total em Taxas", value: walletMetrics?.totalFeesCollected ?? 0, icon: <DollarSign size={16} />, accent: "text-emerald-400" },
+                    { label: "Total Recebido", value: walletMetrics?.totalEarned ?? 0, icon: <TrendingUp size={16} />, accent: "text-cyan-400" },
+                    { label: "Total Sacado", value: walletMetrics?.totalWithdrawn ?? 0, icon: <BarChart2 size={16} />, accent: "text-blue-400" },
+                    { label: "Comissões Pagas", value: walletMetrics?.referralCommissionsPaid ?? 0, icon: <Percent size={16} />, accent: "text-purple-400" },
+                    { label: "Saques Pendentes", value: walletMetrics?.pendingWithdrawals ?? 0, icon: <AlertTriangle size={16} />, accent: "text-yellow-400" },
+                  ].map(({ label, value, icon, accent }) => (
+                    <div key={label} className="p-4 rounded-2xl space-y-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                      <div className={`flex items-center gap-1.5 ${accent}`}>{icon}<span className="text-[10px] font-bold uppercase tracking-wider">{label}</span></div>
+                      <p className="text-lg font-bold tabular-nums">{currFormat(value)}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Ledger */}
+                <div className="p-4 rounded-2xl space-y-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <BarChart2 size={16} className="text-primary" />
+                      <p className="text-sm font-bold">Ledger da Plataforma</p>
+                    </div>
+                    <button onClick={fetchLedger} className="text-muted-foreground hover:text-foreground transition-colors">
+                      <RefreshCw size={14} className={ledgerLoading ? "animate-spin" : ""} />
+                    </button>
+                  </div>
+                  {ledgerLoading ? (
+                    <div className="flex justify-center py-8"><Loader2 size={18} className="animate-spin text-primary/60" /></div>
+                  ) : ledgerEntries.length === 0 ? (
+                    <div className="text-center py-8 text-sm text-muted-foreground">Nenhuma entrada no ledger ainda</div>
+                  ) : (
+                    <div className="space-y-1.5">
+                      {ledgerEntries.map(entry => (
+                        <div key={entry.id} className="flex items-center gap-3 p-3 rounded-xl text-xs" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                          <div className={`w-2 h-2 rounded-full flex-shrink-0 ${entry.amount >= 0 ? "bg-emerald-400" : "bg-red-400"}`} />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold truncate">{entry.description ?? entry.type}</p>
+                            <p className="text-muted-foreground/60 text-[10px]">
+                              {new Date(entry.createdAt).toLocaleString("pt-BR")}
+                              {entry.referenceType && ` · ${entry.referenceType}`}
+                            </p>
+                          </div>
+                          <div className="text-right flex-shrink-0">
+                            <p className={`font-bold tabular-nums ${entry.amount >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+                              {entry.amount >= 0 ? "+" : ""}{currFormat(entry.amount)}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground/50">{currFormat(entry.balanceAfter)}</p>
+                          </div>
+                        </div>
+                      ))}
+                      {ledgerTotal > 20 && (
+                        <div className="flex items-center justify-center gap-3 pt-2">
+                          <button disabled={ledgerPage <= 1} onClick={() => setLedgerPage(p => p - 1)} className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors">
+                            ← Anterior
+                          </button>
+                          <span className="text-xs text-muted-foreground">Pág. {ledgerPage} · {ledgerTotal} total</span>
+                          <button disabled={ledgerPage * 20 >= ledgerTotal} onClick={() => setLedgerPage(p => p + 1)} className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors">
+                            Próxima →
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
             )}
           </motion.div>
         )}
