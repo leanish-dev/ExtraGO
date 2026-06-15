@@ -313,6 +313,62 @@ export default function LandingPage() {
 
           {/* CTA — single waitlist conversion */}
           <div className="w-full relative z-10 px-5 pt-5 pb-2 sm:pt-6 sm:pb-2">
+
+            {/* ── Authenticated return-to-app strip — shown only when logged in ── */}
+            <AnimatePresence>
+              {user && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+                  className="flex items-center justify-center mb-4"
+                >
+                  <Link href={user.role === "admin" ? "/admin" : "/app/dashboard"}>
+                    <motion.div
+                      whileHover={{ scale: 1.03, boxShadow: "0 0 28px rgba(124,252,0,0.35), 0 4px 20px rgba(0,0,0,0.40)" }}
+                      whileTap={{ scale: 0.97 }}
+                      className="flex items-center gap-3 cursor-pointer"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(124,252,0,0.10) 0%, rgba(0,229,255,0.07) 100%)",
+                        border: "1px solid rgba(124,252,0,0.30)",
+                        backdropFilter: "blur(12px)",
+                        borderRadius: "100px",
+                        paddingLeft: "clamp(14px,3vw,22px)",
+                        paddingRight: "clamp(10px,2vw,16px)",
+                        paddingTop: "10px",
+                        paddingBottom: "10px",
+                        gap: "clamp(8px,1.5vw,12px)",
+                        boxShadow: "0 0 16px rgba(124,252,0,0.18), 0 2px 12px rgba(0,0,0,0.35)",
+                      }}
+                    >
+                      {/* Avatar */}
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center font-black text-black text-xs flex-shrink-0"
+                        style={{ background: "linear-gradient(135deg, #7CFC00, #00e5ff)" }}
+                      >
+                        {user.name?.charAt(0)?.toUpperCase() ?? "?"}
+                      </div>
+                      <div>
+                        <p style={{ fontSize: "clamp(11px,2vw,13px)", fontWeight: 700, color: "rgba(255,255,255,0.92)", lineHeight: 1.2, whiteSpace: "nowrap" }}>
+                          Olá, {user.name?.split(" ")[0]} — bem-vindo de volta!
+                        </p>
+                        <p style={{ fontSize: "clamp(9px,1.5vw,11px)", color: "rgba(124,252,0,0.75)", fontWeight: 600, marginTop: 1 }}>
+                          Continuar para o {user.role === "admin" ? "Painel Admin" : "Dashboard"} →
+                        </p>
+                      </div>
+                      <div
+                        className="flex items-center justify-center w-7 h-7 rounded-full flex-shrink-0"
+                        style={{ background: "rgba(124,252,0,0.15)", border: "1px solid rgba(124,252,0,0.28)" }}
+                      >
+                        <ArrowRight size={13} style={{ color: "#7CFC00" }} />
+                      </div>
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <motion.div
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
@@ -858,7 +914,13 @@ export default function LandingPage() {
           <div className="flex items-center gap-6 text-xs text-muted-foreground">
             <a href="#como-funciona" className="hover:text-foreground transition-colors">Como funciona</a>
             <a href="#para-quem" className="hover:text-foreground transition-colors">Para quem</a>
-            <Link href="/login" className="hover:text-foreground transition-colors">Entrar</Link>
+            {user ? (
+              <Link href={user.role === "admin" ? "/admin" : "/app/dashboard"} className="hover:text-foreground transition-colors font-semibold" style={{ color: "rgba(124,252,0,0.75)" }}>
+                Dashboard →
+              </Link>
+            ) : (
+              <Link href="/login" className="hover:text-foreground transition-colors">Entrar</Link>
+            )}
           </div>
           <p className="text-xs text-muted-foreground">© 2026 extraGO · Plataforma Premium de Hospitalidade</p>
         </div>

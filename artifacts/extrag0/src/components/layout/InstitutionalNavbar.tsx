@@ -223,7 +223,10 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
   ];
   const isInstitutionalPage =
     loc === "/" || INSTITUTIONAL_PATHS.some(p => loc.startsWith(p));
+  // effectiveUser: null on public pages → drives the CENTER nav (public links vs welcome)
   const effectiveUser = isInstitutionalPage ? null : user;
+  // navUser: always the real authenticated user → drives RIGHT actions + drawer content
+  const navUser = user;
 
   /* ── Authenticated badge data (Phase 8) ── */
   const { data: notifs } = useListNotifications(undefined, { query: { queryKey: ["notifications"], enabled: !!user } });
@@ -385,11 +388,37 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
             </nav>
           )}
 
-          {/* ── RIGHT: actions ── */}
+          {/* ── RIGHT: actions — always reflect real auth state (navUser) ── */}
           <div className="flex items-center flex-shrink-0" style={{ gap: "clamp(2px,0.8vw,8px)" }}>
 
-            {effectiveUser ? (
+            {navUser ? (
               <>
+                {/* "Abrir App" / dashboard shortcut — shown on public pages so user can return instantly */}
+                {isInstitutionalPage && (
+                  <Link href={isAdmin ? "/admin" : "/app/dashboard"} aria-label="Ir para o Dashboard">
+                    <motion.button
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="hidden sm:flex items-center gap-1.5 rounded-full font-bold cursor-pointer"
+                      style={{
+                        fontSize: "clamp(10px,1.8vw,12px)",
+                        paddingLeft: "clamp(10px,1.8vw,14px)",
+                        paddingRight: "clamp(10px,1.8vw,14px)",
+                        height: 32,
+                        color: "#000",
+                        border: "none",
+                        background: `linear-gradient(135deg, ${G}, ${C})`,
+                        boxShadow: `0 0 14px rgba(22,163,74,0.38)`,
+                        transition: "box-shadow 0.15s",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <ArrowRight size={12} />
+                      Abrir App
+                    </motion.button>
+                  </Link>
+                )}
+
                 {/* Search (authenticated) */}
                 {onSearchOpen && (
                   <button
@@ -402,8 +431,8 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                   </button>
                 )}
 
-                {/* Chat (Phase 8 — always visible, non-admin) */}
-                {!isAdmin && effectiveUser && (
+                {/* Chat (non-admin, non-public pages) */}
+                {!isAdmin && !isInstitutionalPage && (
                   <Link href="/app/chat" aria-label="Mensagens">
                     <button
                       className={`relative flex items-center justify-center w-9 h-9 rounded-xl transition-all ${
@@ -421,16 +450,16 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                   </Link>
                 )}
 
-                {/* Notifications (Phase 8 — authenticated only) */}
-                {effectiveUser && <NotificationBell unread={unread} />}
+                {/* Notifications (authenticated only) */}
+                <NotificationBell unread={unread} />
 
-                {/* Avatar → /app/profile (Phase 9 — direct, no dropdown) */}
+                {/* Avatar → /app/profile */}
                 <Link href="/app/profile" aria-label="Meu perfil">
                   <button className="relative flex items-center justify-center ml-0.5" title="Meu perfil">
-                    <AvatarInitials name={effectiveUser?.name} avatarUrl={(effectiveUser as any)?.avatarUrl} />
-                    {effectiveUser?.role === "freelancer" && effectiveUser?.level && (
+                    <AvatarInitials name={navUser?.name} avatarUrl={(navUser as any)?.avatarUrl} />
+                    {navUser?.role === "freelancer" && navUser?.level && (
                       <span className="absolute -bottom-1 -right-1 pointer-events-none">
-                        <LevelBadgeIcon level={effectiveUser?.level} size="xs" />
+                        <LevelBadgeIcon level={navUser?.level} size="xs" />
                       </span>
                     )}
                   </button>
@@ -620,19 +649,31 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 </button>
               </div>
 
-              {/* Authenticated user card */}
-              {effectiveUser && (
+              {/* Authenticated user card — always show when logged in (even on public pages) */}
+              {navUser && (
                 <div className="relative z-10 flex items-center gap-3 px-4 py-3 border-b flex-shrink-0" style={{ borderColor: "rgba(22,163,74,0.18)" }}>
-                  <AvatarInitials name={effectiveUser.name} avatarUrl={(effectiveUser as any)?.avatarUrl} />
-                  <div className="min-w-0">
-                    <p className="text-[13px] font-bold text-white/95 truncate leading-tight">{effectiveUser.name}</p>
-                    <p className="text-[10.5px] text-white/45 truncate">{effectiveUser.email}</p>
+                  <AvatarInitials name={navUser.name} avatarUrl={(navUser as any)?.avatarUrl} />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[13px] font-bold text-white/95 truncate leading-tight">{navUser.name}</p>
+                    <p className="text-[10.5px] text-white/45 truncate">{navUser.email}</p>
                   </div>
+                  {/* "Abrir App" shortcut in drawer header for public pages */}
+                  {isInstitutionalPage && (
+                    <Link href={isAdmin ? "/admin" : "/app/dashboard"} onClick={() => setDrawer(false)}>
+                      <div
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-full font-bold text-[10px] flex-shrink-0 cursor-pointer"
+                        style={{ background: `linear-gradient(135deg, ${G}, ${C})`, color: "#000", whiteSpace: "nowrap" }}
+                      >
+                        <ArrowRight size={9} />
+                        App
+                      </div>
+                    </Link>
+                  )}
                 </div>
               )}
 
               {/* Search (mobile-first access — GlobalSearch trigger) */}
-              {effectiveUser && onSearchOpen && (
+              {navUser && onSearchOpen && (
                 <div className="relative z-10 px-3 pt-3 flex-shrink-0">
                   <button
                     onClick={() => { setDrawer(false); onSearchOpen(); }}
@@ -650,9 +691,9 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 </div>
               )}
 
-              {/* Nav sections */}
+              {/* Nav sections — always reflect real auth state */}
               <div className="relative z-10 flex-1 overflow-y-auto py-3 px-3">
-                {effectiveUser ? (
+                {navUser ? (
                   visibleSections(role).map((sec, si) => (
                     <div key={si} className="mb-4">
                       <p className="px-3 pb-1.5 text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.65)" }}>
@@ -723,16 +764,29 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 )}
               </div>
 
-              {/* Footer CTAs */}
+              {/* Footer CTAs — always reflect real auth state */}
               <div className="relative z-10 flex-shrink-0 p-4 border-t" style={{ borderColor: "rgba(22,163,74,0.22)", background: "rgba(2,8,22,0.60)", backdropFilter: "blur(8px)" }}>
-                {effectiveUser ? (
-                  <button
-                    onClick={() => { logout(); setDrawer(false); }}
-                    className="w-full h-11 rounded-full font-bold text-[13px] cursor-pointer flex items-center justify-center gap-2"
-                    style={{ color: "#f87171", border: "1px solid rgba(248,113,113,0.30)", background: "rgba(248,113,113,0.10)" }}
-                  >
-                    <LogOut size={14} /> Sair da conta
-                  </button>
+                {navUser ? (
+                  <div className="space-y-2">
+                    {/* Primary: Abrir App (on public pages) or just logout */}
+                    {isInstitutionalPage && (
+                      <Link href={isAdmin ? "/admin" : "/app/dashboard"} onClick={() => setDrawer(false)}>
+                        <button
+                          className="w-full h-10 rounded-full font-bold text-[13px] border-none cursor-pointer flex items-center justify-center gap-2"
+                          style={{ background: `linear-gradient(135deg,${G},${C})`, color: "#000", boxShadow: "0 0 18px rgba(22,163,74,0.35)" }}
+                        >
+                          <ArrowRight size={13} /> Abrir App
+                        </button>
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => { logout(); setDrawer(false); }}
+                      className="w-full h-10 rounded-full font-bold text-[13px] cursor-pointer flex items-center justify-center gap-2"
+                      style={{ color: "#f87171", border: "1px solid rgba(248,113,113,0.30)", background: "rgba(248,113,113,0.10)" }}
+                    >
+                      <LogOut size={14} /> Sair da conta
+                    </button>
+                  </div>
                 ) : (
                   <div className="space-y-2">
                     <Link href="/login" onClick={() => setDrawer(false)}>
