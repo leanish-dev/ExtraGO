@@ -252,8 +252,12 @@ export default function CompanyProfilePage() {
               className="space-y-4"
             >
               {company.bio && (
-                <div className="glass-card rounded-2xl p-5 border border-white/6">
-                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                <div className="rounded-2xl p-5 relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.05) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(0,229,255,0.11)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.32), transparent)" }} />
+                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2 relative">
                     <div className="w-6 h-6 rounded-lg bg-secondary/10 flex items-center justify-center">
                       <Building2 size={12} className="text-secondary" />
                     </div>
@@ -263,8 +267,12 @@ export default function CompanyProfilePage() {
                 </div>
               )}
 
-              <div className="glass-card rounded-2xl p-5 border border-white/6">
-                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+              <div className="rounded-2xl p-5 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.045) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(124,252,0,0.1)" }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.28), rgba(0,229,255,0.15), transparent)" }} />
+                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2 relative">
                   <Users size={13} className="text-primary" /> Estatísticas
                 </h2>
                 <div className="space-y-3">
@@ -282,8 +290,12 @@ export default function CompanyProfilePage() {
               </div>
 
               {company.serviceRegions && company.serviceRegions.length > 0 && (
-                <div className="glass-card rounded-2xl p-5 border border-white/6">
-                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                <div className="rounded-2xl p-5 relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(0,229,255,0.1)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.28), transparent)" }} />
+                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2 relative">
                     <MapPin size={13} className="text-secondary" /> Regiões de Atuação
                   </h2>
                   <div className="flex flex-wrap gap-2">
@@ -297,8 +309,12 @@ export default function CompanyProfilePage() {
               )}
 
               {company.website && (
-                <div className="glass-card rounded-2xl p-5 border border-white/6">
-                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                <div className="rounded-2xl p-5 relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(124,252,0,0.1)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.25), transparent)" }} />
+                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2 relative">
                     <Globe size={13} className="text-primary" /> Website
                   </h2>
                   <a
@@ -323,7 +339,9 @@ export default function CompanyProfilePage() {
               className="space-y-3"
             >
               {jobs.length === 0 ? (
-                <div className="glass-card rounded-2xl p-8 border border-white/6 text-center">
+                <div className="rounded-2xl p-8 text-center relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
+                >
                   <Briefcase size={28} className="text-muted-foreground mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground">Nenhum extra aberto no momento.</p>
                   {isFreelancer && (
@@ -340,7 +358,8 @@ export default function CompanyProfilePage() {
                     <motion.div
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.98 }}
-                      className="glass-card rounded-2xl p-4 border border-white/6 cursor-pointer hover:border-primary/25 transition-all card-hover"
+                      className="rounded-2xl p-4 cursor-pointer hover:border-primary/30 transition-all card-hover relative overflow-hidden"
+                      style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(8,17,26,0.90) 65%)", border: "1px solid rgba(139,92,246,0.12)" }}
                     >
                       <div className="flex items-start gap-3">
                         <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">

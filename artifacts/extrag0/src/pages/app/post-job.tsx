@@ -111,8 +111,21 @@ export default function PostJobPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="glass-card rounded-2xl p-5 sm:p-6 space-y-5"
+            className="rounded-2xl p-5 sm:p-6 space-y-5 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, rgba(139,92,246,0.065) 0%, rgba(8,17,26,0.92) 65%)",
+              border: "1px solid rgba(139,92,246,0.16)",
+            }}
           >
+            <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.5), rgba(59,130,246,0.25), transparent)" }} />
+            <div className="absolute right-3 top-3 pointer-events-none select-none opacity-[0.04]">
+              <svg width="44" height="40" viewBox="0 0 44 40" fill="none">
+                <rect x="2" y="12" width="40" height="26" rx="4" stroke="#8b5cf6" strokeWidth="1.8"/>
+                <path d="M14 12v-3a4 4 0 014-4h8a4 4 0 014 4v3" stroke="#8b5cf6" strokeWidth="1.8"/>
+                <line x1="2" y1="22" x2="42" y2="22" stroke="#8b5cf6" strokeWidth="1.4"/>
+              </svg>
+            </div>
             <SectionHeader icon={<Briefcase size={14} />} title="Informações do Extra" color="primary" />
 
             <FormField control={form.control} name="title" render={({ field }) => (
@@ -169,8 +182,14 @@ export default function PostJobPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.07 }}
-            className="glass-card rounded-2xl p-5 sm:p-6 space-y-5"
+            className="rounded-2xl p-5 sm:p-6 space-y-5 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, rgba(0,229,255,0.05) 0%, rgba(8,17,26,0.92) 65%)",
+              border: "1px solid rgba(0,229,255,0.13)",
+            }}
           >
+            <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.4), rgba(20,184,166,0.25), transparent)" }} />
             <SectionHeader icon={<MapPin size={14} />} title="Local e Horário" color="secondary" />
 
             <FormField control={form.control} name="location" render={({ field }) => (
@@ -207,8 +226,14 @@ export default function PostJobPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.13 }}
-            className="glass-card rounded-2xl p-5 sm:p-6 space-y-5"
+            className="rounded-2xl p-5 sm:p-6 space-y-5 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, rgba(250,204,21,0.05) 0%, rgba(8,17,26,0.92) 65%)",
+              border: "1px solid rgba(250,204,21,0.14)",
+            }}
           >
+            <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(250,204,21,0.45), rgba(124,252,0,0.2), transparent)" }} />
             <SectionHeader icon={<DollarSign size={14} />} title="Remuneração e Equipe" color="yellow" />
 
             <div className="grid grid-cols-2 gap-4">

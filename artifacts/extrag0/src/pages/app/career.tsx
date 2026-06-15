@@ -291,9 +291,29 @@ export default function CareerPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.07 }}
-          className="glass-card rounded-2xl border border-white/8 p-5"
+          className="rounded-2xl p-5 relative overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, rgba(34,197,94,0.06) 0%, rgba(8,17,26,0.92) 60%, rgba(124,252,0,0.03) 100%)",
+            border: "1px solid rgba(34,197,94,0.14)",
+          }}
         >
-          <div className="flex items-center gap-2 mb-5">
+          {/* Career-green top stripe */}
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(34,197,94,0.5), rgba(124,252,0,0.35), transparent)" }} />
+          {/* Path/route SVG watermark */}
+          <div className="absolute right-2 bottom-2 pointer-events-none select-none opacity-[0.055]">
+            <svg width="52" height="56" viewBox="0 0 52 56" fill="none">
+              <circle cx="10" cy="8" r="5" stroke="#22c55e" strokeWidth="1.8"/>
+              <circle cx="10" cy="28" r="5" stroke="#22c55e" strokeWidth="1.8"/>
+              <circle cx="10" cy="48" r="5" stroke="#22c55e" strokeWidth="1.8"/>
+              <line x1="10" y1="13" x2="10" y2="23" stroke="#22c55e" strokeWidth="1.4" strokeDasharray="2 2"/>
+              <line x1="10" y1="33" x2="10" y2="43" stroke="#22c55e" strokeWidth="1.4" strokeDasharray="2 2"/>
+              <line x1="15" y1="8" x2="46" y2="8" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.5"/>
+              <line x1="15" y1="28" x2="40" y2="28" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.5"/>
+              <line x1="15" y1="48" x2="44" y2="48" stroke="#22c55e" strokeWidth="1.2" strokeOpacity="0.5"/>
+            </svg>
+          </div>
+          <div className="flex items-center gap-2 mb-5 relative">
             <TrendingUp size={15} className="text-primary" />
             <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Jornada de Carreira</h3>
           </div>
@@ -373,9 +393,24 @@ export default function CareerPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.14 }}
-            className="glass-card rounded-2xl border border-white/8 p-5"
+            className="rounded-2xl p-5 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, rgba(34,197,94,0.065) 0%, rgba(8,17,26,0.92) 60%, rgba(124,252,0,0.035) 100%)",
+              border: "1px solid rgba(34,197,94,0.16)",
+            }}
           >
-            <div className="flex items-center gap-2 mb-4">
+            {/* Career-green top stripe */}
+            <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(34,197,94,0.55), rgba(124,252,0,0.3), transparent)" }} />
+            {/* Target watermark */}
+            <div className="absolute right-3 bottom-3 pointer-events-none select-none opacity-[0.04]">
+              <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
+                <circle cx="25" cy="25" r="22" stroke="#22c55e" strokeWidth="1.8"/>
+                <circle cx="25" cy="25" r="14" stroke="#22c55e" strokeWidth="1.4"/>
+                <circle cx="25" cy="25" r="6" stroke="#22c55e" strokeWidth="1.6" fill="#22c55e" fillOpacity="0.3"/>
+              </svg>
+            </div>
+            <div className="flex items-center gap-2 mb-4 relative">
               <Target size={15} className="text-primary" />
               <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Próximo Objetivo</h3>
             </div>
@@ -435,9 +470,24 @@ export default function CareerPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.21 }}
-          className="glass-card rounded-2xl border border-white/8 p-5"
+          className="rounded-2xl p-5 relative overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, rgba(124,252,0,0.055) 0%, rgba(8,17,26,0.90) 55%, rgba(0,229,255,0.03) 100%)",
+            border: "1px solid rgba(124,252,0,0.12)",
+          }}
         >
-          <div className="flex items-center gap-2 mb-1">
+          {/* Green top stripe */}
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.45), rgba(0,229,255,0.25), transparent)" }} />
+          {/* Dollar/calculator watermark */}
+          <div className="absolute right-2 bottom-2 pointer-events-none select-none opacity-[0.05]">
+            <svg width="50" height="52" viewBox="0 0 50 52" fill="none">
+              <rect x="3" y="3" width="44" height="46" rx="6" stroke="#7cfc00" strokeWidth="1.8"/>
+              <text x="25" y="32" textAnchor="middle" fontSize="22" fontWeight="bold" fill="#7cfc00" fontFamily="monospace">$</text>
+              <line x1="10" y1="42" x2="40" y2="42" stroke="#7cfc00" strokeWidth="1.2" strokeOpacity="0.5"/>
+            </svg>
+          </div>
+          <div className="flex items-center gap-2 mb-1 relative">
             <DollarSign size={15} className="text-primary" />
             <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Simulador de Ganhos</h3>
           </div>
@@ -506,9 +556,25 @@ export default function CareerPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.28 }}
-          className="glass-card rounded-2xl border border-white/8 p-5"
+          className="rounded-2xl p-5 relative overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, rgba(250,204,21,0.04) 0%, rgba(8,17,26,0.92) 60%, rgba(34,197,94,0.035) 100%)",
+            border: "1px solid rgba(250,204,21,0.13)",
+          }}
         >
-          <div className="flex items-center justify-between mb-4">
+          {/* Gold top stripe */}
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(250,204,21,0.5), rgba(34,197,94,0.25), transparent)" }} />
+          {/* Trophy watermark */}
+          <div className="absolute right-2 top-3 pointer-events-none select-none opacity-[0.045]">
+            <svg width="44" height="50" viewBox="0 0 44 50" fill="none">
+              <path d="M8 4h28v18a14 14 0 01-28 0V4z" stroke="#facc15" strokeWidth="1.8"/>
+              <path d="M8 10H2a4 4 0 004 4h2M36 10h6a4 4 0 01-4 4h-2" stroke="#facc15" strokeWidth="1.6"/>
+              <line x1="22" y1="36" x2="22" y2="44" stroke="#facc15" strokeWidth="1.6"/>
+              <line x1="12" y1="44" x2="32" y2="44" stroke="#facc15" strokeWidth="2"/>
+            </svg>
+          </div>
+          <div className="flex items-center justify-between mb-4 relative">
             <div className="flex items-center gap-2">
               <Trophy size={15} className="text-primary" />
               <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Conquistas</h3>
@@ -552,9 +618,22 @@ export default function CareerPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.35 }}
-          className="glass-card rounded-2xl border border-white/8 p-5"
+          className="rounded-2xl p-5 relative overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, rgba(250,204,21,0.045) 0%, rgba(8,17,26,0.92) 60%, rgba(124,252,0,0.025) 100%)",
+            border: "1px solid rgba(250,204,21,0.12)",
+          }}
         >
-          <div className="flex items-center gap-2 mb-1">
+          {/* Star/yellow top stripe */}
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(250,204,21,0.5), rgba(124,252,0,0.2), transparent)" }} />
+          {/* Star watermark */}
+          <div className="absolute right-3 bottom-3 pointer-events-none select-none opacity-[0.04]">
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+              <path d="M26 4l5.6 11.3L44 17.1l-9 8.8 2.1 12.3L26 32.4 14.9 38.2 17 25.9l-9-8.8 12.4-1.8z" stroke="#facc15" strokeWidth="2" fill="#facc15" fillOpacity="0.2"/>
+            </svg>
+          </div>
+          <div className="flex items-center gap-2 mb-1 relative">
             <Star size={15} className="text-yellow-400" />
             <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Impacto da Reputação</h3>
           </div>

@@ -45,11 +45,26 @@ function ApplicationCard({ app, isCompany, onApprove, onReject, index }: {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.05 }}
-      className="glass-card rounded-xl p-5 space-y-3"
+      className="rounded-xl p-5 space-y-3 relative overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(8,17,26,0.90) 60%, rgba(59,130,246,0.03) 100%)",
+        border: `1px solid ${app.status === "approved" ? "rgba(124,252,0,0.18)" : app.status === "rejected" ? "rgba(239,68,68,0.15)" : "rgba(139,92,246,0.14)"}`,
+      }}
     >
-      <div className="flex items-start justify-between gap-3">
+      {/* Top accent stripe — status-aware */}
+      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{ background: app.status === "approved" ? "linear-gradient(90deg,transparent,rgba(124,252,0,0.45),transparent)" : app.status === "rejected" ? "linear-gradient(90deg,transparent,rgba(239,68,68,0.35),transparent)" : "linear-gradient(90deg,transparent,rgba(139,92,246,0.4),transparent)" }} />
+      {/* Extras marketplace watermark — briefcase */}
+      <div className="absolute right-2 bottom-1 pointer-events-none select-none opacity-[0.06]">
+        <svg width="52" height="48" viewBox="0 0 52 48" fill="none">
+          <rect x="4" y="16" width="44" height="30" rx="5" stroke="#8b5cf6" strokeWidth="2"/>
+          <path d="M18 16v-4a4 4 0 014-4h8a4 4 0 014 4v4" stroke="#8b5cf6" strokeWidth="2"/>
+          <line x1="4" y1="28" x2="48" y2="28" stroke="#8b5cf6" strokeWidth="1.5"/>
+        </svg>
+      </div>
+      <div className="flex items-start justify-between gap-3 relative">
         <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/25 to-secondary/15 border border-white/10 flex items-center justify-center text-sm font-bold flex-shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500/25 to-blue-500/15 border border-violet-500/20 flex items-center justify-center text-sm font-bold flex-shrink-0">
             {(isCompany ? (app.freelancer?.name ?? "P") : (app.job?.title ?? "E")).charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">

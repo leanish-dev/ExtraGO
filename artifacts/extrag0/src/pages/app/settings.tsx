@@ -80,8 +80,16 @@ function SectionCard({ title, icon, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="glass-card rounded-2xl border border-white/8 overflow-hidden">
-      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/6">
+    <div className="rounded-2xl overflow-hidden relative"
+      style={{
+        background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(8,17,26,0.92) 55%, rgba(0,229,255,0.025) 100%)",
+        border: "1px solid rgba(255,255,255,0.09)",
+      }}
+    >
+      {/* Top accent stripe */}
+      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.28), rgba(0,229,255,0.18), transparent)" }} />
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/6 relative">
         <span className="text-primary">{icon}</span>
         <h3 className="text-sm font-bold">{title}</h3>
       </div>
@@ -439,7 +447,9 @@ function ProfissionalSection() {
 
   if (user?.role === "company") {
     return (
-      <div className="glass-card rounded-2xl border border-white/8 p-8 text-center">
+      <div className="rounded-2xl p-8 text-center relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
+      >
         <Briefcase size={32} className="text-muted-foreground mx-auto mb-3" />
         <p className="text-sm text-muted-foreground">Esta seção é exclusiva para freelancers.</p>
       </div>
@@ -582,7 +592,9 @@ function IndicacoesSection() {
 
   if (user?.role !== "freelancer") {
     return (
-      <div className="glass-card rounded-2xl border border-white/8 p-8 text-center">
+      <div className="rounded-2xl p-8 text-center relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
+      >
         <Share2 size={32} className="text-muted-foreground mx-auto mb-3" />
         <p className="text-sm text-muted-foreground">Esta seção é exclusiva para freelancers.</p>
       </div>
@@ -685,7 +697,9 @@ export default function SettingsPage() {
         <div className="flex flex-col lg:flex-row gap-5">
           {/* ── Sidebar tabs ── */}
           <div className="lg:w-52 flex-shrink-0">
-            <div className="glass-card rounded-2xl border border-white/8 overflow-hidden">
+            <div className="rounded-2xl overflow-hidden relative"
+              style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.08)" }}
+            >
               {visibleTabs.map(tab => (
                 <button
                   key={tab.id}

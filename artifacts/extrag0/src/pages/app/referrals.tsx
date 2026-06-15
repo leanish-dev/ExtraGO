@@ -539,8 +539,14 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.12 }}
-          className="glass-card rounded-2xl p-5 border border-white/6 relative overflow-hidden"
+          className="rounded-2xl p-5 relative overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, rgba(124,252,0,0.05) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.03) 100%)",
+            border: "1px solid rgba(124,252,0,0.12)",
+          }}
         >
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.4), rgba(0,229,255,0.2), transparent)" }} />
           <div className="absolute inset-0 bg-gradient-to-br from-primary/3 to-secondary/3 pointer-events-none" />
           <div className="relative">
             <div className="flex items-center justify-between mb-1">
@@ -627,9 +633,12 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.14 }}
-          className="glass-card rounded-2xl p-5 border border-white/6"
+          className="rounded-2xl p-5 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(250,204,21,0.045) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(250,204,21,0.11)" }}
         >
-          <h2 className="font-bold mb-4 flex items-center gap-2 text-sm">
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(250,204,21,0.35), rgba(124,252,0,0.15), transparent)" }} />
+          <h2 className="font-bold mb-4 flex items-center gap-2 text-sm relative">
             <Trophy size={14} className="text-yellow-400" />
             Roadmap de Níveis
           </h2>
@@ -706,9 +715,12 @@ export default function ReferralsPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.16 }}
-            className="glass-card rounded-2xl p-5 border border-white/6"
+            className="rounded-2xl p-5 relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.045) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(245,158,11,0.12)" }}
           >
-            <div className="flex items-center justify-between mb-4">
+            <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.35), rgba(0,229,255,0.15), transparent)" }} />
+            <div className="flex items-center justify-between mb-4 relative">
               <h2 className="font-bold flex items-center gap-2 text-sm">
                 <Users size={14} className="text-secondary" />
                 Minha Rede de Indicados
@@ -760,9 +772,12 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.16 }}
-          className="glass-card rounded-2xl p-5 border border-white/6"
+          className="rounded-2xl p-5 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.045) 0%, rgba(8,17,26,0.92) 60%, rgba(124,252,0,0.025) 100%)", border: "1px solid rgba(245,158,11,0.12)" }}
         >
-          <div className="flex items-center justify-between mb-1">
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.38), rgba(124,252,0,0.18), transparent)" }} />
+          <div className="flex items-center justify-between mb-1 relative">
             <h2 className="font-bold flex items-center gap-2 text-sm">
               <Gift size={14} className="text-primary" />
               Níveis de Comissão por Indicação
@@ -822,8 +837,8 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.17 }}
-          className="glass-card rounded-2xl p-5 border border-primary/12 relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.03) 0%, rgba(0,229,255,0.02) 100%)" }}
+          className="rounded-2xl p-5 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.05) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.025) 100%)", border: "1px solid rgba(124,252,0,0.13)" }}
         >
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(124,252,0,0.06) 0%, transparent 70%)", filter: "blur(30px)" }} />
           <h2 className="font-bold mb-4 flex items-center gap-2 text-sm">
@@ -839,8 +854,11 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.18 }}
-          className="glass-card rounded-2xl p-5 border border-white/6"
+          className="rounded-2xl p-5 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(245,158,11,0.1)" }}
         >
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.3), rgba(124,252,0,0.12), transparent)" }} />
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold flex items-center gap-2 text-sm">
               <Crown size={14} className="text-yellow-400" />

@@ -301,8 +301,12 @@ export default function FreelancerProfilePage() {
               className="space-y-5"
             >
               {(user.bio || user.professionalSummary) && (
-                <div className="glass-card rounded-2xl p-5 border border-white/6">
-                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                <div className="rounded-2xl p-5 relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(59,130,246,0.05) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(59,130,246,0.12)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(59,130,246,0.35), transparent)" }} />
+                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2 relative">
                     <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center">
                       <MessageCircle size={12} className="text-primary" />
                     </div>
@@ -318,8 +322,12 @@ export default function FreelancerProfilePage() {
               )}
 
               {/* Earnings & stats card — visible to everyone */}
-              <div className="glass-card rounded-2xl p-5 border border-white/6">
-                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+              <div className="rounded-2xl p-5 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(34,197,94,0.05) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(34,197,94,0.12)" }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(34,197,94,0.4), rgba(250,204,21,0.2), transparent)" }} />
+                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2 relative">
                   <Star size={13} className="text-yellow-400" /> Desempenho
                 </h2>
                 <div className="space-y-3">
@@ -347,8 +355,12 @@ export default function FreelancerProfilePage() {
               </div>
 
               {user.serviceRegions && user.serviceRegions.length > 0 && (
-                <div className="glass-card rounded-2xl p-5 border border-white/6">
-                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                <div className="rounded-2xl p-5 relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(0,229,255,0.1)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent)" }} />
+                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2 relative">
                     <MapPin size={14} className="text-secondary" /> Regiões de Atendimento
                   </h2>
                   <div className="flex flex-wrap gap-2">
@@ -362,8 +374,12 @@ export default function FreelancerProfilePage() {
               )}
 
               {user.languages && user.languages.length > 0 && (
-                <div className="glass-card rounded-2xl p-5 border border-white/6">
-                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                <div className="rounded-2xl p-5 relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(250,204,21,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(250,204,21,0.1)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(250,204,21,0.3), transparent)" }} />
+                  <h2 className="font-semibold text-sm mb-3 flex items-center gap-2 relative">
                     <Globe size={14} className="text-yellow-400" /> Idiomas
                   </h2>
                   <div className="flex flex-wrap gap-2">
@@ -378,19 +394,27 @@ export default function FreelancerProfilePage() {
 
               {/* Social */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="glass-card rounded-2xl p-4 border border-white/6 text-center">
-                  <p className="text-2xl font-black text-primary">
+                <div className="rounded-2xl p-4 text-center relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(8,17,26,0.90) 70%)", border: "1px solid rgba(59,130,246,0.14)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(59,130,246,0.35), transparent)" }} />
+                  <p className="text-2xl font-black text-primary relative">
                     <AnimatedCounter value={user.followersCount ?? 0} />
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1">
+                  <p className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1 relative">
                     <Users size={10} /> Seguidores
                   </p>
                 </div>
-                <div className="glass-card rounded-2xl p-4 border border-white/6 text-center">
-                  <p className="text-2xl font-black text-secondary">
+                <div className="rounded-2xl p-4 text-center relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.05) 0%, rgba(8,17,26,0.90) 70%)", border: "1px solid rgba(0,229,255,0.13)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent)" }} />
+                  <p className="text-2xl font-black text-secondary relative">
                     <AnimatedCounter value={user.followingCount ?? 0} />
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">Seguindo</p>
+                  <p className="text-xs text-muted-foreground mt-1 relative">Seguindo</p>
                 </div>
               </div>
             </motion.div>
@@ -402,9 +426,12 @@ export default function FreelancerProfilePage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="glass-card rounded-2xl p-5 border border-white/6"
+              className="rounded-2xl p-5 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.045) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(0,229,255,0.11)" }}
             >
-              <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+              <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.32), rgba(59,130,246,0.18), transparent)" }} />
+              <h2 className="font-semibold text-sm mb-4 flex items-center gap-2 relative">
                 <Briefcase size={14} className="text-secondary" /> Experiência Profissional
               </h2>
               {experience.length > 0 ? (
@@ -448,9 +475,12 @@ export default function FreelancerProfilePage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="glass-card rounded-2xl p-5 border border-white/6"
+              className="rounded-2xl p-5 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.045) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(139,92,246,0.11)" }}
             >
-              <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+              <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.32), rgba(250,204,21,0.15), transparent)" }} />
+              <h2 className="font-semibold text-sm mb-4 flex items-center gap-2 relative">
                 <Award size={14} className="text-yellow-400" /> Especialidades
               </h2>
               {user.categories && user.categories.length > 0 ? (
@@ -473,9 +503,12 @@ export default function FreelancerProfilePage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="glass-card rounded-2xl p-5 border border-white/6"
+              className="rounded-2xl p-5 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(124,252,0,0.1)" }}
             >
-              <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+              <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.28), rgba(139,92,246,0.12), transparent)" }} />
+              <h2 className="font-semibold text-sm mb-4 flex items-center gap-2 relative">
                 <Zap size={14} className="text-primary" /> Habilidades
               </h2>
               {skills.length > 0 ? (

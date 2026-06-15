@@ -47,9 +47,15 @@ function BarChart({ data, valueKey, labelKey, color = "#7CFC00", maxBars = 12, s
   );
 }
 
-function MetricCard({ icon, label, value, sub, color }: { icon: React.ReactNode; label: string; value: string | number; sub?: string; color: string }) {
+function MetricCard({ icon, label, value, sub, color, gradientFrom = "rgba(124,252,0,0.06)" }: { icon: React.ReactNode; label: string; value: string | number; sub?: string; color: string; gradientFrom?: string }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className={`glass-card rounded-2xl p-5 border ${color}`}>
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+      className={`rounded-2xl p-5 relative overflow-hidden border ${color}`}
+      style={{ background: `linear-gradient(135deg, ${gradientFrom} 0%, rgba(8,17,26,0.92) 70%)` }}
+    >
+      {/* Top accent stripe derived from the icon color */}
+      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent)" }} />
       <div className="flex items-start justify-between mb-3">
         <div className="opacity-80">{icon}</div>
       </div>
@@ -116,19 +122,24 @@ export default function AdminAnalyticsPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <MetricCard icon={<Users size={18} className="text-primary" />} label="Freelancers" value={d.totalFreelancers} color="border-primary/15" />
-        <MetricCard icon={<Building2 size={18} className="text-secondary" />} label="Empresas" value={d.totalCompanies} color="border-secondary/15" />
-        <MetricCard icon={<CheckCircle size={18} className="text-green-400" />} label="Extras Concluídos" value={d.completedJobs} color="border-green-400/15" />
+        <MetricCard icon={<Users size={18} className="text-primary" />} label="Freelancers" value={d.totalFreelancers} color="border-primary/15" gradientFrom="rgba(124,252,0,0.06)" />
+        <MetricCard icon={<Building2 size={18} className="text-secondary" />} label="Empresas" value={d.totalCompanies} color="border-secondary/15" gradientFrom="rgba(0,229,255,0.055)" />
+        <MetricCard icon={<CheckCircle size={18} className="text-green-400" />} label="Extras Concluídos" value={d.completedJobs} color="border-green-400/15" gradientFrom="rgba(34,197,94,0.055)" />
         <MetricCard
           icon={<DollarSign size={18} className="text-yellow-400" />}
           label="Volume Total"
           value={`R$${(d.totalGross / 100).toFixed(0)}`}
           color="border-yellow-400/15"
+          gradientFrom="rgba(250,204,21,0.055)"
         />
       </div>
 
       {/* Growth Chart */}
-      <div className="glass-card rounded-2xl p-5">
+      <div className="rounded-2xl p-5 relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(8,17,26,0.92) 60%)", border: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.3), rgba(0,229,255,0.2), transparent)" }} />
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-bold">Crescimento — Últimos 12 meses</h2>
           <div className="flex gap-1.5">
@@ -153,8 +164,12 @@ export default function AdminAnalyticsPage() {
 
       <div className="grid sm:grid-cols-2 gap-4">
         {/* Level Distribution */}
-        <div className="glass-card rounded-2xl p-5">
-          <h2 className="text-sm font-bold mb-4 flex items-center gap-2"><Trophy size={14} className="text-primary" /> Distribuição de Níveis</h2>
+        <div className="rounded-2xl p-5 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.045) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(124,252,0,0.1)" }}
+        >
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.35), transparent)" }} />
+          <h2 className="text-sm font-bold mb-4 flex items-center gap-2 relative"><Trophy size={14} className="text-primary" /> Distribuição de Níveis</h2>
           <div className="space-y-3">
             {d.levelDistribution.map(({ level, count }) => {
               const meta = LEVEL_META[level] ?? LEVEL_META.bronze;
@@ -184,8 +199,12 @@ export default function AdminAnalyticsPage() {
         </div>
 
         {/* Conversion Funnel */}
-        <div className="glass-card rounded-2xl p-5">
-          <h2 className="text-sm font-bold mb-4 flex items-center gap-2"><BarChart3 size={14} className="text-secondary" /> Funil de Conversão</h2>
+        <div className="rounded-2xl p-5 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(0,229,255,0.1)" }}
+        >
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent)" }} />
+          <h2 className="text-sm font-bold mb-4 flex items-center gap-2 relative"><BarChart3 size={14} className="text-secondary" /> Funil de Conversão</h2>
           <div className="space-y-4">
             {[
               { label: "Candidaturas Totais", value: d.totalApplications, color: "bg-primary/20 border-primary/20", pct: 100 },
@@ -212,8 +231,12 @@ export default function AdminAnalyticsPage() {
       </div>
 
       {/* Top Earners */}
-      <div className="glass-card rounded-2xl p-5">
-        <h2 className="text-sm font-bold mb-4 flex items-center gap-2"><Crown size={14} className="text-primary" /> Top Freelancers por Ganhos</h2>
+      <div className="rounded-2xl p-5 relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(8,17,26,0.93) 65%)", border: "1px solid rgba(124,252,0,0.1)" }}
+      >
+        <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.35), rgba(0,229,255,0.18), transparent)" }} />
+        <h2 className="text-sm font-bold mb-4 flex items-center gap-2 relative"><Crown size={14} className="text-primary" /> Top Freelancers por Ganhos</h2>
         <div className="space-y-2">
           {d.topEarners.slice(0, 8).map((f, i) => {
             const meta = LEVEL_META[f.level] ?? LEVEL_META.bronze;
@@ -242,8 +265,12 @@ export default function AdminAnalyticsPage() {
       </div>
 
       {/* Top Companies */}
-      <div className="glass-card rounded-2xl p-5">
-        <h2 className="text-sm font-bold mb-4 flex items-center gap-2"><Building2 size={14} className="text-secondary" /> Top Empresas por Extras</h2>
+      <div className="rounded-2xl p-5 relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.04) 0%, rgba(8,17,26,0.93) 65%)", border: "1px solid rgba(0,229,255,0.1)" }}
+      >
+        <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), rgba(124,252,0,0.18), transparent)" }} />
+        <h2 className="text-sm font-bold mb-4 flex items-center gap-2 relative"><Building2 size={14} className="text-secondary" /> Top Empresas por Extras</h2>
         <div className="space-y-2">
           {d.topCompanies.map((c, i) => (
             <div key={c.id} className="flex items-center gap-3 py-2 border-b border-white/4 last:border-0">

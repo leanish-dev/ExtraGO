@@ -86,7 +86,11 @@ function ApplyModal({
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 40 }}
-        className="w-full max-w-lg glass-card rounded-2xl border border-white/10 p-6 shadow-2xl"
+        className="w-full max-w-lg rounded-2xl p-6 shadow-2xl relative overflow-hidden"
+        style={{
+          background: "linear-gradient(135deg, rgba(139,92,246,0.07) 0%, rgba(8,17,26,0.95) 65%)",
+          border: "1px solid rgba(139,92,246,0.2)",
+        }}
       >
         <div className="flex items-center gap-3 mb-5">
           <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
@@ -156,9 +160,15 @@ function ApplicantCard({ app, onApprove, onReject, isActing }: {
       layout
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card rounded-xl p-4 border border-white/6"
+      className="rounded-xl p-4 relative overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(8,17,26,0.90) 65%)",
+        border: `1px solid ${app.status === "approved" ? "rgba(124,252,0,0.18)" : app.status === "rejected" ? "rgba(239,68,68,0.14)" : "rgba(139,92,246,0.13)"}`,
+      }}
     >
-      <div className="flex items-start gap-3">
+      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{ background: app.status === "approved" ? "linear-gradient(90deg,transparent,rgba(124,252,0,0.4),transparent)" : "linear-gradient(90deg,transparent,rgba(139,92,246,0.35),transparent)" }} />
+      <div className="flex items-start gap-3 relative">
         {freelancer?.avatarUrl ? (
           <img
             src={freelancer.avatarUrl}
@@ -347,8 +357,14 @@ export default function JobDetailPage() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="glass-card rounded-2xl border border-white/8 p-5 relative overflow-hidden"
+            className="rounded-2xl p-5 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.025) 100%)",
+              border: "1px solid rgba(139,92,246,0.16)",
+            }}
           >
+            <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.45), rgba(0,229,255,0.2), transparent)" }} />
             {/* Subtle category-colored glow */}
             <div className="absolute top-0 right-0 w-48 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -417,7 +433,9 @@ export default function JobDetailPage() {
                 accent: spotsLeft > 0 ? "text-cyan-400" : "text-red-400",
               },
             ].map((item) => (
-              <div key={item.label} className="glass-card rounded-xl p-3.5 border border-white/6 flex flex-col gap-1">
+              <div key={item.label} className="rounded-xl p-3.5 flex flex-col gap-1 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(8,17,26,0.90) 70%)", border: "1px solid rgba(139,92,246,0.12)" }}
+              >
                 <div className="flex items-center gap-1.5">
                   {item.icon}
                   <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">{item.label}</span>
@@ -434,12 +452,15 @@ export default function JobDetailPage() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.08 }}
-              className="glass-card rounded-xl p-4 border border-white/6 flex items-center gap-3"
+              className="rounded-xl p-4 flex items-center gap-3 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.05) 0%, rgba(8,17,26,0.90) 70%)", border: "1px solid rgba(0,229,255,0.12)" }}
             >
-              <div className="w-8 h-8 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
+              <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent)" }} />
+              <div className="w-8 h-8 rounded-lg bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0 relative">
                 <MapPin size={13} className="text-secondary" />
               </div>
-              <div>
+              <div className="relative">
                 <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Localização</p>
                 <p className="text-sm font-semibold mt-0.5">{job.location}</p>
               </div>
@@ -451,9 +472,12 @@ export default function JobDetailPage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="glass-card rounded-2xl p-5 border border-white/6"
+            className="rounded-2xl p-5 relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(139,92,246,0.12)" }}
           >
-            <h2 className="font-bold text-sm mb-3 flex items-center gap-2">
+            <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.35), rgba(0,229,255,0.15), transparent)" }} />
+            <h2 className="font-bold text-sm mb-3 flex items-center gap-2 relative">
               <Briefcase size={14} className="text-primary" /> Descrição do Extra
             </h2>
             <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">{job.description}</p>
@@ -488,11 +512,15 @@ export default function JobDetailPage() {
                   <Zap size={16} className="mr-2" /> Candidatar-se agora
                 </Button>
               ) : job.status !== "open" ? (
-                <div className="glass-card rounded-2xl p-4 border border-white/6 text-center">
+                <div className="rounded-2xl p-4 text-center relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.04) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(239,68,68,0.12)" }}
+                >
                   <p className="text-sm text-muted-foreground">Este extra não está mais disponível para candidaturas.</p>
                 </div>
               ) : spotsLeft === 0 ? (
-                <div className="glass-card rounded-2xl p-4 border border-white/6 text-center">
+                <div className="rounded-2xl p-4 text-center relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.04) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(239,68,68,0.12)" }}
+                >
                   <p className="text-sm text-muted-foreground">Todas as posições já foram preenchidas.</p>
                 </div>
               ) : null}
@@ -537,7 +565,9 @@ export default function JobDetailPage() {
                   ))}
                 </div>
               ) : applications.length === 0 ? (
-                <div className="glass-card rounded-2xl p-8 border border-white/6 text-center">
+                <div className="rounded-2xl p-8 text-center relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
+                >
                   <Users size={28} className="text-muted-foreground mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground">Ainda não há candidatos para este extra.</p>
                 </div>
@@ -574,7 +604,11 @@ export default function JobDetailPage() {
             transition={{ delay: 0.16 }}
           >
             <Link href={`/app/companies/${job.companyId}`}>
-              <div className="glass-card rounded-2xl p-4 border border-white/6 hover:border-secondary/25 transition-colors cursor-pointer card-hover flex items-center gap-3">
+              <div className="rounded-2xl p-4 hover:border-secondary/30 transition-colors cursor-pointer card-hover flex items-center gap-3 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.045) 0%, rgba(8,17,26,0.90) 65%)", border: "1px solid rgba(0,229,255,0.12)" }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent)" }} />
                 {job.companyAvatarUrl ? (
                   <img
                     src={job.companyAvatarUrl}

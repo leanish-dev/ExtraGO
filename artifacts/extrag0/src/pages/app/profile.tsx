@@ -687,8 +687,12 @@ export default function ProfilePage() {
           {/* ESPECIALIDADES TAB */}
           {activeTab === "especialidades" && user?.role === "freelancer" && (
             <motion.div key="especialidades" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-              <div className="glass-card rounded-2xl p-5 border border-white/8">
-                <h2 className="font-semibold text-sm mb-1 flex items-center gap-2">
+              <div className="rounded-2xl p-5 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(139,92,246,0.12)" }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.35), rgba(250,204,21,0.15), transparent)" }} />
+                <h2 className="font-semibold text-sm mb-1 flex items-center gap-2 relative">
                   <Award size={14} className="text-yellow-400" /> Minhas Especialidades
                 </h2>
                 <p className="text-xs text-muted-foreground mb-4">Selecione as funções que você exerce</p>
@@ -750,8 +754,12 @@ export default function ProfilePage() {
           {/* EXPERIÊNCIA TAB */}
           {activeTab === "experiencia" && user?.role === "freelancer" && (
             <motion.div key="experiencia" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <div className="glass-card rounded-2xl p-5 border border-white/8">
-                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+              <div className="rounded-2xl p-5 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.045) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(0,229,255,0.11)" }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), rgba(59,130,246,0.15), transparent)" }} />
+                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2 relative">
                   <Briefcase size={14} className="text-secondary" /> Experiência Profissional
                 </h2>
                 <ExperienceSection userId={user.id!} />
@@ -762,8 +770,12 @@ export default function ProfilePage() {
           {/* HABILIDADES TAB */}
           {activeTab === "habilidades" && user?.role === "freelancer" && (
             <motion.div key="habilidades" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <div className="glass-card rounded-2xl p-5 border border-white/8">
-                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2">
+              <div className="rounded-2xl p-5 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(124,252,0,0.1)" }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.28), transparent)" }} />
+                <h2 className="font-semibold text-sm mb-4 flex items-center gap-2 relative">
                   <Zap size={14} className="text-primary" /> Habilidades
                 </h2>
                 <SkillsSection userId={user.id!} />
@@ -913,8 +925,12 @@ export default function ProfilePage() {
                 )}
 
                 {/* Reputation score */}
-                <div className="glass-card rounded-2xl p-5 border border-white/8">
-                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                <div className="rounded-2xl p-5 relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(250,204,21,0.05) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(250,204,21,0.11)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(250,204,21,0.35), rgba(124,252,0,0.15), transparent)" }} />
+                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2 relative">
                     <Star size={14} className="text-yellow-400 fill-yellow-400" /> Reputação
                   </h3>
                   <div className="flex items-center gap-5">
@@ -944,8 +960,12 @@ export default function ProfilePage() {
                 </div>
 
                 {/* All levels timeline */}
-                <div className="glass-card rounded-2xl p-5 border border-white/8">
-                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
+                <div className="rounded-2xl p-5 relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(0,229,255,0.1)" }}
+                >
+                  <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.28), rgba(124,252,0,0.12), transparent)" }} />
+                  <h3 className="font-bold text-sm mb-4 flex items-center gap-2 relative">
                     <TrendingUp size={14} className="text-secondary" /> Todos os Níveis
                   </h3>
                   <div className="space-y-3">
@@ -984,8 +1004,10 @@ export default function ProfilePage() {
           {/* CONFIG TAB */}
           {activeTab === "config" && (
             <motion.div key="config" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-              <div className="glass-card rounded-2xl p-5 border border-white/8 space-y-4">
-                <h2 className="font-semibold text-sm flex items-center gap-2">
+              <div className="rounded-2xl p-5 space-y-4 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                <h2 className="font-semibold text-sm flex items-center gap-2 relative">
                   <Shield size={14} className="text-muted-foreground" /> Configurações
                 </h2>
                 <div className="p-3 rounded-xl bg-white/3 border border-white/6">

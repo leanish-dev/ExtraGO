@@ -34,9 +34,29 @@ function WithdrawalCard({ w, onApprove, onReject, approving, rejecting }: {
   approving: boolean;
   rejecting: boolean;
 }) {
+  const wBorderColor = w.status === "pending" ? "rgba(250,204,21,0.22)" : w.status === "rejected" ? "rgba(239,68,68,0.18)" : "rgba(20,184,166,0.22)";
+  const wStripeColor = w.status === "pending" ? "rgba(250,204,21,0.45)" : w.status === "rejected" ? "rgba(239,68,68,0.35)" : "rgba(20,184,166,0.4)";
+
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-xl p-5">
-      <div className="flex items-start justify-between gap-4">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+      className="rounded-xl p-5 relative overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, rgba(20,184,166,0.055) 0%, rgba(8,17,26,0.92) 60%, rgba(250,204,21,0.025) 100%)",
+        border: `1px solid ${wBorderColor}`,
+      }}
+    >
+      {/* Top accent stripe */}
+      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{ background: `linear-gradient(90deg, transparent, ${wStripeColor}, transparent)` }} />
+      {/* PIX/wallet watermark */}
+      <div className="absolute right-3 bottom-2 pointer-events-none select-none opacity-[0.055]">
+        <svg width="48" height="44" viewBox="0 0 48 44" fill="none">
+          <rect x="2" y="8" width="44" height="30" rx="5" stroke="#14b8a6" strokeWidth="1.8"/>
+          <rect x="2" y="15" width="44" height="8" fill="#14b8a6" fillOpacity="0.5"/>
+          <rect x="8" y="27" width="12" height="4" rx="1.5" fill="#14b8a6" fillOpacity="0.6"/>
+        </svg>
+      </div>
+      <div className="flex items-start justify-between gap-4 relative">
         <div className="flex items-start gap-3">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
             w.status === "pending" ? "bg-yellow-400/10 text-yellow-400 border border-yellow-400/20"

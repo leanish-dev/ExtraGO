@@ -777,7 +777,9 @@ export default function JobsPage() {
                 transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
                 className="overflow-hidden"
               >
-                <div className="flex flex-wrap gap-2 p-4 glass-card rounded-xl border border-white/6">
+                <div className="flex flex-wrap gap-2 p-4 rounded-xl relative overflow-hidden"
+                  style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.04) 0%, rgba(8,17,26,0.90) 65%)", border: "1px solid rgba(139,92,246,0.1)" }}
+                >
                   <p className="w-full text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Categoria</p>
                   {CATEGORIES.map(cat => (
                     <motion.button
@@ -806,7 +808,9 @@ export default function JobsPage() {
         )}
 
         {!isLoading && filtered.length === 0 && (
-          <div className="glass-card rounded-2xl">
+          <div className="rounded-2xl relative overflow-hidden"
+            style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
+          >
             <EmptyState
               icon={<Briefcase size={28} />}
               title="Nenhum extra encontrado"

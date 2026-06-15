@@ -237,8 +237,15 @@ function PostCard({ post, onDelete }: { post: FeedPost; onDelete: (id: number) =
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass-card rounded-2xl border border-white/6 overflow-hidden"
+        className="rounded-2xl overflow-hidden relative"
+        style={{
+          background: "linear-gradient(135deg, rgba(59,130,246,0.035) 0%, rgba(8,17,26,0.92) 70%, rgba(124,252,0,0.02) 100%)",
+          border: "1px solid rgba(255,255,255,0.09)",
+        }}
       >
+        {/* Top accent stripe */}
+        <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(59,130,246,0.28), rgba(124,252,0,0.15), transparent)" }} />
         {/* Post type indicator */}
         {post.postType !== "general" && (
           <div className={`px-5 py-2 border-b border-white/5 flex items-center gap-1.5 text-xs font-semibold ${typeInfo.color}`}>
@@ -422,9 +429,15 @@ function CreatePostCard({ onCreated }: { onCreated: () => void }) {
   return (
     <motion.div
       layout
-      className="glass-card rounded-2xl border border-white/8 p-4 sm:p-5"
+      className="rounded-2xl p-4 sm:p-5 relative overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, rgba(59,130,246,0.04) 0%, rgba(8,17,26,0.92) 65%)",
+        border: "1px solid rgba(59,130,246,0.1)",
+      }}
     >
-      <div className="flex gap-3">
+      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(59,130,246,0.25), rgba(124,252,0,0.12), transparent)" }} />
+      <div className="flex gap-3 relative">
         <Avatar user={user ? { id: user.id, name: user.name, avatarUrl: user.avatarUrl } : undefined} size={40} />
         <div className="flex-1 min-w-0">
           <button

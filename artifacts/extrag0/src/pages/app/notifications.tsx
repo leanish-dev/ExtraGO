@@ -100,7 +100,9 @@ export default function NotificationsPage() {
       )}
 
       {!isLoading && notifs.length === 0 && (
-        <div className="glass-card rounded-2xl">
+        <div className="rounded-2xl relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
+        >
           <EmptyState
             icon={<BellOff size={28} />}
             title="Nenhuma notificação"
@@ -119,7 +121,7 @@ export default function NotificationsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.04 }}
             onClick={() => !notif.isRead && handleMarkOne(notif.id!)}
-            className={`w-full text-left glass-card rounded-xl p-4 flex items-start gap-3 transition-all ${getNotifCardClass(notif.type, notif.isRead ?? false)} ${
+            className={`w-full text-left rounded-xl p-4 flex items-start gap-3 transition-all ${getNotifCardClass(notif.type, notif.isRead ?? false)} ${
               !notif.isRead ? "hover:opacity-95" : "opacity-55 hover:opacity-70"
             }`}
           >
