@@ -96,8 +96,9 @@ A extraGO é composta por camadas interconectadas que formam a infraestrutura co
 | `health.ts` | `/api/health` | Health check da API |
 | `profile-sections.ts` | `/api/profile-sections` | Portfólio, seções do perfil |
 | `chat.ts` | `/api/chat` | Mensagens entre usuários |
-| `setup.ts` | `/api/setup` | Admin bootstrap (dev only) |
-| `seed.ts` | `/api/setup/seed` | Seed de dados de teste (dev only) |
+| `governance.ts` | `/api/governance` | CEO Governance Center — configurações, overrides por usuário |
+| `setup.ts` | `/api/setup/admin` | Admin bootstrap (dev only) — idempotente |
+| `seed.ts` | `/api/setup/seed` | Provisionamento das 5 contas aprovadas (dev only) — idempotente, sem dados de ecossistema |
 
 > **REGRA TÉCNICA CRÍTICA:** `app.use("/api", router)` — o Express já prefixia com `/api`. Rotas dentro do router NÃO devem incluir `/api/` no path. Ver `.agents/memory/express-route-prefix.md`.
 
@@ -109,7 +110,7 @@ Localização: `lib/db/src/schema/`
 
 | Arquivo | Tabela principal | Descrição |
 |---|---|---|
-| `users.ts` | `usersTable` | Usuários, roles, nível, referralCode |
+| `users.ts` | `usersTable` | Usuários, roles, nível, referralCode, customFee, customReferralRate, governanceNotes |
 | `jobs.ts` | `jobsTable` | Extras publicados pelas empresas |
 | `applications.ts` | `applicationsTable` | Candidaturas de freelancers |
 | `wallet.ts` | `walletsTable` | Saldo, reservas, pendências |
@@ -118,6 +119,7 @@ Localização: `lib/db/src/schema/`
 | `ratings.ts` | `ratingsTable` | Avaliações bilaterais |
 | `messages.ts` | `messagesTable` | Mensagens entre usuários |
 | `representatives.ts` | `representativesTable` | Representantes estaduais |
+| `platformConfig.ts` | `platformConfigTable` | Configurações da plataforma + badges de governança |
 | `index.ts` | — | Re-exporta todos os schemas |
 
 ---
@@ -181,16 +183,19 @@ Localização: `lib/db/src/schema/`
 - **Rota base:** `/admin`
 - **Arquivos:** `artifacts/extrag0/src/pages/admin/`
 
-| Página | Arquivo | Descrição |
-|---|---|---|
-| Dashboard | `index.tsx` | Visão geral do ecossistema |
-| Usuários | `users.tsx` | Gestão e moderação de usuários |
-| Extras | `jobs.tsx` | Moderação de publicações |
-| Saques | `withdrawals.tsx` | Aprovação de withdrawals PIX |
-| Analytics | `analytics.tsx` | Métricas do ecossistema |
-| Operações | `ops.tsx` | Health check do sistema |
-| Mapa Nacional | `map.tsx` | Geolocalização da rede |
-| Representantes | `representatives.tsx` | Gestão da rede regional |
+| Página | Rota | Arquivo | Descrição |
+|---|---|---|---|
+| Dashboard | `/admin` | `index.tsx` | Visão geral do ecossistema |
+| Usuários | `/admin/users` | `users.tsx` | Gestão e moderação de usuários |
+| Extras | `/admin/jobs` | `jobs.tsx` | Moderação de publicações |
+| Saques | `/admin/withdrawals` | `withdrawals.tsx` | Aprovação de withdrawals PIX |
+| Analytics | `/admin/analytics` | `analytics.tsx` | Métricas do ecossistema |
+| Operações | `/admin/ops` | `ops.tsx` | Health check do sistema |
+| Mapa Nacional | `/admin/map` | `map.tsx` | Geolocalização da rede |
+| Representantes | `/admin/representatives` | `representatives.tsx` | Gestão da rede regional |
+| CEO Governance | `/admin/governance` | `governance.tsx` | Configurações da plataforma, overrides por usuário, badge management |
+
+> **Nota:** O painel admin possui 9 páginas. Gráficos usam barras CSS-only — sem biblioteca recharts.
 
 ### 6. Página de Investidores
 - **Rota:** `/investidores-parceiros`
@@ -292,6 +297,10 @@ lib/db/src/schema/ (source of truth do DB)
 | `DATABASE_URL` | PostgreSQL connection string | Sim (auto-provisionado pelo Replit) |
 | `PORT` | Porta do servidor | Sim (definido no comando do workflow) |
 | `BASE_PATH` | Caminho base do Vite (frontend) | Sim (frontend) |
+
+> **NOTA MULTI-REPLIT:** Estas variáveis precisam ser reconfiguradas em cada conta Replit
+> para onde o projeto for migrado. `DATABASE_URL` em particular aponta para o banco
+> da conta atual — não é portável entre contas automaticamente.
 
 ---
 

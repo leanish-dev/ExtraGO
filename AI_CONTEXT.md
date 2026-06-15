@@ -5,6 +5,29 @@
 
 ---
 
+## ⚠️ LEIA PRIMEIRO — AMBIENTE MULTI-REPLIT
+
+O projeto extraGO é desenvolvido em múltiplas contas Replit.
+O proprietário realiza remixes e migrações frequentes entre contas.
+
+**A conta Replit atual NÃO é assumida como:**
+- O ambiente final de produção
+- O banco de dados final de produção
+- A infraestrutura permanente de hospedagem
+
+**Agentes NÃO devem:**
+- Recomendar arquitetura de deployment permanente sem declaração explícita do proprietário
+- Assumir estabilidade de longo prazo da infraestrutura atual
+- Tomar decisões irreversíveis de infraestrutura sem autorização explícita
+
+**Antes de qualquer recomendação de deploy/hosting/infraestrutura, responder:**
+- [ ] O proprietário declarou explicitamente que esta é a conta Replit final?
+- Se a resposta for desconhecida → assuma **NÃO**.
+
+Ver `docs/MASTER_CONTEXT.md` seção "Multi-Replit Development Policy" para regras completas.
+
+---
+
 ## LEIA ANTES DE QUALQUER ALTERAÇÃO
 
 ### 1. Ler a documentação em `docs/`
@@ -41,18 +64,42 @@ teste.e@extrago.com  — pode ver mock data
 ```
 Helper: `artifacts/extrag0/src/config/test-accounts.ts` → `canUseMockData(email)`
 
-### Contas Master (NUNCA mostrar mock data)
+### Contas Master / Governança (NUNCA mostrar mock data)
 ```
-leonardoscheffel2000@gmail.com  — SUPER_ADMIN / CEO
-extrago.ceo@yahoo.com           — SUPER_ADMIN / CEO
+leonardoscheffel2000@gmail.com  — CEO / SUPER_ADMIN
+extrago.ceo@yahoo.com           — CEO Master / SUPER_ADMIN
+jeandick2000@gmail.com          — CMO / SUPER_ADMIN
 ```
 Helper: `artifacts/extrag0/src/config/master-accounts.ts` → `isMasterAccount(email)`
+
+> **REGRA CRÍTICA:** As 3 contas acima são contas de governança. Nunca recebem dados de demo,
+> seed data, mock data, estatísticas simuladas, rankings fabricados ou qualquer valor artificial.
 
 ### Regra geral
 - Master → dados reais ou empty state
 - Teste → pode ver mock data
 - Comum → dados reais ou empty state elegante
 - **NUNCA** mostrar métricas falsas, rankings inventados ou receitas fictícias a usuários comuns
+
+---
+
+## Política de Imagens de Perfil de Governança
+
+As contas de governança possuem imagens de perfil oficiais permanentes.
+Estas imagens fazem parte da identidade oficial da plataforma.
+
+| Email | Arquivo de Imagem |
+|---|---|
+| `leonardoscheffel2000@gmail.com` | `Leonardo.jpg` |
+| `jeandick2000@gmail.com` | `Jean.jpg` |
+
+**Regras permanentes:**
+- Sempre que seed, bootstrap, restauração de conta ou provisionamento de governança for executado,
+  estas imagens devem ser atribuídas se disponíveis.
+- Agentes devem preservar estas atribuições durante migrações, remixes, rebuilds e provisionamento.
+- Estas imagens são padrão de identidade de governança — não substituir por avatares genéricos.
+
+Ver `docs/TEST_DATA_POLICY.md` seção "Profile Asset Policy" para regras completas.
 
 ---
 
@@ -98,6 +145,8 @@ Helper: `artifacts/extrag0/src/config/master-accounts.ts` → `isMasterAccount(e
 6. NÃO criar dashboards SaaS genéricos
 7. NÃO transformar a extraGO em portal de vagas
 8. NÃO usar "MARKETPLACE #1 DE HOSPITALIDADE" ou similar
+9. NÃO assumir que a conta Replit atual é o ambiente de produção final
+10. NÃO recomendar arquitetura de deployment permanente sem declaração explícita do proprietário
 
 ---
 

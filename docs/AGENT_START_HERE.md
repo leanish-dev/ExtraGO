@@ -5,6 +5,28 @@
 
 ---
 
+## ⚠️ AVISO CRÍTICO — AMBIENTE MULTI-REPLIT
+
+O projeto extraGO pode existir simultaneamente em múltiplas contas Replit.
+O proprietário realiza remixes e migrações frequentes entre contas durante o desenvolvimento.
+
+**Checklist obrigatório antes de qualquer recomendação de deploy, hosting ou infraestrutura:**
+
+- [ ] O proprietário declarou explicitamente que esta é a conta Replit final?
+
+**Se a resposta for desconhecida → assuma NÃO.**
+
+Até que o proprietário declare explicitamente que o ambiente final de produção foi atingido:
+- Não recomendar arquitetura de deployment permanente
+- Não recomendar decisões irreversíveis de infraestrutura
+- Não remover salvaguardas de migração
+- Não assumir estabilidade de longo prazo do banco de dados atual
+- Considerar possibilidade de migração futura em qualquer recomendação de backup ou domínio
+
+Ver `docs/MASTER_CONTEXT.md` seção "Multi-Replit Development Policy" para regras completas.
+
+---
+
 ## O que é a extraGO?
 
 A extraGO é **a Infraestrutura de Mão de Obra do Brasil** — não um job board, não um portal de vagas, não um marketplace de hospitalidade.
@@ -19,10 +41,10 @@ A extraGO é **a Infraestrutura de Mão de Obra do Brasil** — não um job boar
 
 | Documento | Quando ler | O que contém |
 |---|---|---|
-| `MASTER_CONTEXT.md` | **Sempre** — primeira leitura obrigatória | Visão, missão, posicionamento, tese de investimento, Visão 2030 |
+| `MASTER_CONTEXT.md` | **Sempre** — primeira leitura obrigatória | Visão, missão, posicionamento, tese de investimento, Visão 2030, Multi-Replit Policy |
 | `BUSINESS_MODEL.md` | Antes de qualquer feature financeira, de nível ou indicação | Taxas, níveis, indicações, representantes, wallet, fluxos de receita |
 | `VISUAL_GUIDELINES.md` | Antes de qualquer trabalho de UI/UX | Paleta, tipografia, overlay, navbar, backgrounds, terminologia |
-| `TEST_DATA_POLICY.md` | Antes de trabalhar com dados, dashboards ou analytics | Mock data, contas de teste, contas master, empty states, auditorias |
+| `TEST_DATA_POLICY.md` | Antes de trabalhar com dados, dashboards ou analytics | Mock data, contas de teste, contas master, empty states, Profile Asset Policy |
 | `PRODUCT_ARCHITECTURE.md` | Antes de criar rotas, componentes ou schemas | Stack, estrutura de monorepo, módulos, fluxo de dados, auth |
 | `ROADMAP.md` | Antes de propor ou priorizar features | Status atual, marcos, visão de expansão, fases do produto |
 
@@ -47,14 +69,18 @@ beginner → junior → intermediate → senior → elite
 
 ### Contas Especiais
 ```ts
-// MASTER: nunca veem mock data
-isMasterAccount("leonardoscheffel2000@gmail.com") // true
-isMasterAccount("extrago.ceo@yahoo.com") // true
+// MASTER / GOVERNANÇA: nunca veem mock data (3 contas)
+isMasterAccount("leonardoscheffel2000@gmail.com") // true — CEO
+isMasterAccount("extrago.ceo@yahoo.com")          // true — CEO Master
+isMasterAccount("jeandick2000@gmail.com")          // true — CMO
 
-// TESTE: únicas que podem ver mock data
+// TESTE: únicas que podem ver mock data (2 contas)
 canUseMockData("teste.f@extrago.com") // true
 canUseMockData("teste.e@extrago.com") // true
 ```
+
+> **ATENÇÃO:** `jeandick2000@gmail.com` é conta de governança master — NUNCA exibir
+> mock data, seed data, estatísticas simuladas ou qualquer valor artificial para esta conta.
 
 ### Gotchas Técnicos Críticos
 
@@ -64,7 +90,7 @@ canUseMockData("teste.e@extrago.com") // true
 4. **FormLabel crash:** `FormLabel` fora de `FormField` context causa crash em runtime — usar `<label>` simples.
 5. **Codegen obrigatório:** Após mudar `openapi.yaml` → rodar `pnpm --filter @workspace/api-spec run codegen`. Após mudar schema DB → rodar `pnpm --filter @workspace/db run push`.
 6. **Tokens in-memory:** Auth tokens são perdidos no restart do servidor — comportamento esperado.
-7. **Admin seed em produção:** Endpoints `/api/setup/seed` e `/api/setup/admin` devem ser protegidos/removidos em produção.
+7. **Endpoints de setup em produção:** `/api/setup/seed` e `/api/setup/admin` devem ser protegidos ou removidos em produção.
 
 ---
 
@@ -116,6 +142,7 @@ pnpm run build
 ## Checklist Antes de Qualquer Implementação
 
 - [ ] Li `MASTER_CONTEXT.md` e entendo o posicionamento da extraGO?
+- [ ] **Esta recomendação envolve deploy/hosting/infraestrutura? O proprietário declarou este ambiente como final?**
 - [ ] Se for feature financeira: li `BUSINESS_MODEL.md`?
 - [ ] Se for trabalho de UI: li `VISUAL_GUIDELINES.md`?
 - [ ] Se for feature com dados: li `TEST_DATA_POLICY.md`?
@@ -129,7 +156,8 @@ pnpm run build
 ## Checklist Antes de Finalizar Qualquer Implementação
 
 - [ ] A terminologia oficial foi usada em toda a UI?
-- [ ] Contas master não veem mock data?
+- [ ] Contas master (3 contas) não veem mock data?
+- [ ] Imagens de perfil de governança preservadas (Leonardo.jpg / Jean.jpg)?
 - [ ] Se nova rota: está no `openapi.yaml` + codegen rodado?
 - [ ] Se novo schema de DB: `db:push` rodado?
 - [ ] Empty states implementados para novos componentes com dados?
@@ -139,12 +167,13 @@ pnpm run build
 
 ---
 
-## Contato dos Fundadores / Contas Master
+## Fundadores / Contas de Governança
 
-| Nome | Email | Role |
-|---|---|---|
-| Leonardo Scheffel | `leonardoscheffel2000@gmail.com` | CEO / SUPER_ADMIN |
-| extraGO CEO | `extrago.ceo@yahoo.com` | CEO / SUPER_ADMIN |
+| Nome | Email | Role | Imagem de Perfil |
+|---|---|---|---|
+| Leonardo Scheffel | `leonardoscheffel2000@gmail.com` | CEO / SUPER_ADMIN | `Leonardo.jpg` |
+| Jean Dick | `jeandick2000@gmail.com` | CMO / SUPER_ADMIN | `Jean.jpg` |
+| extraGO CEO | `extrago.ceo@yahoo.com` | CEO Master / SUPER_ADMIN | — |
 
 ---
 

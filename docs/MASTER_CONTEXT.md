@@ -12,6 +12,55 @@ Ele define quem somos, o que fazemos, por que existimos e para onde vamos.
 
 ---
 
+## Multi-Replit Development Policy
+
+### Contexto Operacional
+
+O projeto extraGO é desenvolvido ativamente em múltiplas contas Replit.
+O proprietário realiza remixes e migrações frequentes entre contas como parte do fluxo normal de desenvolvimento.
+
+### Premissa Fundamental
+
+**A conta Replit atual NÃO é assumida como o ambiente de produção final** a menos que o proprietário declare explicitamente o contrário.
+
+### O que agentes NÃO devem assumir sem declaração explícita do proprietário:
+
+- Que a conta Replit atual é o host final de produção
+- Que o banco de dados atual é o banco de produção permanente
+- Que a infraestrutura atual é estável de longo prazo
+- Que configurações de domínio, SSL ou DNS são permanentes
+- Que dados no banco atual serão preservados indefinidamente
+
+### O que agentes DEVEM considerar em qualquer recomendação:
+
+- Possibilidade de migração futura para outra conta Replit
+- Portabilidade das configurações de ambiente
+- Estratégias de backup que suportem migração
+- Compatibilidade de `DATABASE_URL` em novos ambientes
+- Configurações de variáveis de ambiente que precisarão ser replicadas
+
+### Ambiente de Produção Final
+
+O proprietário declarará explicitamente quando o ambiente final de hospedagem for atingido.
+
+**Somente após esta declaração, agentes devem:**
+- Recomendar arquitetura de deployment permanente
+- Recomendar decisões irreversíveis de infraestrutura
+- Remover salvaguardas de migração
+- Executar hardening de produção
+- Travar premissas de infraestrutura de longo prazo
+- Assumir estabilidade permanente de hospedagem
+
+**Até então:** assumir que migração permanece possível.
+
+### Checklist antes de qualquer recomendação de deploy / hosting / infraestrutura
+
+- [ ] O proprietário declarou explicitamente que esta é a conta Replit final?
+
+**Se a resposta for desconhecida → assuma NÃO.**
+
+---
+
 ## Visão
 
 Ser a infraestrutura operacional que conecta toda a força de trabalho avulsa e eventual do Brasil — empresas, profissionais, representantes, parceiros e investidores — em um único ecossistema nacional integrado.
@@ -171,6 +220,7 @@ Mais Indicações → Rede cresce organicamente
 3. Nunca posicionar como produto de hospitalidade — o alcance é multi-setorial
 4. Nunca apresentar a plataforma como apenas um job board
 5. Toda tela, copy e comunicação deve ser consistente com a narrativa de infraestrutura
+6. Nunca assumir que a conta Replit atual é o ambiente de produção final
 
 ---
 
@@ -180,6 +230,7 @@ Mais Indicações → Rede cresce organicamente
 - Ao redigir copy, usar a frase oficial como âncora de posicionamento
 - Ao apresentar para investidores, usar os dados do flywheel como estrutura
 - Ao descrever o produto, começar sempre pelo problema de mercado (informalidade)
+- Ao recomendar infraestrutura, considerar portabilidade para migração futura
 
 ---
 
@@ -188,6 +239,7 @@ Mais Indicações → Rede cresce organicamente
 - Não alterar o posicionamento sem aprovação dos fundadores
 - Não criar novos slogans sem alinhamento com a identidade oficial
 - Não descrever a extraGO como "app de freelas" — escopo é infraestrutura nacional
+- Não recomendar arquitetura permanente de deployment sem declaração explícita do proprietário
 
 ---
 
@@ -199,3 +251,4 @@ Mais Indicações → Rede cresce organicamente
 - [ ] Os 6 pilares do ecossistema são respeitados?
 - [ ] A frase oficial pode ser usada como tagline da feature?
 - [ ] Não há referência a "vaga", "job board" ou "hospitalidade" no conteúdo?
+- [ ] Recomendações de infraestrutura consideram a política Multi-Replit?

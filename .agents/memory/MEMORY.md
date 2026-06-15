@@ -1,7 +1,8 @@
 - [Platform audit fixes](platform-audit-fixes.md) — comprehensive fix log for fake data, broken links, auth, onboarding, nav, N+1 queries, and shared utilities
 - [Express route prefix](express-route-prefix.md) — `app.use("/api", router)` strips `/api`; routes in the router must NOT include `/api/` prefix.
 - [SSE auth pattern](sse-auth.md) — EventSource can't set headers; accept auth token via `?token=` query param for SSE endpoints.
-- [Admin seed endpoint](admin-seed.md) — Idempotent admin bootstrap at `POST /api/setup/admin`; password `Gremory26@`.
+- [Admin seed endpoint](admin-seed.md) — Idempotent admin bootstrap at `POST /api/setup/admin`; password `Gremory26@`. Seed endpoint provisions 5 accounts only — no ecosystem data.
+- [Multi-Replit & governance docs](multi-replit-governance.md) — Current Replit account is NOT assumed to be final production. 3 master accounts (Leonardo, Jean Dick, extrago.ceo). Profile assets: Leonardo.jpg→leonardoscheffel2000, Jean.jpg→jeandick2000.
 - [Progression & referral tiers](progression-engine.md) — 5 level tiers (fees 20/18/15/12/10) + 3 referral tiers (2/3/5%); internal level keys ≠ labels (diamond=Elite). Switches on level MUST cover all 5 keys.
 - [Admin pages](admin-pages.md) — Admin now has 9 pages: dashboard, users, jobs, withdrawals, analytics, ops, map, representatives, governance. Chart library: CSS-only bars (no recharts).
 - [CEO Governance Center](ceo-governance.md) — `/admin/governance` route + backend at `routes/governance.ts`. Settings locked by default; per-section Edit button unlocks sliders. Confirmation dialog before save. New "Usuários" tab with per-user fee/referral/notes overrides (customFee, customReferralRate, governanceNotes on usersTable). Advanced badge management with predefined badges (Fundador, Investidor, etc.) and category/color/icon fields. Badge grants stored as `badge:{userId}:{name}` keys in platformConfigTable.

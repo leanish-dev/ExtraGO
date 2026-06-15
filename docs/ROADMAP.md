@@ -11,6 +11,16 @@ Registrar as prioridades estratégicas do produto, marcos de expansão e visão 
 
 ---
 
+## ⚠️ Nota sobre Ambiente de Desenvolvimento
+
+O projeto extraGO é desenvolvido em múltiplas contas Replit. O proprietário realiza remixes e migrações frequentes como parte do fluxo normal de desenvolvimento.
+
+**Itens de roadmap relacionados a deployment, hosting e infraestrutura de produção** devem ser planejados considerando migração futura. O proprietário declarará explicitamente quando o ambiente final de produção for atingido — somente então devem ser executadas ações irreversíveis de infraestrutura.
+
+Ver `docs/MASTER_CONTEXT.md` seção "Multi-Replit Development Policy" para regras completas.
+
+---
+
 ## Princípios para Priorização
 
 1. **Dados reais antes de novas features** — nenhum usuário deve ver mock data
@@ -40,7 +50,7 @@ MVP completo com as funcionalidades essenciais de todos os perfis:
 - Autenticação (login, cadastro, sessão)
 - Área do Freelancer (dashboard, extras, candidaturas, wallet, indicações)
 - Área da Empresa (dashboard, publicação de extras, gestão de candidatos, wallet)
-- Admin (dashboard, usuários, extras, saques, analytics, ops, mapa, representantes)
+- Admin (dashboard, usuários, extras, saques, analytics, ops, mapa, representantes, governance)
 - Landing institucional com posicionamento de infraestrutura
 - Página de investidores completa
 - Sistema de badges de nível (sprite-based)
@@ -62,12 +72,34 @@ Refinamento da identidade visual alinhada com posicionamento de infraestrutura n
 ### ✅ 3. Test Data Isolation
 Política documentada e helpers implementados:
 - `canUseMockData()` — isolamento de dados de demonstração
-- `isMasterAccount()` — proteção de contas master
-- Contas de teste oficiais registradas
+- `isMasterAccount()` — proteção de 3 contas de governança
+- Contas de teste oficiais registradas (2 contas)
+- Contas master oficiais registradas (3 contas: Leonardo, Jean Dick, extrago.ceo)
+- Seeder reescrito para provisionar apenas 5 contas aprovadas — sem dados de ecossistema
 
 ---
 
-### 🔄 4. Motor de Progressão de Nível
+### ✅ 4. Limpeza de Dados de Produção
+O banco de dados foi completamente limpo. Apenas 5 contas aprovadas permanecem:
+- `leonardoscheffel2000@gmail.com` (CEO)
+- `jeandick2000@gmail.com` (CMO)
+- `extrago.ceo@yahoo.com` (CEO Master)
+- `teste.f@extrago.com` (freelancer de teste)
+- `teste.e@extrago.com` (empresa de teste)
+
+---
+
+### ✅ 5. CEO Governance Center
+Painel de controle executivo em `/admin/governance`:
+- Configurações da plataforma com sliders por seção
+- Confirmação antes de salvar alterações
+- Overrides por usuário (fee customizada, taxa de indicação, notas)
+- Badge management com badges predefinidos e categorias
+- Backend em `routes/governance.ts`
+
+---
+
+### 🔄 6. Motor de Progressão de Nível
 Calcular nível do freelancer automaticamente com base em extras concluídos + avaliações + tempo na plataforma:
 - Notificação ao subir de nível
 - Exibir progresso até o próximo nível com barra visual
@@ -77,7 +109,7 @@ Calcular nível do freelancer automaticamente com base em extras concluídos + a
 
 ---
 
-### 📋 5. Centro Financeiro para Empresas
+### 📋 7. Centro Financeiro para Empresas
 Dashboard financeiro corporativo completo:
 - Histórico completo de depósitos
 - Saldo disponível, reservado e pendente em destaque
@@ -86,7 +118,7 @@ Dashboard financeiro corporativo completo:
 
 ---
 
-### 📋 6. Transições de Página Fluidas
+### 📋 8. Transições de Página Fluidas
 Transições de rota com fade ou slide:
 - Entrada/saída consistente com a linguagem visual da landing
 - Performance otimizada (não bloquear interação)
@@ -94,7 +126,7 @@ Transições de rota com fade ou slide:
 
 ---
 
-### 📋 7. Hero Sections Distintas por Perfil
+### 📋 9. Hero Sections Distintas por Perfil
 Cada área da plataforma tem um hero/header que reforça o posicionamento daquela audiência:
 - Freelancer: foco em progressão, renda, reputação
 - Empresa: foco em eficiência, confiança, pool qualificado
@@ -102,7 +134,7 @@ Cada área da plataforma tem um hero/header que reforça o posicionamento daquel
 
 ---
 
-### 📋 8. Admin Mobile Responsiveness
+### 📋 10. Admin Mobile Responsiveness
 Painel administrativo totalmente responsivo:
 - Tabelas adaptadas para cards/lista em mobile
 - Ações acessíveis em telas pequenas
@@ -110,7 +142,7 @@ Painel administrativo totalmente responsivo:
 
 ---
 
-### 📋 9. Perfil Menu & Notificações
+### 📋 11. Perfil Menu & Notificações
 Garantir funcionamento correto em todas as plataformas e roles:
 - Menu de perfil (avatar dropdown) funcional em mobile e desktop
 - Centro de notificações com marcação de leitura em tempo real
@@ -118,7 +150,7 @@ Garantir funcionamento correto em todas as plataformas e roles:
 
 ---
 
-### 📋 10. Feed de Atividade de Indicações (Real-Time)
+### 📋 12. Feed de Atividade de Indicações (Real-Time)
 Atividade em tempo real da rede de indicações:
 - Novo indicado se cadastrou
 - Indicado concluiu primeiro extra
@@ -129,7 +161,7 @@ Atividade em tempo real da rede de indicações:
 
 ## Fase 2 — Expansão Nacional
 
-### 🔮 11. Onboarding por Representante Estadual
+### 🔮 13. Onboarding por Representante Estadual
 Fluxo de captação regional:
 - Landing page personalizada por estado
 - Onboarding guiado com representante como padrinho
@@ -137,7 +169,7 @@ Fluxo de captação regional:
 
 ---
 
-### 🔮 12. Motor de Matching Inteligente
+### 🔮 14. Motor de Matching Inteligente
 Matching automático empresa ↔ profissional:
 - Baseado em histórico, avaliações, localização, disponibilidade
 - Score de compatibilidade visível para ambos os lados
@@ -145,7 +177,7 @@ Matching automático empresa ↔ profissional:
 
 ---
 
-### 🔮 13. Verificação de Identidade
+### 🔮 15. Verificação de Identidade
 Background check integrado:
 - CPF, antecedentes criminais, validação de documentos
 - Badge "Verificado" com data e método
@@ -153,7 +185,7 @@ Background check integrado:
 
 ---
 
-### 🔮 14. Avaliações Bilaterais Completas
+### 🔮 16. Avaliações Bilaterais Completas
 Sistema de reputação bilateral:
 - Freelancer avalia empresa e vice-versa
 - Score público de reputação
@@ -161,7 +193,7 @@ Sistema de reputação bilateral:
 
 ---
 
-### 🔮 15. Centro Nacional de Operações — Fase 2
+### 🔮 17. Centro Nacional de Operações — Fase 2
 Expansão do mapa e ops:
 - Distribuição de extras em tempo real por geolocalização
 - Heatmap de demanda por setor (gastronomia, hotelaria, eventos)
@@ -171,7 +203,7 @@ Expansão do mapa e ops:
 
 ## Fase 3 — Infraestrutura Financeira
 
-### 🔮 16. Produtos Financeiros Próprios
+### 🔮 18. Produtos Financeiros Próprios
 Expansão do ecossistema financeiro:
 - Antecipação de recebíveis para freelancers (desconto sobre próximos extras)
 - Crédito para empresas (contratação parcelada)
@@ -179,14 +211,14 @@ Expansão do ecossistema financeiro:
 
 ---
 
-### 🔮 17. Assinaturas Profissionais e Empresariais
+### 🔮 19. Assinaturas Profissionais e Empresariais
 Planos pagos com benefícios diferenciados:
 - Freelancer PRO: maior visibilidade no feed, analytics avançados, badge verificado
 - Empresa Premium: pool premium, reporting, posting ilimitado
 
 ---
 
-### 🔮 18. Integrações Ecossistema
+### 🔮 20. Integrações Ecossistema
 Integrações com plataformas complementares:
 - Escolas de qualificação (certificados verificados)
 - Sistemas de ERP para empresas grandes
@@ -247,6 +279,7 @@ Integrações com plataformas complementares:
 2. Qualquer nova feature planejada deve ser adicionada aqui antes de implementar
 3. Features de Fase 3 não entram em desenvolvimento enquanto Fase 1 tiver itens pendentes
 4. Todo item concluído deve ter o checklist de validação dos docs relevantes marcado
+5. Items de infraestrutura de produção devem aguardar declaração do ambiente final pelo proprietário
 
 ---
 
