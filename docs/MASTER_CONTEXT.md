@@ -158,7 +158,7 @@ O modelo cria **interdependência**: a combinação de marketplace + reputação
 2. **Programa de Indicações** — rede que cresce e gera renda passiva recorrente
 3. **Representantes Estaduais** — presença física descentralizada com incentivo de receita
 4. **Centro Nacional de Operações** — visibilidade geográfica em tempo real do ecossistema
-5. **Arquitetura Financeira Integrada** — wallet, PIX, histórico, reputação em uma plataforma
+5. **Arquitetura Financeira Integrada** — wallet, PIX, Split Engine, ledger, escrow e histórico em uma plataforma
 
 ---
 
@@ -170,6 +170,8 @@ Mais Profissionais
 Mais Empresas Contratam
        ↓
 Mais Extras Concluídos
+       ↓
+Split Engine distribui receita automaticamente
        ↓
 Mais Receita → Mais Representantes → Mais Cobertura
        ↓
@@ -183,10 +185,10 @@ Mais Indicações → Rede cresce organicamente
 
 1. **Matching & Operações** — conexão eficiente entre demanda e oferta
 2. **Reputação & Progressão** — sistema de níveis que incentiva qualidade
-3. **Finanças & Pagamentos** — wallet integrada, PIX, histórico financeiro
+3. **Finanças & Pagamentos** — wallet integrada, Split Engine, ledger, escrow, PIX, Asaas (futuro)
 4. **Rede de Indicações** — crescimento orgânico com incentivo financeiro
 5. **Representantes Regionais** — expansão descentralizada com accountability local
-6. **Governança & Compliance** — painel administrativo, auditoria, moderação
+6. **Governança & Compliance** — CEO Governance Center, auditoria, moderação, configuração financeira
 
 ---
 
@@ -199,6 +201,27 @@ Mais Indicações → Rede cresce organicamente
 | **Representante** | Negócio próprio com suporte nacional | Território, comissão, ferramentas |
 | **Investidor** | Retorno, tese clara, equipe, escalabilidade | Flywheel comprovável, modelo robusto |
 | **Indicador** | Renda passiva sobre a rede construída | Comissão recorrente, leaderboard |
+
+---
+
+## Controladores de Governança Financeira
+
+As seguintes contas têm controle exclusivo sobre todos os parâmetros financeiros da plataforma:
+
+| Nome | Email | Role |
+|---|---|---|
+| Leonardo Scheffel | `leonardoscheffel2000@gmail.com` | CEO / SUPER_ADMIN |
+| Jean Dick | `jeandick2000@gmail.com` | CMO / SUPER_ADMIN |
+| extraGO CEO | `extrago.ceo@yahoo.com` | CEO Master / SUPER_ADMIN |
+
+Estes 3 controladores têm acesso exclusivo ao CEO Governance Center e podem configurar:
+- Split Rules (taxas por nível, comissões de indicação)
+- Financial Governance (representante, investidor, fundo de reserva)
+- Platform Wallet (visualização de métricas e ledger)
+- Escrow Configuration (ativação e parâmetros de custódia)
+- Category Governance (CRUD de categorias de extras)
+- Asaas Integration Status (visualização — ativação requer variável de ambiente)
+- Future Financial Parameters (qualquer novo parâmetro financeiro)
 
 ---
 
@@ -221,6 +244,8 @@ Mais Indicações → Rede cresce organicamente
 4. Nunca apresentar a plataforma como apenas um job board
 5. Toda tela, copy e comunicação deve ser consistente com a narrativa de infraestrutura
 6. Nunca assumir que a conta Replit atual é o ambiente de produção final
+7. Nunca hardcodar taxas, comissões ou percentuais financeiros — sempre usar o Split Engine
+8. Nunca ativar Asaas em produção sem aprovação explícita dos controladores de governança
 
 ---
 
@@ -231,6 +256,7 @@ Mais Indicações → Rede cresce organicamente
 - Ao apresentar para investidores, usar os dados do flywheel como estrutura
 - Ao descrever o produto, começar sempre pelo problema de mercado (informalidade)
 - Ao recomendar infraestrutura, considerar portabilidade para migração futura
+- Ao tocar em qualquer lógica financeira, passar pelo Split Engine
 
 ---
 
@@ -240,6 +266,7 @@ Mais Indicações → Rede cresce organicamente
 - Não criar novos slogans sem alinhamento com a identidade oficial
 - Não descrever a extraGO como "app de freelas" — escopo é infraestrutura nacional
 - Não recomendar arquitetura permanente de deployment sem declaração explícita do proprietário
+- Não implementar cálculo financeiro fora do Split Engine
 
 ---
 
@@ -252,3 +279,4 @@ Mais Indicações → Rede cresce organicamente
 - [ ] A frase oficial pode ser usada como tagline da feature?
 - [ ] Não há referência a "vaga", "job board" ou "hospitalidade" no conteúdo?
 - [ ] Recomendações de infraestrutura consideram a política Multi-Replit?
+- [ ] Lógica financeira usa Split Engine (não hardcode)?

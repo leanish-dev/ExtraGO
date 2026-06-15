@@ -37,10 +37,10 @@ Antes de implementar qualquer feature, alteração visual ou refatoração:
 | Arquivo | Quando ler |
 |---|---|
 | `docs/MASTER_CONTEXT.md` | Sempre — posicionamento e visão |
-| `docs/BUSINESS_MODEL.md` | Ao tocar em taxas, níveis, indicações |
+| `docs/BUSINESS_MODEL.md` | Ao tocar em taxas, níveis, indicações, split engine, escrow |
 | `docs/VISUAL_GUIDELINES.md` | Ao tocar em qualquer componente visual |
 | `docs/TEST_DATA_POLICY.md` | Ao tocar em dados exibidos ao usuário |
-| `docs/PRODUCT_ARCHITECTURE.md` | Ao adicionar rotas, módulos ou integrações |
+| `docs/PRODUCT_ARCHITECTURE.md` | Ao adicionar rotas, módulos, schemas ou integrações |
 | `docs/ROADMAP.md` | Ao planejar features ou priorizar trabalho |
 
 ---
@@ -109,11 +109,20 @@ Ver `docs/TEST_DATA_POLICY.md` seção "Profile Asset Policy" para regras comple
 - Níveis têm 5 valores: `beginner`, `junior`, `intermediate`, `senior`, `elite`
 - Switches sobre nível DEVEM cobrir todos os 5
 - Verificar `docs/BUSINESS_MODEL.md` antes de alterar
+- **Taxas não são hardcoded** — lidas do `platformConfigTable` via Split Engine
 
 ### Ao alterar rotas de API:
 - O router está montado em `app.use("/api", router)` — rotas no router NÃO incluem `/api/`
 - Após alterar `openapi.yaml`: rodar `pnpm --filter @workspace/api-spec run codegen`
 - Após alterar schema DB: rodar `pnpm --filter @workspace/db run push`
+- Rotas de governança usam `apiFetch` direto (não codegen) — não precisam de spec update
+
+### Split Engine (CRÍTICO):
+- `loadSplitConfig()` deve ser chamado **ANTES** do início de qualquer `db.transaction()`
+- Drizzle transactions não suportam I/O assíncrono adicional de forma segura
+- Após salvar governança: chamar `invalidateSplitConfigCache()` para limpar o cache de 60s
+- Split Engine lê `platformConfigTable` com chaves `financial.*` e `level_fee_*`
+- Toda lógica de split, taxa, comissão e referral DEVE passar pelo Split Engine
 
 ### SSE (Server-Sent Events):
 - EventSource não suporta headers customizados
@@ -122,6 +131,11 @@ Ver `docs/TEST_DATA_POLICY.md` seção "Profile Asset Policy" para regras comple
 ### Auth:
 - Tokens em memória no servidor — perdidos no restart
 - Client armazena em `localStorage`
+
+### Asaas Foundation:
+- `artifacts/api-server/src/lib/asaas.ts` — abstraction layer preparada, todos os métodos retornam `not_implemented`
+- Frontend **NUNCA** se comunica com Asaas diretamente
+- Ativação só após checklist completo na governance → tab Financeiro
 
 ---
 
@@ -147,6 +161,8 @@ Ver `docs/TEST_DATA_POLICY.md` seção "Profile Asset Policy" para regras comple
 8. NÃO usar "MARKETPLACE #1 DE HOSPITALIDADE" ou similar
 9. NÃO assumir que a conta Replit atual é o ambiente de produção final
 10. NÃO recomendar arquitetura de deployment permanente sem declaração explícita do proprietário
+11. NÃO hardcodar taxas, percentuais de split ou comissões — sempre usar Split Engine
+12. NÃO comunicar frontend diretamente com Asaas — toda integração via extraGO API
 
 ---
 
@@ -175,9 +191,15 @@ pnpm --filter @workspace/api-spec run codegen
 
 ```
 artifacts/api-server/     — Express 5 backend (porta 8080)
+  src/lib/split-engine.ts — Motor de cálculo financeiro (fonte de verdade das taxas)
+  src/lib/asaas.ts        — Foundation layer para integração Asaas (stubs)
+  src/lib/ecosystem.ts    — Lógica de conclusão de extras (usa Split Engine)
 artifacts/extrag0/        — React 19 frontend (porta 8081)
 lib/db/src/schema/        — Drizzle ORM schema (source of truth)
-lib/api-spec/openapi.yaml — OpenAPI spec (source of truth)
+  categories.ts           — categoriesTable (gerenciado pela Governance)
+  ledger.ts               — walletLedgerTable (audit trail de movimentações)
+  escrow.ts               — escrowsTable (custódia de pagamentos, foundation)
+lib/api-spec/openapi.yaml — OpenAPI spec (source of truth para API codegen)
 lib/api-client-react/     — React Query hooks (gerado)
 lib/api-zod/              — Zod schemas (gerado)
 docs/                     — Documentação permanente

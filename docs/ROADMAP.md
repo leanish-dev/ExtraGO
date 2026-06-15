@@ -89,9 +89,9 @@ O banco de dados foi completamente limpo. Apenas 5 contas aprovadas permanecem:
 
 ---
 
-### ✅ 5. CEO Governance Center
-Painel de controle executivo em `/admin/governance`:
-- Configurações da plataforma com sliders por seção
+### ✅ 5. CEO Governance Center — Fase 1
+Painel de controle executivo em `/admin/governance` com 4 tabs iniciais:
+- Configurações da plataforma com sliders por seção (taxas e thresholds)
 - Confirmação antes de salvar alterações
 - Overrides por usuário (fee customizada, taxa de indicação, notas)
 - Badge management com badges predefinidos e categorias
@@ -99,9 +99,57 @@ Painel de controle executivo em `/admin/governance`:
 
 ---
 
-### 🔄 6. Motor de Progressão de Nível
-Calcular nível do freelancer automaticamente com base em extras concluídos + avaliações + tempo na plataforma:
-- Notificação ao subir de nível
+### ✅ 6. Sprint Financeiro — Split Engine, Ledger, Escrow, Asaas Foundation
+
+Sprint completo de infraestrutura financeira implementado:
+
+#### Split Engine (`artifacts/api-server/src/lib/split-engine.ts`)
+- Motor financeiro centralizado — todas as taxas passam aqui
+- Lê configurações do `platformConfigTable` (chaves `level_fee_*`, `referral_rate_*`, `financial.*`)
+- Cache de 60 segundos em memória; invalidação automática após save de governança
+- `loadSplitConfig()`, `calculateSplit()`, `calculateReferralRate()`, `invalidateSplitConfigCache()`
+- Wired em `completeJobCascade()` — carregado ANTES da DB transaction
+- Taxas de nível e comissões de indicação não são mais hardcoded
+
+#### Wallet Ledger (`lib/db/src/schema/ledger.ts`)
+- `walletLedgerTable` — ledger de dupla entrada para audit trail completo
+- Campos: `debitWalletId`, `creditWalletId`, `amount`, `type`, `referenceType`, `referenceId`, `description`, `metadata` (jsonb)
+- Schema implementado + tabela criada no banco
+- Visualização via Governance → tab Carteira
+
+#### Escrow Foundation (`lib/db/src/schema/escrow.ts`)
+- `escrowsTable` com máquina de estados completa: `draft → open → funded → in_progress → completed → released / cancelled / disputed`
+- Armazena snapshot de todos os valores calculados pelo Split Engine no momento do funding
+- Campos Asaas preparados: `asaasChargeId`, `asaasTransferId`
+- Schema implementado + tabela criada no banco
+- Foundation only — não ativo no fluxo de conclusão de extras ainda
+
+#### Asaas Foundation (`artifacts/api-server/src/lib/asaas.ts`)
+- Abstraction layer completa: `AsaasService`, `getAsaasService()`, `refreshAsaasInstance()`
+- Métodos implementados (stubs): `createCharge`, `createTransfer`, `getBalance`, `processWebhook`, `syncPaymentStatus`
+- Todos retornam `{ ok: false, errorCode: "not_implemented" }` até ativação
+- Frontend nunca acessa Asaas — toda comunicação via extraGO API
+- Checklist de ativação documentado no arquivo e em `BUSINESS_MODEL.md`
+
+#### Governança de Categorias (`lib/db/src/schema/categories.ts`)
+- `categoriesTable` com soft-archive, display order, ícones, regras (jsonb)
+- CRUD completo via Governance → tab Categorias
+- Slug auto-gerado do nome
+
+#### CEO Governance Center — 3 novos tabs
+- **Financeiro:** split de representante/investidor/reserva; configuração de escrow; regras de saque; status Asaas (read-only)
+- **Categorias:** CRUD completo de categorias de extras
+- **Carteira:** métricas da wallet da plataforma + ledger paginado
+
+#### Platform Wallet View (`GET /api/admin/governance/platform-wallet`)
+- Saldo atual, total de taxas coletadas, comissões de indicação pagas, saques pendentes
+- Transações recentes da wallet da plataforma
+
+---
+
+### 🔄 7. Motor de Progressão de Nível
+Calcular nível do freelancer automaticamente com base em extras concluídos + avaliações:
+- Notificação ao subir de nível (parcialmente implementado em `completeJobCascade`)
 - Exibir progresso até o próximo nível com barra visual
 - Histórico de progressão
 
@@ -109,7 +157,31 @@ Calcular nível do freelancer automaticamente com base em extras concluídos + a
 
 ---
 
-### 📋 7. Centro Financeiro para Empresas
+### 📋 8. Wallet Ledger — Escrita Automática
+
+O schema e a visualização do ledger já existem. O próximo passo é instrumentar `completeJobCascade` para escrever entradas automáticas:
+- Entrada por débito da empresa
+- Entrada por crédito do freelancer
+- Entrada por taxa da plataforma
+- Entrada por comissão de indicação (se aplicável)
+- Entrada por comissão do representante (se aplicável)
+- Entrada por fundo de reserva (se aplicável)
+
+---
+
+### 📋 9. Escrow — Integração no Fluxo de Extras
+
+O schema e a máquina de estados do escrow já existem. Integrar no fluxo de contratação:
+- Criar registro de escrow ao aprovar candidatura
+- Fundar escrow ao confirmar início do extra
+- Liberar escrow ao concluir extra (manual ou automático após `autoReleaseHours`)
+- Fluxo de disputa com janela configurável
+
+**Dependência:** Requer definição de `financial.escrow_rules.enabled = true` via Governance
+
+---
+
+### 📋 10. Centro Financeiro para Empresas
 Dashboard financeiro corporativo completo:
 - Histórico completo de depósitos
 - Saldo disponível, reservado e pendente em destaque
@@ -118,35 +190,11 @@ Dashboard financeiro corporativo completo:
 
 ---
 
-### 📋 8. Transições de Página Fluidas
-Transições de rota com fade ou slide:
-- Entrada/saída consistente com a linguagem visual da landing
-- Performance otimizada (não bloquear interação)
-- Respeitar preferências de `prefers-reduced-motion`
-
----
-
-### 📋 9. Hero Sections Distintas por Perfil
-Cada área da plataforma tem um hero/header que reforça o posicionamento daquela audiência:
-- Freelancer: foco em progressão, renda, reputação
-- Empresa: foco em eficiência, confiança, pool qualificado
-- Admin: foco em escala nacional, operações, controle
-
----
-
-### 📋 10. Admin Mobile Responsiveness
+### 📋 11. Admin Mobile Responsiveness
 Painel administrativo totalmente responsivo:
 - Tabelas adaptadas para cards/lista em mobile
 - Ações acessíveis em telas pequenas
 - Drawer de navegação em mobile
-
----
-
-### 📋 11. Perfil Menu & Notificações
-Garantir funcionamento correto em todas as plataformas e roles:
-- Menu de perfil (avatar dropdown) funcional em mobile e desktop
-- Centro de notificações com marcação de leitura em tempo real
-- Badge de contador de não lidos
 
 ---
 
@@ -161,7 +209,33 @@ Atividade em tempo real da rede de indicações:
 
 ## Fase 2 — Expansão Nacional
 
-### 🔮 13. Onboarding por Representante Estadual
+### 🔮 13. Asaas — Ativação Completa
+
+Antes de ativar Asaas em produção, todos os itens abaixo devem estar concluídos:
+
+- [ ] `ASAAS_API_KEY` configurado em environment secrets
+- [ ] Wallet Ledger com escrita automática (item 8) implementado
+- [ ] Escrow integrado ao fluxo de extras (item 9) implementado e testado
+- [ ] Webhook endpoint implementado e validado com sandbox Asaas
+- [ ] Cálculos do Split Engine validados contra valores de transferência Asaas
+- [ ] `financial.asaas_config.environment` = sandbox → testes completos
+- [ ] `financial.asaas_config.enabled = true` via Governance Center
+- [ ] Aprovação do CEO antes de mudar ambiente para `production`
+
+---
+
+### 🔮 14. PIX Automático para Saques
+
+Com Asaas ativo, automatizar o fluxo de saque:
+- Freelancer solicita saque → `AsaasService.createTransfer()` executa automaticamente
+- Webhook Asaas atualiza status do saque
+- Notificação automática ao freelancer
+
+**Dependência:** Item 13 (Asaas ativo)
+
+---
+
+### 🔮 15. Onboarding por Representante Estadual
 Fluxo de captação regional:
 - Landing page personalizada por estado
 - Onboarding guiado com representante como padrinho
@@ -169,7 +243,7 @@ Fluxo de captação regional:
 
 ---
 
-### 🔮 14. Motor de Matching Inteligente
+### 🔮 16. Motor de Matching Inteligente
 Matching automático empresa ↔ profissional:
 - Baseado em histórico, avaliações, localização, disponibilidade
 - Score de compatibilidade visível para ambos os lados
@@ -177,7 +251,7 @@ Matching automático empresa ↔ profissional:
 
 ---
 
-### 🔮 15. Verificação de Identidade
+### 🔮 17. Verificação de Identidade
 Background check integrado:
 - CPF, antecedentes criminais, validação de documentos
 - Badge "Verificado" com data e método
@@ -185,7 +259,7 @@ Background check integrado:
 
 ---
 
-### 🔮 16. Avaliações Bilaterais Completas
+### 🔮 18. Avaliações Bilaterais Completas
 Sistema de reputação bilateral:
 - Freelancer avalia empresa e vice-versa
 - Score público de reputação
@@ -193,32 +267,32 @@ Sistema de reputação bilateral:
 
 ---
 
-### 🔮 17. Centro Nacional de Operações — Fase 2
+### 🔮 19. Centro Nacional de Operações — Fase 2
 Expansão do mapa e ops:
 - Distribuição de extras em tempo real por geolocalização
-- Heatmap de demanda por setor (gastronomia, hotelaria, eventos)
+- Heatmap de demanda por setor
 - Alertas de concentração de demanda
 
 ---
 
 ## Fase 3 — Infraestrutura Financeira
 
-### 🔮 18. Produtos Financeiros Próprios
-Expansão do ecossistema financeiro:
-- Antecipação de recebíveis para freelancers (desconto sobre próximos extras)
+### 🔮 20. Produtos Financeiros Próprios
+Expansão do ecossistema financeiro (requer Asaas ativo + base jurídica):
+- Antecipação de recebíveis para freelancers
 - Crédito para empresas (contratação parcelada)
 - Cartão extraGO (futura possibilidade)
 
 ---
 
-### 🔮 19. Assinaturas Profissionais e Empresariais
+### 🔮 21. Assinaturas Profissionais e Empresariais
 Planos pagos com benefícios diferenciados:
 - Freelancer PRO: maior visibilidade no feed, analytics avançados, badge verificado
 - Empresa Premium: pool premium, reporting, posting ilimitado
 
 ---
 
-### 🔮 20. Integrações Ecossistema
+### 🔮 22. Integrações Ecossistema
 Integrações com plataformas complementares:
 - Escolas de qualificação (certificados verificados)
 - Sistemas de ERP para empresas grandes
@@ -234,9 +308,11 @@ Integrações com plataformas complementares:
 ├── SP, RJ, MG, ES operacionais
 ├── 100.000 usuários cadastrados
 ├── Motor de progressão ativo
+├── Split Engine + Ledger + Escrow foundation implementados
 └── Wallet e PIX consolidados
 
 2027 (Fase 2 — Expansão Nacional)
+├── Asaas ativo em produção (PIX automático)
 ├── 27 representantes estaduais ativos
 ├── Cobertura nacional completa
 ├── Motor de matching inteligente
@@ -256,11 +332,29 @@ Integrações com plataformas complementares:
 | Marco | Métrica | Fase |
 |---|---|---|
 | Primeiros 1.000 extras concluídos | Volume transacional real | Fase 1 |
+| Ledger com audit trail completo | Conformidade financeira | Fase 1 |
+| Escrow ativo no fluxo de extras | Confiança bilateral | Fase 1-2 |
+| Asaas ativo (sandbox validado) | PIX automático | Fase 2 |
 | 10 representantes estaduais ativos | Cobertura regional inicial | Fase 1-2 |
 | 100.000 usuários cadastrados | Escala de rede | Fase 2 |
 | 27 representantes (cobertura nacional) | Infraestrutura nacional | Fase 2 |
 | R$ 1M em volume transacional mensal | Validação do modelo | Fase 2 |
 | Produtos financeiros próprios | Diferenciação como infraestrutura | Fase 3 |
+
+---
+
+## Gaps Remanescentes Antes de Pagamentos em Produção
+
+Itens implementados como foundation mas que precisam ser completados antes de processar pagamentos reais:
+
+| Item | Status | Bloqueio |
+|---|---|---|
+| Wallet Ledger — escrita automática em `completeJobCascade` | 📋 Planejado | — |
+| Escrow — integração no fluxo de candidatura/conclusão | 📋 Planejado | — |
+| Asaas webhook endpoint | 📋 Planejado | Ledger + Escrow devem estar prontos primeiro |
+| Validação completa em sandbox Asaas | 📋 Planejado | Webhook + Split Engine validados |
+| `ASAAS_API_KEY` em environment secrets | 📋 Planejado | Aprovação do CEO |
+| Aprovação do CEO para ativação em produção | 📋 Planejado | Todos os itens acima |
 
 ---
 
@@ -270,6 +364,7 @@ Integrações com plataformas complementares:
 - Expansão pela rede — indicações e representantes têm custo de aquisição ≈ 0
 - Nunca sacrificar confiança por velocidade de entrega
 - Mobile first em toda nova feature
+- Nunca ativar Asaas em produção sem checklist completo aprovado pelo CEO
 
 ---
 
@@ -280,22 +375,7 @@ Integrações com plataformas complementares:
 3. Features de Fase 3 não entram em desenvolvimento enquanto Fase 1 tiver itens pendentes
 4. Todo item concluído deve ter o checklist de validação dos docs relevantes marcado
 5. Items de infraestrutura de produção devem aguardar declaração do ambiente final pelo proprietário
-
----
-
-## Boas Práticas
-
-- Vincular novos itens do roadmap ao(s) pilar(es) do ecossistema que reforçam
-- Itens de UX/mobile devem ser priorizados junto com a feature correspondente
-- Não criar features para "parecer completo" — cada feature serve ao flywheel
-
----
-
-## Restrições
-
-- Não iniciar Fase 2 sem validar motor de progressão e wallet consolidados
-- Não lançar produtos financeiros sem estrutura legal adequada
-- Não implementar matching automático sem dados reais suficientes para treinar
+6. Asaas não entra em ambiente de produção sem aprovação explícita do CEO
 
 ---
 
@@ -306,3 +386,4 @@ Integrações com plataformas complementares:
 - [ ] O impacto no flywheel de receita está claro?
 - [ ] Mobile foi considerado no escopo da feature?
 - [ ] O item está alinhado com a fase correta (não queimando etapas)?
+- [ ] Se envolve pagamentos: o checklist de Asaas foi verificado?
