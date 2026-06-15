@@ -255,6 +255,7 @@ export default function WalletPage() {
           mixBlendMode: "screen", filter: "blur(2px)",
         }}
       />
+      <div className="mod-wallet-ambient absolute inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
 
       <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-5">
@@ -267,18 +268,27 @@ export default function WalletPage() {
             initial={{ opacity: 0, scale: 0.97, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.19, 1, 0.22, 1] }}
-            className="fintech-hero-card p-6 sm:p-8"
+            className="card-wallet-hero p-6 sm:p-8"
           >
             <div className="absolute inset-0 opacity-[0.09] bg-cover bg-center mix-blend-screen pointer-events-none blur-[1px]" style={{ backgroundImage: "url(/images/backgrounds/bg-wallet.webp)" }} />
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-green-500/6 pointer-events-none" />
-            <div className="absolute -top-20 -right-20 w-64 h-64 bg-cyan-500/8 blur-3xl rounded-full pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-teal-500/6 via-transparent to-cyan-500/5 pointer-events-none" />
+            <div className="absolute -top-20 -right-20 w-64 h-64 pointer-events-none" style={{ background: "radial-gradient(circle, rgba(20,184,166,0.12) 0%, transparent 70%)", filter: "blur(40px)" }} />
+            {/* Financial wave watermark */}
+            <div className="absolute right-0 bottom-0 pointer-events-none select-none opacity-[0.10]">
+              <svg width="180" height="110" viewBox="0 0 180 110" fill="none">
+                <path d="M0 55 Q22 33 44 55 Q66 77 88 55 Q110 33 132 55 Q154 77 180 55" stroke="#14B8A6" strokeWidth="2.5" fill="none"/>
+                <path d="M0 72 Q22 50 44 72 Q66 94 88 72 Q110 50 132 72 Q154 94 180 72" stroke="#14B8A6" strokeWidth="1.8" fill="none" opacity="0.7"/>
+                <path d="M0 38 Q22 16 44 38 Q66 60 88 38 Q110 16 132 38 Q154 60 180 38" stroke="#14B8A6" strokeWidth="1.2" fill="none" opacity="0.5"/>
+                <path d="M0 88 Q22 66 44 88 Q66 110 88 88 Q110 66 132 88 Q154 110 180 88" stroke="#14B8A6" strokeWidth="1" fill="none" opacity="0.35"/>
+              </svg>
+            </div>
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/15 border border-primary/25 flex items-center justify-center">
-                    <Wallet size={15} className="text-primary" />
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center mod-icon-wallet">
+                    <Wallet size={15} />
                   </div>
-                  <span className="text-[11px] font-bold text-primary/80 uppercase tracking-widest">
+                  <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "#14b8a6" }}>
                     {isCompany ? "Saldo da Empresa" : "Saldo Disponível"}
                   </span>
                 </div>

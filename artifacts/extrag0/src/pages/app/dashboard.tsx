@@ -175,12 +175,23 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
-      className="relative rounded-2xl overflow-hidden border border-primary/12 p-5 sm:p-6"
-      style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.035) 0%, rgba(0,229,255,0.015) 50%, rgba(124,252,0,0.025) 100%)" }}
+      className="card-career-hero p-5 sm:p-6"
     >
       {/* Ambient top glow */}
-      <div className="absolute top-0 left-6 w-40 h-12 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(124,252,0,0.10) 0%, transparent 70%)", filter: "blur(18px)" }} />
+      <div className="absolute top-0 left-6 w-52 h-16 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, rgba(34,197,94,0.20) 0%, transparent 70%)", filter: "blur(22px)" }} />
+      {/* Freelancer badge watermark */}
+      <div className="absolute right-4 -bottom-2 pointer-events-none select-none"
+        style={{
+          width: 120, height: 120,
+          backgroundImage: "url(/badges/freelancer-badges.png)",
+          backgroundSize: "500% auto",
+          backgroundPosition: "100% center",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.18,
+          mixBlendMode: "screen",
+        }}
+      />
 
       {/* Row 1: Badge + Identity + Fee */}
       <div className="relative flex items-start gap-4 mb-5">
@@ -321,11 +332,16 @@ function CompanyHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-      className="relative rounded-2xl overflow-hidden border border-secondary/12 p-5 sm:p-6"
-      style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.03) 0%, rgba(124,252,0,0.015) 100%)" }}
+      className="relative rounded-2xl overflow-hidden p-5 sm:p-6"
+      style={{
+        background: "linear-gradient(135deg, rgba(20,184,166,0.16) 0%, rgba(8,17,26,0.96) 50%, rgba(0,229,255,0.08) 100%)",
+        border: "1px solid rgba(20,184,166,0.24)",
+        boxShadow: "0 0 0 1px rgba(20,184,166,0.05) inset, 0 0 40px rgba(20,184,166,0.09), 0 20px 60px rgba(0,0,0,0.50)",
+      }}
     >
-      <div className="absolute top-0 right-8 w-32 h-12 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(0,229,255,0.09) 0%, transparent 70%)", filter: "blur(18px)" }} />
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(20,184,166,0.50), rgba(0,229,255,0.22), transparent)" }} />
+      <div className="absolute top-0 right-8 w-40 h-14 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse, rgba(20,184,166,0.18) 0%, transparent 70%)", filter: "blur(20px)" }} />
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
@@ -398,6 +414,7 @@ function CompanyDashboard() {
         className="absolute inset-0 pointer-events-none"
         style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.07, mixBlendMode: "screen", filter: "blur(2px)" }}
       />
+      <div className="mod-wallet-ambient absolute inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
 
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">

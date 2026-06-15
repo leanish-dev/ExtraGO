@@ -49,8 +49,7 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl p-4 border border-white/6 hover:border-white/14 transition-all group"
-      style={{ background: "rgba(255,255,255,0.060)" }}
+      className="user-card-network rounded-2xl p-4 transition-all group"
     >
       <div className="flex items-start gap-3">
         <Link href={type === "freelancer" ? `/app/freelancers/${user.id}` : `/app/companies/${user.id}`}>
@@ -190,18 +189,20 @@ export default function NetworkPage() {
   return (
     <div className="pb-24 lg:pb-6 relative">
       <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
-        <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-br from-secondary/6 via-primary/2 to-transparent" />
-        <div className="absolute top-0 left-0 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 70%)", filter: "blur(70px)" }} />
+        <div className="mod-network-ambient absolute inset-0" />
+        <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-br from-blue-500/8 via-primary/2 to-transparent" />
+        <div className="absolute top-0 left-0 w-80 h-80 rounded-full" style={{ background: "radial-gradient(circle, rgba(59,130,246,0.11) 0%, transparent 70%)", filter: "blur(65px)" }} />
+        <div className="absolute bottom-40 right-0 w-64 h-64 rounded-full" style={{ background: "radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)", filter: "blur(60px)" }} />
       </div>
       {/* Header */}
       <div className="sticky top-0 z-20 bg-[#060809]/95 backdrop-blur-xl border-b border-white/6">
         <div className="px-4 sm:px-6 pt-4 pb-3 max-w-3xl mx-auto">
           <div className="flex items-center gap-2.5 mb-3">
-            <div className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(0,229,255,0.12)", border: "1px solid rgba(0,229,255,0.20)" }}>
-              <Users size={13} style={{ color: "rgba(0,229,255,0.85)" }} />
+            <div className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 mod-icon-network">
+              <Users size={13} />
             </div>
             <h1 className="text-lg font-bold">Descobrir Pessoas</h1>
-            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/25 ml-1 hidden sm:inline">Comunidade extraGO</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] ml-1 hidden sm:inline" style={{ color: "rgba(59,130,246,0.65)" }}>Comunidade extraGO</span>
           </div>
 
           {/* Search */}

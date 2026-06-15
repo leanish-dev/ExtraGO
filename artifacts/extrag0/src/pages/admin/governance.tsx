@@ -30,6 +30,7 @@ interface AdminUser {
   id: number;
   name: string;
   email: string;
+  avatarUrl?: string | null;
   adminRole?: string;
   corporateRole?: string;
   level: string;
@@ -593,30 +594,36 @@ export default function GovernancePage() {
       />
 
       {/* Executive Header */}
-      <div
-        className="relative rounded-2xl overflow-hidden border p-5 sm:p-6"
-        style={{
-          background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(0,229,255,0.025) 50%, rgba(124,252,0,0.03) 100%)",
-          borderColor: "rgba(124,252,0,0.18)",
-        }}
-      >
+      <div className="card-governance-hero p-5 sm:p-6">
         {/* ambient glow */}
-        <div className="absolute top-0 right-0 w-48 h-24 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse, rgba(124,252,0,0.08) 0%, transparent 70%)", filter: "blur(20px)" }} />
+        <div className="absolute top-0 right-0 w-56 h-28 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(236,72,153,0.20) 0%, transparent 70%)", filter: "blur(24px)" }} />
+        {/* Crown watermark */}
+        <div className="absolute right-4 -bottom-2 pointer-events-none select-none"
+          style={{
+            width: 120, height: 120,
+            backgroundImage: "url(/badges/corporate-badges.png)",
+            backgroundSize: "400% auto",
+            backgroundPosition: "0% center",
+            backgroundRepeat: "no-repeat",
+            opacity: 0.22,
+            mixBlendMode: "screen",
+          }}
+        />
 
         <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div
               className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
-              style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.22), rgba(0,229,255,0.12))", border: "1px solid rgba(124,252,0,0.28)" }}
+              style={{ background: "linear-gradient(135deg, rgba(236,72,153,0.22), rgba(245,158,11,0.12))", border: "1px solid rgba(236,72,153,0.28)" }}
             >
-              <Shield size={22} style={{ color: "#7CFC00" }} />
+              <Shield size={22} style={{ color: "#ec4899" }} />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-lg font-bold">Centro de Governança</h1>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold"
-                  style={{ background: "rgba(124,252,0,0.10)", border: "1px solid rgba(124,252,0,0.22)", color: "#7CFC00" }}>
+                  style={{ background: "rgba(236,72,153,0.12)", border: "1px solid rgba(236,72,153,0.30)", color: "#ec4899" }}>
                   <CheckCircle size={9} /> CEO
                 </span>
               </div>
@@ -628,8 +635,8 @@ export default function GovernancePage() {
           {!configLoading && config && (
             <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
               {[
-                { label: "Taxa Iniciante", value: currentFeeBronze !== null ? `${(currentFeeBronze * 100).toFixed(0)}%` : "—", color: "#7CFC00" },
-                { label: "Taxa Elite", value: currentFeeDiamond !== null ? `${(currentFeeDiamond * 100).toFixed(0)}%` : "—", color: "#00c9a7" },
+                { label: "Taxa Iniciante", value: currentFeeBronze !== null ? `${(currentFeeBronze * 100).toFixed(0)}%` : "—", color: "#ec4899" },
+                { label: "Taxa Elite", value: currentFeeDiamond !== null ? `${(currentFeeDiamond * 100).toFixed(0)}%` : "—", color: "#f59e0b" },
                 { label: "Módulos ativos", value: "7", color: "rgba(255,255,255,0.55)" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center min-w-[52px]">
@@ -643,8 +650,8 @@ export default function GovernancePage() {
 
         {/* Config last-saved indicator */}
         {config?.lastUpdatedAt && (
-          <div className="relative mt-3 pt-3 border-t flex items-center gap-1.5" style={{ borderColor: "rgba(124,252,0,0.10)" }}>
-            <Circle size={6} style={{ color: "#7CFC00", fill: "#7CFC00" }} />
+          <div className="relative mt-3 pt-3 border-t flex items-center gap-1.5" style={{ borderColor: "rgba(236,72,153,0.12)" }}>
+            <Circle size={6} style={{ color: "#ec4899", fill: "#ec4899" }} />
             <span className="text-[10px] text-muted-foreground">
               Última alteração: {new Date(config.lastUpdatedAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
             </span>
@@ -1058,9 +1065,17 @@ export default function GovernancePage() {
                     className="flex items-center gap-4 p-4 rounded-xl"
                     style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
                   >
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/40 to-secondary/30 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                      {admin.name?.charAt(0).toUpperCase() ?? "?"}
-                    </div>
+                    {admin.avatarUrl ? (
+                      <img
+                        src={admin.avatarUrl}
+                        alt={admin.name}
+                        className="w-10 h-10 rounded-full object-cover border border-white/12 flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0" style={{ background: "linear-gradient(135deg, rgba(236,72,153,0.35), rgba(245,158,11,0.25))" }}>
+                        {admin.name?.charAt(0).toUpperCase() ?? "?"}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-sm font-bold truncate">{admin.name}</p>

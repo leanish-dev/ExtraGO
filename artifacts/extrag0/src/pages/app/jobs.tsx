@@ -518,6 +518,7 @@ export default function JobsPage() {
           filter: "blur(2px)",
         }}
       />
+      <div className="mod-extras-ambient absolute inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
       {/* Banner */}
       <motion.div
@@ -554,9 +555,8 @@ export default function JobsPage() {
         >
           <div>
             <div className="flex items-center gap-2 mb-0.5">
-              <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ background: "rgba(124,252,0,0.12)", border: "1px solid rgba(124,252,0,0.22)" }}>
-                <Briefcase size={11} style={{ color: "#7CFC00" }} />
+              <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mod-icon-extras">
+                <Briefcase size={11} />
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/30">
                 {user?.role === "company" ? "Marketplace · Seus Extras" : "Marketplace · Oportunidades"}

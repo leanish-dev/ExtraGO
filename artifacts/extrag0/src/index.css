@@ -904,6 +904,174 @@
     33% { transform: translate(-20px, 15px) scale(0.95); opacity: 0.7; }
     66% { transform: translate(12px, 8px) scale(1.05); opacity: 0.3; }
   }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     MODULE IDENTITY SYSTEM — 6 modules, 6 visual personalities
+     Palette: Career=#22C55E  Wallet=#14B8A6  Network=#3B82F6
+              Extras=#8B5CF6  Referral=#F59E0B  Governance=#EC4899
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* ── Page-level ambient overlays ── */
+  .mod-career-ambient {
+    background:
+      radial-gradient(ellipse at 18% 0%, rgba(34,197,94,0.22) 0%, transparent 52%),
+      radial-gradient(ellipse at 84% 82%, rgba(124,252,0,0.12) 0%, transparent 44%);
+  }
+  .mod-wallet-ambient {
+    background:
+      radial-gradient(ellipse at 14% 0%, rgba(20,184,166,0.22) 0%, transparent 50%),
+      radial-gradient(ellipse at 88% 76%, rgba(0,229,255,0.11) 0%, transparent 44%);
+  }
+  .mod-network-ambient {
+    background:
+      radial-gradient(ellipse at 10% 4%, rgba(59,130,246,0.22) 0%, transparent 50%),
+      radial-gradient(ellipse at 86% 72%, rgba(139,92,246,0.10) 0%, transparent 44%);
+  }
+  .mod-extras-ambient {
+    background:
+      radial-gradient(ellipse at 12% 4%, rgba(139,92,246,0.22) 0%, transparent 50%),
+      radial-gradient(ellipse at 88% 74%, rgba(59,130,246,0.10) 0%, transparent 44%);
+  }
+  .mod-referral-ambient {
+    background:
+      radial-gradient(ellipse at 16% 0%, rgba(245,158,11,0.22) 0%, transparent 50%),
+      radial-gradient(ellipse at 86% 80%, rgba(239,68,68,0.10) 0%, transparent 44%);
+  }
+  .mod-governance-ambient {
+    background:
+      radial-gradient(ellipse at 14% 0%, rgba(236,72,153,0.22) 0%, transparent 50%),
+      radial-gradient(ellipse at 87% 76%, rgba(245,158,11,0.10) 0%, transparent 44%);
+  }
+
+  /* ── Primary hero cards per module ── */
+  .card-career-hero {
+    background: linear-gradient(135deg, rgba(34,197,94,0.20) 0%, rgba(8,17,26,0.96) 44%, rgba(124,252,0,0.08) 100%);
+    border: 1px solid rgba(34,197,94,0.28);
+    box-shadow: 0 0 0 1px rgba(34,197,94,0.06) inset, 0 0 44px rgba(34,197,94,0.11), 0 20px 60px rgba(0,0,0,0.55);
+    position: relative; overflow: hidden; border-radius: 1.5rem;
+  }
+  .card-career-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(34,197,94,0.55), rgba(124,252,0,0.28), transparent);
+  }
+  .card-career-hero::after {
+    content: ''; position: absolute; top: -60%; left: -30%; width: 60%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.022), transparent);
+    animation: cardShimmer 5s ease-in-out infinite; transform: skewX(-15deg);
+  }
+
+  .card-wallet-hero {
+    background: linear-gradient(135deg, rgba(20,184,166,0.22) 0%, rgba(8,17,26,0.96) 44%, rgba(0,229,255,0.10) 100%);
+    border: 1px solid rgba(20,184,166,0.28);
+    box-shadow: 0 0 0 1px rgba(20,184,166,0.06) inset, 0 0 44px rgba(20,184,166,0.13), 0 20px 60px rgba(0,0,0,0.55);
+    position: relative; overflow: hidden; border-radius: 1.5rem;
+  }
+  .card-wallet-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(20,184,166,0.60), rgba(0,229,255,0.28), transparent);
+  }
+  .card-wallet-hero::after {
+    content: ''; position: absolute; top: -60%; left: -30%; width: 60%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.022), transparent);
+    animation: cardShimmer 5s ease-in-out infinite; transform: skewX(-15deg);
+  }
+
+  .card-network-hero {
+    background: linear-gradient(135deg, rgba(59,130,246,0.20) 0%, rgba(8,17,26,0.96) 44%, rgba(139,92,246,0.08) 100%);
+    border: 1px solid rgba(59,130,246,0.28);
+    box-shadow: 0 0 0 1px rgba(59,130,246,0.06) inset, 0 0 44px rgba(59,130,246,0.11), 0 20px 60px rgba(0,0,0,0.55);
+    position: relative; overflow: hidden; border-radius: 1.5rem;
+  }
+  .card-network-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59,130,246,0.55), rgba(139,92,246,0.25), transparent);
+  }
+
+  .card-extras-hero {
+    background: linear-gradient(135deg, rgba(139,92,246,0.22) 0%, rgba(8,17,26,0.96) 44%, rgba(59,130,246,0.08) 100%);
+    border: 1px solid rgba(139,92,246,0.28);
+    box-shadow: 0 0 0 1px rgba(139,92,246,0.06) inset, 0 0 44px rgba(139,92,246,0.13), 0 20px 60px rgba(0,0,0,0.55);
+    position: relative; overflow: hidden; border-radius: 1.5rem;
+  }
+  .card-extras-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139,92,246,0.60), rgba(59,130,246,0.28), transparent);
+  }
+  .card-extras-hero::after {
+    content: ''; position: absolute; top: -60%; left: -30%; width: 60%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.022), transparent);
+    animation: cardShimmer 5s ease-in-out infinite; transform: skewX(-15deg);
+  }
+
+  .card-referral-hero {
+    background: linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(8,17,26,0.96) 44%, rgba(239,68,68,0.08) 100%);
+    border: 1px solid rgba(245,158,11,0.28);
+    box-shadow: 0 0 0 1px rgba(245,158,11,0.06) inset, 0 0 44px rgba(245,158,11,0.13), 0 20px 60px rgba(0,0,0,0.55);
+    position: relative; overflow: hidden; border-radius: 1.5rem;
+  }
+  .card-referral-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245,158,11,0.60), rgba(239,68,68,0.22), transparent);
+  }
+
+  .card-governance-hero {
+    background: linear-gradient(135deg, rgba(236,72,153,0.22) 0%, rgba(8,17,26,0.96) 44%, rgba(245,158,11,0.08) 100%);
+    border: 1px solid rgba(236,72,153,0.28);
+    box-shadow: 0 0 0 1px rgba(236,72,153,0.06) inset, 0 0 44px rgba(236,72,153,0.13), 0 20px 60px rgba(0,0,0,0.55);
+    position: relative; overflow: hidden; border-radius: 1.5rem;
+  }
+  .card-governance-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(236,72,153,0.60), rgba(245,158,11,0.22), transparent);
+  }
+  .card-governance-hero::after {
+    content: ''; position: absolute; top: -60%; left: -30%; width: 60%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.022), transparent);
+    animation: cardShimmer 5s ease-in-out infinite; transform: skewX(-15deg);
+  }
+
+  /* ── Secondary module cards (subtle tint) ── */
+  .card-career-secondary   { background: rgba(34,197,94,0.06);  border: 1px solid rgba(34,197,94,0.14);  border-radius: 1rem; }
+  .card-wallet-secondary   { background: rgba(20,184,166,0.06); border: 1px solid rgba(20,184,166,0.14); border-radius: 1rem; }
+  .card-network-secondary  { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.14); border-radius: 1rem; }
+  .card-extras-secondary   { background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.14); border-radius: 1rem; }
+  .card-referral-secondary { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.14); border-radius: 1rem; }
+  .card-governance-secondary { background: rgba(236,72,153,0.06); border: 1px solid rgba(236,72,153,0.14); border-radius: 1rem; }
+
+  /* ── Module user/item cards (list-level tint) ── */
+  .user-card-network {
+    background: rgba(59,130,246,0.055); border: 1px solid rgba(59,130,246,0.12);
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .user-card-network:hover { background: rgba(59,130,246,0.090); border-color: rgba(59,130,246,0.22); }
+
+  .job-card-extras {
+    background: rgba(139,92,246,0.055); border: 1px solid rgba(139,92,246,0.12);
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .job-card-extras:hover { background: rgba(139,92,246,0.090); border-color: rgba(139,92,246,0.22); }
+
+  /* ── Module icon containers ── */
+  .mod-icon-career     { background: rgba(34,197,94,0.14);   border: 1px solid rgba(34,197,94,0.28);   color: #22c55e; }
+  .mod-icon-wallet     { background: rgba(20,184,166,0.14);  border: 1px solid rgba(20,184,166,0.28);  color: #14b8a6; }
+  .mod-icon-network    { background: rgba(59,130,246,0.14);  border: 1px solid rgba(59,130,246,0.28);  color: #3b82f6; }
+  .mod-icon-extras     { background: rgba(139,92,246,0.14);  border: 1px solid rgba(139,92,246,0.28);  color: #8b5cf6; }
+  .mod-icon-referral   { background: rgba(245,158,11,0.14);  border: 1px solid rgba(245,158,11,0.28);  color: #f59e0b; }
+  .mod-icon-governance { background: rgba(236,72,153,0.14);  border: 1px solid rgba(236,72,153,0.28);  color: #ec4899; }
+
+  /* ── Module accent top-stripe (1px top border glow for secondary cards) ── */
+  .stripe-career::before     { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(34,197,94,0.55), rgba(124,252,0,0.25), transparent); }
+  .stripe-wallet::before     { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(20,184,166,0.55), rgba(0,229,255,0.25), transparent); }
+  .stripe-network::before    { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(59,130,246,0.55), rgba(139,92,246,0.25), transparent); }
+  .stripe-extras::before     { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(139,92,246,0.55), rgba(59,130,246,0.25), transparent); }
+  .stripe-referral::before   { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(245,158,11,0.55), rgba(239,68,68,0.22), transparent); }
+  .stripe-governance::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, transparent, rgba(236,72,153,0.55), rgba(245,158,11,0.22), transparent); }
 }
 
 /* ── Accessibility: respect user motion preferences ── */

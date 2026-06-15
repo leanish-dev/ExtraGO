@@ -304,10 +304,22 @@ export default function ReferralsPage() {
           className={`glass-card rounded-2xl p-5 border relative overflow-hidden ${currentLevel.bg} ${currentLevel.glow}`}
         >
           <div
-            className="absolute inset-0 opacity-[0.07] bg-cover bg-right mix-blend-screen pointer-events-none blur-[1px]"
+            className="absolute inset-0 opacity-[0.10] bg-cover bg-right mix-blend-screen pointer-events-none blur-[1px]"
             style={{ backgroundImage: "url(/images/backgrounds/bg-referral-page.webp)" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500/4 via-transparent to-cyan-500/4 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-orange-500/5 pointer-events-none" />
+          {/* Referral badge watermark */}
+          <div className="absolute right-4 -bottom-2 pointer-events-none select-none"
+            style={{
+              width: 110, height: 110,
+              backgroundImage: "url(/badges/indicacoes-badges.png)",
+              backgroundSize: "300% auto",
+              backgroundPosition: "100% center",
+              backgroundRepeat: "no-repeat",
+              opacity: 0.22,
+              mixBlendMode: "screen",
+            }}
+          />
           <div className="flex items-start gap-4 relative">
             <motion.div
               animate={{ rotate: [0, 5, -5, 0] }}
