@@ -100,8 +100,15 @@ function GradientHamburger() {
   );
 }
 
-/* ── Avatar initials ── */
-function AvatarInitials({ name }: { name?: string }) {
+/* ── Avatar initials (or real photo when avatarUrl is set) ── */
+function AvatarInitials({ name, avatarUrl }: { name?: string; avatarUrl?: string | null }) {
+  if (avatarUrl) {
+    return (
+      <div className="rounded-full w-8 h-8 flex-shrink-0 overflow-hidden border-2 border-primary/40">
+        <img src={avatarUrl} alt={name ?? "Avatar"} className="w-full h-full object-cover" />
+      </div>
+    );
+  }
   return (
     <div className="rounded-full bg-gradient-to-br from-primary via-[#9aff1c] to-secondary flex items-center justify-center font-bold text-black flex-shrink-0 w-8 h-8 text-sm">
       {name?.charAt(0)?.toUpperCase() ?? "?"}
@@ -420,7 +427,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                 {/* Avatar → /app/profile (Phase 9 — direct, no dropdown) */}
                 <Link href="/app/profile" aria-label="Meu perfil">
                   <button className="relative flex items-center justify-center ml-0.5" title="Meu perfil">
-                    <AvatarInitials name={effectiveUser?.name} />
+                    <AvatarInitials name={effectiveUser?.name} avatarUrl={(effectiveUser as any)?.avatarUrl} />
                     {effectiveUser?.role === "freelancer" && effectiveUser?.level && (
                       <span className="absolute -bottom-1 -right-1 pointer-events-none">
                         <LevelBadgeIcon level={effectiveUser?.level} size="xs" />
@@ -616,7 +623,7 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
               {/* Authenticated user card */}
               {effectiveUser && (
                 <div className="relative z-10 flex items-center gap-3 px-4 py-3 border-b flex-shrink-0" style={{ borderColor: "rgba(22,163,74,0.18)" }}>
-                  <AvatarInitials name={effectiveUser.name} />
+                  <AvatarInitials name={effectiveUser.name} avatarUrl={(effectiveUser as any)?.avatarUrl} />
                   <div className="min-w-0">
                     <p className="text-[13px] font-bold text-white/95 truncate leading-tight">{effectiveUser.name}</p>
                     <p className="text-[10.5px] text-white/45 truncate">{effectiveUser.email}</p>

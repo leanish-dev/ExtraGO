@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { CATEGORIES, CATEGORY_NAMES } from "@/lib/categories";
+import { useCategories } from "@/hooks/use-categories";
 
 import { apiFetch } from "@/lib/api-fetch";
 import { LevelBadge, LevelBadgeIcon, LEVEL_LABELS, LEVEL_COLORS, UserBadge, UserBadgeIcon, CorporateBadge, CorporateBadgeIcon, CORPORATE_ROLE_LABELS } from "@/components/level-badge";
@@ -228,6 +228,7 @@ export default function ProfilePage() {
   const { user } = useAuth() as any;
   const updateUser = useUpdateUser();
   const qc = useQueryClient();
+  const { categories: CATEGORIES } = useCategories();
 
   const [form, setForm] = useState({
     name: user?.name ?? "",

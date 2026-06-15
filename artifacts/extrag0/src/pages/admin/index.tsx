@@ -62,7 +62,7 @@ function LiveOperationsStrip() {
     { label: "Usuários Ativos (24h)", value: stats?.activeUsers24h ?? 0, color: "text-primary", dot: "bg-primary" },
     { label: "Extras Hoje", value: stats?.jobsToday ?? 0, color: "text-secondary", dot: "bg-secondary" },
     { label: "Em Andamento", value: stats?.jobsInProgress ?? 0, color: "text-green-400", dot: "bg-green-400" },
-    { label: "Total Extras", value: stats?.totalFreelancers ?? 0, color: "text-yellow-400", dot: "bg-yellow-400" },
+    { label: "Total Extras", value: stats?.totalJobs ?? 0, color: "text-yellow-400", dot: "bg-yellow-400" },
   ];
 
   return (

@@ -50,25 +50,25 @@ function ApplicationCard({ app, isCompany, onApprove, onReject, index }: {
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary/25 to-secondary/15 border border-white/10 flex items-center justify-center text-sm font-bold flex-shrink-0">
-            {(isCompany ? (app.freelancer?.name ?? "P") : (app.job?.title ?? "V")).charAt(0).toUpperCase()}
+            {(isCompany ? (app.freelancer?.name ?? "P") : (app.job?.title ?? "E")).charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
             <p className="font-semibold text-sm truncate">
-              {isCompany ? (app.freelancer?.name ?? "Profissional") : (app.job?.title ?? "Vaga")}
+              {isCompany ? (app.freelancer?.name ?? "Profissional") : (app.job?.title ?? "Extra")}
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
               {app.appliedAt ? format(new Date(app.appliedAt), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR }) : ""}
             </p>
           </div>
         </div>
-        <span className={`flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border whitespace-nowrap ${info.class}`}>
+        <span className={`flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full border whitespace-nowrap ${info.class}`}>
           {info.icon} {info.label}
         </span>
       </div>
 
       {(app as any).message && (
         <div className="p-3 rounded-xl bg-white/3 border border-white/6">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold mb-1.5">Mensagem</p>
+          <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold mb-1.5">Mensagem</p>
           <p className="text-xs leading-relaxed line-clamp-3 text-foreground/80">{(app as any).message}</p>
         </div>
       )}

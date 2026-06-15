@@ -86,7 +86,7 @@ function ActivityFeedItem({ title, sub, time, icon, iconBg }: {
         <p className="text-sm font-medium truncate">{title}</p>
         {sub && <p className="text-xs text-muted-foreground mt-0.5 truncate">{sub}</p>}
       </div>
-      {time && <p className="text-[10px] text-muted-foreground flex-shrink-0">{time}</p>}
+      {time && <p className="text-[11px] text-muted-foreground flex-shrink-0">{time}</p>}
     </motion.div>
   );
 }
@@ -151,6 +151,7 @@ function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }
       <div className="flex items-center gap-2 mb-4">
         <Activity size={14} className="text-muted-foreground" />
         <h2 className="font-semibold text-sm flex-1">Atividade Recente</h2>
+        <Link href="/app/feed" className="text-[11px] text-muted-foreground hover:text-primary transition-colors font-medium mr-1.5">Ver tudo</Link>
         <span className="live-dot" />
       </div>
       {loading ? (
@@ -226,12 +227,12 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             <UserBadge user={user} size="sm" />
             {user?.isVerified && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/8 border border-primary/18 px-2 py-0.5 rounded-full">
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-primary bg-primary/8 border border-primary/18 px-2 py-0.5 rounded-full">
                 <CheckCircle size={8} /> Verificado
               </span>
             )}
             {(user?.reputationScore ?? 0) > 0 && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-yellow-400">
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-yellow-400">
                 <Star size={9} className="fill-yellow-400" /> {(user?.reputationScore ?? 0).toFixed(1)}
               </span>
             )}
@@ -239,10 +240,10 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
         </div>
 
         <div className="flex-shrink-0 text-right">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-0.5">Taxa atual</p>
+          <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-bold mb-0.5">Taxa atual</p>
           <p className="text-3xl sm:text-4xl font-black text-primary leading-none">{currentFee}%</p>
           {nextInfo && (
-            <p className="text-[10px] text-muted-foreground mt-1">→ <span className="text-foreground font-semibold">{nextInfo.fee}%</span> no próximo</p>
+            <p className="text-[11px] text-muted-foreground mt-1">→ <span className="text-foreground font-semibold">{nextInfo.fee}%</span> no próximo</p>
           )}
         </div>
       </div>
@@ -278,7 +279,7 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.9 }}
-                className="text-[10px] font-bold text-primary bg-primary/8 border border-primary/18 px-2.5 py-1 rounded-full"
+                className="text-[11px] font-bold text-primary bg-primary/8 border border-primary/18 px-2.5 py-1 rounded-full"
               >
                 Economize ~R${monthlySavings}/mês
               </motion.span>
@@ -325,7 +326,7 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
             </Button>
           </Link>
           <Link href="/app/referrals">
-            <Button size="sm" variant="outline" className="border-white/12 hover:border-yellow-400/25 rounded-xl text-xs h-9 px-3 font-semibold gap-1.5 hidden sm:flex">
+            <Button size="sm" variant="outline" className="border-white/12 hover:border-yellow-400/25 rounded-xl text-xs h-9 px-3 font-semibold gap-1.5 flex">
               <Star size={12} /> Indicações
             </Button>
           </Link>
@@ -359,7 +360,7 @@ function CompanyHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
           <p className="text-xs text-muted-foreground font-medium">{greeting} 👋</p>
           <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate">{displayName}</h1>
           {user?.isVerified && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/8 border border-primary/18 px-2 py-0.5 rounded-full mt-2">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-primary bg-primary/8 border border-primary/18 px-2 py-0.5 rounded-full mt-2">
               <CheckCircle size={8} /> Empresa Verificada
             </span>
           )}
@@ -475,8 +476,8 @@ function CompanyDashboard() {
                           <p className="text-xs text-muted-foreground mt-0.5">{job.location} · {job.date ? format(new Date(job.date), "dd MMM", { locale: ptBR }) : ""}</p>
                         </div>
                         <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${s.class}`}>{s.label}</span>
-                          <span className="text-[10px] text-muted-foreground">{job.workersApproved}/{job.workersNeeded} vagas</span>
+                          <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${s.class}`}>{s.label}</span>
+                          <span className="text-[11px] text-muted-foreground">{job.workersApproved}/{job.workersNeeded} vagas</span>
                         </div>
                       </div>
                     </Link>
@@ -593,7 +594,7 @@ function FreelancerDashboard() {
                         <p className="text-sm font-semibold truncate">{app.job?.title ?? "Extra"}</p>
                         <p className="text-xs text-muted-foreground mt-0.5">Aguardando resposta</p>
                       </div>
-                      <span className="text-[10px] font-bold text-yellow-400/80 flex-shrink-0 tracking-wide">PEND.</span>
+                      <span className="text-[11px] font-bold text-yellow-400/80 flex-shrink-0 tracking-wide">PEND.</span>
                     </motion.div>
                   ))}
                 </AnimatePresence>

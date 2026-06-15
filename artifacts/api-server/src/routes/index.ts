@@ -15,6 +15,7 @@ import chatRouter from "./chat";
 import setupRouter from "./setup";
 import seedRouter from "./seed";
 import governanceRouter from "./governance";
+import categoriesRouter from "./categories";
 
 const router: IRouter = Router();
 
@@ -38,5 +39,6 @@ router.use(chatRouter);
 router.use(setupRouter);
 router.use(seedRouter);
 router.use(governanceRouter);
+router.use(categoriesRouter);
 
 export default router;

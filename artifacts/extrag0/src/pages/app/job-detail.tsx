@@ -296,7 +296,7 @@ export default function JobDetailPage() {
           <AlertCircle size={22} className="text-destructive" />
         </div>
         <p className="font-bold text-foreground mb-1">Extra não encontrado</p>
-        <p className="text-sm text-muted-foreground mb-5">Esta vaga não existe ou foi removida.</p>
+        <p className="text-sm text-muted-foreground mb-5">Este Extra não existe ou foi removido.</p>
         <Link href="/app/jobs">
           <Button variant="outline" className="border-white/15">Ver todos os Extras</Button>
         </Link>
@@ -493,7 +493,7 @@ export default function JobDetailPage() {
                 </div>
               ) : spotsLeft === 0 ? (
                 <div className="glass-card rounded-2xl p-4 border border-white/6 text-center">
-                  <p className="text-sm text-muted-foreground">Todas as vagas já foram preenchidas.</p>
+                  <p className="text-sm text-muted-foreground">Todas as posições já foram preenchidas.</p>
                 </div>
               ) : null}
             </motion.div>

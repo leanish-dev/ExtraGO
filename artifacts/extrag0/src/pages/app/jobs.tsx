@@ -16,8 +16,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import jobsBanner from "@assets/file_00000000311071f98244eb8a979d0597_1779868067126.png";
 
-import { CATEGORY_NAMES } from "@/lib/categories";
-const CATEGORIES = ["Todos", ...CATEGORY_NAMES];
+import { useCategories } from "@/hooks/use-categories";
 
 const STATUS_MAP: Record<string, { label: string; class: string }> = {
   open: { label: "Aberta", class: "bg-primary/20 text-primary border-primary/30" },
@@ -411,6 +410,8 @@ const RADIUS_OPTIONS = [
 
 export default function JobsPage() {
   const { user } = useAuth();
+  const { categoryNames } = useCategories();
+  const CATEGORIES = ["Todos", ...categoryNames];
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Todos");
   const [showFilters, setShowFilters] = useState(false);

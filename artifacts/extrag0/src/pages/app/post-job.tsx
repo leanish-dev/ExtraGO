@@ -16,7 +16,7 @@ const CATEGORIES = ALL_CATEGORIES.map(c => c.name);
 
 const formSchema = z.object({
   title: z.string().min(5, "Mínimo 5 caracteres"),
-  description: z.string().min(20, "Descreva melhor a vaga"),
+  description: z.string().min(20, "Descreva melhor o Extra"),
   category: z.string().min(1, "Selecione uma categoria"),
   location: z.string().min(5, "Informe o local completo"),
   date: z.string().min(1, "Informe a data"),

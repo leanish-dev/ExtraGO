@@ -96,7 +96,7 @@ export default function NotificationsPage() {
           <EmptyState
             icon={<BellOff size={28} />}
             title="Nenhuma notificação"
-            description="Você está em dia! Novas notificações sobre vagas, candidaturas e pagamentos aparecerão aqui."
+            description="Você está em dia! Novas notificações sobre Extras, candidaturas e pagamentos aparecerão aqui."
             actionLabel="Buscar Extras"
             actionHref="/app/jobs"
           />

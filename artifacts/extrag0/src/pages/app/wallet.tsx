@@ -111,7 +111,7 @@ function TransactionRow({ tx, index }: { tx: Transaction; index: number }) {
         <p className={`text-sm font-bold tabular-nums ${amountColor}`}>
           {amountSign}R$ {((tx.amount ?? 0) / 100).toFixed(2)}
         </p>
-        <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${statusChip}`}>
+        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-1.5 py-0.5 rounded-full border ${statusChip}`}>
           {statusIcon}
           {tx.status === "pending" ? "Pendente" : tx.status === "completed" ? "Concluído" : "Cancelado"}
         </span>
@@ -151,7 +151,7 @@ function DepositRow({ dep, index }: { dep: DepositRequest; index: number }) {
       </div>
       <div className="text-right flex-shrink-0 space-y-1">
         <p className="text-sm font-bold text-primary tabular-nums">+R$ {((dep.amount ?? 0) / 100).toFixed(2)}</p>
-        <span className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded-full border ${meta.chip}`}>
+        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-1.5 py-0.5 rounded-full border ${meta.chip}`}>
           {meta.label}
         </span>
       </div>
@@ -335,9 +335,9 @@ export default function WalletPage() {
                         {showDeposit ? <><X size={15} /> Cancelar</> : <><ArrowDownLeft size={15} /> Adicionar Saldo</>}
                       </Button>
                     </motion.div>
-                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/8 flex-shrink-0">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-[10px] text-muted-foreground font-medium">PIX ativo</span>
+                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/8 flex-shrink-0" title="Depósitos confirmados manualmente em até 1 dia útil">
+                      <Clock size={11} className="text-yellow-400 flex-shrink-0" />
+                      <span className="text-[11px] text-muted-foreground font-medium">Aprovação manual</span>
                     </div>
                   </>
                 ) : (
@@ -352,9 +352,9 @@ export default function WalletPage() {
                         {showWithdraw ? <><X size={15} /> Cancelar</> : <><Send size={15} /> Sacar via PIX</>}
                       </Button>
                     </motion.div>
-                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/8 flex-shrink-0">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-[10px] text-muted-foreground font-medium">PIX ativo</span>
+                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/8 flex-shrink-0" title="Saques aprovados pela equipe em até 2 dias úteis">
+                      <Clock size={11} className="text-yellow-400 flex-shrink-0" />
+                      <span className="text-[11px] text-muted-foreground font-medium">Aprovação manual</span>
                     </div>
                   </>
                 )}
@@ -370,13 +370,13 @@ export default function WalletPage() {
         ) : (
           <div className="grid grid-cols-2 gap-3">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="balance-card-mini p-4">
-              <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2.5">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-2.5">
                 {isCompany ? "Reservado" : "Pendente"}
               </p>
               <p className="text-xl font-bold leading-none tabular-nums">
                 {hideBalance ? "••••" : <>R$ <AnimatedCounter value={(isCompany ? reserved : pending) / 100} decimals={2} /></>}
               </p>
-              <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1">
+              <p className="text-[11px] text-muted-foreground mt-2 flex items-center gap-1">
                 {isCompany
                   ? <><Lock size={9} className="text-blue-400" /> Em Extras em andamento</>
                   : <><Clock size={9} className="text-yellow-400" /> Em processamento</>
@@ -384,13 +384,13 @@ export default function WalletPage() {
               </p>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className="balance-card-mini p-4">
-              <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mb-2.5">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-2.5">
                 {isCompany ? "Total Investido" : "Total Ganho"}
               </p>
               <p className="text-xl font-bold leading-none tabular-nums text-secondary">
                 {hideBalance ? "••••" : <>R$ <AnimatedCounter value={totalEarned / 100} decimals={2} /></>}
               </p>
-              <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1">
+              <p className="text-[11px] text-muted-foreground mt-2 flex items-center gap-1">
                 <TrendingUp size={9} className="text-secondary" /> Histórico acumulado
               </p>
             </motion.div>
@@ -409,7 +409,7 @@ export default function WalletPage() {
               <p className="text-xs font-semibold text-yellow-400">Depósito em análise</p>
               <p className="text-[11px] text-muted-foreground">R$ {(pendingDeposits / 100).toFixed(2)} aguardando confirmação da equipe</p>
             </div>
-            <button onClick={() => setActiveTab("deposits")} className="text-[10px] text-yellow-400 font-bold flex-shrink-0 border border-yellow-400/30 rounded-lg px-2 py-1">Ver</button>
+            <button onClick={() => setActiveTab("deposits")} className="text-[11px] text-yellow-400 font-bold flex-shrink-0 border border-yellow-400/30 rounded-lg px-2 py-1">Ver</button>
           </motion.div>
         )}
 
@@ -436,7 +436,7 @@ export default function WalletPage() {
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[10px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Valor do Saque</label>
+                    <label className="text-[11px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Valor do Saque</label>
                     <div className="relative">
                       <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-bold">R$</span>
                       <Input
@@ -450,14 +450,14 @@ export default function WalletPage() {
                       {[20, 50, 100, 200].map(v => (
                         <motion.button key={v} whileTap={{ scale: 0.93 }} type="button"
                           onClick={() => setAmount(String(Math.min(v, balance / 100)))}
-                          className="flex-1 py-1.5 rounded-lg border border-white/8 text-[10px] font-bold hover:border-primary/35 hover:text-primary hover:bg-primary/6 transition-all">
+                          className="flex-1 py-1.5 rounded-lg border border-white/8 text-[11px] font-bold hover:border-primary/35 hover:text-primary hover:bg-primary/6 transition-all">
                           R${v}
                         </motion.button>
                       ))}
                     </div>
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Chave PIX</label>
+                    <label className="text-[11px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Chave PIX</label>
                     <Input
                       value={pixKey} onChange={e => setPixKey(e.target.value)}
                       placeholder="CPF, CNPJ, e-mail ou celular"
@@ -526,7 +526,7 @@ export default function WalletPage() {
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Valor do Depósito</label>
+                  <label className="text-[11px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Valor do Depósito</label>
                   <div className="relative">
                     <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">R$</span>
                     <Input
@@ -539,7 +539,7 @@ export default function WalletPage() {
                     {[50, 100, 250, 500].map(v => (
                       <motion.button key={v} whileTap={{ scale: 0.93 }} type="button"
                         onClick={() => setDepositAmount(String(v))}
-                        className="flex-1 py-1.5 rounded-lg border border-white/8 text-[10px] font-bold hover:border-primary/35 hover:text-primary hover:bg-primary/6 transition-all">
+                        className="flex-1 py-1.5 rounded-lg border border-white/8 text-[11px] font-bold hover:border-primary/35 hover:text-primary hover:bg-primary/6 transition-all">
                         R${v}
                       </motion.button>
                     ))}
@@ -547,7 +547,7 @@ export default function WalletPage() {
                 </div>
 
                 <div className="p-3 rounded-xl border border-white/8 bg-white/3 space-y-2">
-                  <p className="text-[10px] font-bold text-foreground uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                  <p className="text-[11px] font-bold text-foreground uppercase tracking-widest mb-2 flex items-center gap-1.5">
                     <Shield size={11} className="text-primary" />
                     {depositMethod === "pix" ? "Dados para PIX" : "Dados do Cartão"}
                   </p>
@@ -558,7 +558,7 @@ export default function WalletPage() {
                         <code className="text-xs font-mono text-primary flex-1">{PLATFORM_PIX_KEY}</code>
                         <button
                           onClick={() => { navigator.clipboard.writeText(PLATFORM_PIX_KEY); toast.success("Chave copiada!"); }}
-                          className="text-[10px] text-muted-foreground hover:text-foreground border border-white/10 rounded-md px-2 py-0.5 transition-colors">
+                          className="text-[11px] text-muted-foreground hover:text-foreground border border-white/10 rounded-md px-2 py-0.5 transition-colors">
                           Copiar
                         </button>
                       </div>
@@ -568,7 +568,7 @@ export default function WalletPage() {
                       <p className="text-xs text-muted-foreground">Nossa equipe entrará em contato com o link de pagamento após confirmar sua solicitação.</p>
                     </div>
                   )}
-                  <p className="text-[10px] text-muted-foreground mt-2">
+                  <p className="text-[11px] text-muted-foreground mt-2">
                     Após realizar o pagamento, clique em confirmar. Saldo creditado em até 1 dia útil.
                   </p>
                 </div>
@@ -619,7 +619,7 @@ export default function WalletPage() {
             <div className="flex items-center gap-3 mb-5">
               <h2 className="font-bold text-base flex-1">Histórico de Depósitos</h2>
               {depositRequests.length > 0 && (
-                <span className="text-[10px] text-muted-foreground bg-white/4 border border-white/8 px-2.5 py-1 rounded-full font-semibold">
+                <span className="text-[11px] text-muted-foreground bg-white/4 border border-white/8 px-2.5 py-1 rounded-full font-semibold">
                   {depositRequests.length} {depositRequests.length !== 1 ? "solicitações" : "solicitação"}
                 </span>
               )}
@@ -649,7 +649,7 @@ export default function WalletPage() {
             <div className="flex items-center gap-3 mb-5">
               <h2 className="font-bold text-base flex-1">Extrato</h2>
               {allTxs.length > 0 && (
-                <span className="text-[10px] text-muted-foreground bg-white/4 border border-white/8 px-2.5 py-1 rounded-full font-semibold">
+                <span className="text-[11px] text-muted-foreground bg-white/4 border border-white/8 px-2.5 py-1 rounded-full font-semibold">
                   {allTxs.length} transaç{allTxs.length !== 1 ? "ões" : "ão"}
                 </span>
               )}
@@ -660,7 +660,7 @@ export default function WalletPage() {
               <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1">
                 {(Object.keys(TX_FILTER_LABELS) as TxFilter[]).map(f => (
                   <button key={f} onClick={() => { setTxFilter(f); setPage(0); }}
-                    className={`px-3 py-1.5 rounded-full text-[10px] font-bold flex-shrink-0 transition-all ${
+                    className={`px-3 py-1.5 rounded-full text-[11px] font-bold flex-shrink-0 transition-all ${
                       txFilter === f ? "bg-primary text-black" : "border border-white/10 text-muted-foreground hover:border-white/20 hover:text-foreground"
                     }`}>
                     {TX_FILTER_LABELS[f]}
