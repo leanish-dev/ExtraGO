@@ -174,7 +174,7 @@ function EcosystemBreakdown({ stats }: { stats: any }) {
   return (
     <div className="grid sm:grid-cols-2 gap-5">
       {/* Composição de usuários */}
-      <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.015)" }}>
+      <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.055)" }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold">Composição de Usuários</h2>
           <Users size={15} className="text-muted-foreground opacity-50" />
@@ -206,7 +206,7 @@ function EcosystemBreakdown({ stats }: { stats: any }) {
       </div>
 
       {/* Status dos extras */}
-      <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.015)" }}>
+      <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.055)" }}>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold">Status dos Extras</h2>
           <Briefcase size={15} className="text-muted-foreground opacity-50" />
@@ -234,7 +234,7 @@ function EcosystemBreakdown({ stats }: { stats: any }) {
 function TopFreelancers({ users }: { users: any[] }) {
   if (!users || users.length === 0) return null;
   return (
-    <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.015)" }}>
+    <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.055)" }}>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold">Top Freelancers</h2>
         <UserCheck size={15} className="text-muted-foreground opacity-50" />
@@ -281,7 +281,7 @@ function OperationsNav({ stats }: { stats: any }) {
               transition={{ delay: i * 0.05 }}
               whileHover={{ y: -1 }}
               className={`rounded-xl p-4 flex items-center gap-3 border border-white/6 ${link.border} transition-all cursor-pointer group`}
-              style={{ background: "rgba(255,255,255,0.018)" }}
+              style={{ background: "rgba(255,255,255,0.060)" }}
             >
               <div className={`w-9 h-9 rounded-xl border border-white/8 flex items-center justify-center flex-shrink-0 ${link.color} opacity-70 group-hover:opacity-100 transition-opacity`}>
                 {link.icon}
@@ -326,14 +326,14 @@ export default function AdminDashboard() {
       <LiveOperationsStrip />
 
       {/* 2nd — Main KPIs as typography, not colored cards */}
-      <div className="rounded-2xl border border-white/6 p-5 space-y-2" style={{ background: "rgba(255,255,255,0.015)" }}>
+      <div className="rounded-2xl border border-white/6 p-5 space-y-2" style={{ background: "rgba(255,255,255,0.055)" }}>
         <h2 className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Indicadores Gerais</h2>
         <MainKPIs stats={stats} isLoading={isLoading} />
       </div>
 
       {/* 3rd — Revenue + Ecosystem */}
       <div className="grid lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.015)" }}>
+        <div className="lg:col-span-2 rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.055)" }}>
           {!isLoading && stats?.revenueByMonth ? (
             <RevenueChart data={stats.revenueByMonth} />
           ) : (

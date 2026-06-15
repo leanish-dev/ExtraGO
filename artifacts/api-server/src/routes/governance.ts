@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db, usersTable, platformConfigTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, isNull, or } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 
 const router = Router();
@@ -45,8 +45,8 @@ router.get("/admin/governance/config", requireAuth, requireCEO, async (req, res)
   const config: Record<string, any> = { ...DEFAULTS };
   stored.forEach(c => { if (c.key in DEFAULTS) config[c.key] = c.value; });
 
-  const lastUpdated = stored.length > 0
-    ? stored.reduce((a, b) => a.updatedAt > b.updatedAt ? a : b).updatedAt
+  const lastUpdated = stored.filter(c => c.key in DEFAULTS).length > 0
+    ? stored.filter(c => c.key in DEFAULTS).reduce((a, b) => a.updatedAt > b.updatedAt ? a : b).updatedAt
     : null;
 
   res.json({ config, defaults: DEFAULTS, lastUpdatedAt: lastUpdated });
@@ -94,9 +94,58 @@ router.post("/admin/governance/users/:id/promote", requireAuth, requireCEO, asyn
   res.json({ message: "Usuário atualizado" });
 });
 
+// GET /admin/governance/users/:id/overrides — get individual user overrides
+router.get("/admin/governance/users/:id/overrides", requireAuth, requireCEO, async (req, res) => {
+  const id = parseInt(req.params.id as string);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+  const [user] = await db.select({
+    id: usersTable.id,
+    name: usersTable.name,
+    email: usersTable.email,
+    role: usersTable.role,
+    level: usersTable.level,
+    customFee: usersTable.customFee,
+    customReferralRate: usersTable.customReferralRate,
+    governanceNotes: usersTable.governanceNotes,
+  }).from(usersTable).where(eq(usersTable.id, id));
+  if (!user) { res.status(404).json({ error: "Usuário não encontrado" }); return; }
+  res.json(user);
+});
+
+// PUT /admin/governance/users/:id/overrides — set individual user overrides
+router.put("/admin/governance/users/:id/overrides", requireAuth, requireCEO, async (req, res) => {
+  const id = parseInt(req.params.id as string);
+  if (isNaN(id)) { res.status(400).json({ error: "Invalid ID" }); return; }
+  const { customFee, customReferralRate, governanceNotes } = req.body;
+  const update: Record<string, any> = {};
+  if (customFee !== undefined) update.customFee = customFee === null ? null : Number(customFee);
+  if (customReferralRate !== undefined) update.customReferralRate = customReferralRate === null ? null : Number(customReferralRate);
+  if (governanceNotes !== undefined) update.governanceNotes = governanceNotes ?? null;
+  if (!Object.keys(update).length) { res.status(400).json({ error: "No changes provided" }); return; }
+  await db.update(usersTable).set(update).where(eq(usersTable.id, id));
+  res.json({ message: "Overrides salvos com sucesso" });
+});
+
+// GET /admin/governance/users/overrides — list all users with overrides
+router.get("/admin/governance/overrides", requireAuth, requireCEO, async (req, res) => {
+  const users = await db.select({
+    id: usersTable.id,
+    name: usersTable.name,
+    email: usersTable.email,
+    role: usersTable.role,
+    level: usersTable.level,
+    customFee: usersTable.customFee,
+    customReferralRate: usersTable.customReferralRate,
+    governanceNotes: usersTable.governanceNotes,
+  }).from(usersTable).where(
+    sql`${usersTable.customFee} IS NOT NULL OR ${usersTable.customReferralRate} IS NOT NULL OR ${usersTable.governanceNotes} IS NOT NULL`
+  );
+  res.json(users);
+});
+
 // POST /admin/governance/badges/grant
 router.post("/admin/governance/badges/grant", requireAuth, requireCEO, async (req, res) => {
-  const { userId, badge, description } = req.body;
+  const { userId, badge, description, icon, color, category } = req.body;
   if (!userId || !badge) { res.status(400).json({ error: "userId e badge são obrigatórios" }); return; }
   const key = `badge:${userId}:${String(badge).replace(/\s+/g, "_").toLowerCase()}`;
   const [existing] = await db.select({ id: platformConfigTable.id })
@@ -104,7 +153,15 @@ router.post("/admin/governance/badges/grant", requireAuth, requireCEO, async (re
   if (existing) { res.status(409).json({ error: "Badge já concedido" }); return; }
   await db.insert(platformConfigTable).values({
     key,
-    value: { userId, badge, description: description ?? "", grantedAt: new Date().toISOString() } as any,
+    value: {
+      userId,
+      badge,
+      description: description ?? "",
+      icon: icon ?? "award",
+      color: color ?? "primary",
+      category: category ?? "special",
+      grantedAt: new Date().toISOString(),
+    } as any,
     description: `Badge: ${badge} → user ${userId}`,
     updatedBy: (req as any).user.id,
   });
@@ -141,6 +198,9 @@ router.get("/admin/governance/badges", requireAuth, requireCEO, async (req, res)
       id: b.id, key: b.key,
       userId: v.userId, badge: v.badge,
       description: v.description, grantedAt: v.grantedAt,
+      icon: v.icon ?? "award",
+      color: v.color ?? "primary",
+      category: v.category ?? "special",
       userName: userMap.get(v.userId)?.name ?? null,
       userEmail: userMap.get(v.userId)?.email ?? null,
     };

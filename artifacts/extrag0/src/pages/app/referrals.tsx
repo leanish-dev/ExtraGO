@@ -338,7 +338,7 @@ export default function ReferralsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.06 + i * 0.05 }}
               className="rounded-2xl border border-white/6 p-4 text-center"
-              style={{ background: "rgba(255,255,255,0.018)" }}
+              style={{ background: "rgba(255,255,255,0.060)" }}
             >
               <p className={`text-2xl font-black leading-none tabular-nums ${item.color}`}>{item.value}</p>
               <p className="text-[11px] font-bold text-foreground mt-1.5">{item.label}</p>
@@ -353,7 +353,7 @@ export default function ReferralsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
           className="rounded-2xl border border-white/6 p-5 relative overflow-hidden"
-          style={{ background: "rgba(255,255,255,0.015)" }}
+          style={{ background: "rgba(255,255,255,0.055)" }}
         >
           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Progressão na Rede</p>
           <div className="flex items-stretch gap-0 relative">

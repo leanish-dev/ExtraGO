@@ -6,6 +6,8 @@ import { CreateJobBody, UpdateJobBody, ListJobsQueryParams } from "@workspace/ap
 
 const router = Router();
 
+const TEST_ACCOUNTS_JOBS = ["teste.f@extrago.com", "teste.e@extrago.com"];
+
 function formatJob(job: any, company?: any) {
   return {
     id: job.id,
@@ -30,6 +32,9 @@ function formatJob(job: any, company?: any) {
 
 // GET /jobs
 router.get("/jobs", requireAuth, async (req, res) => {
+  const requestingUser = (req as any).user;
+  const canSeeDemoData = TEST_ACCOUNTS_JOBS.includes((requestingUser?.email ?? "").toLowerCase());
+
   const parsed = ListJobsQueryParams.safeParse(req.query);
   const { status, category, companyId, search } = parsed.data ?? {};
 
@@ -48,8 +53,12 @@ router.get("/jobs", requireAuth, async (req, res) => {
     ? await db.select().from(usersTable).where(sql`${usersTable.id} = ANY(ARRAY[${sql.join(companyIds.map(id => sql`${id}`), sql`, `)}]::int[])`)
     : [];
 
+  // Filter out jobs posted by demo companies for non-test accounts
+  const demoCompanyIds = canSeeDemoData ? new Set<number>() : new Set(companies.filter(c => c.isDemo).map(c => c.id));
+  const filteredJobs = canSeeDemoData ? jobs : jobs.filter(j => !demoCompanyIds.has(j.companyId));
+
   const companyMap = new Map(companies.map(c => [c.id, c]));
-  res.json(jobs.map(j => formatJob(j, companyMap.get(j.companyId))));
+  res.json(filteredJobs.map(j => formatJob(j, companyMap.get(j.companyId))));
 });
 
 // POST /jobs

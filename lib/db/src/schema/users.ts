@@ -51,6 +51,10 @@ export const usersTable = pgTable("users", {
   ambassadorApproved: boolean("ambassador_approved").notNull().default(false),
   // Demo/seed accounts — content from these users is filtered out for non-test accounts
   isDemo: boolean("is_demo").notNull().default(false),
+  // CEO Governance individual overrides (null = use platform defaults)
+  customFee: real("custom_fee"),
+  customReferralRate: real("custom_referral_rate"),
+  governanceNotes: text("governance_notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

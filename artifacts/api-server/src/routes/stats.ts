@@ -12,8 +12,8 @@ router.get("/stats/platform", async (req, res) => {
   const todayStr = new Date().toISOString().slice(0, 10);
 
   const [freelancers, companies, allJobs, allTransactions, repsResult] = await Promise.all([
-    db.select().from(usersTable).where(eq(usersTable.role, "freelancer")),
-    db.select().from(usersTable).where(eq(usersTable.role, "company")),
+    db.select().from(usersTable).where(and(eq(usersTable.role, "freelancer"), eq(usersTable.isDemo, false))),
+    db.select().from(usersTable).where(and(eq(usersTable.role, "company"), eq(usersTable.isDemo, false))),
     db.select().from(jobsTable),
     db.select().from(transactionsTable).where(eq(transactionsTable.type, "credit")),
     db.select({ id: stateRepresentativesTable.id }).from(stateRepresentativesTable),
@@ -57,7 +57,7 @@ router.get("/stats/platform", async (req, res) => {
 router.get("/stats/activity-feed", async (req, res) => {
   const [recentJobs, recentUsers, recentApps, recentTxs] = await Promise.all([
     db.select().from(jobsTable).orderBy(desc(jobsTable.createdAt)).limit(8),
-    db.select().from(usersTable).where(eq(usersTable.role, "freelancer")).orderBy(desc(usersTable.createdAt)).limit(5),
+    db.select().from(usersTable).where(and(eq(usersTable.role, "freelancer"), eq(usersTable.isDemo, false))).orderBy(desc(usersTable.createdAt)).limit(5),
     db.select().from(applicationsTable).orderBy(desc(applicationsTable.appliedAt)).limit(8),
     db.select().from(transactionsTable).where(eq(transactionsTable.type, "credit")).orderBy(desc(transactionsTable.createdAt)).limit(5),
   ]);

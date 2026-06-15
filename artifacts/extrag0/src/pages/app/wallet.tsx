@@ -95,7 +95,7 @@ function TransactionRow({ tx, index }: { tx: Transaction; index: number }) {
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay: index * 0.035 }}
-      className="flex items-center gap-3 sm:gap-4 py-3.5 border-b border-white/5 last:border-0 group hover:bg-white/[0.015] rounded-lg transition-colors px-1 relative"
+      className="flex items-center gap-3 sm:gap-4 py-3.5 border-b border-white/5 last:border-0 group hover:bg-white/[0.040] rounded-lg transition-colors px-1 relative"
     >
       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r-full flex-shrink-0" style={dotColor} />
       <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ml-2 ${iconConfig.bg}`}>

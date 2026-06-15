@@ -224,7 +224,7 @@ export default function AdminOpsPage() {
               {BRAZIL_NODES.map((node) => (
                 <div
                   key={node.sigla}
-                  className="flex items-center gap-2.5 px-3 py-2.5 hover:bg-white/[0.015] transition-colors group"
+                  className="flex items-center gap-2.5 px-3 py-2.5 hover:bg-white/[0.040] transition-colors group"
                 >
                   <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all ${node.primary ? "bg-green-400 animate-pulse group-hover:shadow-[0_0_6px_rgba(74,222,128,0.8)]" : "bg-primary/50"}`} />
                   <div className="flex-1 min-w-0">

@@ -50,7 +50,7 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className="rounded-2xl p-4 border border-white/6 hover:border-white/14 transition-all group"
-      style={{ background: "rgba(255,255,255,0.018)" }}
+      style={{ background: "rgba(255,255,255,0.060)" }}
     >
       <div className="flex items-start gap-3">
         <Link href={type === "freelancer" ? `/app/freelancers/${user.id}` : `/app/companies/${user.id}`}>

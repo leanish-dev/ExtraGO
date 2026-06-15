@@ -147,7 +147,7 @@ function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }
   const topItems = items.slice(0, 6);
 
   return (
-    <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.015)" }}>
+    <div className="rounded-2xl border border-white/6 p-5" style={{ background: "rgba(255,255,255,0.055)" }}>
       <div className="flex items-center gap-2 mb-4">
         <Activity size={14} className="text-muted-foreground" />
         <h2 className="font-semibold text-sm flex-1">Atividade Recente</h2>
@@ -466,7 +466,7 @@ function CompanyDashboard() {
                     whileHover={{ x: 2 }}
                   >
                     <Link href="/app/jobs">
-                      <div className="rounded-xl p-4 cursor-pointer flex items-center gap-4 border border-white/5 hover:border-primary/18 transition-all group" style={{ background: "rgba(255,255,255,0.018)" }}>
+                      <div className="rounded-xl p-4 cursor-pointer flex items-center gap-4 border border-white/5 hover:border-primary/18 transition-all group" style={{ background: "rgba(255,255,255,0.060)" }}>
                         <div className="w-9 h-9 rounded-xl bg-primary/8 border border-primary/18 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/14 transition-colors">
                           <Briefcase size={15} className="text-primary" />
                         </div>
@@ -502,7 +502,7 @@ function CompanyDashboard() {
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   className={`rounded-xl p-4 cursor-pointer flex items-center gap-3 border border-white/6 ${action.border} transition-all`}
-                  style={{ background: "rgba(255,255,255,0.018)" }}
+                  style={{ background: "rgba(255,255,255,0.060)" }}
                 >
                   <div className={`w-9 h-9 rounded-xl border border-white/8 flex items-center justify-center ${action.color}`}>
                     {action.icon}
@@ -563,7 +563,7 @@ function FreelancerDashboard() {
             {appsLoading ? (
               <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="rounded-xl h-14 skeleton" />)}</div>
             ) : pendingApps.length === 0 ? (
-              <div className="rounded-2xl border border-white/5 p-6 flex flex-col items-center text-center gap-3" style={{ background: "rgba(255,255,255,0.012)" }}>
+              <div className="rounded-2xl border border-white/5 p-6 flex flex-col items-center text-center gap-3" style={{ background: "rgba(255,255,255,0.050)" }}>
                 <Briefcase size={22} className="text-muted-foreground/30" />
                 <div>
                   <p className="text-sm font-semibold">Nenhuma missão ativa</p>
@@ -576,7 +576,7 @@ function FreelancerDashboard() {
                 </Link>
               </div>
             ) : (
-              <div className="divide-y divide-white/4 rounded-2xl border border-white/5 overflow-hidden" style={{ background: "rgba(255,255,255,0.012)" }}>
+              <div className="divide-y divide-white/4 rounded-2xl border border-white/5 overflow-hidden" style={{ background: "rgba(255,255,255,0.050)" }}>
                 <AnimatePresence>
                   {pendingApps.map((app, i) => (
                     <motion.div

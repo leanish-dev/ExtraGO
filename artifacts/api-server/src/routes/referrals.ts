@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db, usersTable, applicationsTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, and } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { ValidateReferralCodeBody } from "@workspace/api-zod";
 import { referralRate, referralTierLabel } from "../lib/ecosystem";
@@ -79,7 +79,7 @@ router.post("/referrals/validate", requireAuth, async (req, res) => {
 // GET /referrals/leaderboard
 router.get("/referrals/leaderboard", requireAuth, async (req, res) => {
   const freelancers = await db.select().from(usersTable)
-    .where(eq(usersTable.role, "freelancer"))
+    .where(and(eq(usersTable.role, "freelancer"), eq(usersTable.isDemo, false)))
     .orderBy(sql`${usersTable.completedJobs} DESC`)
     .limit(20);
 

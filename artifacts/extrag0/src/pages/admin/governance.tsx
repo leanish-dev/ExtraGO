@@ -6,7 +6,8 @@ import { toast } from "sonner";
 import {
   Shield, Settings, Users, Award, Save, RotateCcw, ChevronRight,
   Crown, AlertTriangle, Loader2, CheckCircle, Trash2, Search,
-  Lock, Unlock, RefreshCw, Star, TrendingUp,
+  Lock, Unlock, RefreshCw, Star, TrendingUp, Edit2, X, UserCog,
+  Percent, DollarSign, Plus, Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,16 +41,41 @@ interface BadgeGrant {
   userId: number;
   badge: string;
   description: string;
+  icon: string;
+  color: string;
+  category: string;
   grantedAt: string;
   userName: string | null;
   userEmail: string | null;
 }
 
+interface UserOverride {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  level: string;
+  customFee: number | null;
+  customReferralRate: number | null;
+  governanceNotes: string | null;
+}
+
+const PREDEFINED_BADGES = [
+  { name: "Fundador", icon: "crown", color: "amber", category: "founding" },
+  { name: "Investidor", icon: "trending-up", color: "emerald", category: "investor" },
+  { name: "Parceiro Estratégico", icon: "handshake", color: "blue", category: "partner" },
+  { name: "Embaixador Nacional", icon: "map", color: "purple", category: "ambassador" },
+  { name: "Conselho Executivo", icon: "shield", color: "yellow", category: "executive" },
+  { name: "Top Performer", icon: "star", color: "orange", category: "performance" },
+  { name: "Growth Leader", icon: "trending-up", color: "green", category: "performance" },
+  { name: "Pioneiro", icon: "zap", color: "cyan", category: "special" },
+];
+
 function SliderField({
-  label, value, min, max, step, onChange, format,
+  label, value, min, max, step, onChange, format, locked,
 }: {
   label: string; value: number; min: number; max: number; step: number;
-  onChange: (v: number) => void; format?: (v: number) => string;
+  onChange: (v: number) => void; format?: (v: number) => string; locked?: boolean;
 }) {
   const pct = ((value - min) / (max - min)) * 100;
   const display = format ? format(value) : String(value);
@@ -61,8 +87,9 @@ function SliderField({
       </div>
       <input
         type="range" min={min} max={max} step={step} value={value}
-        onChange={e => onChange(Number(e.target.value))}
-        className="w-full h-1.5 rounded-full cursor-pointer appearance-none"
+        onChange={e => !locked && onChange(Number(e.target.value))}
+        disabled={locked}
+        className={`w-full h-1.5 rounded-full appearance-none ${locked ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
         style={{
           background: `linear-gradient(90deg, hsl(var(--primary)) ${pct}%, rgba(255,255,255,0.1) 0%)`,
           accentColor: "hsl(var(--primary))",
@@ -92,20 +119,80 @@ function CorporateRoleBadge({ role }: { role?: string }) {
   );
 }
 
+function ConfirmDialog({
+  open, title, description, onConfirm, onCancel, loading,
+}: {
+  open: boolean; title: string; description: string;
+  onConfirm: () => void; onCancel: () => void; loading?: boolean;
+}) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-sm rounded-2xl p-6 space-y-4"
+        style={{ background: "rgba(10,16,26,0.97)", border: "1px solid rgba(255,255,255,0.12)" }}
+      >
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center flex-shrink-0">
+            <AlertTriangle size={16} className="text-yellow-400" />
+          </div>
+          <div>
+            <h3 className="font-bold text-sm">{title}</h3>
+            <p className="text-xs text-muted-foreground mt-1">{description}</p>
+          </div>
+        </div>
+        <div className="flex gap-2 pt-1">
+          <Button variant="ghost" size="sm" onClick={onCancel} className="flex-1 h-10 text-muted-foreground hover:text-foreground">
+            Cancelar
+          </Button>
+          <Button size="sm" onClick={onConfirm} disabled={loading} className="flex-1 h-10 bg-primary text-black font-bold hover:bg-primary/90">
+            {loading ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Save size={14} className="mr-1.5" />}
+            Confirmar
+          </Button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export default function GovernancePage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"config" | "team" | "badges">("config");
+  const [activeTab, setActiveTab] = useState<"config" | "team" | "badges" | "users">("config");
+
+  // Config state
   const [config, setConfig] = useState<PlatformConfig | null>(null);
   const [localConfig, setLocalConfig] = useState<Record<string, number>>({});
   const [configLoading, setConfigLoading] = useState(true);
   const [configSaving, setConfigSaving] = useState(false);
+  // Lock state per section (all locked by default)
+  const [unlockedSections, setUnlockedSections] = useState<Set<string>>(new Set());
+  // Confirm dialog
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  // Team state
   const [admins, setAdmins] = useState<AdminUser[]>([]);
   const [adminsLoading, setAdminsLoading] = useState(false);
+  const [userSearch, setUserSearch] = useState("");
+
+  // Badges state
   const [badges, setBadges] = useState<BadgeGrant[]>([]);
   const [badgesLoading, setBadgesLoading] = useState(false);
-  const [badgeForm, setBadgeForm] = useState({ userId: "", badge: "", description: "" });
+  const [badgeForm, setBadgeForm] = useState({ userId: "", badge: "", description: "", icon: "award", color: "primary", category: "special" });
   const [badgeGranting, setBadgeGranting] = useState(false);
-  const [userSearch, setUserSearch] = useState("");
+
+  // User overrides state
+  const [overrides, setOverrides] = useState<UserOverride[]>([]);
+  const [overridesLoading, setOverridesLoading] = useState(false);
+  const [overrideSearch, setOverrideSearch] = useState("");
+  const [overrideForm, setOverrideForm] = useState<{
+    userId: string; customFee: string; customReferralRate: string; governanceNotes: string;
+  }>({ userId: "", customFee: "", customReferralRate: "", governanceNotes: "" });
+  const [overrideSaving, setOverrideSaving] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserOverride | null>(null);
+  const [searchResults, setSearchResults] = useState<UserOverride[]>([]);
+  const [searching, setSearching] = useState(false);
 
   const isCEO = CEO_EMAILS.includes((user?.email ?? "").toLowerCase());
 
@@ -137,17 +224,29 @@ export default function GovernancePage() {
     finally { setBadgesLoading(false); }
   }, []);
 
+  const fetchOverrides = useCallback(async () => {
+    setOverridesLoading(true);
+    try {
+      const data: UserOverride[] = await apiFetch("/api/admin/governance/overrides");
+      setOverrides(data);
+    } catch { /* noop */ }
+    finally { setOverridesLoading(false); }
+  }, []);
+
   useEffect(() => {
     if (!isCEO) return;
     fetchConfig();
   }, [isCEO, fetchConfig]);
 
   useEffect(() => {
-    if (activeTab === "team" && isCEO) fetchAdmins();
-    if (activeTab === "badges" && isCEO) fetchBadges();
-  }, [activeTab, isCEO, fetchAdmins, fetchBadges]);
+    if (!isCEO) return;
+    if (activeTab === "team") fetchAdmins();
+    if (activeTab === "badges") fetchBadges();
+    if (activeTab === "users") fetchOverrides();
+  }, [activeTab, isCEO, fetchAdmins, fetchBadges, fetchOverrides]);
 
   const handleSaveConfig = async () => {
+    setConfirmOpen(false);
     setConfigSaving(true);
     try {
       await apiFetch("/api/admin/governance/config", {
@@ -155,12 +254,22 @@ export default function GovernancePage() {
         body: JSON.stringify(localConfig),
       });
       toast.success("Configurações salvas com sucesso");
+      setUnlockedSections(new Set());
       fetchConfig();
     } catch {
       toast.error("Erro ao salvar configurações");
     } finally {
       setConfigSaving(false);
     }
+  };
+
+  const toggleSection = (section: string) => {
+    setUnlockedSections(prev => {
+      const next = new Set(prev);
+      if (next.has(section)) next.delete(section);
+      else next.add(section);
+      return next;
+    });
   };
 
   const handleGrantBadge = async () => {
@@ -176,10 +285,13 @@ export default function GovernancePage() {
           userId: parseInt(badgeForm.userId),
           badge: badgeForm.badge,
           description: badgeForm.description,
+          icon: badgeForm.icon,
+          color: badgeForm.color,
+          category: badgeForm.category,
         }),
       });
       toast.success("Badge concedido com sucesso");
-      setBadgeForm({ userId: "", badge: "", description: "" });
+      setBadgeForm({ userId: "", badge: "", description: "", icon: "award", color: "primary", category: "special" });
       fetchBadges();
     } catch (e: any) {
       toast.error(e?.message ?? "Erro ao conceder badge");
@@ -198,8 +310,70 @@ export default function GovernancePage() {
     }
   };
 
-  const pctFormat = (v: number) => `${(v * 100).toFixed(0)}%`;
+  const handleSearchUser = async () => {
+    if (!overrideSearch.trim()) return;
+    setSearching(true);
+    try {
+      const id = parseInt(overrideSearch);
+      if (!isNaN(id)) {
+        const data: UserOverride = await apiFetch(`/api/admin/governance/users/${id}/overrides`);
+        setSearchResults([data]);
+      } else {
+        toast.error("Informe um ID numérico válido");
+      }
+    } catch (e: any) {
+      toast.error("Usuário não encontrado");
+      setSearchResults([]);
+    } finally {
+      setSearching(false);
+    }
+  };
 
+  const handleSelectUserForOverride = (u: UserOverride) => {
+    setSelectedUser(u);
+    setOverrideForm({
+      userId: String(u.id),
+      customFee: u.customFee !== null && u.customFee !== undefined ? String((u.customFee * 100).toFixed(1)) : "",
+      customReferralRate: u.customReferralRate !== null && u.customReferralRate !== undefined ? String((u.customReferralRate * 100).toFixed(1)) : "",
+      governanceNotes: u.governanceNotes ?? "",
+    });
+  };
+
+  const handleSaveOverride = async () => {
+    if (!overrideForm.userId) { toast.error("Selecione um usuário"); return; }
+    setOverrideSaving(true);
+    try {
+      const payload: Record<string, any> = {};
+      if (overrideForm.customFee !== "") {
+        payload.customFee = parseFloat(overrideForm.customFee) / 100;
+      } else {
+        payload.customFee = null;
+      }
+      if (overrideForm.customReferralRate !== "") {
+        payload.customReferralRate = parseFloat(overrideForm.customReferralRate) / 100;
+      } else {
+        payload.customReferralRate = null;
+      }
+      payload.governanceNotes = overrideForm.governanceNotes || null;
+
+      await apiFetch(`/api/admin/governance/users/${overrideForm.userId}/overrides`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+      toast.success("Overrides salvos com sucesso");
+      setSelectedUser(null);
+      setOverrideForm({ userId: "", customFee: "", customReferralRate: "", governanceNotes: "" });
+      setSearchResults([]);
+      setOverrideSearch("");
+      fetchOverrides();
+    } catch {
+      toast.error("Erro ao salvar overrides");
+    } finally {
+      setOverrideSaving(false);
+    }
+  };
+
+  const pctFormat = (v: number) => `${(v * 100).toFixed(0)}%`;
   const hasConfigChanges = config && JSON.stringify(localConfig) !== JSON.stringify(config.config);
   const filteredAdmins = admins.filter(a =>
     !userSearch || a.name.toLowerCase().includes(userSearch.toLowerCase()) ||
@@ -222,8 +396,23 @@ export default function GovernancePage() {
     );
   }
 
+  const SECTIONS = [
+    { id: "fees", label: "Taxas por Nível" },
+    { id: "referral", label: "Comissões de Indicação" },
+    { id: "thresholds", label: "Requisitos de Evolução" },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Confirmar alterações de governança"
+        description="Essas mudanças afetam todas as taxas e comissões da plataforma. Tem certeza que deseja salvar?"
+        onConfirm={handleSaveConfig}
+        onCancel={() => setConfirmOpen(false)}
+        loading={configSaving}
+      />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -250,16 +439,17 @@ export default function GovernancePage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="flex gap-1 p-1 rounded-xl overflow-x-auto" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
         {[
           { id: "config", label: "Configurações", icon: <Settings size={14} /> },
-          { id: "team", label: "Equipe Admin", icon: <Users size={14} /> },
+          { id: "users", label: "Usuários", icon: <UserCog size={14} /> },
+          { id: "team", label: "Equipe", icon: <Users size={14} /> },
           { id: "badges", label: "Badges", icon: <Award size={14} /> },
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
               activeTab === tab.id
                 ? "bg-primary text-black"
                 : "text-muted-foreground hover:text-foreground hover:bg-white/4"
@@ -279,96 +469,126 @@ export default function GovernancePage() {
               <div className="flex justify-center py-16"><Loader2 size={22} className="animate-spin text-primary/60" /></div>
             ) : (
               <>
-                {/* Level Fees */}
-                <div
-                  className="rounded-2xl p-5 space-y-5"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
-                >
-                  <div className="flex items-center gap-2 mb-4">
-                    <TrendingUp size={16} className="text-primary" />
-                    <h3 className="text-sm font-bold">Taxas por Nível</h3>
-                    <span className="text-[10px] text-muted-foreground ml-auto">descontado do profissional por extra concluído</span>
-                  </div>
-                  {[
-                    { key: "level_fee_bronze", label: "Iniciante (Bronze)" },
-                    { key: "level_fee_silver", label: "Júnior (Prata)" },
-                    { key: "level_fee_gold", label: "Intermediário (Ouro)" },
-                    { key: "level_fee_elite", label: "Sênior (Elite)" },
-                    { key: "level_fee_diamond", label: "Elite (Diamante)" },
-                  ].map(({ key, label }) => (
-                    <SliderField
-                      key={key}
-                      label={label}
-                      value={localConfig[key] ?? config?.defaults[key] ?? 0}
-                      min={0.05} max={0.30} step={0.01}
-                      onChange={v => setLocalConfig(prev => ({ ...prev, [key]: v }))}
-                      format={pctFormat}
-                    />
-                  ))}
-                </div>
-
-                {/* Referral Rates */}
-                <div
-                  className="rounded-2xl p-5 space-y-5"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
-                >
-                  <div className="flex items-center gap-2 mb-4">
-                    <Star size={16} className="text-primary" />
-                    <h3 className="text-sm font-bold">Comissões de Indicação</h3>
-                    <span className="text-[10px] text-muted-foreground ml-auto">% pago ao indicador sobre cada extra</span>
-                  </div>
-                  {[
-                    { key: "referral_rate_indicador", label: "Indicador" },
-                    { key: "referral_rate_agente", label: "Agente de Captação" },
-                    { key: "referral_rate_embaixador", label: "Embaixador Regional" },
-                  ].map(({ key, label }) => (
-                    <SliderField
-                      key={key}
-                      label={label}
-                      value={localConfig[key] ?? config?.defaults[key] ?? 0}
-                      min={0.005} max={0.10} step={0.005}
-                      onChange={v => setLocalConfig(prev => ({ ...prev, [key]: v }))}
-                      format={pctFormat}
-                    />
-                  ))}
-                </div>
+                {/* Level Fees — locked by default */}
+                {[
+                  {
+                    sectionId: "fees",
+                    icon: <TrendingUp size={16} className="text-primary" />,
+                    title: "Taxas por Nível",
+                    subtitle: "descontado do profissional por extra concluído",
+                    fields: [
+                      { key: "level_fee_bronze", label: "Iniciante (Bronze)" },
+                      { key: "level_fee_silver", label: "Júnior (Prata)" },
+                      { key: "level_fee_gold", label: "Intermediário (Ouro)" },
+                      { key: "level_fee_elite", label: "Sênior (Elite)" },
+                      { key: "level_fee_diamond", label: "Elite (Diamante)" },
+                    ],
+                    sliderProps: { min: 0.05, max: 0.30, step: 0.01, format: pctFormat },
+                  },
+                  {
+                    sectionId: "referral",
+                    icon: <Star size={16} className="text-primary" />,
+                    title: "Comissões de Indicação",
+                    subtitle: "% pago ao indicador sobre cada extra",
+                    fields: [
+                      { key: "referral_rate_indicador", label: "Indicador" },
+                      { key: "referral_rate_agente", label: "Agente de Captação" },
+                      { key: "referral_rate_embaixador", label: "Embaixador Regional" },
+                    ],
+                    sliderProps: { min: 0.005, max: 0.10, step: 0.005, format: pctFormat },
+                  },
+                ].map(section => {
+                  const isUnlocked = unlockedSections.has(section.sectionId);
+                  return (
+                    <div
+                      key={section.sectionId}
+                      className="rounded-2xl p-5 space-y-5"
+                      style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${isUnlocked ? "rgba(124,252,0,0.20)" : "rgba(255,255,255,0.07)"}` }}
+                    >
+                      <div className="flex items-center gap-2">
+                        {section.icon}
+                        <h3 className="text-sm font-bold">{section.title}</h3>
+                        <span className="text-[10px] text-muted-foreground ml-auto hidden sm:inline">{section.subtitle}</span>
+                        <button
+                          onClick={() => toggleSection(section.sectionId)}
+                          className={`ml-2 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                            isUnlocked
+                              ? "bg-primary/15 text-primary border border-primary/25 hover:bg-primary/20"
+                              : "bg-white/6 text-muted-foreground border border-white/10 hover:bg-white/10 hover:text-foreground"
+                          }`}
+                        >
+                          {isUnlocked ? <Unlock size={11} /> : <Lock size={11} />}
+                          {isUnlocked ? "Bloqueiar" : "Editar"}
+                        </button>
+                      </div>
+                      {section.fields.map(({ key, label }) => (
+                        <SliderField
+                          key={key}
+                          label={label}
+                          value={localConfig[key] ?? config?.defaults[key] ?? 0}
+                          {...section.sliderProps}
+                          onChange={v => setLocalConfig(prev => ({ ...prev, [key]: v }))}
+                          locked={!isUnlocked}
+                        />
+                      ))}
+                    </div>
+                  );
+                })}
 
                 {/* Level Thresholds */}
-                <div
-                  className="rounded-2xl p-5 space-y-4"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
-                >
-                  <div className="flex items-center gap-2 mb-4">
-                    <Shield size={16} className="text-primary" />
-                    <h3 className="text-sm font-bold">Requisitos de Evolução</h3>
-                    <span className="text-[10px] text-muted-foreground ml-auto">mínimo de extras + reputação para subir de nível</span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {[
-                      { jobsKey: "level_threshold_silver_jobs", repKey: "level_threshold_silver_rep", label: "Júnior" },
-                      { jobsKey: "level_threshold_gold_jobs", repKey: "level_threshold_gold_rep", label: "Intermediário" },
-                      { jobsKey: "level_threshold_elite_jobs", repKey: "level_threshold_elite_rep", label: "Sênior" },
-                      { jobsKey: "level_threshold_diamond_jobs", repKey: "level_threshold_diamond_rep", label: "Elite" },
-                    ].map(({ jobsKey, repKey, label }) => (
-                      <div key={label} className="space-y-3 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                        <p className="text-xs font-bold text-primary/80">{label}</p>
-                        <SliderField
-                          label="Extras concluídos"
-                          value={localConfig[jobsKey] ?? config?.defaults[jobsKey] ?? 0}
-                          min={5} max={1000} step={5}
-                          onChange={v => setLocalConfig(prev => ({ ...prev, [jobsKey]: v }))}
-                        />
-                        <SliderField
-                          label="Reputação mínima"
-                          value={localConfig[repKey] ?? config?.defaults[repKey] ?? 0}
-                          min={3.0} max={5.0} step={0.05}
-                          onChange={v => setLocalConfig(prev => ({ ...prev, [repKey]: v }))}
-                          format={v => v.toFixed(2)}
-                        />
+                {(() => {
+                  const isUnlocked = unlockedSections.has("thresholds");
+                  return (
+                    <div
+                      className="rounded-2xl p-5 space-y-4"
+                      style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${isUnlocked ? "rgba(124,252,0,0.20)" : "rgba(255,255,255,0.07)"}` }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Shield size={16} className="text-primary" />
+                        <h3 className="text-sm font-bold">Requisitos de Evolução</h3>
+                        <span className="text-[10px] text-muted-foreground ml-auto hidden sm:inline">mínimo de extras + reputação para subir de nível</span>
+                        <button
+                          onClick={() => toggleSection("thresholds")}
+                          className={`ml-2 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                            isUnlocked
+                              ? "bg-primary/15 text-primary border border-primary/25 hover:bg-primary/20"
+                              : "bg-white/6 text-muted-foreground border border-white/10 hover:bg-white/10 hover:text-foreground"
+                          }`}
+                        >
+                          {isUnlocked ? <Unlock size={11} /> : <Lock size={11} />}
+                          {isUnlocked ? "Bloquear" : "Editar"}
+                        </button>
                       </div>
-                    ))}
-                  </div>
-                </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {[
+                          { jobsKey: "level_threshold_silver_jobs", repKey: "level_threshold_silver_rep", label: "Júnior" },
+                          { jobsKey: "level_threshold_gold_jobs", repKey: "level_threshold_gold_rep", label: "Intermediário" },
+                          { jobsKey: "level_threshold_elite_jobs", repKey: "level_threshold_elite_rep", label: "Sênior" },
+                          { jobsKey: "level_threshold_diamond_jobs", repKey: "level_threshold_diamond_rep", label: "Elite" },
+                        ].map(({ jobsKey, repKey, label }) => (
+                          <div key={label} className="space-y-3 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                            <p className="text-xs font-bold text-primary/80">{label}</p>
+                            <SliderField
+                              label="Extras concluídos"
+                              value={localConfig[jobsKey] ?? config?.defaults[jobsKey] ?? 0}
+                              min={5} max={1000} step={5}
+                              onChange={v => setLocalConfig(prev => ({ ...prev, [jobsKey]: v }))}
+                              locked={!isUnlocked}
+                            />
+                            <SliderField
+                              label="Reputação mínima"
+                              value={localConfig[repKey] ?? config?.defaults[repKey] ?? 0}
+                              min={3.0} max={5.0} step={0.05}
+                              onChange={v => setLocalConfig(prev => ({ ...prev, [repKey]: v }))}
+                              format={v => v.toFixed(2)}
+                              locked={!isUnlocked}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {/* Action Bar */}
                 <div className="flex items-center justify-between gap-4 pt-2">
@@ -382,7 +602,7 @@ export default function GovernancePage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setLocalConfig({ ...config!.config })}
+                        onClick={() => { setLocalConfig({ ...config!.config }); setUnlockedSections(new Set()); }}
                         className="text-muted-foreground h-9"
                       >
                         <RotateCcw size={14} className="mr-1.5" />
@@ -391,7 +611,7 @@ export default function GovernancePage() {
                     )}
                     <Button
                       size="sm"
-                      onClick={handleSaveConfig}
+                      onClick={() => setConfirmOpen(true)}
                       disabled={configSaving || !hasConfigChanges}
                       className="h-9 bg-primary text-black font-bold hover:bg-primary/90"
                     >
@@ -409,6 +629,189 @@ export default function GovernancePage() {
                 )}
               </>
             )}
+          </motion.div>
+        )}
+
+        {/* USERS TAB — individual overrides */}
+        {activeTab === "users" && (
+          <motion.div key="users" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-4">
+            {/* Search user by ID */}
+            <div
+              className="rounded-2xl p-5 space-y-4"
+              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <UserCog size={16} className="text-primary" />
+                <h3 className="text-sm font-bold">Configuração Individual</h3>
+              </div>
+              <p className="text-xs text-muted-foreground">Busque um usuário por ID para configurar taxa personalizada, comissão de indicação e notas de governança.</p>
+              <div className="flex gap-2">
+                <Input
+                  value={overrideSearch}
+                  onChange={e => setOverrideSearch(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && handleSearchUser()}
+                  placeholder="ID do usuário (ex: 42)"
+                  className="bg-white/5 border-white/10 h-10 flex-1"
+                  type="number"
+                />
+                <Button size="sm" onClick={handleSearchUser} disabled={searching} className="h-10 bg-white/8 border border-white/12 hover:bg-white/14">
+                  {searching ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
+                </Button>
+              </div>
+
+              {/* Search results */}
+              {searchResults.map(u => (
+                <button
+                  key={u.id}
+                  onClick={() => handleSelectUserForOverride(u)}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all hover:bg-white/6"
+                  style={{ background: selectedUser?.id === u.id ? "rgba(124,252,0,0.06)" : "rgba(255,255,255,0.02)", border: `1px solid ${selectedUser?.id === u.id ? "rgba(124,252,0,0.20)" : "rgba(255,255,255,0.06)"}` }}
+                >
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/30 to-secondary/20 flex items-center justify-center text-xs font-bold flex-shrink-0">
+                    {u.name?.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate">{u.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">{u.email} · ID {u.id} · {u.level}</p>
+                  </div>
+                  {(u.customFee !== null || u.customReferralRate !== null) && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold" style={{ background: "rgba(124,252,0,0.1)", color: "#7CFC00", border: "1px solid rgba(124,252,0,0.2)" }}>
+                      Override ativo
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* Override form */}
+            {selectedUser && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-2xl p-5 space-y-4"
+                style={{ background: "rgba(124,252,0,0.03)", border: "1px solid rgba(124,252,0,0.15)" }}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-bold">{selectedUser.name}</p>
+                    <p className="text-xs text-muted-foreground">{selectedUser.email}</p>
+                  </div>
+                  <button onClick={() => { setSelectedUser(null); setSearchResults([]); setOverrideSearch(""); }} className="text-muted-foreground hover:text-foreground p-1">
+                    <X size={14} />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                      <Percent size={11} />
+                      Taxa Personalizada (%)
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        value={overrideForm.customFee}
+                        onChange={e => setOverrideForm(f => ({ ...f, customFee: e.target.value }))}
+                        placeholder={`Padrão: ${((config?.defaults[`level_fee_${selectedUser.level}`] ?? 0.18) * 100).toFixed(0)}%`}
+                        className="bg-white/5 border-white/10 h-10"
+                        type="number" min={0} max={100} step={0.1}
+                      />
+                      {overrideForm.customFee && (
+                        <button onClick={() => setOverrideForm(f => ({ ...f, customFee: "" }))} className="text-muted-foreground hover:text-destructive p-1">
+                          <X size={12} />
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">Deixe vazio para usar a taxa padrão do nível</p>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                      <DollarSign size={11} />
+                      Comissão de Indicação (%)
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        value={overrideForm.customReferralRate}
+                        onChange={e => setOverrideForm(f => ({ ...f, customReferralRate: e.target.value }))}
+                        placeholder="Padrão da plataforma"
+                        className="bg-white/5 border-white/10 h-10"
+                        type="number" min={0} max={100} step={0.1}
+                      />
+                      {overrideForm.customReferralRate && (
+                        <button onClick={() => setOverrideForm(f => ({ ...f, customReferralRate: "" }))} className="text-muted-foreground hover:text-destructive p-1">
+                          <X size={12} />
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted-foreground">Deixe vazio para usar a comissão padrão</p>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Notas de Governança
+                  </label>
+                  <textarea
+                    value={overrideForm.governanceNotes}
+                    onChange={e => setOverrideForm(f => ({ ...f, governanceNotes: e.target.value }))}
+                    placeholder="Ex: Parceiro Estratégico — acordo comercial aprovado em Jun/2026"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:border-primary/40"
+                    rows={2}
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 pt-1">
+                  <Button
+                    size="sm"
+                    onClick={handleSaveOverride}
+                    disabled={overrideSaving}
+                    className="h-9 bg-primary text-black font-bold hover:bg-primary/90"
+                  >
+                    {overrideSaving ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Save size={14} className="mr-1.5" />}
+                    Salvar Override
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Active overrides list */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Overrides Ativos</h4>
+                <button onClick={fetchOverrides} className="text-muted-foreground hover:text-foreground p-1">
+                  <RefreshCw size={12} />
+                </button>
+              </div>
+              {overridesLoading ? (
+                <div className="flex justify-center py-8"><Loader2 size={18} className="animate-spin text-primary/60" /></div>
+              ) : overrides.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground text-sm">
+                  Nenhum override configurado.
+                </div>
+              ) : (
+                overrides.map(u => (
+                  <div
+                    key={u.id}
+                    className="flex items-center gap-4 p-4 rounded-xl cursor-pointer transition-all hover:bg-white/4"
+                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+                    onClick={() => { setSearchResults([u]); handleSelectUserForOverride(u); }}
+                  >
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary/30 to-secondary/20 flex items-center justify-center text-xs font-bold flex-shrink-0">
+                      {u.name?.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold truncate">{u.name}</p>
+                      <div className="flex gap-3 mt-0.5 text-xs text-muted-foreground flex-wrap">
+                        {u.customFee !== null && <span className="text-primary font-medium">Taxa: {(u.customFee * 100).toFixed(1)}%</span>}
+                        {u.customReferralRate !== null && <span className="text-secondary font-medium">Comissão: {(u.customReferralRate * 100).toFixed(1)}%</span>}
+                        {u.governanceNotes && <span className="truncate max-w-[180px]">{u.governanceNotes}</span>}
+                      </div>
+                    </div>
+                    <Edit2 size={13} className="text-muted-foreground flex-shrink-0" />
+                  </div>
+                ))
+              )}
+            </div>
           </motion.div>
         )}
 
@@ -468,6 +871,29 @@ export default function GovernancePage() {
         {/* BADGES TAB */}
         {activeTab === "badges" && (
           <motion.div key="badges" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="space-y-4">
+            {/* Predefined badge types */}
+            <div
+              className="p-4 rounded-2xl space-y-3"
+              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Badges Predefinidos</p>
+              <div className="flex flex-wrap gap-2">
+                {PREDEFINED_BADGES.map(b => (
+                  <button
+                    key={b.name}
+                    onClick={() => setBadgeForm(f => ({ ...f, badge: b.name, icon: b.icon, color: b.color, category: b.category }))}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                      badgeForm.badge === b.name
+                        ? "bg-primary/15 text-primary border-primary/30"
+                        : "bg-white/5 text-muted-foreground border-white/10 hover:bg-white/10 hover:text-foreground"
+                    }`}
+                  >
+                    {b.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Grant form */}
             <div
               className="p-5 rounded-2xl space-y-4"
@@ -477,7 +903,7 @@ export default function GovernancePage() {
                 <Award size={16} className="text-primary" />
                 <h3 className="text-sm font-bold">Conceder Badge</h3>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input
                   placeholder="ID do usuário"
                   value={badgeForm.userId}
@@ -486,7 +912,7 @@ export default function GovernancePage() {
                   type="number"
                 />
                 <Input
-                  placeholder="Nome do badge (ex: Pioneiro)"
+                  placeholder="Nome do badge"
                   value={badgeForm.badge}
                   onChange={e => setBadgeForm(f => ({ ...f, badge: e.target.value }))}
                   className="bg-white/5 border-white/10 h-10"
@@ -497,6 +923,12 @@ export default function GovernancePage() {
                   onChange={e => setBadgeForm(f => ({ ...f, description: e.target.value }))}
                   className="bg-white/5 border-white/10 h-10"
                 />
+                <Input
+                  placeholder="Categoria (ex: investor, partner)"
+                  value={badgeForm.category}
+                  onChange={e => setBadgeForm(f => ({ ...f, category: e.target.value }))}
+                  className="bg-white/5 border-white/10 h-10"
+                />
               </div>
               <div className="flex justify-end">
                 <Button
@@ -505,7 +937,7 @@ export default function GovernancePage() {
                   disabled={badgeGranting || !badgeForm.userId || !badgeForm.badge}
                   className="h-9 bg-primary text-black font-bold"
                 >
-                  {badgeGranting ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Award size={14} className="mr-1.5" />}
+                  {badgeGranting ? <Loader2 size={14} className="animate-spin mr-1.5" /> : <Plus size={14} className="mr-1.5" />}
                   Conceder Badge
                 </Button>
               </div>
@@ -524,28 +956,24 @@ export default function GovernancePage() {
                     className="flex items-center gap-4 p-4 rounded-xl"
                     style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
                   >
-                    <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                    <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
                       <Award size={16} className="text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-sm font-bold">{b.badge}</p>
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary/70 font-semibold">
-                          User #{b.userId}
-                        </span>
+                        {b.category && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/8 text-muted-foreground">{b.category}</span>
+                        )}
                       </div>
                       <p className="text-xs text-muted-foreground truncate">
-                        {b.userName ? `${b.userName} · ` : ""}{b.description || "Sem descrição"}
+                        {b.userName ?? `User #${b.userId}`} · {b.userEmail}
                       </p>
-                      {b.grantedAt && (
-                        <p className="text-[10px] text-muted-foreground/40 mt-0.5">
-                          {new Date(b.grantedAt).toLocaleDateString("pt-BR")}
-                        </p>
-                      )}
+                      {b.description && <p className="text-xs text-muted-foreground/70 mt-0.5">{b.description}</p>}
                     </div>
                     <button
                       onClick={() => handleDeleteBadge(b.id)}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-red-400/60 hover:text-red-400 hover:bg-red-500/10 transition-colors flex-shrink-0"
+                      className="text-destructive/50 hover:text-destructive transition-colors p-1 flex-shrink-0"
                     >
                       <Trash2 size={14} />
                     </button>

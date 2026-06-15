@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAdminListUsers, useAdminBanUser, useAdminVerifyUser } from "@workspace/api-client-react";
 import type { User } from "@workspace/api-client-react";
-import { Users, Search, Shield, Ban, CheckCircle, Star, Briefcase, ChevronDown, Crown } from "lucide-react";
+import { Users, Search, Shield, Ban, CheckCircle, Star, Briefcase, ChevronDown, Crown, X } from "lucide-react";
 import { LevelBadgeIcon, CorporateBadge, CorporateBadgeIcon } from "@/components/level-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +35,89 @@ const ADMIN_ROLE_COLORS: Record<string, string> = {
   state_representative: "text-cyan-400 bg-cyan-400/10 border-cyan-400/30",
 };
 
+// Mobile-friendly governance modal — replaces the floating dropdown
+function GovernanceModal({
+  user,
+  open,
+  onClose,
+  onSetRole,
+}: {
+  user: User;
+  open: boolean;
+  onClose: () => void;
+  onSetRole: (id: number, role: string, adminRole: string | null) => void;
+}) {
+  const adminRole = (user as any).adminRole as string | null;
+
+  if (!open) return null;
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+      style={{ background: "rgba(0,0,0,0.65)", backdropFilter: "blur(4px)" }}
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 32 }}
+        transition={{ type: "spring", stiffness: 320, damping: 28 }}
+        onClick={e => e.stopPropagation()}
+        className="w-full sm:w-auto sm:min-w-[320px] rounded-t-2xl sm:rounded-2xl overflow-hidden"
+        style={{ background: "rgba(10,16,26,0.97)", border: "1px solid rgba(255,255,255,0.10)", maxWidth: "480px" }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-white/8">
+          <div>
+            <p className="text-sm font-bold">{user.name}</p>
+            <p className="text-xs text-muted-foreground">{user.email}</p>
+          </div>
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-white/8 transition-all">
+            <X size={16} />
+          </button>
+        </div>
+
+        {/* Current role info */}
+        <div className="px-5 py-3 border-b border-white/5">
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">Cargo atual</p>
+          <div className="flex items-center gap-2">
+            <span className={`text-xs px-2.5 py-1 rounded-full border font-semibold ${
+              adminRole ? (ADMIN_ROLE_COLORS[adminRole] ?? "text-primary bg-primary/10 border-primary/20") : "text-muted-foreground bg-white/5 border-white/10"
+            }`}>
+              {adminRole ? (ADMIN_ROLE_OPTIONS.find(o => o.value === adminRole)?.label ?? adminRole) : "Sem cargo admin"}
+            </span>
+          </div>
+        </div>
+
+        {/* Role options */}
+        <div className="px-3 py-3 space-y-1">
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wider px-2 mb-2">Atribuir cargo</p>
+          {ADMIN_ROLE_OPTIONS.map(opt => (
+            <button
+              key={String(opt.value)}
+              onClick={() => {
+                onSetRole(user.id!, opt.value === null ? user.role ?? "freelancer" : "admin", opt.value);
+                onClose();
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm text-left transition-all hover:bg-white/6 ${
+                opt.value === adminRole ? "bg-primary/8 text-primary font-semibold" : "text-foreground/80"
+              }`}
+            >
+              {opt.value === "super_admin" && <Crown size={14} className="text-yellow-400 flex-shrink-0" />}
+              {opt.value !== "super_admin" && opt.value !== null && <Shield size={14} className="text-muted-foreground flex-shrink-0" />}
+              {opt.value === null && <Ban size={14} className="text-destructive/60 flex-shrink-0" />}
+              <span className="flex-1">{opt.label}</span>
+              {opt.value === adminRole && <CheckCircle size={12} className="text-primary flex-shrink-0" />}
+            </button>
+          ))}
+        </div>
+
+        {/* Safe area for mobile */}
+        <div className="h-4 sm:h-2" />
+      </motion.div>
+    </div>
+  );
+}
+
 function UserRow({
   user, onVerify, onBan, onSetRole, isSuperAdmin,
 }: {
@@ -44,7 +127,7 @@ function UserRow({
   onSetRole: (id: number, role: string, adminRole: string | null) => void;
   isSuperAdmin: boolean;
 }) {
-  const [showRoleMenu, setShowRoleMenu] = useState(false);
+  const [showGovernanceModal, setShowGovernanceModal] = useState(false);
 
   const roleColors: Record<string, string> = {
     freelancer: "text-primary bg-primary/10 border-primary/20",
@@ -64,142 +147,123 @@ function UserRow({
     : null;
 
   return (
-    <div className={`glass-card rounded-xl p-4 flex items-center gap-4 transition-all ${isBanned ? "opacity-60 border-destructive/30" : ""}`}>
-      {/* Avatar */}
-      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center text-sm font-bold flex-shrink-0 overflow-hidden">
-        {(user as any).avatarUrl ? (
-          <img src={(user as any).avatarUrl} alt={user.name} className="w-full h-full object-cover" />
-        ) : (
-          user.name?.charAt(0).toUpperCase()
+    <>
+      <AnimatePresence>
+        {showGovernanceModal && (
+          <GovernanceModal
+            user={user}
+            open={showGovernanceModal}
+            onClose={() => setShowGovernanceModal(false)}
+            onSetRole={onSetRole}
+          />
         )}
-      </div>
+      </AnimatePresence>
 
-      {/* Info */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <p className="font-semibold text-sm truncate">{user.name}</p>
-          <span className={`text-xs px-2 py-0.5 rounded-full border ${roleColors[user.role ?? "freelancer"]}`}>
-            {roleLabels[user.role ?? "freelancer"]}
-          </span>
-          {adminRole && (
-            <span className={`text-xs px-2 py-0.5 rounded-full border flex items-center gap-1 ${ADMIN_ROLE_COLORS[adminRole] ?? "text-primary bg-primary/10 border-primary/20"}`}>
-              {(user as any).corporateRole
-                ? <CorporateBadgeIcon role={(user as any).corporateRole} size="xs" />
-                : adminRole === "super_admin" && <Crown size={9} />
-              }
-              {(user as any).corporateRole
-                ? ((user as any).corporateRole.toUpperCase())
-                : (ADMIN_ROLE_OPTIONS.find(o => o.value === adminRole)?.label ?? adminRole)
-              }
-            </span>
-          )}
-          {user.isVerified && (
-            <span className="text-xs text-green-400 flex items-center gap-0.5">
-              <CheckCircle size={11} /> Verificado
-            </span>
-          )}
-          {isBanned && (
-            <span className="text-xs text-destructive flex items-center gap-0.5 bg-destructive/10 border border-destructive/20 px-1.5 py-0.5 rounded-full">
-              <Ban size={10} /> Banido
-            </span>
+      <div className={`glass-card rounded-xl p-4 flex items-center gap-4 transition-all ${isBanned ? "opacity-60 border-destructive/30" : ""}`}>
+        {/* Avatar */}
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center text-sm font-bold flex-shrink-0 overflow-hidden">
+          {(user as any).avatarUrl ? (
+            <img src={(user as any).avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+          ) : (
+            user.name?.charAt(0).toUpperCase()
           )}
         </div>
-        <p className="text-xs text-muted-foreground mt-0.5">{user.email}</p>
-        <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
-          {user.role === "freelancer" && (
-            <>
-              <span className="flex items-center gap-1"><Briefcase size={10} /> {user.completedJobs ?? 0} jobs</span>
-              <span className="flex items-center gap-1"><Star size={10} className="text-yellow-400" /> {(user.reputationScore ?? 0).toFixed(1)}</span>
-              <span className="flex items-center gap-1"><LevelBadgeIcon level={user.level} size="sm" /><span className="capitalize">{user.level ?? "bronze"}</span></span>
-            </>
-          )}
-          {user.role === "admin" && (user as any).corporateRole && (
-            <span className="flex items-center gap-1">
-              <CorporateBadgeIcon role={(user as any).corporateRole} size="sm" />
-              <span className="uppercase text-[10px] font-bold">{(user as any).corporateRole}</span>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="font-semibold text-sm truncate">{user.name}</p>
+            <span className={`text-xs px-2 py-0.5 rounded-full border ${roleColors[user.role ?? "freelancer"]}`}>
+              {roleLabels[user.role ?? "freelancer"]}
             </span>
-          )}
-          {user.role === "company" && user.companyName && (
-            <span>{user.companyName}</span>
-          )}
-          {joinDate && <span>Desde {joinDate}</span>}
+            {adminRole && (
+              <span className={`text-xs px-2 py-0.5 rounded-full border flex items-center gap-1 ${ADMIN_ROLE_COLORS[adminRole] ?? "text-primary bg-primary/10 border-primary/20"}`}>
+                {(user as any).corporateRole
+                  ? <CorporateBadgeIcon role={(user as any).corporateRole} size="xs" />
+                  : adminRole === "super_admin" && <Crown size={9} />
+                }
+                {(user as any).corporateRole
+                  ? ((user as any).corporateRole.toUpperCase())
+                  : (ADMIN_ROLE_OPTIONS.find(o => o.value === adminRole)?.label ?? adminRole)
+                }
+              </span>
+            )}
+            {user.isVerified && (
+              <span className="text-xs text-green-400 flex items-center gap-0.5">
+                <CheckCircle size={11} /> Verificado
+              </span>
+            )}
+            {isBanned && (
+              <span className="text-xs text-destructive flex items-center gap-0.5 bg-destructive/10 border border-destructive/20 px-1.5 py-0.5 rounded-full">
+                <Ban size={10} /> Banido
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground mt-0.5">{user.email}</p>
+          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
+            {user.role === "freelancer" && (
+              <>
+                <span className="flex items-center gap-1"><Briefcase size={10} /> {user.completedJobs ?? 0} jobs</span>
+                <span className="flex items-center gap-1"><Star size={10} className="text-yellow-400" /> {(user.reputationScore ?? 0).toFixed(1)}</span>
+                <span className="flex items-center gap-1"><LevelBadgeIcon level={user.level} size="sm" /><span className="capitalize">{user.level ?? "bronze"}</span></span>
+              </>
+            )}
+            {user.role === "admin" && (user as any).corporateRole && (
+              <span className="flex items-center gap-1">
+                <CorporateBadgeIcon role={(user as any).corporateRole} size="sm" />
+                <span className="uppercase text-[10px] font-bold">{(user as any).corporateRole}</span>
+              </span>
+            )}
+            {user.role === "company" && user.companyName && (
+              <span>{user.companyName}</span>
+            )}
+            {joinDate && <span>Desde {joinDate}</span>}
+          </div>
         </div>
-      </div>
 
-      {/* Actions */}
-      <div className="flex gap-2 flex-shrink-0 items-center">
-        {!user.isVerified && user.role !== "admin" && !isBanned && (
-          <Button
-            size="sm"
-            className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 text-xs h-8"
-            onClick={() => onVerify(user.id!)}
-          >
-            <CheckCircle size={12} className="mr-1" /> Verificar
-          </Button>
-        )}
+        {/* Actions */}
+        <div className="flex gap-2 flex-shrink-0 items-center">
+          {!user.isVerified && user.role !== "admin" && !isBanned && (
+            <Button
+              size="sm"
+              className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 text-xs h-8"
+              onClick={() => onVerify(user.id!)}
+            >
+              <CheckCircle size={12} className="mr-1" /> Verificar
+            </Button>
+          )}
 
-        {/* Role assignment — super admin only, for non-super-admin users */}
-        {isSuperAdmin && adminRole !== "super_admin" && (
-          <div className="relative">
+          {/* Role assignment — opens full-screen modal instead of floating dropdown */}
+          {isSuperAdmin && adminRole !== "super_admin" && (
             <Button
               size="sm"
               variant="ghost"
               className="text-xs h-8 text-muted-foreground hover:text-foreground hover:bg-white/8 gap-1"
-              onClick={() => setShowRoleMenu(v => !v)}
+              onClick={() => setShowGovernanceModal(true)}
             >
               <Shield size={12} />
-              {user.role === "admin" ? "Cargo" : "Promover"}
+              <span className="hidden sm:inline">{user.role === "admin" ? "Cargo" : "Promover"}</span>
               <ChevronDown size={10} />
             </Button>
-            <AnimatePresence>
-              {showRoleMenu && (
-                <motion.div
-                  initial={{ opacity: 0, y: -4, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -4, scale: 0.96 }}
-                  transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-1 z-50 bg-[#0d1117] border border-white/10 rounded-xl shadow-xl min-w-[200px] py-1 overflow-hidden"
-                  style={{ backdropFilter: "blur(20px)" }}
-                >
-                  {ADMIN_ROLE_OPTIONS.map(opt => (
-                    <button
-                      key={String(opt.value)}
-                      onClick={() => {
-                        setShowRoleMenu(false);
-                        onSetRole(user.id!, opt.value === null ? user.role ?? "freelancer" : "admin", opt.value);
-                      }}
-                      className={`w-full flex items-center gap-2 px-3 py-2 text-xs text-left transition-colors hover:bg-white/6 ${
-                        opt.value === adminRole ? "text-primary font-semibold" : "text-foreground/80"
-                      }`}
-                    >
-                      {opt.value === "super_admin" && <Crown size={10} className="text-yellow-400" />}
-                      {opt.value !== "super_admin" && opt.value !== null && <Shield size={10} className="text-muted-foreground" />}
-                      {opt.value === null && <Ban size={10} className="text-destructive/60" />}
-                      {opt.label}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        )}
+          )}
 
-        {user.role !== "admin" && (
-          <Button
-            size="sm"
-            variant="ghost"
-            className={`text-xs h-8 ${isBanned ? "text-green-400 hover:bg-green-400/10" : "text-destructive hover:bg-destructive/10"}`}
-            onClick={() => onBan(user.id!)}
-          >
-            {isBanned ? (
-              <><CheckCircle size={12} className="mr-1" /> Desbanir</>
-            ) : (
-              <><Ban size={12} className="mr-1" /> Banir</>
-            )}
-          </Button>
-        )}
+          {user.role !== "admin" && (
+            <Button
+              size="sm"
+              variant="ghost"
+              className={`text-xs h-8 ${isBanned ? "text-green-400 hover:bg-green-400/10" : "text-destructive hover:bg-destructive/10"}`}
+              onClick={() => onBan(user.id!)}
+            >
+              {isBanned ? (
+                <><CheckCircle size={12} className="mr-1" /> Desbanir</>
+              ) : (
+                <><Ban size={12} className="mr-1" /> Banir</>
+              )}
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

@@ -198,12 +198,6 @@ const FEATURES_FREELANCER = [
   "Sistema de níveis e indicações com bônus",
 ];
 
-const TESTIMONIALS = [
-  { name: "Rodrigo M.", role: "Garçom · Nível Ouro", text: "Já fiz mais de 30 extras pela extraGO. O pagamento via PIX é imediato e os extras são ótimos!", stars: 5 },
-  { name: "Marina K.", role: "Bar São Paulo", text: "Contratamos freelancers em menos de 24h. A plataforma é incrível para eventos de última hora.", stars: 5 },
-  { name: "Felipe S.", role: "Barman · Nível Elite", text: "O sistema de gamificação me motiva a sempre buscar mais. Já subi para Elite e as ofertas melhoraram muito.", stars: 5 },
-];
-
 
 export default function LandingPage() {
   const heroRef = useRef<HTMLDivElement>(null);
