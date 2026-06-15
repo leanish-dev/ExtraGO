@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { GlobalSearch } from "@/components/global-search";
 import UnifiedNavbar from "@/components/layout/InstitutionalNavbar";
+import BottomNav from "@/components/bottom-nav";
 
 /* ── Premium background using the attached artwork ── */
 function AppBackground() {
@@ -48,6 +49,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (!user) return null;
 
   const isChatPage = location.startsWith("/app/chat");
+  const isAdminPage = location.startsWith("/admin");
 
   return (
     <div className="dark relative flex flex-col h-[100dvh] overflow-hidden text-foreground">
@@ -55,7 +57,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <GlobalSearch open={globalSearchOpen} onClose={() => setGlobalSearchOpen(false)} />
 
-      {/* Single unified navbar (Phase 4) */}
+      {/* Single unified navbar */}
       <UnifiedNavbar onSearchOpen={() => setGlobalSearchOpen(true)} />
 
       {/* Scrollable content area */}
@@ -66,6 +68,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       >
         {children}
       </main>
+
+      {/* Mobile bottom navigation — hidden on desktop, hidden on admin pages and chat */}
+      {!isAdminPage && !isChatPage && <BottomNav />}
     </div>
   );
 }

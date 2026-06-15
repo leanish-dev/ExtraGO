@@ -364,37 +364,54 @@ export default function WalletPage() {
           </motion.div>
         )}
 
-        {/* Secondary balance cards */}
+        {/* Secondary balance cards — 3-metric summary */}
         {walletLoading ? (
-          <div className="grid grid-cols-2 gap-3"><SkeletonStatCard /><SkeletonStatCard /></div>
+          <div className="grid grid-cols-3 gap-2.5"><SkeletonStatCard /><SkeletonStatCard /><SkeletonStatCard /></div>
         ) : (
-          <div className="grid grid-cols-2 gap-3">
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="balance-card-mini p-4">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-2.5">
-                {isCompany ? "Reservado" : "Pendente"}
-              </p>
-              <p className="text-xl font-bold leading-none tabular-nums">
-                {hideBalance ? "••••" : <>R$ <AnimatedCounter value={(isCompany ? reserved : pending) / 100} decimals={2} /></>}
-              </p>
-              <p className="text-[11px] text-muted-foreground mt-2 flex items-center gap-1">
-                {isCompany
-                  ? <><Lock size={9} className="text-blue-400" /> Em Extras em andamento</>
-                  : <><Clock size={9} className="text-yellow-400" /> Em processamento</>
-                }
-              </p>
-            </motion.div>
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className="balance-card-mini p-4">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-2.5">
-                {isCompany ? "Total Investido" : "Total Ganho"}
-              </p>
-              <p className="text-xl font-bold leading-none tabular-nums text-secondary">
-                {hideBalance ? "••••" : <>R$ <AnimatedCounter value={totalEarned / 100} decimals={2} /></>}
-              </p>
-              <p className="text-[11px] text-muted-foreground mt-2 flex items-center gap-1">
-                <TrendingUp size={9} className="text-secondary" /> Histórico acumulado
-              </p>
-            </motion.div>
-          </div>
+          <>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/30">Resumo Financeiro</span>
+              <div className="h-px flex-1 bg-white/6" />
+            </div>
+            <div className="grid grid-cols-3 gap-2.5">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="balance-card-mini p-3 sm:p-4">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2 leading-tight">
+                  {isCompany ? "Reservado" : "Pendente"}
+                </p>
+                <p className="text-base sm:text-xl font-bold leading-none tabular-nums">
+                  {hideBalance ? "••••" : <>R$ <AnimatedCounter value={(isCompany ? reserved : pending) / 100} decimals={2} /></>}
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
+                  {isCompany
+                    ? <><Lock size={8} className="text-blue-400" /> Em andamento</>
+                    : <><Clock size={8} className="text-yellow-400" /> Processando</>
+                  }
+                </p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className="balance-card-mini p-3 sm:p-4">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2 leading-tight">
+                  {isCompany ? "Total Investido" : "Total Ganho"}
+                </p>
+                <p className="text-base sm:text-xl font-bold leading-none tabular-nums text-secondary">
+                  {hideBalance ? "••••" : <>R$ <AnimatedCounter value={totalEarned / 100} decimals={2} /></>}
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
+                  <TrendingUp size={8} className="text-secondary" /> Histórico total
+                </p>
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="balance-card-mini p-3 sm:p-4">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2 leading-tight">
+                  Entradas
+                </p>
+                <p className="text-base sm:text-xl font-bold leading-none tabular-nums text-primary">
+                  {hideBalance ? "••••" : <>R$ <AnimatedCounter value={creditTotal} decimals={2} /></>}
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
+                  <ArrowDownLeft size={8} className="text-primary" /> Créditos totais
+                </p>
+              </motion.div>
+            </div>
+          </>
         )}
 
         {/* Company pending deposits alert */}
@@ -646,7 +663,10 @@ export default function WalletPage() {
             transition={{ delay: 0.28 }}
             className="glass-card rounded-2xl p-5 sm:p-6 border border-white/6"
           >
-            <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-7 h-7 rounded-lg bg-secondary/12 border border-secondary/20 flex items-center justify-center flex-shrink-0">
+                <ArrowDownLeft size={13} className="text-secondary" />
+              </div>
               <h2 className="font-bold text-base flex-1">Extrato</h2>
               {allTxs.length > 0 && (
                 <span className="text-[11px] text-muted-foreground bg-white/4 border border-white/8 px-2.5 py-1 rounded-full font-semibold">
@@ -654,6 +674,20 @@ export default function WalletPage() {
                 </span>
               )}
             </div>
+            {allTxs.length > 0 && (
+              <div className="flex items-center gap-3 py-2 mb-3 border-b border-white/5">
+                <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                  <ArrowDownLeft size={9} className="text-primary" />
+                  Entradas: <span className="text-primary font-bold ml-0.5">R$ {creditTotal.toFixed(2)}</span>
+                </span>
+                <span className="w-px h-3 bg-white/10" />
+                <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                  <ArrowUpRight size={9} className="text-destructive" />
+                  Saídas: <span className="text-destructive font-bold ml-0.5">R$ {debitTotal.toFixed(2)}</span>
+                </span>
+              </div>
+            )}
+            <div className="mt-1" />
 
             {/* Filter pills */}
             {allTxs.length > 0 && (

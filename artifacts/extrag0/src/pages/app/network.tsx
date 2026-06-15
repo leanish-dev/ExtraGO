@@ -196,7 +196,13 @@ export default function NetworkPage() {
       {/* Header */}
       <div className="sticky top-0 z-20 bg-[#060809]/95 backdrop-blur-xl border-b border-white/6">
         <div className="px-4 sm:px-6 pt-4 pb-3 max-w-3xl mx-auto">
-          <h1 className="text-lg font-bold mb-3">Descobrir Pessoas</h1>
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(0,229,255,0.12)", border: "1px solid rgba(0,229,255,0.20)" }}>
+              <Users size={13} style={{ color: "rgba(0,229,255,0.85)" }} />
+            </div>
+            <h1 className="text-lg font-bold">Descobrir Pessoas</h1>
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/25 ml-1 hidden sm:inline">Comunidade extraGO</span>
+          </div>
 
           {/* Search */}
           <div className="relative mb-3">

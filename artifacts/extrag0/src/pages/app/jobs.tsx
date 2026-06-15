@@ -553,6 +553,15 @@ export default function JobsPage() {
           className="flex items-center justify-between gap-4"
         >
           <div>
+            <div className="flex items-center gap-2 mb-0.5">
+              <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: "rgba(124,252,0,0.12)", border: "1px solid rgba(124,252,0,0.22)" }}>
+                <Briefcase size={11} style={{ color: "#7CFC00" }} />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/30">
+                {user?.role === "company" ? "Marketplace · Seus Extras" : "Marketplace · Oportunidades"}
+              </span>
+            </div>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
               {user?.role === "company" ? "Meus Extras" : "Buscar Extras"}
             </h1>

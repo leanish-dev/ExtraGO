@@ -578,8 +578,11 @@ export default function GovernancePage() {
     { id: "thresholds", label: "Requisitos de Evolução" },
   ];
 
+  const currentFeeBronze = localConfig["level_fee_bronze"] ?? config?.config["level_fee_bronze"] ?? null;
+  const currentFeeDiamond = localConfig["level_fee_diamond"] ?? config?.config["level_fee_diamond"] ?? null;
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-5 pb-8">
       <ConfirmDialog
         open={confirmOpen}
         title="Confirmar alterações de governança"
@@ -589,53 +592,89 @@ export default function GovernancePage() {
         loading={configSaving}
       />
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.2), rgba(0,229,255,0.1))", border: "1px solid rgba(124,252,0,0.25)" }}
-          >
-            <Shield size={22} style={{ color: "#7CFC00" }} />
+      {/* Executive Header */}
+      <div
+        className="relative rounded-2xl overflow-hidden border p-5 sm:p-6"
+        style={{
+          background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(0,229,255,0.025) 50%, rgba(124,252,0,0.03) 100%)",
+          borderColor: "rgba(124,252,0,0.18)",
+        }}
+      >
+        {/* ambient glow */}
+        <div className="absolute top-0 right-0 w-48 h-24 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse, rgba(124,252,0,0.08) 0%, transparent 70%)", filter: "blur(20px)" }} />
+
+        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.22), rgba(0,229,255,0.12))", border: "1px solid rgba(124,252,0,0.28)" }}
+            >
+              <Shield size={22} style={{ color: "#7CFC00" }} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-lg font-bold">Centro de Governança</h1>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold"
+                  style={{ background: "rgba(124,252,0,0.10)", border: "1px solid rgba(124,252,0,0.22)", color: "#7CFC00" }}>
+                  <CheckCircle size={9} /> CEO
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5">Acesso verificado · <span className="text-white/60">{user?.email}</span></p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-lg font-bold">Centro de Governança</h1>
-            <p className="text-xs text-muted-foreground">Controles exclusivos do CEO · Acesso verificado</p>
-          </div>
+
+          {/* Quick-view platform config stats */}
+          {!configLoading && config && (
+            <div className="flex items-center gap-3 sm:gap-5 flex-wrap">
+              {[
+                { label: "Taxa Iniciante", value: currentFeeBronze !== null ? `${(currentFeeBronze * 100).toFixed(0)}%` : "—", color: "#7CFC00" },
+                { label: "Taxa Elite", value: currentFeeDiamond !== null ? `${(currentFeeDiamond * 100).toFixed(0)}%` : "—", color: "#00c9a7" },
+                { label: "Módulos ativos", value: "7", color: "rgba(255,255,255,0.55)" },
+              ].map((stat) => (
+                <div key={stat.label} className="text-center min-w-[52px]">
+                  <p className="text-lg font-black leading-none" style={{ color: stat.color }}>{stat.value}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap">{stat.label}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-        <div className="flex items-center gap-2">
-          <div
-            className="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-bold"
-            style={{ background: "rgba(124,252,0,0.1)", border: "1px solid rgba(124,252,0,0.25)", color: "#7CFC00" }}
-          >
-            <CheckCircle size={12} />
-            {user?.name ?? user?.email}
+
+        {/* Config last-saved indicator */}
+        {config?.lastUpdatedAt && (
+          <div className="relative mt-3 pt-3 border-t flex items-center gap-1.5" style={{ borderColor: "rgba(124,252,0,0.10)" }}>
+            <Circle size={6} style={{ color: "#7CFC00", fill: "#7CFC00" }} />
+            <span className="text-[10px] text-muted-foreground">
+              Última alteração: {new Date(config.lastUpdatedAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+            </span>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Tabs */}
+      {/* Tabs — scrollable on mobile, full labels on desktop */}
       <div className="flex gap-1 p-1 rounded-xl overflow-x-auto" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
         {[
-          { id: "config", label: "Config", icon: <Settings size={14} /> },
-          { id: "financial", label: "Financeiro", icon: <Layers size={14} /> },
-          { id: "categories", label: "Categorias", icon: <Tag size={14} /> },
-          { id: "wallet", label: "Carteira", icon: <Wallet size={14} /> },
-          { id: "users", label: "Usuários", icon: <UserCog size={14} /> },
-          { id: "team", label: "Equipe", icon: <Users size={14} /> },
-          { id: "badges", label: "Badges", icon: <Award size={14} /> },
+          { id: "config", label: "Configuração", shortLabel: "Config", icon: <Settings size={13} /> },
+          { id: "financial", label: "Financeiro", shortLabel: "Fin.", icon: <Layers size={13} /> },
+          { id: "categories", label: "Categorias", shortLabel: "Cat.", icon: <Tag size={13} /> },
+          { id: "wallet", label: "Carteira Plataforma", shortLabel: "Carteira", icon: <Wallet size={13} /> },
+          { id: "users", label: "Usuários", shortLabel: "Users", icon: <UserCog size={13} /> },
+          { id: "team", label: "Equipe", shortLabel: "Equipe", icon: <Users size={13} /> },
+          { id: "badges", label: "Badges", shortLabel: "Badges", icon: <Award size={13} /> },
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap min-w-[40px] ${
               activeTab === tab.id
-                ? "bg-primary text-black"
-                : "text-muted-foreground hover:text-foreground hover:bg-white/4"
+                ? "bg-primary text-black shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-white/5"
             }`}
           >
             {tab.icon}
             <span className="hidden sm:inline">{tab.label}</span>
+            <span className="sm:hidden">{tab.shortLabel}</span>
           </button>
         ))}
       </div>

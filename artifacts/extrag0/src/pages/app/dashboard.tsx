@@ -433,6 +433,13 @@ function CompanyDashboard() {
         {/* Hero: greeting + inline stats + CTA */}
         <CompanyHero stats={stats} isLoading={statsLoading} />
 
+        {/* Section divider */}
+        <div className="flex items-center gap-3">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/25 px-2">Operações</span>
+          <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/8 to-transparent" />
+        </div>
+
         {/* Extras recentes */}
         <div>
           <div className="flex items-center justify-between mb-3">
@@ -486,6 +493,13 @@ function CompanyDashboard() {
               })}
             </div>
           )}
+        </div>
+
+        {/* Section divider */}
+        <div className="flex items-center gap-3">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/25 px-2">Atividade</span>
+          <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/8 to-transparent" />
         </div>
 
         {/* Activity + quick links */}
@@ -545,6 +559,13 @@ function FreelancerDashboard() {
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         {/* CAREER HERO — the single most important element on this page */}
         <CareerHero stats={stats} isLoading={statsLoading} />
+
+        {/* Section divider */}
+        <div className="flex items-center gap-3">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/25 px-2">Missões & Atividade</span>
+          <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/8 to-transparent" />
+        </div>
 
         {/* Operações + Atividade */}
         <div className="grid lg:grid-cols-2 gap-5">
