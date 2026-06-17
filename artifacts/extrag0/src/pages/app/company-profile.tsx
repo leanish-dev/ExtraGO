@@ -28,7 +28,7 @@ function MessageButton({ recipientId, setLocation }: { recipientId: number; setL
   const handleOpen = async () => {
     setLoading(true);
     try {
-      const conv = await apiFetch("/api/chat/conversations", { method: "POST", body: JSON.stringify({ recipientId }) });
+      const conv = await apiFetch("/api/chat/conversations", { method: "POST", body: JSON.stringify({ participantId: recipientId }) });
       setLocation(conv?.id ? `/app/chat?conv=${conv.id}` : "/app/chat");
     } catch {
       setLocation("/app/chat");

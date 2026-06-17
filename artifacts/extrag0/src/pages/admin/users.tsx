@@ -173,6 +173,9 @@ function UserRow({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="font-semibold text-sm truncate">{user.name}</p>
+            <span className="text-[10px] font-mono text-white/50 bg-white/5 px-1.5 py-0.5 rounded border border-white/10 flex-shrink-0">
+              ID #{user.id}
+            </span>
             <span className={`text-xs px-2 py-0.5 rounded-full border ${roleColors[user.role ?? "freelancer"]}`}>
               {roleLabels[user.role ?? "freelancer"]}
             </span>
