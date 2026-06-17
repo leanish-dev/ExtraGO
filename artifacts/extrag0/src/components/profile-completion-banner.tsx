@@ -44,7 +44,7 @@ export function ProfileCompletionBanner() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -8 }}
         transition={{ duration: 0.3 }}
-        className="glass-card rounded-2xl p-4 sm:p-5 border border-primary/15 relative overflow-hidden"
+        className="rounded-2xl p-4 sm:p-5 border relative overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(8,17,26,0.96) 55%, rgba(124,252,0,0.08) 100%)", borderColor: "rgba(34,197,94,0.28)", boxShadow: "0 4px 24px rgba(34,197,94,0.10)" }}
       >
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
 

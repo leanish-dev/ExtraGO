@@ -521,7 +521,7 @@ export default function CareerPage() {
                 <div
                   key={lv.key}
                   className={`flex items-center justify-between rounded-xl px-4 py-3 border transition-all
-                    ${isCur ? `${lc.bg} ${lc.border} ${lv.glow}` : "bg-white/[0.03] border-white/8"}
+                    ${isCur ? `${lc.bg} ${lc.border} ${lv.glow}` : "bg-white/[0.07] border-white/12"}
                   `}
                 >
                   <div className="flex items-center gap-2.5">
@@ -541,7 +541,7 @@ export default function CareerPage() {
           </div>
 
           {nextLevelData && (
-            <div className="mt-3 rounded-xl bg-white/[0.04] border border-white/8 px-4 py-3">
+            <div className="mt-3 rounded-xl bg-white/[0.08] border border-white/12 px-4 py-3">
               <p className="text-xs text-white/50 text-center">
                 No nível <span className={`font-bold ${LEVEL_COLORS[nextLevelData.key].text}`}>{nextLevelData.label}</span>, você ganharia{" "}
                 <span className="font-bold text-white">

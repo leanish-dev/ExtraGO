@@ -223,24 +223,6 @@ export default function ReferralsPage() {
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Indicações</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Expanda sua rede. <span style={{ color: "#f59e0b" }} className="font-semibold">Cresça junto.</span></p>
-          <div className="module-hero-kpi mt-3">
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums" style={{ color: "#f59e0b" }}>{referral?.totalConverted ?? 0}</p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Convertidos</p>
-            </div>
-            <div className="module-hero-kpi-divider mx-4" />
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums text-primary">
-                R${((referral?.totalRewardEarned ?? 0) / 100).toFixed(2)}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Total Ganho</p>
-            </div>
-            <div className="module-hero-kpi-divider mx-4" />
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums text-purple-400">{referral?.code ?? "—"}</p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Seu Código</p>
-            </div>
-          </div>
         </div>
       </div>
 

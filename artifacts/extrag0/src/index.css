@@ -946,9 +946,9 @@
 
   /* ── Primary hero cards per module ── */
   .card-career-hero {
-    background: linear-gradient(135deg, rgba(34,197,94,0.20) 0%, rgba(8,17,26,0.96) 44%, rgba(124,252,0,0.08) 100%);
-    border: 1px solid rgba(34,197,94,0.28);
-    box-shadow: 0 0 0 1px rgba(34,197,94,0.06) inset, 0 0 44px rgba(34,197,94,0.11), 0 20px 60px rgba(0,0,0,0.55);
+    background: linear-gradient(135deg, rgba(34,197,94,0.30) 0%, rgba(8,17,26,0.96) 46%, rgba(124,252,0,0.12) 100%);
+    border: 1px solid rgba(34,197,94,0.34);
+    box-shadow: 0 0 0 1px rgba(34,197,94,0.10) inset, 0 0 56px rgba(34,197,94,0.18), 0 20px 60px rgba(0,0,0,0.60);
     position: relative; overflow: hidden; border-radius: 1.5rem;
   }
   .card-career-hero::before {
@@ -963,9 +963,9 @@
   }
 
   .card-wallet-hero {
-    background: linear-gradient(135deg, rgba(20,184,166,0.22) 0%, rgba(8,17,26,0.96) 44%, rgba(0,229,255,0.10) 100%);
-    border: 1px solid rgba(20,184,166,0.28);
-    box-shadow: 0 0 0 1px rgba(20,184,166,0.06) inset, 0 0 44px rgba(20,184,166,0.13), 0 20px 60px rgba(0,0,0,0.55);
+    background: linear-gradient(135deg, rgba(20,184,166,0.30) 0%, rgba(8,17,26,0.96) 46%, rgba(0,229,255,0.14) 100%);
+    border: 1px solid rgba(20,184,166,0.34);
+    box-shadow: 0 0 0 1px rgba(20,184,166,0.10) inset, 0 0 56px rgba(20,184,166,0.18), 0 20px 60px rgba(0,0,0,0.60);
     position: relative; overflow: hidden; border-radius: 1.5rem;
   }
   .card-wallet-hero::before {
@@ -980,9 +980,9 @@
   }
 
   .card-network-hero {
-    background: linear-gradient(135deg, rgba(59,130,246,0.20) 0%, rgba(8,17,26,0.96) 44%, rgba(139,92,246,0.08) 100%);
-    border: 1px solid rgba(59,130,246,0.28);
-    box-shadow: 0 0 0 1px rgba(59,130,246,0.06) inset, 0 0 44px rgba(59,130,246,0.11), 0 20px 60px rgba(0,0,0,0.55);
+    background: linear-gradient(135deg, rgba(59,130,246,0.30) 0%, rgba(8,17,26,0.96) 46%, rgba(139,92,246,0.12) 100%);
+    border: 1px solid rgba(59,130,246,0.34);
+    box-shadow: 0 0 0 1px rgba(59,130,246,0.10) inset, 0 0 56px rgba(59,130,246,0.18), 0 20px 60px rgba(0,0,0,0.60);
     position: relative; overflow: hidden; border-radius: 1.5rem;
   }
   .card-network-hero::before {
@@ -992,9 +992,9 @@
   }
 
   .card-extras-hero {
-    background: linear-gradient(135deg, rgba(139,92,246,0.22) 0%, rgba(8,17,26,0.96) 44%, rgba(59,130,246,0.08) 100%);
-    border: 1px solid rgba(139,92,246,0.28);
-    box-shadow: 0 0 0 1px rgba(139,92,246,0.06) inset, 0 0 44px rgba(139,92,246,0.13), 0 20px 60px rgba(0,0,0,0.55);
+    background: linear-gradient(135deg, rgba(139,92,246,0.30) 0%, rgba(8,17,26,0.96) 46%, rgba(59,130,246,0.12) 100%);
+    border: 1px solid rgba(139,92,246,0.34);
+    box-shadow: 0 0 0 1px rgba(139,92,246,0.10) inset, 0 0 56px rgba(139,92,246,0.18), 0 20px 60px rgba(0,0,0,0.60);
     position: relative; overflow: hidden; border-radius: 1.5rem;
   }
   .card-extras-hero::before {
@@ -1009,9 +1009,9 @@
   }
 
   .card-referral-hero {
-    background: linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(8,17,26,0.96) 44%, rgba(239,68,68,0.08) 100%);
-    border: 1px solid rgba(245,158,11,0.28);
-    box-shadow: 0 0 0 1px rgba(245,158,11,0.06) inset, 0 0 44px rgba(245,158,11,0.13), 0 20px 60px rgba(0,0,0,0.55);
+    background: linear-gradient(135deg, rgba(245,158,11,0.30) 0%, rgba(8,17,26,0.96) 46%, rgba(239,68,68,0.12) 100%);
+    border: 1px solid rgba(245,158,11,0.34);
+    box-shadow: 0 0 0 1px rgba(245,158,11,0.10) inset, 0 0 56px rgba(245,158,11,0.18), 0 20px 60px rgba(0,0,0,0.60);
     position: relative; overflow: hidden; border-radius: 1.5rem;
   }
   .card-referral-hero::before {
@@ -1021,9 +1021,9 @@
   }
 
   .card-governance-hero {
-    background: linear-gradient(135deg, rgba(236,72,153,0.22) 0%, rgba(8,17,26,0.96) 44%, rgba(245,158,11,0.08) 100%);
-    border: 1px solid rgba(236,72,153,0.28);
-    box-shadow: 0 0 0 1px rgba(236,72,153,0.06) inset, 0 0 44px rgba(236,72,153,0.13), 0 20px 60px rgba(0,0,0,0.55);
+    background: linear-gradient(135deg, rgba(220,38,38,0.30) 0%, rgba(8,17,26,0.96) 46%, rgba(245,158,11,0.12) 100%);
+    border: 1px solid rgba(220,38,38,0.34);
+    box-shadow: 0 0 0 1px rgba(220,38,38,0.10) inset, 0 0 56px rgba(220,38,38,0.18), 0 20px 60px rgba(0,0,0,0.60);
     position: relative; overflow: hidden; border-radius: 1.5rem;
   }
   .card-governance-hero::before {
@@ -1037,21 +1037,21 @@
     animation: cardShimmer 5s ease-in-out infinite; transform: skewX(-15deg);
   }
 
-  /* ── Secondary module cards (solid tint, 90-95% opacity) ── */
-  .card-career-secondary   { background: linear-gradient(135deg, rgba(34,197,94,0.10) 0%, rgba(8,17,26,0.94) 100%);  border: 1px solid rgba(34,197,94,0.18);  border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-wallet-secondary   { background: linear-gradient(135deg, rgba(20,184,166,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(20,184,166,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-network-secondary  { background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(59,130,246,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-extras-secondary   { background: linear-gradient(135deg, rgba(139,92,246,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(139,92,246,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-referral-secondary { background: linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(245,158,11,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-governance-secondary { background: linear-gradient(135deg, rgba(220,38,38,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(220,38,38,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
+  /* ── Secondary module cards (solid tint — stronger color presence) ── */
+  .card-career-secondary   { background: linear-gradient(135deg, rgba(34,197,94,0.16) 0%, rgba(8,17,26,0.95) 100%);  border: 1px solid rgba(34,197,94,0.24);  border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-wallet-secondary   { background: linear-gradient(135deg, rgba(20,184,166,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(20,184,166,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-network-secondary  { background: linear-gradient(135deg, rgba(59,130,246,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(59,130,246,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-extras-secondary   { background: linear-gradient(135deg, rgba(139,92,246,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(139,92,246,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-referral-secondary { background: linear-gradient(135deg, rgba(245,158,11,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(245,158,11,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-governance-secondary { background: linear-gradient(135deg, rgba(220,38,38,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(220,38,38,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
 
   /* ── Module user/item cards (list-level tint) ── */
   .user-card-network {
-    background: rgba(59,130,246,0.055); border: 1px solid rgba(59,130,246,0.12);
+    background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,17,26,0.96) 100%); border: 1px solid rgba(59,130,246,0.20);
     position: relative; overflow: hidden;
     transition: background 0.2s ease, border-color 0.2s ease;
   }
-  .user-card-network:hover { background: rgba(59,130,246,0.090); border-color: rgba(59,130,246,0.22); }
+  .user-card-network:hover { background: linear-gradient(135deg, rgba(59,130,246,0.16) 0%, rgba(8,17,26,0.96) 100%); border-color: rgba(59,130,246,0.32); }
   /* Connected node dot-grid watermark — bottom-right corner fade */
   .user-card-network::after {
     content: '';
@@ -1068,10 +1068,10 @@
   }
 
   .job-card-extras {
-    background: rgba(139,92,246,0.055); border: 1px solid rgba(139,92,246,0.12);
+    background: linear-gradient(135deg, rgba(139,92,246,0.10) 0%, rgba(8,17,26,0.96) 100%); border: 1px solid rgba(139,92,246,0.20);
     transition: background 0.2s ease, border-color 0.2s ease;
   }
-  .job-card-extras:hover { background: rgba(139,92,246,0.090); border-color: rgba(139,92,246,0.22); }
+  .job-card-extras:hover { background: linear-gradient(135deg, rgba(139,92,246,0.16) 0%, rgba(8,17,26,0.96) 100%); border-color: rgba(139,92,246,0.32); }
 
   /* ── Module icon containers ── */
   .mod-icon-career     { background: rgba(34,197,94,0.14);   border: 1px solid rgba(34,197,94,0.28);   color: #22c55e; }
@@ -1217,13 +1217,13 @@
 
   /* ── Feed post cards — network-tinted with subtle identity ── */
   .card-feed-post {
-    background: linear-gradient(135deg, rgba(59,130,246,0.055) 0%, rgba(8,17,26,0.94) 62%, rgba(124,252,0,0.025) 100%);
-    border: 1px solid rgba(59,130,246,0.12);
+    background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,17,26,0.96) 62%, rgba(124,252,0,0.05) 100%);
+    border: 1px solid rgba(59,130,246,0.18);
     border-radius: 1rem;
     position: relative; overflow: hidden;
     transition: border-color 0.2s ease, background 0.2s ease;
   }
-  .card-feed-post:hover { border-color: rgba(59,130,246,0.22); background: linear-gradient(135deg, rgba(59,130,246,0.075) 0%, rgba(8,17,26,0.94) 62%, rgba(124,252,0,0.030) 100%); }
+  .card-feed-post:hover { border-color: rgba(59,130,246,0.30); background: linear-gradient(135deg, rgba(59,130,246,0.14) 0%, rgba(8,17,26,0.96) 62%, rgba(124,252,0,0.06) 100%); }
   .card-feed-post::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -1242,13 +1242,13 @@
 
   /* ── Notification full-page card ── */
   .card-notif-page {
-    background: linear-gradient(135deg, rgba(59,130,246,0.055) 0%, rgba(8,17,26,0.94) 60%, rgba(34,197,94,0.04) 100%);
-    border: 1px solid rgba(59,130,246,0.12);
+    background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,17,26,0.96) 60%, rgba(34,197,94,0.06) 100%);
+    border: 1px solid rgba(59,130,246,0.18);
     border-radius: 1rem;
     position: relative; overflow: hidden;
     transition: border-color 0.2s ease;
   }
-  .card-notif-page:hover { border-color: rgba(59,130,246,0.22); }
+  .card-notif-page:hover { border-color: rgba(59,130,246,0.30); }
   .card-notif-page::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -1456,62 +1456,62 @@
 
   /* Dashboard (Green) */
   .module-hero-dashboard {
-    background: linear-gradient(135deg, rgba(34,197,94,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(124,252,0,0.10) 100%);
-    border-bottom: 1px solid rgba(34,197,94,0.22);
-    box-shadow: 0 8px 32px rgba(34,197,94,0.08);
+    background: linear-gradient(135deg, rgba(34,197,94,0.32) 0%, rgba(8,17,26,0.97) 50%, rgba(124,252,0,0.14) 100%);
+    border-bottom: 1px solid rgba(34,197,94,0.30);
+    box-shadow: 0 8px 40px rgba(34,197,94,0.14);
   }
   .module-hero-dashboard::after {
-    background: linear-gradient(90deg, rgba(34,197,94,0.70) 0%, rgba(124,252,0,0.40) 50%, transparent 100%);
+    background: linear-gradient(90deg, rgba(34,197,94,0.80) 0%, rgba(124,252,0,0.45) 50%, transparent 100%);
   }
 
   /* Wallet (Teal) */
   .module-hero-wallet {
-    background: linear-gradient(135deg, rgba(20,184,166,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(0,229,255,0.10) 100%);
-    border-bottom: 1px solid rgba(20,184,166,0.22);
-    box-shadow: 0 8px 32px rgba(20,184,166,0.08);
+    background: linear-gradient(135deg, rgba(20,184,166,0.32) 0%, rgba(8,17,26,0.97) 50%, rgba(0,229,255,0.14) 100%);
+    border-bottom: 1px solid rgba(20,184,166,0.30);
+    box-shadow: 0 8px 40px rgba(20,184,166,0.14);
   }
   .module-hero-wallet::after {
-    background: linear-gradient(90deg, rgba(20,184,166,0.70) 0%, rgba(0,229,255,0.40) 50%, transparent 100%);
+    background: linear-gradient(90deg, rgba(20,184,166,0.80) 0%, rgba(0,229,255,0.45) 50%, transparent 100%);
   }
 
   /* Network (Blue) */
   .module-hero-network {
-    background: linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(139,92,246,0.10) 100%);
-    border-bottom: 1px solid rgba(59,130,246,0.22);
-    box-shadow: 0 8px 32px rgba(59,130,246,0.08);
+    background: linear-gradient(135deg, rgba(59,130,246,0.32) 0%, rgba(8,17,26,0.97) 50%, rgba(139,92,246,0.14) 100%);
+    border-bottom: 1px solid rgba(59,130,246,0.30);
+    box-shadow: 0 8px 40px rgba(59,130,246,0.14);
   }
   .module-hero-network::after {
-    background: linear-gradient(90deg, rgba(59,130,246,0.70) 0%, rgba(139,92,246,0.40) 50%, transparent 100%);
+    background: linear-gradient(90deg, rgba(59,130,246,0.80) 0%, rgba(139,92,246,0.45) 50%, transparent 100%);
   }
 
   /* Extras / Applications (Purple) */
   .module-hero-extras {
-    background: linear-gradient(135deg, rgba(139,92,246,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(59,130,246,0.10) 100%);
-    border-bottom: 1px solid rgba(139,92,246,0.22);
-    box-shadow: 0 8px 32px rgba(139,92,246,0.08);
+    background: linear-gradient(135deg, rgba(139,92,246,0.32) 0%, rgba(8,17,26,0.97) 50%, rgba(59,130,246,0.14) 100%);
+    border-bottom: 1px solid rgba(139,92,246,0.30);
+    box-shadow: 0 8px 40px rgba(139,92,246,0.14);
   }
   .module-hero-extras::after {
-    background: linear-gradient(90deg, rgba(139,92,246,0.70) 0%, rgba(59,130,246,0.40) 50%, transparent 100%);
+    background: linear-gradient(90deg, rgba(139,92,246,0.80) 0%, rgba(59,130,246,0.45) 50%, transparent 100%);
   }
 
   /* Referrals (Amber) */
   .module-hero-referrals {
-    background: linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(239,68,68,0.08) 100%);
-    border-bottom: 1px solid rgba(245,158,11,0.22);
-    box-shadow: 0 8px 32px rgba(245,158,11,0.08);
+    background: linear-gradient(135deg, rgba(245,158,11,0.32) 0%, rgba(8,17,26,0.97) 50%, rgba(239,68,68,0.12) 100%);
+    border-bottom: 1px solid rgba(245,158,11,0.30);
+    box-shadow: 0 8px 40px rgba(245,158,11,0.14);
   }
   .module-hero-referrals::after {
-    background: linear-gradient(90deg, rgba(245,158,11,0.70) 0%, rgba(239,68,68,0.35) 50%, transparent 100%);
+    background: linear-gradient(90deg, rgba(245,158,11,0.80) 0%, rgba(239,68,68,0.40) 50%, transparent 100%);
   }
 
   /* Governance (Crimson) */
   .module-hero-governance {
-    background: linear-gradient(135deg, rgba(220,38,38,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(245,158,11,0.08) 100%);
-    border-bottom: 1px solid rgba(220,38,38,0.22);
-    box-shadow: 0 8px 32px rgba(220,38,38,0.08);
+    background: linear-gradient(135deg, rgba(220,38,38,0.32) 0%, rgba(8,17,26,0.97) 50%, rgba(245,158,11,0.12) 100%);
+    border-bottom: 1px solid rgba(220,38,38,0.30);
+    box-shadow: 0 8px 40px rgba(220,38,38,0.14);
   }
   .module-hero-governance::after {
-    background: linear-gradient(90deg, rgba(220,38,38,0.70) 0%, rgba(245,158,11,0.35) 50%, transparent 100%);
+    background: linear-gradient(90deg, rgba(220,38,38,0.80) 0%, rgba(245,158,11,0.40) 50%, transparent 100%);
   }
 
   /* Module hero KPI strip */

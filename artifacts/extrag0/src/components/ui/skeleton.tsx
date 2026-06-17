@@ -11,7 +11,7 @@ function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>)
 
 function SkeletonCard({ className }: { className?: string }) {
   return (
-    <div className={cn("glass-card rounded-2xl p-5 space-y-4", className)}>
+    <div className={cn("rounded-2xl p-5 space-y-4 border border-white/8", className)} style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.045) 0%, rgba(8,17,26,0.96) 100%)" }}>
       <div className="flex items-center gap-3">
         <Skeleton className="w-10 h-10 rounded-xl flex-shrink-0" />
         <div className="flex-1 space-y-2">
@@ -36,7 +36,7 @@ function SkeletonCard({ className }: { className?: string }) {
 
 function SkeletonStatCard({ className }: { className?: string }) {
   return (
-    <div className={cn("glass-card rounded-2xl p-5", className)}>
+    <div className={cn("rounded-2xl p-5 border border-white/8", className)} style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.045) 0%, rgba(8,17,26,0.96) 100%)" }}>
       <div className="flex justify-between items-start">
         <div className="space-y-2">
           <Skeleton className="h-3 w-20" />

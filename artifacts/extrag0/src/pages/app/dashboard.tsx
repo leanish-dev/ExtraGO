@@ -473,28 +473,6 @@ function CompanyDashboard() {
             Olá, {user?.name?.split(" ")[0] ?? "Empresa"}
           </h1>
           <p className="text-sm text-muted-foreground mt-0.5">Gerencie seus extras e contratações</p>
-          <div className="module-hero-kpi mt-3">
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums" style={{ color: "#22c55e" }}>
-                {statsLoading ? "—" : stats?.totalJobsPosted ?? 0}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Extras Publicados</p>
-            </div>
-            <div className="module-hero-kpi-divider mx-4" />
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums text-yellow-400">
-                {statsLoading ? "—" : stats?.activeJobs ?? 0}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Extras Ativos</p>
-            </div>
-            <div className="module-hero-kpi-divider mx-4" />
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums text-primary">
-                R${statsLoading ? "—" : ((stats?.totalSpent ?? 0) / 100).toFixed(0)}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Total Investido</p>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -651,28 +629,6 @@ function FreelancerDashboard() {
             Olá, {user?.name?.split(" ")[0] ?? "Freelancer"}
           </h1>
           <p className="text-sm text-muted-foreground mt-0.5">Acompanhe sua evolução e oportunidades</p>
-          <div className="module-hero-kpi mt-3">
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums" style={{ color: "#22c55e" }}>
-                {statsLoading ? "—" : stats?.completedJobs ?? 0}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Extras Concluídos</p>
-            </div>
-            <div className="module-hero-kpi-divider mx-4" />
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums text-yellow-400">
-                {statsLoading ? "—" : stats?.level ?? 1}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Nível Atual</p>
-            </div>
-            <div className="module-hero-kpi-divider mx-4" />
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums text-primary">
-                R${statsLoading ? "—" : ((stats?.totalEarned ?? 0) / 100).toFixed(0)}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Total Ganho</p>
-            </div>
-          </div>
         </div>
       </div>
 

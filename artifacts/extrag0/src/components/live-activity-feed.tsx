@@ -74,7 +74,7 @@ export function LiveActivityFeed({ className }: { className?: string }) {
   }, [items]);
 
   return (
-    <div className={`glass-card rounded-2xl p-5 ${className ?? ""}`}>
+    <div className={`card-activity-feed rounded-2xl p-5 ${className ?? ""}`}>
       <div className="flex items-center justify-between mb-4">
         <h2 className="font-semibold text-sm">Atividade ao Vivo</h2>
         <span className="flex items-center gap-1.5">

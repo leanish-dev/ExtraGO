@@ -274,43 +274,6 @@ export default function WalletPage() {
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Carteira</h1>
           <p className="text-sm text-muted-foreground mt-0.5">{isCompany ? "Gerencie o saldo da empresa" : "Seus ganhos e saques via PIX"}</p>
-          <div className="module-hero-kpi mt-3">
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums" style={{ color: "#14b8a6" }}>
-                {walletLoading ? "—" : `R$${(balance / 100).toFixed(2)}`}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Disponível</p>
-            </div>
-            <div className="module-hero-kpi-divider mx-4" />
-            <div className="module-hero-kpi-item">
-              <p className="text-lg font-black tabular-nums text-yellow-400">
-                {walletLoading ? "—" : `R$${(pending / 100).toFixed(2)}`}
-              </p>
-              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Pendente</p>
-            </div>
-            {!isCompany && (
-              <>
-                <div className="module-hero-kpi-divider mx-4" />
-                <div className="module-hero-kpi-item">
-                  <p className="text-lg font-black tabular-nums text-primary">
-                    {walletLoading ? "—" : `R$${(totalEarned / 100).toFixed(2)}`}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Total Ganho</p>
-                </div>
-              </>
-            )}
-            {isCompany && (
-              <>
-                <div className="module-hero-kpi-divider mx-4" />
-                <div className="module-hero-kpi-item">
-                  <p className="text-lg font-black tabular-nums text-blue-400">
-                    {walletLoading ? "—" : `R$${(reserved / 100).toFixed(2)}`}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Reservado</p>
-                </div>
-              </>
-            )}
-          </div>
         </div>
       </div>
 
