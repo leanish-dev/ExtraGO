@@ -36,7 +36,7 @@ export const APP_NAV_SECTIONS: NavSection[] = [
   {
     title: "PRINCIPAL",
     items: [
-      { label: "Dashboard", href: "/app/dashboard", icon: <LayoutDashboard size={16} />, unlocked: ALL },
+      { label: "Dashboard", href: "/app/dashboard", icon: <LayoutDashboard size={16} />, unlocked: ["company", "admin"] },
       { label: "Buscar Extras", href: "/app/jobs", icon: <Briefcase size={16} />, unlocked: ALL },
       { label: "Candidaturas", href: "/app/applications", icon: <FileText size={16} />, unlocked: ALL },
       { label: "Rede", href: "/app/network", icon: <Globe size={16} />, unlocked: ALL },

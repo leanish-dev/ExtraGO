@@ -97,6 +97,8 @@ function ProtectedRoute({
     } else if (!isLoading && user && allowedRoles && !allowedRoles.includes(user.role)) {
       if (user.role === "admin") {
         setLocation("/admin");
+      } else if (user.role === "freelancer") {
+        setLocation("/app/career");
       } else {
         setLocation("/app/dashboard");
       }

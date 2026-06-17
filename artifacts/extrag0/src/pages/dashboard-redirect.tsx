@@ -10,6 +10,8 @@ export default function DashboardRedirect() {
     if (!user) return;
     if (user.role === "admin") {
       setLocation("/admin");
+    } else if (user.role === "freelancer") {
+      setLocation("/app/career");
     } else {
       setLocation("/app/dashboard");
     }
