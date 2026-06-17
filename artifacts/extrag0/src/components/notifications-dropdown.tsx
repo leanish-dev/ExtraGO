@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useListNotifications, useMarkNotificationRead } from "@workspace/api-client-react";
-import { Bell, BellOff, Briefcase, DollarSign, FileText, ChevronRight, X, CheckCheck } from "lucide-react";
+import { Bell, BellOff, Briefcase, DollarSign, FileText, ChevronRight, X, CheckCheck, Zap, Activity } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatDistanceToNow } from "date-fns";
@@ -17,6 +17,119 @@ const TYPE_META: Record<string, { icon: React.ReactNode; bg: string; text: strin
   system:                 { icon: <Bell size={13} />,        bg: "bg-white/6",          text: "text-muted-foreground", accent: "rgba(255,255,255,0.20)" },
 };
 const fallbackMeta = TYPE_META.system;
+
+/* ── Command Center SVG Header ── */
+function CommandCenterHeader({ unreadCount }: { unreadCount: number }) {
+  return (
+    <div className="relative overflow-hidden" style={{ height: 110 }}>
+      {/* Dark gradient base */}
+      <div className="absolute inset-0" style={{
+        background: "linear-gradient(135deg, rgba(6,12,20,1) 0%, rgba(8,16,26,1) 50%, rgba(5,10,18,1) 100%)",
+      }} />
+
+      {/* Module ambient fills */}
+      <div className="absolute inset-0" style={{
+        background: `
+          radial-gradient(ellipse 60% 80% at 10% 20%, rgba(34,197,94,0.22) 0%, transparent 55%),
+          radial-gradient(ellipse 40% 60% at 90% 80%, rgba(59,130,246,0.18) 0%, transparent 50%),
+          radial-gradient(ellipse 35% 50% at 50% 50%, rgba(20,184,166,0.10) 0%, transparent 60%)
+        `,
+      }} />
+
+      {/* SVG: connection network + sparklines */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 320 110" preserveAspectRatio="none" aria-hidden="true">
+        {/* Connection lines */}
+        <line x1="30" y1="35" x2="80" y2="55" stroke="rgba(34,197,94,0.25)" strokeWidth="0.8" strokeDasharray="3,2"/>
+        <line x1="80" y1="55" x2="140" y2="40" stroke="rgba(20,184,166,0.22)" strokeWidth="0.8" strokeDasharray="3,2"/>
+        <line x1="140" y1="40" x2="200" y2="60" stroke="rgba(59,130,246,0.22)" strokeWidth="0.8" strokeDasharray="3,2"/>
+        <line x1="200" y1="60" x2="260" y2="45" stroke="rgba(139,92,246,0.20)" strokeWidth="0.8" strokeDasharray="3,2"/>
+        <line x1="260" y1="45" x2="300" y2="65" stroke="rgba(245,158,11,0.20)" strokeWidth="0.8" strokeDasharray="3,2"/>
+        <line x1="80" y1="55" x2="80" y2="85" stroke="rgba(34,197,94,0.15)" strokeWidth="0.6"/>
+        <line x1="200" y1="60" x2="200" y2="90" stroke="rgba(59,130,246,0.15)" strokeWidth="0.6"/>
+
+        {/* Activity sparkline — growth curve */}
+        <path d="M10,95 L30,88 L55,92 L80,78 L105,82 L130,70 L155,75 L180,62 L205,67 L230,55 L255,60 L280,48 L310,52"
+          stroke="rgba(124,252,0,0.35)" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M10,99 L30,94 L55,97 L80,86 L105,89 L130,80 L155,83 L180,72 L205,76 L230,66 L255,70 L280,60 L310,63"
+          stroke="rgba(20,184,166,0.20)" strokeWidth="0.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+
+        {/* Node dots */}
+        <circle cx="30" cy="35" r="3" fill="rgba(34,197,94,0.7)" />
+        <circle cx="30" cy="35" r="6" fill="none" stroke="rgba(34,197,94,0.25)" strokeWidth="1"/>
+        <circle cx="80" cy="55" r="2.5" fill="rgba(20,184,166,0.7)" />
+        <circle cx="140" cy="40" r="3" fill="rgba(59,130,246,0.7)" />
+        <circle cx="140" cy="40" r="6" fill="none" stroke="rgba(59,130,246,0.22)" strokeWidth="1"/>
+        <circle cx="200" cy="60" r="2.5" fill="rgba(139,92,246,0.7)" />
+        <circle cx="260" cy="45" r="3" fill="rgba(245,158,11,0.7)" />
+        <circle cx="300" cy="65" r="2.5" fill="rgba(236,72,153,0.6)" />
+
+        {/* Dot grid — bottom left */}
+        {[0,1,2,3,4].map(r => [0,1,2,3].map(c => (
+          <circle key={`${r}-${c}`} cx={8 + c * 10} cy={75 + r * 8} r="0.9"
+            fill={`rgba(34,197,94,${0.12 - r * 0.02})`} />
+        )))}
+
+        {/* Dot grid — top right */}
+        {[0,1,2].map(r => [0,1,2,3].map(c => (
+          <circle key={`tr-${r}-${c}`} cx={288 + c * 9} cy={10 + r * 9} r="0.8"
+            fill={`rgba(59,130,246,${0.12 - r * 0.02})`} />
+        )))}
+
+        {/* "GO" watermark */}
+        <text x="155" y="58" fill="rgba(124,252,0,0.06)" fontSize="38" fontWeight="900"
+          fontFamily="system-ui" letterSpacing="-2" textAnchor="middle">GO</text>
+      </svg>
+
+      {/* Dark overlay for content readability */}
+      <div className="absolute inset-0" style={{
+        background: "linear-gradient(to bottom, rgba(6,10,16,0.10) 0%, rgba(6,10,16,0.55) 75%, rgba(6,10,16,0.95) 100%)",
+      }} />
+
+      {/* Content */}
+      <div className="relative z-10 p-4 h-full flex flex-col justify-between">
+        {/* Top: label */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Activity size={10} className="text-primary" />
+            <span className="text-[9px] font-bold uppercase tracking-[0.20em] text-primary/70">Central de Notificações</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-[9px] font-bold text-green-400/70 uppercase tracking-wide">Live</span>
+          </div>
+        </div>
+
+        {/* Bottom: module identity dots */}
+        <div className="flex items-center gap-2">
+          {[
+            { color: "#22c55e", label: "Carreira" },
+            { color: "#14b8a6", label: "Wallet" },
+            { color: "#3b82f6", label: "Rede" },
+            { color: "#8b5cf6", label: "Extras" },
+            { color: "#f59e0b", label: "Indicações" },
+            { color: "#ec4899", label: "Gov" },
+          ].map(m => (
+            <div key={m.label} className="flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: m.color, boxShadow: `0 0 4px ${m.color}` }} />
+              <span className="text-[8px] font-semibold hidden sm:block" style={{ color: `${m.color}80` }}>{m.label}</span>
+            </div>
+          ))}
+          <div className="flex-1" />
+          {unreadCount > 0 && (
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+              style={{ background: "rgba(239,68,68,0.15)", color: "#f87171", border: "1px solid rgba(239,68,68,0.25)" }}>
+              {unreadCount} nova{unreadCount !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Top accent line */}
+      <div className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: "linear-gradient(90deg, rgba(34,197,94,0.60) 0%, rgba(59,130,246,0.45) 50%, rgba(236,72,153,0.35) 100%)" }} />
+    </div>
+  );
+}
 
 interface NotificationsDropdownProps {
   unread: number;
@@ -85,53 +198,26 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
           : "absolute right-0 top-12 w-80 rounded-2xl z-50 overflow-hidden"
       }
       style={{
-        background: "linear-gradient(160deg, rgba(10,14,20,0.99) 0%, rgba(6,9,14,0.99) 100%)",
+        background: "rgba(5,9,15,0.99)",
         border: "1px solid rgba(255,255,255,0.09)",
-        boxShadow: "0 24px 64px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.04) inset",
-        backdropFilter: "blur(24px)",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.90), 0 0 0 1px rgba(255,255,255,0.04) inset, 0 0 60px rgba(34,197,94,0.06)",
+        backdropFilter: "blur(32px)",
         ...(isMobile ? { top: "calc(66px + env(safe-area-inset-top, 0px))" } : {}),
       }}
     >
-      {/* Top accent */}
-      <div className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, rgba(34,197,94,0.50) 0%, rgba(59,130,246,0.35) 60%, transparent 95%)" }} />
+      {/* Command center header */}
+      <CommandCenterHeader unreadCount={unread} />
 
-      {/* Bell watermark — top right */}
-      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"
-        className="absolute top-0 right-0 pointer-events-none select-none"
-        style={{ width: 80, height: 80, opacity: 1 }} aria-hidden="true">
-        <path d="M40 8C29 8 20 17 20 28v2c-7 3-12 10-12 18v3h64v-3c0-8-5-15-12-18v-2c0-11-9-20-20-20z"
-          stroke="rgba(59,130,246,0.18)" strokeWidth="1.8" fill="none" />
-        <path d="M33 51c0 4 3 7 7 7s7-3 7-7" stroke="rgba(59,130,246,0.18)" strokeWidth="1.8" fill="none" strokeLinecap="round" />
-        <circle cx="58" cy="20" r="8" stroke="rgba(34,197,94,0.22)" strokeWidth="1.5" fill="none" />
-        <text x="55" y="24" fill="rgba(34,197,94,0.30)" fontSize="8" fontWeight="bold" fontFamily="system-ui">1</text>
-      </svg>
-
-      {/* Dot grid — bottom left corner */}
-      <div className="absolute bottom-0 left-0 w-16 h-16 pointer-events-none select-none" aria-hidden="true"
-        style={{
-          backgroundImage: "radial-gradient(circle, rgba(34,197,94,0.18) 1px, transparent 1px)",
-          backgroundSize: "8px 8px",
-          WebkitMaskImage: "radial-gradient(ellipse at 0% 100%, black 0%, transparent 70%)",
-          maskImage: "radial-gradient(ellipse at 0% 100%, black 0%, transparent 70%)",
-        }} />
-
-      {/* Panel header */}
-      <div className="flex items-center justify-between px-4 py-3.5"
-        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-        <div className="flex items-center gap-2.5">
-          <div className="w-6 h-6 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-            <Bell size={12} className="text-primary" />
+      {/* Panel sub-header with close on mobile */}
+      {isMobile && (
+        <div className="flex items-center justify-between px-4 py-2.5"
+          style={{ borderBottom: "1px solid rgba(255,255,255,0.07)", background: "rgba(8,12,18,0.95)" }}>
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <Bell size={10} className="text-primary" />
+            </div>
+            <p className="text-xs font-bold tracking-tight">Notificações</p>
           </div>
-          <p className="text-sm font-bold tracking-tight">Notificações</p>
-          {unread > 0 && (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-              style={{ background: "rgba(239,68,68,0.15)", color: "#f87171", border: "1px solid rgba(239,68,68,0.25)" }}>
-              {unread} nova{unread !== 1 ? "s" : ""}
-            </span>
-          )}
-        </div>
-        {isMobile && (
           <button
             onClick={() => setOpen(false)}
             className="w-7 h-7 rounded-full flex items-center justify-center transition-colors"
@@ -139,18 +225,25 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
           >
             <X size={13} className="text-muted-foreground" />
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Notification list */}
-      <div className={isMobile ? "max-h-[62vh] overflow-y-auto overscroll-contain" : "max-h-72 overflow-y-auto"}>
+      <div className={isMobile ? "max-h-[52vh] overflow-y-auto overscroll-contain" : "max-h-64 overflow-y-auto"}>
         {recent.length === 0 ? (
-          <div className="flex flex-col items-center py-10 px-4 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-white/4 border border-white/8 flex items-center justify-center mb-3">
+          <div className="flex flex-col items-center py-9 px-4 text-center relative overflow-hidden">
+            {/* Empty state dot grid */}
+            <div className="absolute inset-0 pointer-events-none" style={{
+              backgroundImage: "radial-gradient(circle, rgba(34,197,94,0.09) 1px, transparent 1px)",
+              backgroundSize: "14px 14px",
+              WebkitMaskImage: "radial-gradient(ellipse at 50% 50%, black 0%, transparent 72%)",
+              maskImage: "radial-gradient(ellipse at 50% 50%, black 0%, transparent 72%)",
+            }} />
+            <div className="w-12 h-12 rounded-2xl bg-white/4 border border-white/8 flex items-center justify-center mb-3 relative">
               <BellOff size={18} className="text-muted-foreground" />
             </div>
-            <p className="text-sm font-semibold">Você está em dia</p>
-            <p className="text-xs text-muted-foreground mt-1 leading-relaxed max-w-[180px]">
+            <p className="text-sm font-semibold relative">Você está em dia</p>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed max-w-[180px] relative">
               Sem notificações não lidas no momento.
             </p>
           </div>
@@ -170,14 +263,15 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
                 }}
               >
                 {/* Type accent strip on left edge */}
-                <div className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full opacity-60"
+                <div className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full opacity-70"
                   style={{ background: meta.accent }} />
 
                 {/* Hover bg */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                  style={{ background: "rgba(255,255,255,0.030)" }} />
+                  style={{ background: "rgba(255,255,255,0.028)" }} />
 
-                <div className={`relative w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${meta.bg} ${meta.text}`}>
+                <div className={`relative w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${meta.bg} ${meta.text}`}
+                  style={{ border: `1px solid ${meta.accent}22` }}>
                   {meta.icon}
                 </div>
                 <div className="relative flex-1 min-w-0">
@@ -187,7 +281,7 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
                 </div>
                 {/* Unread dot */}
                 <div className="relative w-1.5 h-1.5 rounded-full flex-shrink-0 mt-2"
-                  style={{ background: meta.accent, boxShadow: `0 0 6px ${meta.accent}` }} />
+                  style={{ background: meta.accent, boxShadow: `0 0 5px ${meta.accent}` }} />
               </button>
             );
           })
@@ -195,10 +289,11 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
       </div>
 
       {/* Footer CTA */}
-      <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(6,10,16,0.80)" }}>
         <Link href="/app/notifications" onClick={() => setOpen(false)}>
           <button className="w-full flex items-center justify-center gap-1.5 px-4 py-3 text-xs font-bold transition-all group"
             style={{ color: "rgba(124,252,0,0.80)" }}>
+            <Zap size={11} className="text-primary" />
             <span className="group-hover:underline underline-offset-2">Ver todas as notificações</span>
             <ChevronRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
           </button>
@@ -239,7 +334,7 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
             className="fixed inset-0 z-[9998]"
-            style={{ background: "rgba(0,0,0,0.50)", backdropFilter: "blur(3px)" }}
+            style={{ background: "rgba(0,0,0,0.60)", backdropFilter: "blur(4px)" }}
             onClick={() => setOpen(false)}
           />
         )}

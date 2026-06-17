@@ -49,7 +49,7 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="user-card-network rounded-2xl p-4 transition-all group"
+      className="user-card-network-v2 rounded-2xl p-4 transition-all group"
     >
       <div className="flex items-start gap-3">
         <Link href={type === "freelancer" ? `/app/freelancers/${user.id}` : `/app/companies/${user.id}`}>
@@ -195,16 +195,52 @@ export default function NetworkPage() {
         <div className="absolute bottom-40 right-0 w-64 h-64 rounded-full" style={{ background: "radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)", filter: "blur(60px)" }} />
       </div>
       {/* Header */}
-      <div className="sticky top-0 z-20 bg-[#060809]/95 backdrop-blur-xl border-b border-white/6">
-        <div className="px-4 sm:px-6 pt-4 pb-3 max-w-3xl mx-auto">
-          <div className="flex items-center gap-2.5 mb-3">
-            <div className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 mod-icon-network">
-              <Users size={13} />
-            </div>
-            <h1 className="text-lg font-bold">Descobrir Pessoas</h1>
-            <span className="text-[10px] font-bold uppercase tracking-[0.15em] ml-1 hidden sm:inline" style={{ color: "rgba(59,130,246,0.65)" }}>Comunidade extraGO</span>
-          </div>
+      <div className="sticky top-0 z-20 backdrop-blur-xl" style={{ background: "rgba(5,9,15,0.97)", borderBottom: "1px solid rgba(59,130,246,0.15)" }}>
+        {/* Network identity banner */}
+        <div className="network-hero-banner">
+          {/* SVG: connection network visualization */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-90" viewBox="0 0 600 56" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="40" y1="12" x2="120" y2="38" stroke="rgba(59,130,246,0.20)" strokeWidth="0.8" strokeDasharray="4,3"/>
+            <line x1="120" y1="38" x2="220" y2="18" stroke="rgba(59,130,246,0.18)" strokeWidth="0.8" strokeDasharray="4,3"/>
+            <line x1="220" y1="18" x2="340" y2="42" stroke="rgba(139,92,246,0.16)" strokeWidth="0.8" strokeDasharray="4,3"/>
+            <line x1="340" y1="42" x2="460" y2="20" stroke="rgba(59,130,246,0.15)" strokeWidth="0.8" strokeDasharray="4,3"/>
+            <line x1="460" y1="20" x2="560" y2="38" stroke="rgba(139,92,246,0.14)" strokeWidth="0.8" strokeDasharray="4,3"/>
+            <line x1="120" y1="38" x2="340" y2="42" stroke="rgba(59,130,246,0.09)" strokeWidth="0.6"/>
+            <line x1="220" y1="18" x2="460" y2="20" stroke="rgba(139,92,246,0.09)" strokeWidth="0.6"/>
+            <circle cx="40" cy="12" r="3" fill="rgba(59,130,246,0.65)"/>
+            <circle cx="40" cy="12" r="7" fill="none" stroke="rgba(59,130,246,0.20)" strokeWidth="1"/>
+            <circle cx="120" cy="38" r="2.5" fill="rgba(59,130,246,0.55)"/>
+            <circle cx="220" cy="18" r="3.5" fill="rgba(124,252,0,0.55)"/>
+            <circle cx="220" cy="18" r="7" fill="none" stroke="rgba(124,252,0,0.15)" strokeWidth="1"/>
+            <circle cx="340" cy="42" r="2.5" fill="rgba(139,92,246,0.55)"/>
+            <circle cx="460" cy="20" r="3" fill="rgba(59,130,246,0.55)"/>
+            <circle cx="560" cy="38" r="2.5" fill="rgba(139,92,246,0.50)"/>
+          </svg>
 
+          <div className="relative z-10 px-4 sm:px-6 py-3 max-w-3xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-xl flex items-center justify-center flex-shrink-0 mod-icon-network">
+                <Users size={13} />
+              </div>
+              <div>
+                <h1 className="text-base font-bold leading-none">Descobrir Pessoas</h1>
+                <p className="text-[10px] mt-0.5 font-semibold uppercase tracking-[0.15em]" style={{ color: "rgba(59,130,246,0.60)" }}>Comunidade extraGO</p>
+              </div>
+            </div>
+            <div className="hidden sm:flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400" style={{ boxShadow: "0 0 5px #3b82f6" }} />
+                <span className="text-[10px] font-bold" style={{ color: "rgba(59,130,246,0.65)" }}>Freelancers</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#8b5cf6", boxShadow: "0 0 5px #8b5cf6" }} />
+                <span className="text-[10px] font-bold" style={{ color: "rgba(139,92,246,0.65)" }}>Empresas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="px-4 sm:px-6 pt-3 pb-3 max-w-3xl mx-auto">
           {/* Search */}
           <div className="relative mb-3">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -227,9 +263,10 @@ export default function NetworkPage() {
                 onClick={() => setActiveTab(tab.key)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all border ${
                   activeTab === tab.key
-                    ? "bg-primary text-black border-primary"
+                    ? "text-black border-primary"
                     : "border-white/10 text-muted-foreground hover:border-white/25 hover:text-foreground"
                 }`}
+                style={activeTab === tab.key ? { background: "linear-gradient(135deg, #7CFC00, #22c55e)" } : {}}
               >
                 {tab.icon}
                 {tab.label}

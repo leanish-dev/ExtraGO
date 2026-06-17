@@ -74,23 +74,21 @@ function SettingRow({ label, description, children }: {
 }
 
 /* ── Section card ── */
-function SectionCard({ title, icon, children }: {
+function SectionCard({ title, icon, children, variant = "base" }: {
   title: string;
   icon: React.ReactNode;
   children: React.ReactNode;
+  variant?: "base" | "career" | "wallet" | "security" | "network" | "extras" | "referral";
 }) {
+  const variantClass = variant === "base" ? "section-card-base" : `section-card-${variant}`;
+  const iconColor: Record<string, string> = {
+    base: "text-primary", career: "text-green-400", wallet: "text-teal-400",
+    security: "text-red-400", network: "text-blue-400", extras: "text-purple-400", referral: "text-yellow-400",
+  };
   return (
-    <div className="rounded-2xl overflow-hidden relative"
-      style={{
-        background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(8,17,26,0.92) 55%, rgba(0,229,255,0.025) 100%)",
-        border: "1px solid rgba(255,255,255,0.09)",
-      }}
-    >
-      {/* Top accent stripe */}
-      <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.28), rgba(0,229,255,0.18), transparent)" }} />
-      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/6 relative">
-        <span className="text-primary">{icon}</span>
+    <div className={`${variantClass} rounded-2xl overflow-hidden relative`}>
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-white/5 relative">
+        <span className={iconColor[variant] ?? "text-primary"}>{icon}</span>
         <h3 className="text-sm font-bold">{title}</h3>
       </div>
       <div className="px-5 py-1">{children}</div>
@@ -137,7 +135,7 @@ function ContaSection() {
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Informações Pessoais" icon={<User size={15} />}>
+      <SectionCard title="Informações Pessoais" icon={<User size={15} />} variant="career">
         <div className="py-4 space-y-4">
           <div>
             <label className="text-xs font-semibold text-foreground/70 mb-1.5 block">Nome Completo</label>
@@ -186,7 +184,7 @@ function ContaSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Conta e E-mail" icon={<Shield size={15} />}>
+      <SectionCard title="Conta e E-mail" icon={<Shield size={15} />} variant="security">
         <div className="py-2">
           <SettingRow label="E-mail" description="Seu e-mail de acesso à plataforma">
             <span className="text-xs text-muted-foreground font-mono">{user?.email}</span>
@@ -228,7 +226,7 @@ function SegurancaSection() {
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Alterar Senha" icon={<Lock size={15} />}>
+      <SectionCard title="Alterar Senha" icon={<Lock size={15} />} variant="security">
         <div className="py-4 space-y-4">
           {["current", "next", "confirm"].map((key, i) => (
             <div key={key}>
@@ -250,7 +248,7 @@ function SegurancaSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Sessões e Dispositivos" icon={<Smartphone size={15} />}>
+      <SectionCard title="Sessões e Dispositivos" icon={<Smartphone size={15} />} variant="security">
         <div className="py-2">
           <SettingRow label="Sessão Ativa" description="Este dispositivo — agora">
             <span className="text-xs font-semibold text-primary flex items-center gap-1">
@@ -280,7 +278,7 @@ function NotificacoesSection() {
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Notificações Push" icon={<Bell size={15} />}>
+      <SectionCard title="Notificações Push" icon={<Bell size={15} />} variant="network">
         <div className="py-2">
           <SettingRow label="Novos Extras" description="Quando aparecerem extras compatíveis com você">
             <Toggle checked={prefs.pushExtras} onChange={v => setPrefs(p => ({ ...p, pushExtras: v }))} />
@@ -297,7 +295,7 @@ function NotificacoesSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Notificações por E-mail" icon={<Bell size={15} />}>
+      <SectionCard title="Notificações por E-mail" icon={<Bell size={15} />} variant="network">
         <div className="py-2">
           <SettingRow label="Resumo Semanal" description="Relatório de atividades da semana">
             <Toggle checked={prefs.emailResumo} onChange={v => setPrefs(p => ({ ...p, emailResumo: v }))} />
@@ -325,7 +323,7 @@ function PrivacidadeSection() {
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Visibilidade do Perfil" icon={<Eye size={15} />}>
+      <SectionCard title="Visibilidade do Perfil" icon={<Eye size={15} />} variant="network">
         <div className="py-2">
           <SettingRow label="Perfil Público" description="Qualquer pessoa pode visualizar seu perfil">
             <Toggle checked={prefs.perfilPublico} onChange={v => setPrefs(p => ({ ...p, perfilPublico: v }))} />
@@ -342,7 +340,7 @@ function PrivacidadeSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Compartilhamento" icon={<Globe size={15} />}>
+      <SectionCard title="Compartilhamento" icon={<Globe size={15} />} variant="network">
         <div className="py-2">
           <SettingRow label="Receber Mensagens" description="Permitir que empresas enviem mensagens">
             <Toggle checked={prefs.permitirMensagens} onChange={v => setPrefs(p => ({ ...p, permitirMensagens: v }))} />
@@ -382,7 +380,7 @@ function FinanceiroSection() {
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Chave PIX" icon={<Zap size={15} />}>
+      <SectionCard title="Chave PIX" icon={<Zap size={15} />} variant="wallet">
         <div className="py-4 space-y-4">
           <div>
             <label className="text-xs font-semibold text-foreground/70 mb-1.5 block">Chave PIX para Recebimento</label>
@@ -402,7 +400,7 @@ function FinanceiroSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Carteira e Histórico" icon={<CreditCard size={15} />}>
+      <SectionCard title="Carteira e Histórico" icon={<CreditCard size={15} />} variant="wallet">
         <div className="py-2">
           <SettingRow label="Ver Saldo e Transações" description="Acesse sua carteira completa">
             <Link href="/app/wallet">
@@ -458,7 +456,7 @@ function ProfissionalSection() {
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Categorias de Atuação" icon={<Briefcase size={15} />}>
+      <SectionCard title="Categorias de Atuação" icon={<Briefcase size={15} />} variant="extras">
         <div className="py-4">
           <div className="flex flex-wrap gap-2">
             {CATEGORIES.map(cat => (
@@ -479,7 +477,7 @@ function ProfissionalSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Regiões de Atuação" icon={<MapPin size={15} />}>
+      <SectionCard title="Regiões de Atuação" icon={<MapPin size={15} />} variant="career">
         <div className="py-4">
           <div className="flex flex-wrap gap-2">
             {REGION_OPTIONS.map(r => (
@@ -503,7 +501,7 @@ function ProfissionalSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Disponibilidade" icon={<Star size={15} />}>
+      <SectionCard title="Disponibilidade" icon={<Star size={15} />} variant="career">
         <div className="py-2">
           <SettingRow label="Disponível para Extras" description="Aparecer nas buscas das empresas">
             <SoonBadge />
@@ -521,7 +519,7 @@ function AssinaturasSection() {
   const { user } = useAuth();
   return (
     <div className="space-y-4">
-      <SectionCard title="Plano Atual" icon={<Crown size={15} />}>
+      <SectionCard title="Plano Atual" icon={<Crown size={15} />} variant="extras">
         <div className="py-4">
           <div className="flex items-center gap-4 p-4 rounded-xl bg-primary/8 border border-primary/20">
             <div className="w-12 h-12 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center text-primary">
@@ -536,7 +534,7 @@ function AssinaturasSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Planos Premium" icon={<Star size={15} />}>
+      <SectionCard title="Planos Premium" icon={<Star size={15} />} variant="extras">
         <div className="py-3">
           <SettingRow label="extraGO PRO · R$ 19,90/mês" description="Destaque nas buscas, estatísticas avançadas, selo PRO">
             <SoonBadge />
@@ -551,7 +549,7 @@ function AssinaturasSection() {
       </SectionCard>
 
       {user?.role === "company" && (
-        <SectionCard title="Planos Empresariais" icon={<CreditCard size={15} />}>
+        <SectionCard title="Planos Empresariais" icon={<CreditCard size={15} />} variant="extras">
           <div className="py-3">
             <SettingRow label="Starter · R$ 99,90/mês" description="Publicação de extras, painel básico, banco de profissionais">
               <SoonBadge />
@@ -603,7 +601,7 @@ function IndicacoesSection() {
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Seu Código de Indicação" icon={<Share2 size={15} />}>
+      <SectionCard title="Seu Código de Indicação" icon={<Share2 size={15} />} variant="referral">
         <div className="py-4 space-y-4">
           <div className="flex items-center gap-3 p-4 rounded-xl bg-white/4 border border-white/8">
             <span className="flex-1 font-mono text-lg font-bold tracking-[0.15em] text-primary">{code}</span>
@@ -631,7 +629,7 @@ function IndicacoesSection() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Comissão e Tier" icon={<Star size={15} />}>
+      <SectionCard title="Comissão e Tier" icon={<Star size={15} />} variant="referral">
         <div className="py-2">
           <SettingRow label="Total Indicados" description="Pessoas que se cadastraram com seu código">
             <span className="text-sm font-bold text-primary">{referralInfo?.totalConverted ?? 0}</span>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useGetAdminStats } from "@workspace/api-client-react";
-import { Users, Briefcase, DollarSign, TrendingUp, Shield, CheckCircle, AlertCircle, UserCheck, MapPin, Globe, Activity, Radio } from "lucide-react";
+import { Users, Briefcase, DollarSign, TrendingUp, Shield, CheckCircle, AlertCircle, UserCheck, MapPin, Globe, Activity, Radio, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { AnimatedCounter } from "@/components/animated-counter";
 import { LiveActivityFeed } from "@/components/live-activity-feed";
@@ -283,7 +283,11 @@ function OperationsNav({ stats }: { stats: any }) {
 
   return (
     <div>
-      <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-widest mb-3">Módulos de Operação</h2>
+      <div className="flex items-center gap-2 mb-3">
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/30 px-2">Módulos de Operação</span>
+        <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/8 to-transparent" />
+      </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
         {links.map((link, i) => (
           <Link key={link.href} href={link.href}>
@@ -291,16 +295,22 @@ function OperationsNav({ stats }: { stats: any }) {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              whileHover={{ y: -1 }}
-              className={`card-admin-stat p-4 flex items-center gap-3 ${link.border} transition-all cursor-pointer group`}
+              whileHover={{ y: -2 }}
+              className={`card-admin-op p-4 flex items-center gap-3 ${link.border} transition-all cursor-pointer group`}
             >
-              <div className={`w-9 h-9 rounded-xl border border-white/8 flex items-center justify-center flex-shrink-0 ${link.color} opacity-70 group-hover:opacity-100 transition-opacity`}>
+              {/* Left accent line — module color */}
+              <div className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full opacity-0 group-hover:opacity-70 transition-opacity"
+                style={{ background: link.color.replace("text-", "").includes("#") ? link.color : undefined }}
+              />
+              <div className={`w-9 h-9 rounded-xl border border-white/8 flex items-center justify-center flex-shrink-0 ${link.color} opacity-60 group-hover:opacity-100 transition-all`}
+                style={{ background: "rgba(255,255,255,0.04)" }}>
                 {link.icon}
               </div>
               <div className="min-w-0 flex-1">
-                <p className={`text-sm font-bold ${link.color} truncate`}>{link.label}</p>
+                <p className={`text-sm font-bold ${link.color} truncate group-hover:brightness-125 transition-all`}>{link.label}</p>
                 <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{link.sub}</p>
               </div>
+              <ChevronRight size={13} className="text-muted-foreground/30 group-hover:text-muted-foreground/70 flex-shrink-0 transition-all group-hover:translate-x-0.5" />
             </motion.div>
           </Link>
         ))}
@@ -317,19 +327,63 @@ export default function AdminDashboard() {
 
   return (
     <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-8 pb-20 lg:pb-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Shield size={16} className="text-primary opacity-70" />
-            <span className="text-[10px] text-primary font-bold uppercase tracking-widest">extraGO Admin</span>
+      {/* ── Command-center header ── */}
+      <div className="admin-cmd-header p-5">
+        {/* Infrastructure SVG: national network lines */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 700 100" preserveAspectRatio="none" aria-hidden="true">
+          {/* Network spine */}
+          <path d="M0,50 Q80,20 160,55 Q240,90 320,45 Q400,0 480,50 Q560,90 640,42 Q680,28 700,38"
+            stroke="rgba(124,252,0,0.12)" strokeWidth="1.5" fill="none"/>
+          <path d="M0,70 Q100,45 200,72 Q300,95 400,65 Q500,30 600,58 Q660,72 700,62"
+            stroke="rgba(0,229,255,0.08)" strokeWidth="1" fill="none"/>
+          {/* City nodes */}
+          <circle cx="160" cy="55" r="3" fill="rgba(124,252,0,0.45)"/>
+          <circle cx="160" cy="55" r="7" fill="none" stroke="rgba(124,252,0,0.15)" strokeWidth="1"/>
+          <circle cx="320" cy="45" r="4" fill="rgba(0,229,255,0.40)"/>
+          <circle cx="320" cy="45" r="9" fill="none" stroke="rgba(0,229,255,0.12)" strokeWidth="1"/>
+          <circle cx="480" cy="50" r="3" fill="rgba(124,252,0,0.40)"/>
+          <circle cx="640" cy="42" r="2.5" fill="rgba(139,92,246,0.45)"/>
+          {/* Cross-connections */}
+          <line x1="160" y1="55" x2="320" y2="45" stroke="rgba(124,252,0,0.10)" strokeWidth="0.8" strokeDasharray="5,4"/>
+          <line x1="320" y1="45" x2="480" y2="50" stroke="rgba(0,229,255,0.09)" strokeWidth="0.8" strokeDasharray="5,4"/>
+          <line x1="480" y1="50" x2="640" y2="42" stroke="rgba(139,92,246,0.09)" strokeWidth="0.8" strokeDasharray="5,4"/>
+          {/* GO watermark */}
+          <text x="598" y="88" fill="rgba(124,252,0,0.05)" fontSize="50" fontWeight="900"
+            fontFamily="system-ui" letterSpacing="-2">GO</text>
+        </svg>
+
+        <div className="relative z-10 flex items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <Shield size={14} className="text-primary opacity-80" />
+              <span className="text-[10px] text-primary font-bold uppercase tracking-[0.18em]">extraGO Admin</span>
+            </div>
+            <h1 className="text-[22px] sm:text-[26px] font-black tracking-tight leading-tight">Centro Nacional de Operações</h1>
+            <p className="text-sm text-muted-foreground mt-1">Infraestrutura de Mão de Obra do Brasil</p>
+
+            {/* Module identity strip */}
+            <div className="flex items-center gap-2.5 mt-3">
+              {[
+                { color: "#7CFC00", label: "Usuários" },
+                { color: "#14b8a6", label: "Carteira" },
+                { color: "#3b82f6", label: "Extras" },
+                { color: "#f59e0b", label: "Analytics" },
+                { color: "#8b5cf6", label: "Mapa" },
+                { color: "#ec4899", label: "Gov" },
+              ].map(m => (
+                <div key={m.label} className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: m.color, boxShadow: `0 0 4px ${m.color}` }} />
+                  <span className="text-[9px] font-bold uppercase tracking-wide hidden sm:block" style={{ color: `${m.color}90` }}>{m.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <h1 className="text-[24px] sm:text-[28px] font-black tracking-tight">Centro Nacional de Operações</h1>
-          <p className="text-sm text-muted-foreground mt-1">Infraestrutura de Mão de Obra do Brasil</p>
-        </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-green-400/20 bg-green-400/5 flex-shrink-0">
-          <Activity size={11} className="text-green-400" />
-          <span className="text-[10px] text-green-400 font-bold uppercase tracking-widest">Sistema Ativo</span>
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-green-400/20 bg-green-400/5">
+              <Activity size={11} className="text-green-400" />
+              <span className="text-[10px] text-green-400 font-bold uppercase tracking-widest">Ativo</span>
+            </div>
+          </div>
         </div>
       </div>
 

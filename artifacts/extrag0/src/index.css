@@ -1345,6 +1345,127 @@
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.018), transparent);
     animation: cardShimmer 6s ease-in-out infinite; transform: skewX(-15deg);
   }
+
+  /* ── Network Hero Banner — connection nodes + lines (page-level identity strip) ── */
+  .network-hero-banner {
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,16,26,0.96) 55%, rgba(139,92,246,0.06) 100%);
+    border-bottom: 1px solid rgba(59,130,246,0.15);
+  }
+  .network-hero-banner::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(59,130,246,0.11) 1.2px, transparent 1.2px),
+      radial-gradient(circle, rgba(139,92,246,0.07) 1px, transparent 1px);
+    background-size: 22px 22px, 44px 44px;
+    background-position: 0 0, 11px 11px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 100% at 50% 50%, black 0%, transparent 85%);
+    mask-image: radial-gradient(ellipse 80% 100% at 50% 50%, black 0%, transparent 85%);
+    pointer-events: none;
+  }
+  .network-hero-banner::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, rgba(59,130,246,0.55) 0%, rgba(124,252,0,0.25) 50%, rgba(139,92,246,0.45) 100%);
+  }
+
+  /* ── Referral hero card — amber identity ── */
+  .card-referral-identity {
+    background: linear-gradient(135deg, rgba(245,158,11,0.07) 0%, rgba(8,17,26,0.92) 60%, rgba(239,68,68,0.04) 100%);
+    border: 1px solid rgba(245,158,11,0.18);
+    border-radius: 1.25rem;
+    position: relative; overflow: hidden;
+  }
+  .card-referral-identity::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245,158,11,0.60), rgba(239,68,68,0.30), transparent);
+  }
+
+  /* ── Admin command-center header ── */
+  .admin-cmd-header {
+    background: linear-gradient(135deg, rgba(8,12,18,0.97) 0%, rgba(6,10,16,0.99) 100%);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 1rem; position: relative; overflow: hidden;
+  }
+  .admin-cmd-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px);
+    background-size: 18px 18px;
+    -webkit-mask-image: radial-gradient(ellipse 100% 100% at 0% 50%, black 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse 100% 100% at 0% 50%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .admin-cmd-header::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, rgba(124,252,0,0.70) 0%, rgba(0,229,255,0.45) 45%, rgba(139,92,246,0.35) 75%, rgba(236,72,153,0.30) 100%);
+  }
+
+  /* ── Admin op-nav cards (stronger, module-colored) ── */
+  .card-admin-op {
+    background: linear-gradient(135deg, rgba(255,255,255,0.030) 0%, rgba(8,17,26,0.94) 100%);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 0.875rem; position: relative; overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s var(--ease-smooth), background 0.2s ease;
+  }
+  .card-admin-op:hover { transform: translateY(-2px); }
+  .card-admin-op::after {
+    content: '';
+    position: absolute; bottom: 0; right: 0; width: 80px; height: 80px;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── User card (network) — stronger blue identity ── */
+  .user-card-network-v2 {
+    background: linear-gradient(135deg, rgba(59,130,246,0.07) 0%, rgba(8,17,26,0.93) 60%, rgba(139,92,246,0.04) 100%);
+    border: 1px solid rgba(59,130,246,0.14);
+    border-radius: 1rem; position: relative; overflow: hidden;
+    transition: border-color 0.18s ease, background 0.18s ease;
+  }
+  .user-card-network-v2:hover {
+    border-color: rgba(59,130,246,0.28);
+    background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,17,26,0.93) 60%, rgba(139,92,246,0.05) 100%);
+  }
+  .user-card-network-v2::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59,130,246,0.40), rgba(124,252,0,0.12), transparent);
+  }
+  .user-card-network-v2::after {
+    content: '';
+    position: absolute; bottom: 0; right: 0; width: 70px; height: 70px;
+    background-image: radial-gradient(circle, rgba(59,130,246,0.12) 1.2px, transparent 1.2px);
+    background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+    mask-image: radial-gradient(ellipse at 100% 100%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── Settings section card — themed variants ── */
+  .section-card-base {
+    border-radius: 1rem; position: relative; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, rgba(8,17,26,0.94) 100%);
+  }
+  .section-card-career { border-color: rgba(34,197,94,0.14); background: linear-gradient(135deg, rgba(34,197,94,0.05) 0%, rgba(8,17,26,0.93) 60%); }
+  .section-card-career::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(34,197,94,0.50),rgba(124,252,0,0.25),transparent); }
+  .section-card-wallet { border-color: rgba(20,184,166,0.14); background: linear-gradient(135deg, rgba(20,184,166,0.05) 0%, rgba(8,17,26,0.93) 60%); }
+  .section-card-wallet::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(20,184,166,0.50),rgba(0,229,255,0.22),transparent); }
+  .section-card-security { border-color: rgba(239,68,68,0.12); background: linear-gradient(135deg, rgba(239,68,68,0.04) 0%, rgba(8,17,26,0.93) 60%); }
+  .section-card-security::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(239,68,68,0.40),transparent); }
+  .section-card-network { border-color: rgba(59,130,246,0.14); background: linear-gradient(135deg, rgba(59,130,246,0.05) 0%, rgba(8,17,26,0.93) 60%); }
+  .section-card-network::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(59,130,246,0.45),rgba(139,92,246,0.22),transparent); }
+  .section-card-extras { border-color: rgba(139,92,246,0.14); background: linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(8,17,26,0.93) 60%); }
+  .section-card-extras::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(139,92,246,0.45),rgba(59,130,246,0.22),transparent); }
+  .section-card-referral { border-color: rgba(245,158,11,0.14); background: linear-gradient(135deg, rgba(245,158,11,0.05) 0%, rgba(8,17,26,0.93) 60%); }
+  .section-card-referral::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,rgba(245,158,11,0.45),rgba(239,68,68,0.18),transparent); }
 }
 
 /* ── Accessibility: respect user motion preferences ── */
