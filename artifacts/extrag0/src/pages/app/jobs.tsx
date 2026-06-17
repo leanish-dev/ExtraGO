@@ -325,16 +325,16 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
       whileTap={{ scale: 0.98 }}
       onClick={() => onClick(job)}
       className={`card-hover card-shimmer-hover rounded-2xl p-5 flex flex-col h-full group cursor-pointer border border-l-2 transition-all relative overflow-hidden tilt-card ${leftBorderClass} ${
-        liveStatus === "happening" ? "border-green-500/25" :
-        liveStatus === "soon" ? "border-amber-500/20" :
-        "border-white/8 hover:border-purple-400/25"
+        liveStatus === "happening" ? "border-green-500/40" :
+        liveStatus === "soon" ? "border-amber-500/38" :
+        "border-purple-400/32 hover:border-purple-400/50"
       }`}
       style={{
         background: liveStatus === "happening"
-          ? "linear-gradient(135deg, rgba(34,197,94,0.10) 0%, rgba(8,17,26,0.95) 55%, rgba(34,197,94,0.04) 100%)"
+          ? "linear-gradient(135deg, rgba(34,197,94,0.22) 0%, rgba(8,17,26,0.95) 55%, rgba(34,197,94,0.08) 100%)"
           : liveStatus === "soon"
-          ? "linear-gradient(135deg, rgba(245,158,11,0.09) 0%, rgba(8,17,26,0.95) 55%, rgba(245,158,11,0.04) 100%)"
-          : "linear-gradient(135deg, rgba(139,92,246,0.07) 0%, rgba(8,17,26,0.95) 55%, rgba(59,130,246,0.04) 100%)",
+          ? "linear-gradient(135deg, rgba(245,158,11,0.20) 0%, rgba(8,17,26,0.95) 55%, rgba(245,158,11,0.08) 100%)"
+          : "linear-gradient(135deg, rgba(139,92,246,0.20) 0%, rgba(8,17,26,0.95) 55%, rgba(59,130,246,0.08) 100%)",
       }}
     >
       {liveStatus === "happening" && (
@@ -792,7 +792,7 @@ export default function JobsPage() {
 
         {!isLoading && filtered.length === 0 && (
           <div className="rounded-2xl relative overflow-hidden"
-            style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
+            style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.16) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(139,92,246,0.28)" }}
           >
             <EmptyState
               icon={<Briefcase size={28} />}

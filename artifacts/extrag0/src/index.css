@@ -331,13 +331,13 @@
 
   /* ── Balance card mini ── */
   .balance-card-mini {
-    background: linear-gradient(135deg, rgba(20,184,166,0.09) 0%, rgba(8,17,26,0.94) 100%);
-    border: 1px solid rgba(20,184,166,0.16);
+    background: linear-gradient(135deg, rgba(20,184,166,0.22) 0%, rgba(8,17,26,0.95) 100%);
+    border: 1px solid rgba(20,184,166,0.34);
     border-radius: 1rem;
     transition: border-color 0.2s ease, transform 0.2s var(--ease-smooth);
   }
   .balance-card-mini:hover {
-    border-color: rgba(20,184,166,0.28);
+    border-color: rgba(20,184,166,0.48);
     transform: translateY(-1px);
   }
 
@@ -1038,20 +1038,20 @@
   }
 
   /* ── Secondary module cards (solid tint — stronger color presence) ── */
-  .card-career-secondary   { background: linear-gradient(135deg, rgba(34,197,94,0.16) 0%, rgba(8,17,26,0.95) 100%);  border: 1px solid rgba(34,197,94,0.24);  border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-wallet-secondary   { background: linear-gradient(135deg, rgba(20,184,166,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(20,184,166,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-network-secondary  { background: linear-gradient(135deg, rgba(59,130,246,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(59,130,246,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-extras-secondary   { background: linear-gradient(135deg, rgba(139,92,246,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(139,92,246,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-referral-secondary { background: linear-gradient(135deg, rgba(245,158,11,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(245,158,11,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-governance-secondary { background: linear-gradient(135deg, rgba(220,38,38,0.16) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(220,38,38,0.24); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-career-secondary   { background: linear-gradient(135deg, rgba(34,197,94,0.24) 0%, rgba(8,17,26,0.95) 100%);  border: 1px solid rgba(34,197,94,0.36);  border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-wallet-secondary   { background: linear-gradient(135deg, rgba(20,184,166,0.24) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(20,184,166,0.36); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-network-secondary  { background: linear-gradient(135deg, rgba(59,130,246,0.24) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(59,130,246,0.36); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-extras-secondary   { background: linear-gradient(135deg, rgba(139,92,246,0.24) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(139,92,246,0.36); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-referral-secondary { background: linear-gradient(135deg, rgba(245,158,11,0.24) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(245,158,11,0.36); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-governance-secondary { background: linear-gradient(135deg, rgba(220,38,38,0.24) 0%, rgba(8,17,26,0.95) 100%); border: 1px solid rgba(220,38,38,0.36); border-radius: 1rem; position: relative; overflow: hidden; }
 
   /* ── Module user/item cards (list-level tint) ── */
   .user-card-network {
-    background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,17,26,0.96) 100%); border: 1px solid rgba(59,130,246,0.20);
+    background: linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(8,17,26,0.96) 100%); border: 1px solid rgba(59,130,246,0.34);
     position: relative; overflow: hidden;
     transition: background 0.2s ease, border-color 0.2s ease;
   }
-  .user-card-network:hover { background: linear-gradient(135deg, rgba(59,130,246,0.16) 0%, rgba(8,17,26,0.96) 100%); border-color: rgba(59,130,246,0.32); }
+  .user-card-network:hover { background: linear-gradient(135deg, rgba(59,130,246,0.30) 0%, rgba(8,17,26,0.96) 100%); border-color: rgba(59,130,246,0.50); }
   /* Connected node dot-grid watermark — bottom-right corner fade */
   .user-card-network::after {
     content: '';
@@ -1068,10 +1068,10 @@
   }
 
   .job-card-extras {
-    background: linear-gradient(135deg, rgba(139,92,246,0.10) 0%, rgba(8,17,26,0.96) 100%); border: 1px solid rgba(139,92,246,0.20);
+    background: linear-gradient(135deg, rgba(139,92,246,0.22) 0%, rgba(8,17,26,0.96) 100%); border: 1px solid rgba(139,92,246,0.35);
     transition: background 0.2s ease, border-color 0.2s ease;
   }
-  .job-card-extras:hover { background: linear-gradient(135deg, rgba(139,92,246,0.16) 0%, rgba(8,17,26,0.96) 100%); border-color: rgba(139,92,246,0.32); }
+  .job-card-extras:hover { background: linear-gradient(135deg, rgba(139,92,246,0.30) 0%, rgba(8,17,26,0.96) 100%); border-color: rgba(139,92,246,0.50); }
 
   /* ── Module icon containers ── */
   .mod-icon-career     { background: rgba(34,197,94,0.14);   border: 1px solid rgba(34,197,94,0.28);   color: #22c55e; }
@@ -1083,14 +1083,14 @@
 
   /* ── Balance card mini — enriched with fintech wave pattern ── */
   .balance-card-mini {
-    background: rgba(255, 255, 255, 0.035);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(135deg, rgba(20,184,166,0.22) 0%, rgba(8,17,26,0.95) 100%);
+    border: 1px solid rgba(20,184,166,0.34);
     border-radius: 1rem;
     position: relative; overflow: hidden;
     transition: border-color 0.2s ease, transform 0.2s var(--ease-smooth);
   }
   .balance-card-mini:hover {
-    border-color: rgba(255, 255, 255, 0.13);
+    border-color: rgba(20,184,166,0.50);
     transform: translateY(-1px);
   }
   /* Subtle dot-grid watermark on mini cards */
@@ -1107,8 +1107,8 @@
 
   /* ── Activity feed card (Dashboard) ── */
   .card-activity-feed {
-    background: linear-gradient(135deg, rgba(34,197,94,0.07) 0%, rgba(8,17,26,0.95) 100%);
-    border: 1px solid rgba(34,197,94,0.14);
+    background: linear-gradient(135deg, rgba(34,197,94,0.20) 0%, rgba(8,17,26,0.95) 100%);
+    border: 1px solid rgba(34,197,94,0.32);
     border-radius: 1rem;
     position: relative; overflow: hidden;
   }
@@ -1135,7 +1135,7 @@
 
   /* ── Referral stats card (compact stats row) ── */
   .card-referral-stat {
-    background: linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(8,17,26,0.95) 100%);
+    background: linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(8,17,26,0.95) 100%);
     border-radius: 1rem;
     position: relative; overflow: hidden;
     transition: transform 0.2s var(--ease-smooth), border-color 0.2s ease;
@@ -1257,13 +1257,13 @@
 
   /* ── Career achievement card — green identity ── */
   .card-career-achievement {
-    background: rgba(34,197,94,0.050);
-    border: 1px solid rgba(34,197,94,0.12);
+    background: rgba(34,197,94,0.16);
+    border: 1px solid rgba(34,197,94,0.28);
     border-radius: 0.875rem;
     position: relative; overflow: hidden;
     transition: background 0.2s ease, border-color 0.2s ease;
   }
-  .card-career-achievement:hover { background: rgba(34,197,94,0.085); border-color: rgba(34,197,94,0.22); }
+  .card-career-achievement:hover { background: rgba(34,197,94,0.22); border-color: rgba(34,197,94,0.40); }
   .card-career-achievement.locked { background: rgba(255,255,255,0.025); border-color: rgba(255,255,255,0.06); }
 
   /* ── Admin stat cards ── */
@@ -1301,31 +1301,31 @@
 
   /* ── Summary cards (wallet/career secondary stats) ── */
   .card-summary-wallet {
-    background: rgba(20,184,166,0.055);
-    border: 1px solid rgba(20,184,166,0.12);
+    background: rgba(20,184,166,0.18);
+    border: 1px solid rgba(20,184,166,0.32);
     border-radius: 0.875rem;
     position: relative; overflow: hidden;
     transition: border-color 0.2s ease;
   }
-  .card-summary-wallet:hover { border-color: rgba(20,184,166,0.22); }
+  .card-summary-wallet:hover { border-color: rgba(20,184,166,0.46); }
   .card-summary-wallet::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, rgba(20,184,166,0.40), transparent);
+    background: linear-gradient(90deg, rgba(20,184,166,0.65), transparent);
   }
 
   .card-summary-career {
-    background: rgba(34,197,94,0.055);
-    border: 1px solid rgba(34,197,94,0.12);
+    background: rgba(34,197,94,0.18);
+    border: 1px solid rgba(34,197,94,0.32);
     border-radius: 0.875rem;
     position: relative; overflow: hidden;
     transition: border-color 0.2s ease;
   }
-  .card-summary-career:hover { border-color: rgba(34,197,94,0.22); }
+  .card-summary-career:hover { border-color: rgba(34,197,94,0.46); }
   .card-summary-career::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, rgba(34,197,94,0.40), transparent);
+    background: linear-gradient(90deg, rgba(34,197,94,0.65), transparent);
   }
 
   /* ── Career hero (level-aware — replaces generic glass-card on career page) ── */
@@ -1364,8 +1364,8 @@
 
   /* ── Referral hero card — amber identity ── */
   .card-referral-identity {
-    background: linear-gradient(135deg, rgba(245,158,11,0.07) 0%, rgba(8,17,26,0.92) 60%, rgba(239,68,68,0.04) 100%);
-    border: 1px solid rgba(245,158,11,0.18);
+    background: linear-gradient(135deg, rgba(245,158,11,0.20) 0%, rgba(8,17,26,0.92) 60%, rgba(239,68,68,0.08) 100%);
+    border: 1px solid rgba(245,158,11,0.34);
     border-radius: 1.25rem;
     position: relative; overflow: hidden;
   }
@@ -1416,14 +1416,14 @@
 
   /* ── User card (network) — stronger blue identity ── */
   .user-card-network-v2 {
-    background: linear-gradient(135deg, rgba(59,130,246,0.07) 0%, rgba(8,17,26,0.93) 60%, rgba(139,92,246,0.04) 100%);
-    border: 1px solid rgba(59,130,246,0.14);
+    background: linear-gradient(135deg, rgba(59,130,246,0.18) 0%, rgba(8,17,26,0.93) 60%, rgba(139,92,246,0.08) 100%);
+    border: 1px solid rgba(59,130,246,0.30);
     border-radius: 1rem; position: relative; overflow: hidden;
     transition: border-color 0.18s ease, background 0.18s ease;
   }
   .user-card-network-v2:hover {
-    border-color: rgba(59,130,246,0.28);
-    background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,17,26,0.93) 60%, rgba(139,92,246,0.05) 100%);
+    border-color: rgba(59,130,246,0.46);
+    background: linear-gradient(135deg, rgba(59,130,246,0.26) 0%, rgba(8,17,26,0.93) 60%, rgba(139,92,246,0.12) 100%);
   }
   .user-card-network-v2::before {
     content: '';

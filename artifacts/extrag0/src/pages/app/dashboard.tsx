@@ -521,8 +521,8 @@ function CompanyDashboard() {
                     whileHover={{ x: 2 }}
                   >
                     <Link href="/app/jobs">
-                      <div className="rounded-xl p-4 cursor-pointer flex items-center gap-4 border border-white/8 hover:border-primary/22 transition-all group relative overflow-hidden"
-                        style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.05) 0%, rgba(8,17,26,0.85) 60%, rgba(0,229,255,0.03) 100%)" }}>
+                      <div className="rounded-xl p-4 cursor-pointer flex items-center gap-4 border border-primary/28 hover:border-primary/45 transition-all group relative overflow-hidden"
+                        style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.16) 0%, rgba(8,17,26,0.85) 60%, rgba(0,229,255,0.06) 100%)" }}>
                         <div className="w-9 h-9 rounded-xl bg-primary/8 border border-primary/18 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/14 transition-colors">
                           <Briefcase size={15} className="text-primary" />
                         </div>
@@ -557,8 +557,8 @@ function CompanyDashboard() {
           </div>
           <div className="space-y-3">
             {[
-              { href: "/app/applications", icon: <Users size={16} />, label: "Candidaturas", sub: "Aprovar ou recusar profissionais", color: "text-secondary", accentRgb: "0,229,255", borderHover: "rgba(0,229,255,0.22)" },
-              { href: "/app/wallet", icon: <DollarSign size={16} />, label: "Carteira", sub: "Pagamentos e histórico", color: "text-teal-400", accentRgb: "20,184,166", borderHover: "rgba(20,184,166,0.22)" },
+              { href: "/app/applications", icon: <Users size={16} />, label: "Candidaturas", sub: "Aprovar ou recusar profissionais", color: "text-secondary", accentRgb: "0,229,255", borderHover: "rgba(0,229,255,0.48)" },
+              { href: "/app/wallet", icon: <DollarSign size={16} />, label: "Carteira", sub: "Pagamentos e histórico", color: "text-teal-400", accentRgb: "20,184,166", borderHover: "rgba(20,184,166,0.48)" },
             ].map((action) => (
               <Link key={action.href} href={action.href}>
                 <motion.div
@@ -566,11 +566,11 @@ function CompanyDashboard() {
                   whileTap={{ scale: 0.98 }}
                   className="rounded-xl p-4 cursor-pointer flex items-center gap-3 border transition-all group relative overflow-hidden"
                   style={{
-                    background: `linear-gradient(135deg, rgba(${action.accentRgb},0.08) 0%, rgba(8,17,26,0.90) 60%, rgba(${action.accentRgb},0.04) 100%)`,
-                    borderColor: `rgba(${action.accentRgb},0.14)`,
+                    background: `linear-gradient(135deg, rgba(${action.accentRgb},0.20) 0%, rgba(8,17,26,0.90) 60%, rgba(${action.accentRgb},0.08) 100%)`,
+                    borderColor: `rgba(${action.accentRgb},0.32)`,
                   }}
                   onMouseEnter={e => (e.currentTarget.style.borderColor = action.borderHover)}
-                  onMouseLeave={e => (e.currentTarget.style.borderColor = `rgba(${action.accentRgb},0.14)`)}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = `rgba(${action.accentRgb},0.32)`)}
                 >
                   <div className="absolute top-0 left-0 right-0 h-px opacity-50"
                     style={{ background: `linear-gradient(90deg, transparent, rgba(${action.accentRgb},0.40), transparent)` }} />
@@ -662,7 +662,7 @@ function FreelancerDashboard() {
               <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="rounded-xl h-14 skeleton" />)}</div>
             ) : pendingApps.length === 0 ? (
               <div className="rounded-2xl border p-6 flex flex-col items-center text-center gap-3 relative overflow-hidden"
-                style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.05) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.03) 100%)", borderColor: "rgba(124,252,0,0.10)" }}>
+                style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.16) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.06) 100%)", borderColor: "rgba(124,252,0,0.28)" }}>
                 <div className="absolute top-0 left-0 right-0 h-px opacity-40" style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.35), transparent)" }} />
                 <div className="w-10 h-10 rounded-xl bg-primary/8 border border-primary/18 flex items-center justify-center">
                   <Briefcase size={18} className="text-primary/50" />

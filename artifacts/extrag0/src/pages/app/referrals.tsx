@@ -236,9 +236,9 @@ export default function ReferralsPage() {
           className="grid grid-cols-3 gap-3"
         >
           {[
-            { label: "Indicações", value: referral?.totalInvited ?? 0, color: "text-primary", sub: `${activeReferrals} ativos`, border: "border-primary/18", bg: "rgba(124,252,0,0.05)" },
-            { label: "Conversão", value: `${conversionRate}%`, color: "text-secondary", sub: `${referral?.totalConverted ?? 0} convertidos`, border: "border-secondary/18", bg: "rgba(0,229,255,0.05)" },
-            { label: "Ganhos Totais", value: `R$${(referral?.totalRewardEarned ?? 0).toFixed(0)}`, color: "text-yellow-400", sub: `~R$${monthlyEarnings.toFixed(0)}/mês`, border: "border-yellow-400/18", bg: "rgba(245,158,11,0.05)" },
+            { label: "Indicações", value: referral?.totalInvited ?? 0, color: "text-primary", sub: `${activeReferrals} ativos`, border: "border-primary/35", bg: "rgba(124,252,0,0.18)" },
+            { label: "Conversão", value: `${conversionRate}%`, color: "text-secondary", sub: `${referral?.totalConverted ?? 0} convertidos`, border: "border-secondary/35", bg: "rgba(0,229,255,0.16)" },
+            { label: "Ganhos Totais", value: `R$${(referral?.totalRewardEarned ?? 0).toFixed(0)}`, color: "text-yellow-400", sub: `~R$${monthlyEarnings.toFixed(0)}/mês`, border: "border-yellow-400/35", bg: "rgba(245,158,11,0.18)" },
           ].map((item, i) => (
             <motion.div
               key={i}
@@ -260,8 +260,8 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.08 }}
-          className="rounded-2xl border border-amber-500/12 p-5 relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.06) 0%, rgba(8,17,26,0.90) 55%, rgba(239,68,68,0.04) 100%)" }}
+          className="rounded-2xl border border-amber-500/35 p-5 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(8,17,26,0.90) 55%, rgba(239,68,68,0.08) 100%)" }}
         >
           {/* Referral network tree SVG watermark */}
           <div className="absolute right-3 bottom-2 pointer-events-none select-none opacity-[0.09]">
@@ -405,8 +405,8 @@ export default function ReferralsPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="rounded-2xl p-5 border border-primary/14 relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.06) 0%, rgba(8,17,26,0.92) 50%, rgba(0,229,255,0.04) 100%)" }}
+          className="rounded-2xl p-5 border border-primary/35 relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.20) 0%, rgba(8,17,26,0.92) 50%, rgba(0,229,255,0.08) 100%)" }}
         >
           {/* Top stripe */}
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.45), rgba(0,229,255,0.22), transparent)" }} />
@@ -546,8 +546,8 @@ export default function ReferralsPage() {
           transition={{ duration: 0.4, delay: 0.12 }}
           className="rounded-2xl p-5 relative overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, rgba(124,252,0,0.05) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.03) 100%)",
-            border: "1px solid rgba(124,252,0,0.12)",
+            background: "linear-gradient(135deg, rgba(124,252,0,0.18) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.06) 100%)",
+            border: "1px solid rgba(124,252,0,0.32)",
           }}
         >
           <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
@@ -721,10 +721,10 @@ export default function ReferralsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.16 }}
             className="rounded-2xl p-5 relative overflow-hidden"
-            style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.045) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(245,158,11,0.12)" }}
+            style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.20) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(245,158,11,0.32)" }}
           >
             <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-              style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.35), rgba(0,229,255,0.15), transparent)" }} />
+              style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.55), rgba(0,229,255,0.25), transparent)" }} />
             <div className="flex items-center justify-between mb-4 relative">
               <h2 className="font-bold flex items-center gap-2 text-sm">
                 <Users size={14} className="text-secondary" />
@@ -778,10 +778,10 @@ export default function ReferralsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.16 }}
           className="rounded-2xl p-5 relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.045) 0%, rgba(8,17,26,0.92) 60%, rgba(124,252,0,0.025) 100%)", border: "1px solid rgba(245,158,11,0.12)" }}
+          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.20) 0%, rgba(8,17,26,0.92) 60%, rgba(124,252,0,0.06) 100%)", border: "1px solid rgba(245,158,11,0.32)" }}
         >
           <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.38), rgba(124,252,0,0.18), transparent)" }} />
+            style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.58), rgba(124,252,0,0.28), transparent)" }} />
           <div className="flex items-center justify-between mb-1 relative">
             <h2 className="font-bold flex items-center gap-2 text-sm">
               <Gift size={14} className="text-primary" />
@@ -796,11 +796,11 @@ export default function ReferralsPage() {
           </p>
 
           <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="rounded-xl border border-secondary/15 bg-secondary/5 p-3 text-center">
+            <div className="rounded-xl border border-secondary/35 bg-secondary/18 p-3 text-center">
               <p className="text-lg font-bold text-secondary">{activeReferrals}</p>
               <p className="text-[10px] text-muted-foreground">Indicados ativos</p>
             </div>
-            <div className="rounded-xl border border-primary/15 bg-primary/5 p-3 text-center">
+            <div className="rounded-xl border border-primary/35 bg-primary/18 p-3 text-center">
               <p className="text-lg font-bold text-primary">{networkExtras}</p>
               <p className="text-[10px] text-muted-foreground">Extras na sua rede</p>
             </div>
@@ -843,7 +843,7 @@ export default function ReferralsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.17 }}
           className="rounded-2xl p-5 relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.05) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.025) 100%)", border: "1px solid rgba(124,252,0,0.13)" }}
+          style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.18) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.06) 100%)", border: "1px solid rgba(124,252,0,0.30)" }}
         >
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(124,252,0,0.06) 0%, transparent 70%)", filter: "blur(30px)" }} />
           <h2 className="font-bold mb-4 flex items-center gap-2 text-sm">
@@ -860,7 +860,7 @@ export default function ReferralsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.18 }}
           className="rounded-2xl p-5 relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(245,158,11,0.1)" }}
+          style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(8,17,26,0.92) 65%)", border: "1px solid rgba(245,158,11,0.30)" }}
         >
           <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
             style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.3), rgba(124,252,0,0.12), transparent)" }} />

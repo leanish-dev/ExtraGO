@@ -499,7 +499,7 @@ export default function WalletPage() {
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-white/3 border border-white/6 text-xs text-muted-foreground space-y-1.5">
+                <div className="p-3 rounded-xl text-xs text-muted-foreground space-y-1.5" style={{ background: "rgba(20,184,166,0.12)", border: "1px solid rgba(20,184,166,0.24)" }}>
                   <p className="font-bold text-foreground flex items-center gap-1.5 mb-1"><Shield size={12} className="text-primary" /> Informações do saque</p>
                   <p>• Prazo de aprovação: até 2 dias úteis</p>
                   <p>• Valor mínimo: R$ 20,00</p>
@@ -580,7 +580,7 @@ export default function WalletPage() {
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl border border-white/8 bg-white/3 space-y-2">
+                <div className="p-3 rounded-xl space-y-2" style={{ background: "rgba(20,184,166,0.12)", border: "1px solid rgba(20,184,166,0.24)" }}>
                   <p className="text-[11px] font-bold text-foreground uppercase tracking-widest mb-2 flex items-center gap-1.5">
                     <Shield size={11} className="text-primary" />
                     {depositMethod === "pix" ? "Dados para PIX" : "Dados do Cartão"}
@@ -588,7 +588,7 @@ export default function WalletPage() {
                   {depositMethod === "pix" ? (
                     <div className="space-y-1.5">
                       <p className="text-xs text-muted-foreground">Realize o PIX para a chave abaixo e depois confirme:</p>
-                      <div className="flex items-center gap-2 p-2 rounded-lg bg-white/5 border border-white/8">
+                      <div className="flex items-center gap-2 p-2 rounded-lg" style={{ background: "rgba(20,184,166,0.14)", border: "1px solid rgba(20,184,166,0.28)" }}>
                         <code className="text-xs font-mono text-primary flex-1">{PLATFORM_PIX_KEY}</code>
                         <button
                           onClick={() => { navigator.clipboard.writeText(PLATFORM_PIX_KEY); toast.success("Chave copiada!"); }}
@@ -650,12 +650,12 @@ export default function WalletPage() {
             animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl p-5 sm:p-6 relative overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, rgba(20,184,166,0.05) 0%, rgba(8,17,26,0.92) 65%)",
-            border: "1px solid rgba(20,184,166,0.12)",
+            background: "linear-gradient(135deg, rgba(20,184,166,0.18) 0%, rgba(8,17,26,0.92) 65%)",
+            border: "1px solid rgba(20,184,166,0.30)",
           }}
           >
           <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(20,184,166,0.4), rgba(0,229,255,0.2), transparent)" }} />
+            style={{ background: "linear-gradient(90deg, transparent, rgba(20,184,166,0.65), rgba(0,229,255,0.35), transparent)" }} />
             <div className="flex items-center gap-3 mb-5 relative">
               <h2 className="font-bold text-base flex-1">Histórico de Depósitos</h2>
               {depositRequests.length > 0 && (
@@ -686,12 +686,12 @@ export default function WalletPage() {
             transition={{ delay: 0.28 }}
             className="rounded-2xl p-5 sm:p-6 relative overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, rgba(20,184,166,0.05) 0%, rgba(8,17,26,0.92) 65%)",
-            border: "1px solid rgba(20,184,166,0.12)",
+            background: "linear-gradient(135deg, rgba(20,184,166,0.18) 0%, rgba(8,17,26,0.92) 65%)",
+            border: "1px solid rgba(20,184,166,0.30)",
           }}
           >
           <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-            style={{ background: "linear-gradient(90deg, transparent, rgba(20,184,166,0.4), rgba(0,229,255,0.2), transparent)" }} />
+            style={{ background: "linear-gradient(90deg, transparent, rgba(20,184,166,0.65), rgba(0,229,255,0.35), transparent)" }} />
             <div className="flex items-center gap-3 mb-2 relative">
               <div className="w-7 h-7 rounded-lg bg-secondary/12 border border-secondary/20 flex items-center justify-center flex-shrink-0">
                 <ArrowDownLeft size={13} className="text-secondary" />
