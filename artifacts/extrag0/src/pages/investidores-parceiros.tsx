@@ -48,7 +48,12 @@ function Background() {
       {/* Overlay — preserves art depth while keeping white text readable */}
       <div
         className="absolute inset-0"
-        style={{ background: "rgba(4,10,22,0.28)" }}
+        style={{ background: "rgba(4,10,22,0.52)" }}
+      />
+      {/* Atmospheric depth — soft radial vignette for content legibility */}
+      <div
+        className="absolute inset-0"
+        style={{ background: "radial-gradient(ellipse 100% 80% at 50% 0%, transparent 30%, rgba(4,10,22,0.32) 100%)" }}
       />
     </div>
   );
@@ -216,8 +221,8 @@ export default function InvestidoresParceirosPage() {
         <div className="relative overflow-hidden" style={{ padding: "clamp(48px,8vw,100px) 0" }}>
           <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.010) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.010) 1px,transparent 1px)", backgroundSize: "72px 72px" }} />
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,229,255,0.028) 0%, transparent 65%)" }} />
-
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(4,10,22,0.20) 0%, transparent 72%)" }} />
+          {/* Readability depth layer — scrim behind text content */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 85% 75% at 50% 50%, rgba(4,10,22,0.58) 0%, rgba(4,10,22,0.28) 60%, transparent 88%)" }} />
           <div className="relative z-10 max-w-4xl mx-auto px-5 text-center">
             <Reveal>
               <div style={{ color: "rgba(0,229,255,0.50)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "16px", display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}>
@@ -225,14 +230,14 @@ export default function InvestidoresParceirosPage() {
                 Por Que a extraGO Existe
                 <div style={{ width: "28px", height: "1px", background: "rgba(0,229,255,0.30)" }} />
               </div>
-              <h2 style={{ fontSize: "clamp(22px,3.6vw,44px)", fontWeight: 900, lineHeight: 1.16, color: "#fff", marginBottom: "18px", textShadow: "0 1px 12px rgba(0,0,0,0.40)" }}>
+              <h2 style={{ fontSize: "clamp(22px,3.6vw,44px)", fontWeight: 900, lineHeight: 1.16, color: "#fff", marginBottom: "18px", textShadow: "0 2px 24px rgba(0,0,0,0.80), 0 1px 8px rgba(0,0,0,0.60)" }}>
                 O problema não é conectar pessoas.<br />
                 <span style={{ background: `linear-gradient(90deg,${C},${G})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>O problema é a ausência<br />de infraestrutura.</span>
               </h2>
-              <p style={{ fontSize: "14px", lineHeight: 1.78, maxWidth: "520px", color: "rgba(255,255,255,0.82)", textShadow: "0 1px 6px rgba(0,0,0,0.28)", marginBottom: "16px", marginLeft: "auto", marginRight: "auto" }}>
+              <p style={{ fontSize: "14px", lineHeight: 1.78, maxWidth: "520px", color: "rgba(255,255,255,0.92)", textShadow: "0 1px 14px rgba(0,0,0,0.70)", marginBottom: "16px", marginLeft: "auto", marginRight: "auto" }}>
                 Milhões de profissionais e milhares de empresas movimentam diariamente a economia do trabalho flexível no Brasil.
               </p>
-              <p style={{ fontSize: "14px", lineHeight: 1.78, maxWidth: "520px", color: "rgba(255,255,255,0.72)", textShadow: "0 1px 6px rgba(0,0,0,0.24)", marginLeft: "auto", marginRight: "auto" }}>
+              <p style={{ fontSize: "14px", lineHeight: 1.78, maxWidth: "520px", color: "rgba(255,255,255,0.84)", textShadow: "0 1px 14px rgba(0,0,0,0.65)", marginLeft: "auto", marginRight: "auto" }}>
                 A extraGO está construindo a camada de infraestrutura que faltava para conectar esse mercado em escala nacional.
               </p>
             </Reveal>
@@ -284,7 +289,8 @@ export default function InvestidoresParceirosPage() {
         ═══════════════════════════════ */}
         <div className="relative overflow-hidden" style={{ padding: "clamp(28px,4.5vw,56px) 20px" }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 80% at 50% 50%, rgba(124,252,0,0.022) 0%, transparent 65%)" }} />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(4,10,22,0.48) 0%, transparent 70%)" }} />
+          {/* Contrast mask — atmospheric depth behind cascade */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 90% at 50% 50%, rgba(4,10,22,0.62) 0%, rgba(4,10,22,0.30) 55%, transparent 80%)" }} />
           <div className="relative z-10 max-w-2xl mx-auto text-center">
             <Reveal>
               <div style={{ color: "rgba(124,252,0,0.50)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "20px", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
@@ -389,8 +395,10 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             06 · COMPETITIVE ADVANTAGES
         ═══════════════════════════════ */}
-        <section className="py-5 sm:py-16" style={{ background: "rgba(124,252,0,0.018)" }}>
-          <div className="px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+        <section className="relative py-5 sm:py-16" style={{ background: "rgba(124,252,0,0.018)" }}>
+          {/* Atmospheric vignette — prevents bright bg bleed into text */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(4,10,22,0.42) 0%, rgba(4,10,22,0.20) 30%, rgba(4,10,22,0.20) 70%, rgba(4,10,22,0.42) 100%)" }} />
+          <div className="relative z-10 px-5 sm:px-10 max-w-6xl mx-auto mb-6">
             <Reveal>
               <Pill label="Vantagens Competitivas" color={G} icon={<Shield size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
@@ -403,7 +411,7 @@ export default function InvestidoresParceirosPage() {
           </div>
 
           {/* Arquitetura Financeira — ativo institucional visual */}
-          <Reveal className="mb-8">
+          <Reveal className="mb-8 relative z-10">
             <Link href="/modelo-de-negocio">
               <motion.div
                 whileHover={{ y: -3, scale: 1.003 }}
@@ -443,7 +451,7 @@ export default function InvestidoresParceirosPage() {
               </Link>
             </Reveal>
 
-          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
+          <div className="relative z-10 px-5 sm:px-10 max-w-6xl mx-auto">
             <div className="divide-y divide-white/6">
               {ADVANTAGES.map((adv, i) => (
                 <Reveal key={i} delay={i * 0.04}>
@@ -473,7 +481,8 @@ export default function InvestidoresParceirosPage() {
         <div className="relative overflow-hidden" style={{ padding: "clamp(28px,4.5vw,56px) 20px" }}>
           <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.010) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.010) 1px,transparent 1px)", backgroundSize: "80px 80px" }} />
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 60% at 50% 50%, rgba(0,229,255,0.025) 0%, transparent 65%)" }} />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 65% 55% at 50% 50%, rgba(4,10,22,0.18) 0%, transparent 72%)" }} />
+          {/* Readability depth — strong center vignette for flow visual legibility */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 85% 70% at 50% 50%, rgba(4,10,22,0.55) 0%, rgba(4,10,22,0.26) 60%, transparent 82%)" }} />
           <div className="relative z-10 max-w-5xl mx-auto">
             <Reveal className="text-center mb-7">
               <div style={{ color: "rgba(0,229,255,0.52)", fontSize: "10px", fontWeight: 900, letterSpacing: "0.22em", textTransform: "uppercase", marginBottom: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
@@ -481,7 +490,7 @@ export default function InvestidoresParceirosPage() {
                 Como a Infraestrutura Gera Valor
                 <div style={{ width: "36px", height: "1px", background: "rgba(0,229,255,0.30)" }} />
               </div>
-              <h2 style={{ fontSize: "clamp(20px,3.2vw,38px)", fontWeight: 900, lineHeight: 1.18, color: "#fff", textShadow: "0 1px 10px rgba(0,0,0,0.38)" }}>
+              <h2 style={{ fontSize: "clamp(20px,3.2vw,38px)", fontWeight: 900, lineHeight: 1.18, color: "#fff", textShadow: "0 2px 24px rgba(0,0,0,0.80)" }}>
                 Cada camada da plataforma alimenta<br />
                 <span style={{ background: `linear-gradient(90deg,${G},${C})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>a próxima.</span>
               </h2>
@@ -500,7 +509,7 @@ export default function InvestidoresParceirosPage() {
                     <div className="flex flex-col items-center text-center" style={{ minWidth: "clamp(80px,10vw,120px)" }}>
                       <div className="node-breath" style={{ width: "10px", height: "10px", borderRadius: "50%", background: node.color, boxShadow: `0 0 16px ${node.color}90`, marginBottom: "10px" }} />
                       <span style={{ fontSize: "clamp(10px,1.2vw,13px)", fontWeight: 700, color: node.color, lineHeight: 1.3, marginBottom: "5px" }}>{node.label}</span>
-                      <span style={{ fontSize: "clamp(8px,0.9vw,10px)", color: "rgba(255,255,255,0.36)", lineHeight: 1.4 }}>{node.sublabel}</span>
+                      <span style={{ fontSize: "clamp(8px,0.9vw,10px)", color: "rgba(255,255,255,0.68)", lineHeight: 1.4 }}>{node.sublabel}</span>
                     </div>
                   </Reveal>
                   {i < arr.length - 1 && (
@@ -661,16 +670,20 @@ export default function InvestidoresParceirosPage() {
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
               style={{ backgroundImage: "url(/sec-infraestrutura.webp)", backgroundSize: "100% auto", backgroundPosition: "center top", backgroundRepeat: "no-repeat", opacity: 0.88, filter: "saturate(1.75) contrast(1.12)" }} />
+            {/* Top and bottom fade — smooth transitions into adjacent sections */}
             <div className="absolute inset-0"
-              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.26) 0%,rgba(5,12,26,0.03) 50%,rgba(5,12,26,0.26) 100%)" }} />
+              style={{ background: "linear-gradient(180deg,rgba(5,12,26,0.72) 0%,rgba(5,12,26,0.30) 28%,rgba(5,12,26,0.22) 50%,rgba(5,12,26,0.30) 72%,rgba(5,12,26,0.72) 100%)" }} />
+            {/* Radial scrim — deepens behind the text content */}
+            <div className="absolute inset-0"
+              style={{ background: "radial-gradient(ellipse 80% 60% at 20% 30%, rgba(5,12,26,0.48) 0%, transparent 70%)" }} />
           </div>
           <div className="relative z-10 max-w-6xl mx-auto">
             <Reveal className="mb-8">
               <Pill label="Governança & Estrutura Operacional" color="#a855f7" icon={<Cpu size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 1px 8px rgba(0,0,0,0.38)" }}>
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 2px 32px rgba(0,0,0,0.95), 0 1px 10px rgba(0,0,0,0.70)" }}>
                 Infraestrutura de gestão<br />para escala nacional.
               </h2>
-              <p className="text-[14px] leading-relaxed max-w-xl" style={{ color: "rgba(255,255,255,0.88)", textShadow: "0 1px 5px rgba(0,0,0,0.26)" }}>
+              <p className="text-[14px] leading-relaxed max-w-xl" style={{ color: "rgba(255,255,255,0.92)", textShadow: "0 1px 20px rgba(0,0,0,0.90)" }}>
                 A extraGO possui uma arquitetura operacional completa, coordenada por cinco pilares que garantem execução nacional, regional e local.
               </p>
             </Reveal>
@@ -745,8 +758,10 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             09c · WHY THE STRUCTURE SCALES
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(124,252,0,0.015)" }}>
-          <div className="max-w-6xl mx-auto">
+        <section className="relative px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(124,252,0,0.015)" }}>
+          {/* Atmospheric depth layer — subtle vignette for text legibility */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(4,10,22,0.38) 0%, rgba(4,10,22,0.16) 25%, rgba(4,10,22,0.16) 75%, rgba(4,10,22,0.38) 100%)" }} />
+          <div className="relative z-10 max-w-6xl mx-auto">
 
             <Reveal className="mb-8">
               <Pill label="Por Que a Estrutura Escala" color={G} icon={<BarChart3 size={10} />} />

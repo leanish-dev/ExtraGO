@@ -349,7 +349,8 @@ export default function LandingPage() {
         <div className="relative overflow-hidden" style={{ padding: "clamp(40px,7vw,88px) 0" }}>
           <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.012) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.012) 1px,transparent 1px)", backgroundSize: "64px 64px" }} />
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 90% 70% at 50% 50%, rgba(124,252,0,0.035) 0%, transparent 68%)" }} />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 52% at 50% 50%, rgba(4,10,22,0.54) 0%, transparent 72%)" }} />
+          {/* Depth vignette — strong dark core for text legibility over network art */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 75% 65% at 50% 50%, rgba(4,10,22,0.75) 0%, rgba(4,10,22,0.42) 55%, transparent 80%)" }} />
           <div className="relative z-10 max-w-4xl mx-auto px-5 text-center">
             <motion.div
               initial={{ opacity: 0, y: 18 }}
@@ -368,7 +369,7 @@ export default function LandingPage() {
                 <span style={{ background: "linear-gradient(90deg,#7CFC00,#00e5ff)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>empresas e profissionais</span><br />
                 em escala nacional.
               </h2>
-              <p style={{ fontSize: "14px", lineHeight: 1.78, maxWidth: "460px", color: "rgba(255,255,255,0.74)", textShadow: "0 1px 14px rgba(0,0,0,0.60)", margin: "0 auto" }}>
+              <p style={{ fontSize: "14px", lineHeight: 1.78, maxWidth: "460px", color: "rgba(255,255,255,0.88)", textShadow: "0 1px 22px rgba(0,0,0,0.85)", margin: "0 auto" }}>
                 Uma rede de dados, reputação e operações que cresce com cada novo usuário — conectando o Brasil de Norte a Sul em tempo real.
               </p>
             </motion.div>
@@ -557,6 +558,8 @@ export default function LandingPage() {
         ══════════════════════════════════════════ */}
         <div className="relative overflow-hidden" style={{ padding: "clamp(28px,4.5vw,56px) 20px" }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 50%, rgba(124,252,0,0.028) 0%, transparent 65%)" }} />
+          {/* Depth scrim — atmospheric layer for text legibility */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 85% 80% at 50% 50%, rgba(4,10,22,0.65) 0%, rgba(4,10,22,0.32) 55%, transparent 82%)" }} />
           <div className="relative z-10 max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -616,8 +619,9 @@ export default function LandingPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.7, delay: 0.45 }}
               style={{
-                fontSize: "12px", marginTop: "20px", letterSpacing: "0.02em", fontWeight: 600,
-                background: "linear-gradient(90deg, rgba(124,252,0,0.80), rgba(0,229,255,0.70))",
+                fontSize: "12px", marginTop: "20px", letterSpacing: "0.02em", fontWeight: 700,
+                textShadow: "0 1px 14px rgba(0,0,0,0.70)",
+                background: "linear-gradient(90deg, rgba(124,252,0,0.95), rgba(0,229,255,0.90))",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
