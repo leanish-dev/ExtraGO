@@ -28,10 +28,12 @@ function MessageButton({ recipientId, setLocation }: { recipientId: number; setL
   const handleOpen = async () => {
     setLoading(true);
     try {
-      await apiFetch("/api/chat/conversations", { method: "POST", body: JSON.stringify({ recipientId }) });
-    } catch { /* conversation may already exist */ } finally {
-      setLoading(false);
+      const conv = await apiFetch("/api/chat/conversations", { method: "POST", body: JSON.stringify({ recipientId }) });
+      setLocation(conv?.id ? `/app/chat?conv=${conv.id}` : "/app/chat");
+    } catch {
       setLocation("/app/chat");
+    } finally {
+      setLoading(false);
     }
   };
   return (

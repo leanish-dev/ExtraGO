@@ -106,7 +106,17 @@ function itemVisible(item: NavItem, role: Role): boolean {
 
 /** Sections (with items) visible to a given role, empty sections removed. */
 export function visibleSections(role: Role): NavSection[] {
-  return APP_NAV_SECTIONS
+  const sections = APP_NAV_SECTIONS
     .map(s => ({ ...s, items: s.items.filter(it => itemVisible(it, role)) }))
     .filter(s => s.items.length > 0);
+
+  if (role === "freelancer") {
+    const idx = sections.findIndex(s => s.title === "CARREIRA");
+    if (idx > 0) {
+      const [carreira] = sections.splice(idx, 1);
+      sections.unshift(carreira);
+    }
+  }
+
+  return sections;
 }

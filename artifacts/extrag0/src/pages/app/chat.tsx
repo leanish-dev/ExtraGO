@@ -397,6 +397,20 @@ export default function ChatPage() {
     setTimeout(() => inputRef.current?.focus(), 100);
   };
 
+  // Auto-open conversation from ?conv=<id> (set by the Mensagem button on profile pages)
+  const urlConvHandledRef = useRef(false);
+  useEffect(() => {
+    if (loading || conversations.length === 0 || urlConvHandledRef.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get("conv");
+    if (!raw) { urlConvHandledRef.current = true; return; }
+    const targetId = parseInt(raw, 10);
+    if (!isNaN(targetId) && conversations.find(c => c.id === targetId)) {
+      urlConvHandledRef.current = true;
+      handleSelectConv(targetId);
+    }
+  }, [conversations, loading]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleTyping = useCallback(() => {
     if (!activeConvId) return;
     apiFetch(`/api/chat/conversations/${activeConvId}/typing`, { method: "POST", body: JSON.stringify({ isTyping: true }) }).catch(() => {});
