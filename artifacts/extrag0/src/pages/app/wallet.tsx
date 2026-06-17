@@ -258,6 +258,62 @@ export default function WalletPage() {
       <div className="mod-wallet-ambient absolute inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
 
+      {/* Wallet Module Hero Banner */}
+      <div className="module-hero module-hero-wallet">
+        <div className="absolute right-0 top-0 bottom-0 flex items-end gap-3 pr-8 pb-4 pointer-events-none select-none" style={{ opacity: 0.07 }}>
+          <Wallet size={90} style={{ color: "#14b8a6" }} />
+          <CreditCard size={72} style={{ color: "#00e5ff" }} />
+          <TrendingUp size={64} style={{ color: "#14b8a6" }} />
+        </div>
+        <div className="relative z-10 max-w-2xl mx-auto">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center mod-icon-wallet flex-shrink-0">
+              <Wallet size={12} />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#14b8a6" }}>Módulo Financeiro</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Carteira</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">{isCompany ? "Gerencie o saldo da empresa" : "Seus ganhos e saques via PIX"}</p>
+          <div className="module-hero-kpi mt-3">
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums" style={{ color: "#14b8a6" }}>
+                {walletLoading ? "—" : `R$${(balance / 100).toFixed(2)}`}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Disponível</p>
+            </div>
+            <div className="module-hero-kpi-divider mx-4" />
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums text-yellow-400">
+                {walletLoading ? "—" : `R$${(pending / 100).toFixed(2)}`}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Pendente</p>
+            </div>
+            {!isCompany && (
+              <>
+                <div className="module-hero-kpi-divider mx-4" />
+                <div className="module-hero-kpi-item">
+                  <p className="text-lg font-black tabular-nums text-primary">
+                    {walletLoading ? "—" : `R$${(totalEarned / 100).toFixed(2)}`}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Total Ganho</p>
+                </div>
+              </>
+            )}
+            {isCompany && (
+              <>
+                <div className="module-hero-kpi-divider mx-4" />
+                <div className="module-hero-kpi-item">
+                  <p className="text-lg font-black tabular-nums text-blue-400">
+                    {walletLoading ? "—" : `R$${(reserved / 100).toFixed(2)}`}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Reservado</p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-5">
 
         {/* Hero balance card */}

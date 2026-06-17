@@ -207,21 +207,44 @@ export default function ReferralsPage() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/65 via-transparent to-[#070a0d]/55 pointer-events-none" />
 
-      <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-4">
-
-        {/* Page identity bar — replaces decorative banner */}
-        <motion.div
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="flex items-center gap-3"
-        >
-          <div className="w-1 h-8 rounded-full flex-shrink-0" style={{ background: "linear-gradient(180deg, #7CFC00, #00e5ff)" }} />
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-primary">Rede de Expansão</p>
-            <h1 className="text-base font-black leading-tight">Expanda sua rede. <span className="text-primary">Cresça junto.</span></h1>
+      {/* Referrals Module Hero Banner */}
+      <div className="module-hero module-hero-referrals">
+        <div className="absolute right-0 top-0 bottom-0 flex items-end gap-3 pr-8 pb-4 pointer-events-none select-none" style={{ opacity: 0.07 }}>
+          <Gift size={90} style={{ color: "#f59e0b" }} />
+          <TrendingUp size={72} style={{ color: "#ef4444" }} />
+          <Trophy size={60} style={{ color: "#f59e0b" }} />
+        </div>
+        <div className="relative z-10 max-w-3xl mx-auto">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mod-icon-referral">
+              <Gift size={11} />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#f59e0b" }}>Rede de Expansão</span>
           </div>
-        </motion.div>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Indicações</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Expanda sua rede. <span style={{ color: "#f59e0b" }} className="font-semibold">Cresça junto.</span></p>
+          <div className="module-hero-kpi mt-3">
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums" style={{ color: "#f59e0b" }}>{referral?.totalConverted ?? 0}</p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Convertidos</p>
+            </div>
+            <div className="module-hero-kpi-divider mx-4" />
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums text-primary">
+                R${((referral?.totalRewardEarned ?? 0) / 100).toFixed(2)}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Total Ganho</p>
+            </div>
+            <div className="module-hero-kpi-divider mx-4" />
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums text-purple-400">{referral?.code ?? "—"}</p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Seu Código</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-4">
 
         {/* Compact stats strip — replaces the 8-card grid */}
         <motion.div

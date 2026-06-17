@@ -14,7 +14,6 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import jobsBanner from "@assets/file_00000000311071f98244eb8a979d0597_1779868067126.png";
 
 import { useCategories } from "@/hooks/use-categories";
 
@@ -549,66 +548,43 @@ export default function JobsPage() {
       />
       <div className="mod-extras-ambient absolute inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
-      {/* Banner */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-        className="relative w-full overflow-hidden"
-        style={{ borderRadius: "0 0 20px 20px" }}
-      >
-        <img
-          src={jobsBanner}
-          alt="Buscar Extras extraGO"
-          className="w-full object-cover"
-          style={{ maxHeight: "clamp(100px, 16vw, 150px)", objectPosition: "center center" }}
-        />
-        {/* bg-jobs.webp — city map / discovery art layer */}
-        <div
-          className="absolute inset-0 opacity-[0.30] bg-cover bg-right mix-blend-screen pointer-events-none"
-          style={{ backgroundImage: "url(/images/backgrounds/bg-jobs.webp)" }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(to bottom, rgba(7,10,13,0) 0%, rgba(7,10,13,0.2) 60%, rgba(7,10,13,0.88) 100%)" }}
-        />
-      </motion.div>
-
-      <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-5">
-        {/* Page title + action */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
-          className="flex items-center justify-between gap-4"
-        >
+      {/* Extras Module Hero Banner */}
+      <div className="module-hero module-hero-extras">
+        <div className="absolute right-0 top-0 bottom-0 flex items-end gap-3 pr-8 pb-4 pointer-events-none select-none" style={{ opacity: 0.07 }}>
+          <Briefcase size={90} style={{ color: "#8b5cf6" }} />
+          <MapPin size={70} style={{ color: "#3b82f6" }} />
+          <Clock size={60} style={{ color: "#8b5cf6" }} />
+        </div>
+        <div className="relative z-10 max-w-6xl mx-auto flex items-start justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-0.5">
+            <div className="flex items-center gap-2 mb-1">
               <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mod-icon-extras">
                 <Briefcase size={11} />
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/30">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#8b5cf6" }}>
                 {user?.role === "company" ? "Marketplace · Seus Extras" : "Marketplace · Oportunidades"}
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
               {user?.role === "company" ? "Meus Extras" : "Buscar Extras"}
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              <span className="text-primary font-semibold">{filtered.length}</span> extra{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
+              <span className="font-bold" style={{ color: "#8b5cf6" }}>{filtered.length}</span> extra{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
             </p>
           </div>
           {user?.role === "company" && (
             <Link href="/app/jobs/new">
-              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+              <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="mt-1">
                 <Button className="bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold rounded-xl text-sm px-4 h-10 gap-1.5">
                   <Star size={14} /> Publicar Extra
                 </Button>
               </motion.div>
             </Link>
           )}
-        </motion.div>
+        </div>
+      </div>
 
+      <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-5">
         {/* Search + filter bar */}
         <div className="space-y-3">
           {/* Row 1: search + filter toggle */}

@@ -3,7 +3,7 @@ import { useTilt } from "@/hooks/use-tilt";
 import { useAuth } from "@/hooks/use-auth";
 import { useGetCompanyStats, useGetFreelancerStats, useListJobs, useListApplications, useListTransactions } from "@workspace/api-client-react";
 import type { Application, Transaction } from "@workspace/api-client-react";
-import { Briefcase, DollarSign, Star, Clock, CheckCircle, Users, FileText, ArrowRight, Wallet, Plus, Activity } from "lucide-react";
+import { Briefcase, DollarSign, Star, Clock, CheckCircle, Users, FileText, ArrowRight, Wallet, Plus, Activity, TrendingUp, Building2, LayoutDashboard } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty";
@@ -455,6 +455,49 @@ function CompanyDashboard() {
       <div className="mod-wallet-ambient absolute inset-0 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
 
+      {/* Dashboard Module Hero Banner — Company */}
+      <div className="module-hero module-hero-dashboard">
+        <div className="absolute right-0 top-0 bottom-0 flex items-end gap-3 pr-8 pb-4 pointer-events-none select-none" style={{ opacity: 0.07 }}>
+          <Building2 size={90} style={{ color: "#22c55e" }} />
+          <Briefcase size={70} style={{ color: "#7cfc00" }} />
+          <TrendingUp size={60} style={{ color: "#22c55e" }} />
+        </div>
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mod-icon-career">
+              <LayoutDashboard size={11} />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#22c55e" }}>Painel Empresa</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+            Olá, {user?.name?.split(" ")[0] ?? "Empresa"}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Gerencie seus extras e contratações</p>
+          <div className="module-hero-kpi mt-3">
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums" style={{ color: "#22c55e" }}>
+                {statsLoading ? "—" : stats?.totalJobsPosted ?? 0}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Extras Publicados</p>
+            </div>
+            <div className="module-hero-kpi-divider mx-4" />
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums text-yellow-400">
+                {statsLoading ? "—" : stats?.activeJobs ?? 0}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Extras Ativos</p>
+            </div>
+            <div className="module-hero-kpi-divider mx-4" />
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums text-primary">
+                R${statsLoading ? "—" : ((stats?.totalSpent ?? 0) / 100).toFixed(0)}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Total Investido</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         {/* Hero: greeting + inline stats + CTA */}
         <CompanyHero stats={stats} isLoading={statsLoading} />
@@ -589,6 +632,49 @@ function FreelancerDashboard() {
         style={{ backgroundImage: "url(/images/backgrounds/bg-dashboard.webp)", backgroundSize: "cover", backgroundPosition: "center", opacity: 0.07, mixBlendMode: "screen", filter: "blur(2px)" }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#070a0d]/60 via-transparent to-[#070a0d]/50 pointer-events-none" />
+
+      {/* Dashboard Module Hero Banner — Freelancer */}
+      <div className="module-hero module-hero-dashboard">
+        <div className="absolute right-0 top-0 bottom-0 flex items-end gap-3 pr-8 pb-4 pointer-events-none select-none" style={{ opacity: 0.07 }}>
+          <Briefcase size={90} style={{ color: "#22c55e" }} />
+          <Star size={70} style={{ color: "#7cfc00" }} />
+          <TrendingUp size={60} style={{ color: "#22c55e" }} />
+        </div>
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mod-icon-career">
+              <LayoutDashboard size={11} />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#22c55e" }}>Painel Carreira</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+            Olá, {user?.name?.split(" ")[0] ?? "Freelancer"}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Acompanhe sua evolução e oportunidades</p>
+          <div className="module-hero-kpi mt-3">
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums" style={{ color: "#22c55e" }}>
+                {statsLoading ? "—" : stats?.completedJobs ?? 0}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Extras Concluídos</p>
+            </div>
+            <div className="module-hero-kpi-divider mx-4" />
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums text-yellow-400">
+                {statsLoading ? "—" : stats?.level ?? 1}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Nível Atual</p>
+            </div>
+            <div className="module-hero-kpi-divider mx-4" />
+            <div className="module-hero-kpi-item">
+              <p className="text-lg font-black tabular-nums text-primary">
+                R${statsLoading ? "—" : ((stats?.totalEarned ?? 0) / 100).toFixed(0)}
+              </p>
+              <p className="text-[10px] text-muted-foreground font-semibold mt-0.5">Total Ganho</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6">
         {/* CAREER HERO — the single most important element on this page */}

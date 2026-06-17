@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, UserPlus, UserMinus, CheckCircle, Shield, Users, Loader2, Building2, Star } from "lucide-react";
+import { Search, UserPlus, UserMinus, CheckCircle, Shield, Users, Loader2, Building2, Star, UserRound } from "lucide-react";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
@@ -198,24 +198,12 @@ export default function NetworkPage() {
       <div className="sticky top-0 z-20 backdrop-blur-xl" style={{ background: "rgba(5,9,15,0.97)", borderBottom: "1px solid rgba(59,130,246,0.15)" }}>
         {/* Network identity banner */}
         <div className="network-hero-banner">
-          {/* SVG: connection network visualization */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-90" viewBox="0 0 600 56" preserveAspectRatio="none" aria-hidden="true">
-            <line x1="40" y1="12" x2="120" y2="38" stroke="rgba(59,130,246,0.20)" strokeWidth="0.8" strokeDasharray="4,3"/>
-            <line x1="120" y1="38" x2="220" y2="18" stroke="rgba(59,130,246,0.18)" strokeWidth="0.8" strokeDasharray="4,3"/>
-            <line x1="220" y1="18" x2="340" y2="42" stroke="rgba(139,92,246,0.16)" strokeWidth="0.8" strokeDasharray="4,3"/>
-            <line x1="340" y1="42" x2="460" y2="20" stroke="rgba(59,130,246,0.15)" strokeWidth="0.8" strokeDasharray="4,3"/>
-            <line x1="460" y1="20" x2="560" y2="38" stroke="rgba(139,92,246,0.14)" strokeWidth="0.8" strokeDasharray="4,3"/>
-            <line x1="120" y1="38" x2="340" y2="42" stroke="rgba(59,130,246,0.09)" strokeWidth="0.6"/>
-            <line x1="220" y1="18" x2="460" y2="20" stroke="rgba(139,92,246,0.09)" strokeWidth="0.6"/>
-            <circle cx="40" cy="12" r="3" fill="rgba(59,130,246,0.65)"/>
-            <circle cx="40" cy="12" r="7" fill="none" stroke="rgba(59,130,246,0.20)" strokeWidth="1"/>
-            <circle cx="120" cy="38" r="2.5" fill="rgba(59,130,246,0.55)"/>
-            <circle cx="220" cy="18" r="3.5" fill="rgba(124,252,0,0.55)"/>
-            <circle cx="220" cy="18" r="7" fill="none" stroke="rgba(124,252,0,0.15)" strokeWidth="1"/>
-            <circle cx="340" cy="42" r="2.5" fill="rgba(139,92,246,0.55)"/>
-            <circle cx="460" cy="20" r="3" fill="rgba(59,130,246,0.55)"/>
-            <circle cx="560" cy="38" r="2.5" fill="rgba(139,92,246,0.50)"/>
-          </svg>
+          {/* Contextual artwork: people/community watermarks */}
+          <div className="absolute right-0 top-0 bottom-0 flex items-center gap-2 pr-6 pointer-events-none select-none" style={{ opacity: 0.07 }}>
+            <UserRound size={64} style={{ color: "#3b82f6" }} />
+            <Users size={52} style={{ color: "#8b5cf6" }} />
+            <Building2 size={44} style={{ color: "#3b82f6" }} />
+          </div>
 
           <div className="relative z-10 px-4 sm:px-6 py-3 max-w-3xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2.5">

@@ -249,12 +249,10 @@
     }
   }
 
-  /* ── Premium glass card ── */
+  /* ── Solid base card (replaces glass-card) ── */
   .glass-card {
-    background: rgba(255, 255, 255, 0.065);
-    backdrop-filter: blur(20px) saturate(160%);
-    -webkit-backdrop-filter: blur(20px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.11);
+    background: linear-gradient(135deg, rgba(255,255,255,0.040) 0%, rgba(8,17,26,0.94) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
   }
 
   /* ── Card hover ── */
@@ -333,13 +331,13 @@
 
   /* ── Balance card mini ── */
   .balance-card-mini {
-    background: rgba(255, 255, 255, 0.035);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(135deg, rgba(20,184,166,0.09) 0%, rgba(8,17,26,0.94) 100%);
+    border: 1px solid rgba(20,184,166,0.16);
     border-radius: 1rem;
     transition: border-color 0.2s ease, transform 0.2s var(--ease-smooth);
   }
   .balance-card-mini:hover {
-    border-color: rgba(255, 255, 255, 0.13);
+    border-color: rgba(20,184,166,0.28);
     transform: translateY(-1px);
   }
 
@@ -459,21 +457,18 @@
     letter-spacing: -0.02em;
   }
 
-  /* ── Glass card levels ── */
+  /* ── Solid card levels ── */
   .glass-1 {
-    background: var(--glass-1);
-    backdrop-filter: blur(16px) saturate(150%);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(135deg, rgba(255,255,255,0.030) 0%, rgba(8,17,26,0.95) 100%);
+    border: 1px solid rgba(255,255,255,0.07);
   }
   .glass-2 {
-    background: var(--glass-2);
-    backdrop-filter: blur(20px) saturate(160%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.042) 0%, rgba(8,17,26,0.94) 100%);
     border: 1px solid rgba(255,255,255,0.09);
   }
   .glass-3 {
-    background: var(--glass-3);
-    backdrop-filter: blur(24px) saturate(170%);
-    border: 1px solid rgba(255,255,255,0.12);
+    background: linear-gradient(135deg, rgba(255,255,255,0.055) 0%, rgba(8,17,26,0.93) 100%);
+    border: 1px solid rgba(255,255,255,0.11);
   }
 
   /* ── Tilt card (applied via useTilt hook) ── */
@@ -1042,13 +1037,13 @@
     animation: cardShimmer 5s ease-in-out infinite; transform: skewX(-15deg);
   }
 
-  /* ── Secondary module cards (subtle tint) ── */
-  .card-career-secondary   { background: rgba(34,197,94,0.06);  border: 1px solid rgba(34,197,94,0.14);  border-radius: 1rem; }
-  .card-wallet-secondary   { background: rgba(20,184,166,0.06); border: 1px solid rgba(20,184,166,0.14); border-radius: 1rem; position: relative; overflow: hidden; }
-  .card-network-secondary  { background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.14); border-radius: 1rem; }
-  .card-extras-secondary   { background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.14); border-radius: 1rem; }
-  .card-referral-secondary { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.14); border-radius: 1rem; }
-  .card-governance-secondary { background: rgba(236,72,153,0.06); border: 1px solid rgba(236,72,153,0.14); border-radius: 1rem; }
+  /* ── Secondary module cards (solid tint, 90-95% opacity) ── */
+  .card-career-secondary   { background: linear-gradient(135deg, rgba(34,197,94,0.10) 0%, rgba(8,17,26,0.94) 100%);  border: 1px solid rgba(34,197,94,0.18);  border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-wallet-secondary   { background: linear-gradient(135deg, rgba(20,184,166,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(20,184,166,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-network-secondary  { background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(59,130,246,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-extras-secondary   { background: linear-gradient(135deg, rgba(139,92,246,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(139,92,246,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-referral-secondary { background: linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(245,158,11,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
+  .card-governance-secondary { background: linear-gradient(135deg, rgba(220,38,38,0.10) 0%, rgba(8,17,26,0.94) 100%); border: 1px solid rgba(220,38,38,0.18); border-radius: 1rem; position: relative; overflow: hidden; }
 
   /* ── Module user/item cards (list-level tint) ── */
   .user-card-network {
@@ -1112,8 +1107,8 @@
 
   /* ── Activity feed card (Dashboard) ── */
   .card-activity-feed {
-    background: rgba(255,255,255,0.052);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: linear-gradient(135deg, rgba(34,197,94,0.07) 0%, rgba(8,17,26,0.95) 100%);
+    border: 1px solid rgba(34,197,94,0.14);
     border-radius: 1rem;
     position: relative; overflow: hidden;
   }
@@ -1140,6 +1135,7 @@
 
   /* ── Referral stats card (compact stats row) ── */
   .card-referral-stat {
+    background: linear-gradient(135deg, rgba(245,158,11,0.10) 0%, rgba(8,17,26,0.95) 100%);
     border-radius: 1rem;
     position: relative; overflow: hidden;
     transition: transform 0.2s var(--ease-smooth), border-color 0.2s ease;
@@ -1346,28 +1342,24 @@
     animation: cardShimmer 6s ease-in-out infinite; transform: skewX(-15deg);
   }
 
-  /* ── Network Hero Banner — connection nodes + lines (page-level identity strip) ── */
+  /* ── Network Hero Banner — people discovery identity strip ── */
   .network-hero-banner {
     position: relative; overflow: hidden;
-    background: linear-gradient(135deg, rgba(59,130,246,0.10) 0%, rgba(8,16,26,0.96) 55%, rgba(139,92,246,0.06) 100%);
-    border-bottom: 1px solid rgba(59,130,246,0.15);
+    background: linear-gradient(135deg, rgba(59,130,246,0.18) 0%, rgba(8,16,26,0.97) 55%, rgba(139,92,246,0.10) 100%);
+    border-bottom: 1px solid rgba(59,130,246,0.20);
   }
   .network-hero-banner::before {
     content: '';
     position: absolute; inset: 0;
-    background-image:
-      radial-gradient(circle, rgba(59,130,246,0.11) 1.2px, transparent 1.2px),
-      radial-gradient(circle, rgba(139,92,246,0.07) 1px, transparent 1px);
-    background-size: 22px 22px, 44px 44px;
-    background-position: 0 0, 11px 11px;
-    -webkit-mask-image: radial-gradient(ellipse 80% 100% at 50% 50%, black 0%, transparent 85%);
-    mask-image: radial-gradient(ellipse 80% 100% at 50% 50%, black 0%, transparent 85%);
+    background:
+      radial-gradient(ellipse at 0% 50%, rgba(59,130,246,0.14) 0%, transparent 50%),
+      radial-gradient(ellipse at 100% 50%, rgba(139,92,246,0.10) 0%, transparent 50%);
     pointer-events: none;
   }
   .network-hero-banner::after {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, rgba(59,130,246,0.55) 0%, rgba(124,252,0,0.25) 50%, rgba(139,92,246,0.45) 100%);
+    background: linear-gradient(90deg, rgba(59,130,246,0.65) 0%, rgba(124,252,0,0.30) 50%, rgba(139,92,246,0.55) 100%);
   }
 
   /* ── Referral hero card — amber identity ── */
@@ -1448,7 +1440,94 @@
     pointer-events: none;
   }
 
-  /* ── Settings section card — themed variants ── */
+  /* ═══════════════════════════════════════════════════════════════════
+     MODULE HERO BANNERS — full-width identity banners, solid surfaces
+     One per major module. Strong background, large title, KPI strip.
+     ═══════════════════════════════════════════════════════════════════ */
+
+  .module-hero {
+    position: relative; overflow: hidden;
+    padding: 20px 24px 16px;
+  }
+  .module-hero::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  }
+
+  /* Dashboard (Green) */
+  .module-hero-dashboard {
+    background: linear-gradient(135deg, rgba(34,197,94,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(124,252,0,0.10) 100%);
+    border-bottom: 1px solid rgba(34,197,94,0.22);
+    box-shadow: 0 8px 32px rgba(34,197,94,0.08);
+  }
+  .module-hero-dashboard::after {
+    background: linear-gradient(90deg, rgba(34,197,94,0.70) 0%, rgba(124,252,0,0.40) 50%, transparent 100%);
+  }
+
+  /* Wallet (Teal) */
+  .module-hero-wallet {
+    background: linear-gradient(135deg, rgba(20,184,166,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(0,229,255,0.10) 100%);
+    border-bottom: 1px solid rgba(20,184,166,0.22);
+    box-shadow: 0 8px 32px rgba(20,184,166,0.08);
+  }
+  .module-hero-wallet::after {
+    background: linear-gradient(90deg, rgba(20,184,166,0.70) 0%, rgba(0,229,255,0.40) 50%, transparent 100%);
+  }
+
+  /* Network (Blue) */
+  .module-hero-network {
+    background: linear-gradient(135deg, rgba(59,130,246,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(139,92,246,0.10) 100%);
+    border-bottom: 1px solid rgba(59,130,246,0.22);
+    box-shadow: 0 8px 32px rgba(59,130,246,0.08);
+  }
+  .module-hero-network::after {
+    background: linear-gradient(90deg, rgba(59,130,246,0.70) 0%, rgba(139,92,246,0.40) 50%, transparent 100%);
+  }
+
+  /* Extras / Applications (Purple) */
+  .module-hero-extras {
+    background: linear-gradient(135deg, rgba(139,92,246,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(59,130,246,0.10) 100%);
+    border-bottom: 1px solid rgba(139,92,246,0.22);
+    box-shadow: 0 8px 32px rgba(139,92,246,0.08);
+  }
+  .module-hero-extras::after {
+    background: linear-gradient(90deg, rgba(139,92,246,0.70) 0%, rgba(59,130,246,0.40) 50%, transparent 100%);
+  }
+
+  /* Referrals (Amber) */
+  .module-hero-referrals {
+    background: linear-gradient(135deg, rgba(245,158,11,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(239,68,68,0.08) 100%);
+    border-bottom: 1px solid rgba(245,158,11,0.22);
+    box-shadow: 0 8px 32px rgba(245,158,11,0.08);
+  }
+  .module-hero-referrals::after {
+    background: linear-gradient(90deg, rgba(245,158,11,0.70) 0%, rgba(239,68,68,0.35) 50%, transparent 100%);
+  }
+
+  /* Governance (Crimson) */
+  .module-hero-governance {
+    background: linear-gradient(135deg, rgba(220,38,38,0.22) 0%, rgba(8,17,26,0.97) 48%, rgba(245,158,11,0.08) 100%);
+    border-bottom: 1px solid rgba(220,38,38,0.22);
+    box-shadow: 0 8px 32px rgba(220,38,38,0.08);
+  }
+  .module-hero-governance::after {
+    background: linear-gradient(90deg, rgba(220,38,38,0.70) 0%, rgba(245,158,11,0.35) 50%, transparent 100%);
+  }
+
+  /* Module hero KPI strip */
+  .module-hero-kpi {
+    display: flex; align-items: center; gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    margin-top: 14px; padding-top: 12px;
+  }
+  .module-hero-kpi-item {
+    flex: 1; text-align: center;
+  }
+  .module-hero-kpi-divider {
+    width: 1px; height: 32px; background: rgba(255,255,255,0.08); flex-shrink: 0;
+  }
+
+  /* Settings section card — themed variants ── */
   .section-card-base {
     border-radius: 1rem; position: relative; overflow: hidden;
     border: 1px solid rgba(255,255,255,0.08);

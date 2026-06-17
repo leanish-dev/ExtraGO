@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useListApplications, useApproveApplication, useRejectApplication } from "@workspace/api-client-react";
 import type { Application } from "@workspace/api-client-react";
-import { CheckCircle, XCircle, Clock, FileText, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, Clock, FileText, Loader2, ClipboardList, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty";
 import { SkeletonCard } from "@/components/ui/skeleton";
@@ -156,15 +156,38 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <div className="page-enter relative p-4 sm:p-6 max-w-4xl mx-auto space-y-5 pb-20 lg:pb-6">
+    <div className="page-enter relative pb-20 lg:pb-6">
       <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
-        <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-br from-blue-500/5 via-primary/2 to-transparent" />
-        <div className="absolute top-0 left-1/3 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(124,252,0,0.04) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        <div className="absolute top-0 left-0 right-0 h-64 bg-gradient-to-br from-purple-500/5 via-primary/2 to-transparent" />
+        <div className="absolute top-0 left-1/3 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%)", filter: "blur(60px)" }} />
       </div>
-      <PageHeader
-        title={isCompany ? "Candidaturas Recebidas" : "Minhas Candidaturas"}
-        subtitle={`${apps.length} candidatura${apps.length !== 1 ? "s" : ""}`}
-      />
+
+      {/* Applications Module Hero Banner */}
+      <div className="module-hero module-hero-extras">
+        <div className="absolute right-0 top-0 bottom-0 flex items-end gap-3 pr-8 pb-4 pointer-events-none select-none" style={{ opacity: 0.07 }}>
+          <ClipboardList size={90} style={{ color: "#8b5cf6" }} />
+          <FileText size={70} style={{ color: "#3b82f6" }} />
+          <CheckCircle size={60} style={{ color: "#8b5cf6" }} />
+        </div>
+        <div className="relative z-10 max-w-4xl mx-auto">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mod-icon-extras">
+              <ClipboardList size={11} />
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#8b5cf6" }}>
+              {isCompany ? "Gestão de Equipe" : "Módulo Candidaturas"}
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+            {isCompany ? "Candidaturas Recebidas" : "Minhas Candidaturas"}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            <span className="font-bold" style={{ color: "#8b5cf6" }}>{apps.length}</span> candidatura{apps.length !== 1 ? "s" : ""} {isCompany ? "recebida" : "enviada"}{apps.length !== 1 ? "s" : ""}
+          </p>
+        </div>
+      </div>
+
+      <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-5">
 
       <div className="flex gap-1 p-1 rounded-xl bg-white/4 border border-white/8 w-fit overflow-x-auto">
         {TABS.map(t => (
@@ -209,6 +232,7 @@ export default function ApplicationsPage() {
             index={i}
           />
         ))}
+      </div>
       </div>
     </div>
   );
