@@ -385,7 +385,7 @@ export default function WalletPage() {
         ) : (
           <>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/30">Resumo Financeiro</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/65">Resumo Financeiro</span>
               <div className="h-px flex-1 bg-white/6" />
             </div>
             <div className="grid grid-cols-3 gap-2.5">

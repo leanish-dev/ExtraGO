@@ -472,7 +472,7 @@ function CompanyDashboard() {
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
             Olá, {user?.name?.split(" ")[0] ?? "Empresa"}
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Gerencie seus extras e contratações</p>
+          <p className="text-sm text-white/70 mt-0.5">Gerencie seus extras e contratações</p>
         </div>
       </div>
 
@@ -483,7 +483,7 @@ function CompanyDashboard() {
         {/* Section divider */}
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/8 to-transparent" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/25 px-2">Operações</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55 px-2">Operações</span>
           <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/8 to-transparent" />
         </div>
 
@@ -628,7 +628,7 @@ function FreelancerDashboard() {
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
             Olá, {user?.name?.split(" ")[0] ?? "Freelancer"}
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Acompanhe sua evolução e oportunidades</p>
+          <p className="text-sm text-white/70 mt-0.5">Acompanhe sua evolução e oportunidades</p>
         </div>
       </div>
 
@@ -639,7 +639,7 @@ function FreelancerDashboard() {
         {/* Section divider */}
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/8 to-transparent" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/25 px-2">Missões & Atividade</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55 px-2">Missões & Atividade</span>
           <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/8 to-transparent" />
         </div>
 

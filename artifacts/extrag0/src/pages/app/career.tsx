@@ -605,11 +605,11 @@ export default function CareerPage() {
                 />
                 <LevelBadgeIcon level={level} size="xl" />
               </motion.div>
-              <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Nível Atual</p>
+              <p className="text-[10px] text-white/70 uppercase tracking-widest font-bold mb-0.5">Nível Atual</p>
               <p className={`text-3xl font-black tracking-wide leading-tight ${colors.text}`}>
                 {currentLevelData?.label ?? "Iniciante"}
               </p>
-              <p className="text-sm text-white/55 mt-1 font-medium">{user?.name ?? "Profissional"}</p>
+              <p className="text-sm text-white/75 mt-1 font-medium">{user?.name ?? "Profissional"}</p>
               <div className="flex items-center gap-3 mt-3">
                 {isVerified && (
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/8 border border-primary/20 px-2.5 py-1 rounded-full">
@@ -625,17 +625,17 @@ export default function CareerPage() {
             <div className="flex items-center justify-center gap-6 pt-4 border-t border-white/6">
               <div className="text-center">
                 <ReputationRingSmall score={reputationScore} size={52} />
-                <p className="text-[9px] text-white/35 uppercase tracking-widest mt-1">Reputação</p>
+                <p className="text-[9px] text-white/60 uppercase tracking-widest mt-1">Reputação</p>
               </div>
               <div className="w-px h-14 bg-white/8" />
               <div className="text-center">
                 <p className={`text-2xl font-black ${colors.text}`}>{completedJobs}</p>
-                <p className="text-[9px] text-white/35 uppercase tracking-widest mt-0.5">Extras feitos</p>
+                <p className="text-[9px] text-white/60 uppercase tracking-widest mt-0.5">Extras feitos</p>
               </div>
               <div className="w-px h-14 bg-white/8" />
               <div className="text-center">
                 <p className="text-2xl font-black text-yellow-400">{reputationScore.toFixed(1)}</p>
-                <p className="text-[9px] text-white/35 uppercase tracking-widest mt-0.5">Avaliação</p>
+                <p className="text-[9px] text-white/60 uppercase tracking-widest mt-0.5">Avaliação</p>
               </div>
             </div>
           </div>
@@ -668,7 +668,7 @@ export default function CareerPage() {
           </div>
           <div className="flex items-center gap-2 mb-5 relative">
             <TrendingUp size={15} className="text-primary" />
-            <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Jornada de Carreira</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-white/90">Jornada de Carreira</h3>
           </div>
 
           <div className="relative">
@@ -693,24 +693,24 @@ export default function CareerPage() {
                     <div className={`flex-1 min-w-0 pt-1.5 ${isLocked ? "opacity-45" : ""}`}>
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <span className={`text-sm font-bold ${isCurrent ? lc.text : isDone ? lc.text : "text-white/40"}`}>{lv.label}</span>
+                          <span className={`text-sm font-bold ${isCurrent ? lc.text : isDone ? lc.text : "text-white/55"}`}>{lv.label}</span>
                           {isCurrent && (
                             <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide ${lc.bg} ${lc.text} border ${lc.border}`}>Atual</span>
                           )}
                         </div>
-                        <span className={`text-xs font-semibold flex-shrink-0 ${isCurrent ? lc.text : isDone ? "text-white/50" : "text-white/25"}`}>
+                        <span className={`text-xs font-semibold flex-shrink-0 ${isCurrent ? lc.text : isDone ? "text-white/65" : "text-white/40"}`}>
                           Taxa {lv.feePercent}%
                         </span>
                       </div>
                       {idx > 0 && (
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
-                          <span className="text-[10px] text-white/35">{lv.minJobs}+ extras • {lv.minStars}★</span>
+                          <span className="text-[10px] text-white/55">{lv.minJobs}+ extras • {lv.minStars}★</span>
                         </div>
                       )}
                       {isCurrent && nextLevelData && (
                         <div className="mt-2.5">
                           <div className="flex justify-between items-center mb-1">
-                            <span className="text-[10px] text-white/40">Progresso para {nextLevelData.label}</span>
+                            <span className="text-[10px] text-white/65">Progresso para {nextLevelData.label}</span>
                             <span className={`text-[10px] font-bold ${lc.text}`}>{Math.round(progressPct)}%</span>
                           </div>
                           <Progress value={progressPct} className="h-1.5" />
@@ -747,7 +747,7 @@ export default function CareerPage() {
             </div>
             <div className="flex items-center gap-2 mb-4 relative">
               <Target size={15} className="text-primary" />
-              <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Próximo Objetivo</h3>
+              <h3 className="text-sm font-bold uppercase tracking-widest text-white/90">Próximo Objetivo</h3>
             </div>
 
             <div className={`rounded-xl border p-4 ${LEVEL_COLORS[nextLevelData.key].bg} ${LEVEL_COLORS[nextLevelData.key].border}`}>
@@ -755,14 +755,14 @@ export default function CareerPage() {
                 <LevelBadgeIcon level={nextLevelData.key} size="lg" />
                 <div>
                   <p className={`text-base font-black ${LEVEL_COLORS[nextLevelData.key].text}`}>{nextLevelData.label}</p>
-                  <p className="text-xs text-white/50">Nova taxa: <span className="font-bold text-white/80">{nextLevelData.feePercent}%</span></p>
+                  <p className="text-xs text-white/70">Nova taxa: <span className="font-bold text-white/90">{nextLevelData.feePercent}%</span></p>
                 </div>
               </div>
-              <p className="text-xs text-white/50 mb-3 font-medium uppercase tracking-widest">O que falta</p>
+              <p className="text-xs text-white/75 mb-3 font-medium uppercase tracking-widest">O que falta</p>
               <div className="space-y-2.5">
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/65 flex items-center gap-1.5"><Zap size={11} />{nextLevelData.minJobs} extras concluídos</span>
+                    <span className="text-xs text-white/80 flex items-center gap-1.5"><Zap size={11} />{nextLevelData.minJobs} extras concluídos</span>
                     <span className={`text-xs font-bold ${jobsLeft === 0 ? "text-primary" : "text-white/60"}`}>
                       {jobsLeft === 0 ? "✓ Concluído" : `Faltam ${jobsLeft}`}
                     </span>
@@ -771,7 +771,7 @@ export default function CareerPage() {
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-white/65 flex items-center gap-1.5"><Star size={11} />Avaliação ≥ {nextLevelData.minStars}★</span>
+                    <span className="text-xs text-white/80 flex items-center gap-1.5"><Star size={11} />Avaliação ≥ {nextLevelData.minStars}★</span>
                     <span className={`text-xs font-bold ${starsLeft <= 0 ? "text-primary" : "text-white/60"}`}>
                       {starsLeft <= 0 ? "✓ Atingido" : `+${starsLeft.toFixed(1)}★`}
                     </span>
