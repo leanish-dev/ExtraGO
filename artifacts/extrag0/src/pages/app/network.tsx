@@ -93,7 +93,7 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
               </div>
 
               {/* Primary identity line */}
-              <p className="text-xs text-muted-foreground truncate mt-0.5">
+              <p className="text-xs text-white/70 truncate mt-0.5">
                 {type === "freelancer" && categories.length > 0 ? categories[0] : subName}
               </p>
             </div>
@@ -112,11 +112,11 @@ function UserCard({ user, type }: { user: any; type: "freelancer" | "company" })
                 +{categories.length - 1}
               </span>
             )}
-            <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+            <span className="text-[10px] text-white/70 flex items-center gap-0.5">
               <Users size={9} /> {user.followersCount ?? 0}
             </span>
             {type === "freelancer" && user.completedJobs != null && user.completedJobs > 0 && (
-              <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+              <span className="text-[10px] text-white/70 flex items-center gap-0.5">
                 <CheckCircle size={9} className="text-primary/60" /> {user.completedJobs} extras
               </span>
             )}
@@ -211,7 +211,7 @@ export default function NetworkPage() {
                 <Users size={13} />
               </div>
               <div>
-                <h1 className="text-base font-bold leading-none">Descobrir Pessoas</h1>
+                <h1 className="text-base font-bold leading-none neon-text-gradient">Descobrir Pessoas</h1>
                 <p className="text-[10px] mt-0.5 font-semibold uppercase tracking-[0.15em]" style={{ color: "rgba(59,130,246,0.60)" }}>Comunidade extraGO</p>
               </div>
             </div>
@@ -231,7 +231,7 @@ export default function NetworkPage() {
         <div className="px-4 sm:px-6 pt-3 pb-3 max-w-3xl mx-auto">
           {/* Search */}
           <div className="relative mb-3">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
             <Input
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -283,9 +283,9 @@ export default function NetworkPage() {
             ) : items.length === 0 ? (
               <div className="text-center py-16">
                 <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-3">
-                  {activeTab === "freelancers" ? <Users size={22} className="text-muted-foreground" /> : <Building2 size={22} className="text-muted-foreground" />}
+                  {activeTab === "freelancers" ? <Users size={22} className="text-white/60" /> : <Building2 size={22} className="text-white/60" />}
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-white/70">
                   {debouncedSearch ? `Nenhum resultado para "${debouncedSearch}"` : "Nenhum encontrado."}
                 </p>
               </div>

@@ -162,14 +162,14 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
           <div className="flex items-end gap-4 relative">
             <div>
               <p className="text-5xl font-bold text-primary leading-none">R$ {(job.hourlyRate ?? 0).toFixed(0)}</p>
-              <p className="text-xs text-muted-foreground mt-1.5">por hora</p>
+              <p className="text-xs text-white/70 mt-1.5">por hora</p>
             </div>
             {total && (
               <>
                 <div className="w-px h-10 bg-white/10" />
                 <div>
                   <p className="text-2xl font-bold text-secondary leading-none">R$ {total.toFixed(2)}</p>
-                  <p className="text-xs text-muted-foreground mt-1.5">total ({hours?.toFixed(0)}h)</p>
+                  <p className="text-xs text-white/70 mt-1.5">total ({hours?.toFixed(0)}h)</p>
                 </div>
               </>
             )}
@@ -189,12 +189,12 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
                 watermark: <Clock size={40} />,
               },
               {
-                icon: <Briefcase size={13} className="text-muted-foreground" />, label: "Data", value: job.date ? format(new Date(job.date), "dd MMM yyyy", { locale: ptBR }) : "—",
+                icon: <Briefcase size={13} className="text-white/60" />, label: "Data", value: job.date ? format(new Date(job.date), "dd MMM yyyy", { locale: ptBR }) : "—",
                 bg: "rgba(139,92,246,0.04)", border: "rgba(139,92,246,0.12)", accent: "#8b5cf6",
                 watermark: <Briefcase size={40} />,
               },
               {
-                icon: <Users size={13} className="text-muted-foreground" />, label: "Vagas", value: `${job.workersApproved}/${job.workersNeeded}`,
+                icon: <Users size={13} className="text-white/60" />, label: "Vagas", value: `${job.workersApproved}/${job.workersNeeded}`,
                 bg: "rgba(245,158,11,0.04)", border: "rgba(245,158,11,0.12)", accent: "#f59e0b",
                 watermark: <Users size={40} />,
               },
@@ -237,16 +237,16 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
               </div>
               <div className="space-y-2 text-xs">
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Valor/hora</span>
+                  <span className="text-white/70">Valor/hora</span>
                   <span className="font-semibold">R$ {(job.hourlyRate ?? 0).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Horas</span>
+                  <span className="text-white/70">Horas</span>
                   <span className="font-semibold">{hours?.toFixed(1)}h</span>
                 </div>
                 <div className="h-px bg-white/8 my-1" />
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground font-medium">Total líquido</span>
+                  <span className="text-white/70 font-medium">Total líquido</span>
                   <span className="font-bold text-primary text-base">R$ {total.toFixed(2)}</span>
                 </div>
               </div>
@@ -364,7 +364,7 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
         </div>
         <div className="text-right flex-shrink-0">
           <p className="text-2xl font-bold text-primary leading-none">R$ {(job.hourlyRate ?? 0).toFixed(0)}</p>
-          <p className="text-[10px] text-muted-foreground mt-0.5">/hora</p>
+          <p className="text-[10px] text-white/70 mt-0.5">/hora</p>
         </div>
       </div>
 
@@ -375,7 +375,7 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
       )}
 
       {job.description && (
-        <p className="text-xs text-muted-foreground/75 line-clamp-2 mb-4 leading-relaxed flex-shrink-0">{job.description}</p>
+        <p className="text-xs text-white/70 line-clamp-2 mb-4 leading-relaxed flex-shrink-0">{job.description}</p>
       )}
 
       <div className="flex flex-wrap gap-2 mb-4">
@@ -565,7 +565,7 @@ export default function JobsPage() {
                 {user?.role === "company" ? "Marketplace · Seus Extras" : "Marketplace · Oportunidades"}
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight neon-text-gradient">
               {user?.role === "company" ? "Meus Extras" : "Buscar Extras"}
             </h1>
             <p className="text-sm text-white/70 mt-0.5">
@@ -590,7 +590,7 @@ export default function JobsPage() {
           {/* Row 1: search + filter toggle */}
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none" />
               <Input
                 placeholder="Buscar por título ou cargo..."
                 value={search}
@@ -729,7 +729,7 @@ export default function JobsPage() {
                       <X size={10} />
                     </button>
                   </div>
-                  <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground mr-1">
+                  <div className="flex items-center gap-1.5 text-[10px] text-white/70 mr-1">
                     <Radio size={10} /> Raio:
                   </div>
                   {RADIUS_OPTIONS.map(opt => (
@@ -763,7 +763,7 @@ export default function JobsPage() {
                 <div className="flex flex-wrap gap-2 p-4 rounded-xl relative overflow-hidden"
                   style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.04) 0%, rgba(8,17,26,0.90) 65%)", border: "1px solid rgba(139,92,246,0.1)" }}
                 >
-                  <p className="w-full text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">Categoria</p>
+                  <p className="w-full text-[10px] font-bold text-white/75 uppercase tracking-wider mb-1">Categoria</p>
                   {CATEGORIES.map(cat => (
                     <motion.button
                       key={cat}

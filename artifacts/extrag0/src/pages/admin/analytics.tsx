@@ -39,7 +39,7 @@ function BarChart({ data, valueKey, labelKey, color = "#7CFC00", maxBars = 12, s
               className="w-full rounded-t-md transition-all duration-300"
               style={{ height: `${h}%`, background: color, opacity: 0.7 + (i / data.length) * 0.3 }}
             />
-            <span className="text-[9px] text-muted-foreground/50 truncate w-full text-center">{d[labelKey]}</span>
+            <span className="text-[9px] text-white/65 truncate w-full text-center">{d[labelKey]}</span>
           </div>
         );
       })}
@@ -97,7 +97,7 @@ export default function AdminAnalyticsPage() {
         <AlertTriangle size={36} className="text-yellow-400/60" />
         <div className="text-center">
           <p className="font-semibold text-sm">Erro ao carregar analytics</p>
-          <p className="text-xs text-muted-foreground mt-1">Tente recarregar a página</p>
+          <p className="text-xs text-white/70 mt-1">Tente recarregar a página</p>
         </div>
       </div>
     );
@@ -116,7 +116,7 @@ export default function AdminAnalyticsPage() {
     <div className="p-4 sm:p-6 max-w-6xl mx-auto space-y-6 pb-20 lg:pb-6">
       {/* Header */}
       <div>
-        <h1 className="text-[22px] font-bold">Analytics</h1>
+        <h1 className="text-[22px] font-bold neon-text-gradient">Analytics</h1>
         <p className="text-sm text-white/70 mt-0.5">Visão executiva da plataforma extraGO</p>
       </div>
 
@@ -180,7 +180,7 @@ export default function AdminAnalyticsPage() {
                     <span className="text-xs font-semibold flex items-center gap-1.5">
                       <span>{meta.icon}</span> {meta.label}
                     </span>
-                    <span className="text-xs text-muted-foreground">{count} ({pct}%)</span>
+                    <span className="text-xs text-white/70">{count} ({pct}%)</span>
                   </div>
                   <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
                     <motion.div
@@ -216,7 +216,7 @@ export default function AdminAnalyticsPage() {
                 <div className={`flex-shrink-0 w-1 h-8 rounded-full ${item.color.split(" ")[0].replace("/20", "")}`} />
                 <div className="flex-1">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xs text-muted-foreground">{item.label}</span>
+                    <span className="text-xs text-white/70">{item.label}</span>
                     <span className="text-xs font-bold">{item.value}</span>
                   </div>
                   <div className="h-1 bg-white/5 rounded-full overflow-hidden">
@@ -244,7 +244,7 @@ export default function AdminAnalyticsPage() {
             const pct = Math.round((f.totalEarned / maxEarned) * 100);
             return (
               <div key={f.id} className="flex items-center gap-3 py-2 border-b border-white/4 last:border-0">
-                <div className="w-6 text-[11px] font-bold text-muted-foreground/50 text-center flex-shrink-0">
+                <div className="w-6 text-[11px] font-bold text-white/65 text-center flex-shrink-0">
                   {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -274,13 +274,13 @@ export default function AdminAnalyticsPage() {
         <div className="space-y-2">
           {d.topCompanies.map((c, i) => (
             <div key={c.id} className="flex items-center gap-3 py-2 border-b border-white/4 last:border-0">
-              <div className="w-6 text-[11px] font-bold text-muted-foreground/50 text-center flex-shrink-0">{i + 1}</div>
+              <div className="w-6 text-[11px] font-bold text-white/65 text-center flex-shrink-0">{i + 1}</div>
               <div className="w-8 h-8 rounded-lg bg-secondary/15 border border-secondary/20 flex items-center justify-center flex-shrink-0">
                 <Building2 size={14} className="text-secondary" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-semibold truncate">{c.companyName || c.name}</p>
-                <p className="text-[10px] text-muted-foreground">{c.jobsPosted} extras publicados</p>
+                <p className="text-[10px] text-white/70">{c.jobsPosted} extras publicados</p>
               </div>
               <span className="text-xs font-bold text-secondary">{c.jobsPosted}</span>
             </div>

@@ -77,18 +77,18 @@ function WithdrawalCard({ w, onApprove, onReject, approving, rejecting }: {
               </span>
             </div>
             {(w as any).userName && (
-              <p className="text-xs text-muted-foreground mt-0.5 font-medium">{(w as any).userName}</p>
+              <p className="text-xs text-white/70 mt-0.5 font-medium">{(w as any).userName}</p>
             )}
             {(w as any).userEmail && (
-              <p className="text-[11px] text-muted-foreground/70">{(w as any).userEmail}</p>
+              <p className="text-[11px] text-white/60">{(w as any).userEmail}</p>
             )}
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-white/70 mt-1">
               {w.createdAt ? format(new Date(w.createdAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : ""}
             </p>
             {w.pixKey && (
               <div className="flex items-center gap-1.5 mt-1">
-                <Send size={10} className="text-muted-foreground" />
-                <p className="text-xs font-mono text-muted-foreground">{w.pixKey}</p>
+                <Send size={10} className="text-white/60" />
+                <p className="text-xs font-mono text-white/70">{w.pixKey}</p>
               </div>
             )}
           </div>
@@ -151,18 +151,18 @@ function DepositCard({ d, onConfirm, onApprove, onReject, loading }: {
               </span>
             </div>
             {(d as any).companyName && (
-              <p className="text-xs text-muted-foreground mt-0.5 font-medium flex items-center gap-1">
+              <p className="text-xs text-white/70 mt-0.5 font-medium flex items-center gap-1">
                 <Building2 size={11} /> {(d as any).companyName}
               </p>
             )}
             {(d as any).userName && !(d as any).companyName && (
-              <p className="text-xs text-muted-foreground mt-0.5">{(d as any).userName}</p>
+              <p className="text-xs text-white/70 mt-0.5">{(d as any).userName}</p>
             )}
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="text-xs text-white/70 mt-1">
               {d.createdAt ? format(new Date(d.createdAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : ""}
             </p>
             {d.adminNote && (
-              <p className="text-[11px] text-muted-foreground/70 mt-1 italic">Nota: {d.adminNote}</p>
+              <p className="text-[11px] text-white/60 mt-1 italic">Nota: {d.adminNote}</p>
             )}
           </div>
         </div>
@@ -296,7 +296,7 @@ export default function AdminWithdrawalsPage() {
     <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6 pb-20 lg:pb-6">
       {/* Header */}
       <div>
-        <h1 className="text-[22px] font-bold">Financeiro — Aprovações</h1>
+        <h1 className="text-[22px] font-bold neon-text-gradient">Financeiro — Aprovações</h1>
         <p className="text-white/70 mt-1 text-sm">Gerencie saques de freelancers e depósitos de empresas</p>
       </div>
 
@@ -340,7 +340,7 @@ export default function AdminWithdrawalsPage() {
 
       {/* Search */}
       <div className="relative">
-        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
         <Input
           placeholder={mainTab === "withdrawals" ? "Buscar por ID, chave PIX ou nome..." : "Buscar por ID ou empresa..."}
           value={search} onChange={e => setSearch(e.target.value)}
@@ -377,7 +377,7 @@ export default function AdminWithdrawalsPage() {
           ) : filteredWithdrawals.length === 0 ? (
             <div className="text-center py-16">
               <Send size={40} className="text-muted-foreground mx-auto mb-3 opacity-40" />
-              <p className="text-muted-foreground text-sm">Nenhum saque {withdrawFilter === "pending" ? "pendente" : withdrawFilter === "completed" ? "processado" : "recusado"}.</p>
+              <p className="text-white/70 text-sm">Nenhum saque {withdrawFilter === "pending" ? "pendente" : withdrawFilter === "completed" ? "processado" : "recusado"}.</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -419,7 +419,7 @@ export default function AdminWithdrawalsPage() {
                     ? `${filteredDeposits.length} depósito${filteredDeposits.length !== 1 ? "s" : ""} aguardando confirmação de recebimento`
                     : `${filteredDeposits.length} depósito${filteredDeposits.length !== 1 ? "s" : ""} recebidos — aguardando crédito na carteira`}
                 </p>
-                <p className="text-xs text-muted-foreground mt-0.5">Total: R$ {pendingDepositTotal.toFixed(2)}</p>
+                <p className="text-xs text-white/70 mt-0.5">Total: R$ {pendingDepositTotal.toFixed(2)}</p>
               </div>
             </div>
           )}
@@ -429,7 +429,7 @@ export default function AdminWithdrawalsPage() {
           ) : filteredDeposits.length === 0 ? (
             <div className="text-center py-16">
               <ArrowDownLeft size={40} className="text-muted-foreground mx-auto mb-3 opacity-40" />
-              <p className="text-muted-foreground text-sm">Nenhum depósito {depositFilter === "pending" ? "aguardando" : depositFilter === "confirmed" ? "recebido" : depositFilter === "credited" ? "creditado" : "rejeitado"}.</p>
+              <p className="text-white/70 text-sm">Nenhum depósito {depositFilter === "pending" ? "aguardando" : depositFilter === "confirmed" ? "recebido" : depositFilter === "credited" ? "creditado" : "rejeitado"}.</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -455,7 +455,7 @@ export default function AdminWithdrawalsPage() {
             ].map(s => (
               <div key={s.step} className="flex items-center gap-2.5">
                 <span className={`text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border flex-shrink-0 ${s.color}`}>{s.step}</span>
-                <p className="text-xs text-muted-foreground">{s.label}</p>
+                <p className="text-xs text-white/70">{s.label}</p>
               </div>
             ))}
           </div>

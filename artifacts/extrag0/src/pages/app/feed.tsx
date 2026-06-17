@@ -46,7 +46,7 @@ interface PostComment {
 }
 
 const POST_TYPE_MAP = {
-  general: { label: "Geral", icon: <MoreHorizontal size={12} />, color: "text-muted-foreground" },
+  general: { label: "Geral", icon: <MoreHorizontal size={12} />, color: "text-white/60" },
   job_completion: { label: "Extra Concluído", icon: <Briefcase size={12} />, color: "text-primary" },
   availability: { label: "Disponível", icon: <Wifi size={12} />, color: "text-green-400" },
 };
@@ -130,7 +130,7 @@ function CommentDrawer({ post, onClose }: { post: FeedPost; onClose: () => void 
               <div className="flex-1 bg-white/4 rounded-xl px-3 py-2">
                 <p className="text-xs font-semibold text-primary">{c.author?.name ?? "Usuário"}</p>
                 <p className="text-sm mt-0.5 leading-relaxed">{c.content}</p>
-                <p className="text-[10px] text-muted-foreground mt-1">
+                <p className="text-[10px] text-white/65 mt-1">
                   {formatDistanceToNow(new Date(c.createdAt), { addSuffix: true, locale: ptBR })}
                 </p>
               </div>
@@ -265,9 +265,9 @@ function PostCard({ post, onDelete }: { post: FeedPost; onDelete: (id: number) =
                 )}
               </div>
               {post.author?.categories && post.author.categories.length > 0 && (
-                <p className="text-xs text-muted-foreground mt-0.5">{post.author.categories[0]}</p>
+                <p className="text-xs text-white/70 mt-0.5">{post.author.categories[0]}</p>
               )}
-              <p className="text-[10px] text-muted-foreground/65 mt-0.5">{timeAgo}</p>
+              <p className="text-[10px] text-white/65 mt-0.5">{timeAgo}</p>
             </div>
             {!isOwnPost && (
               <motion.button

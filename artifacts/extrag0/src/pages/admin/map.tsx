@@ -126,7 +126,7 @@ export default function AdminMapPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-[22px] font-bold flex items-center gap-2">
+          <h1 className="text-[22px] font-bold flex items-center gap-2 neon-text-gradient">
             <Globe size={20} className="text-primary" /> Mapa Brasil
           </h1>
           <p className="text-sm text-white/70 mt-0.5 flex items-center gap-1.5">
@@ -202,7 +202,7 @@ export default function AdminMapPage() {
             >
               <p className={`text-[11px] font-bold mb-1 ${REGION_COLORS[region] ?? "text-foreground"}`}>{region}</p>
               <p className="text-xl font-bold">{total}</p>
-              <p className="text-[10px] text-muted-foreground mb-2">{pct}% · {states.length} estados</p>
+              <p className="text-[10px] text-white/70 mb-2">{pct}% · {states.length} estados</p>
               {/* Mini bar */}
               <div className="h-1 bg-white/5 rounded-full overflow-hidden">
                 <motion.div
@@ -224,7 +224,7 @@ export default function AdminMapPage() {
           <h2 className="text-sm font-bold flex items-center gap-2">
             <TrendingUp size={14} className="text-primary" /> Mapa de Calor — Estados
           </h2>
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-2 text-[10px] text-white/70">
             <span>Menor</span>
             {[0.08, 0.2, 0.4, 0.65, 1.0].map((o, i) => (
               <div key={i} className="w-3 h-3 rounded-sm bg-primary" style={{ opacity: o }} />
@@ -244,7 +244,7 @@ export default function AdminMapPage() {
                 <div className="flex items-center gap-2 mb-2">
                   <span className={`text-[10px] font-bold ${regionColor}`}>{region}</span>
                   <div className="flex-1 h-px bg-white/5" />
-                  <span className="text-[10px] text-muted-foreground">{regionTotals[region] ?? 0} usuários</span>
+                  <span className="text-[10px] text-white/70">{regionTotals[region] ?? 0} usuários</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {regionStates.map(s => (
@@ -276,7 +276,7 @@ export default function AdminMapPage() {
             <Award size={14} className="text-yellow-400" /> Top 5 Estados
           </h2>
           {top5States.length === 0 || top5States[0].count === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-6">Nenhum dado de localização disponível ainda.</p>
+            <p className="text-sm text-white/70 text-center py-6">Nenhum dado de localização disponível ainda.</p>
           ) : (
             <div className="space-y-3">
               {top5States.map((state, i) => {
@@ -318,7 +318,7 @@ export default function AdminMapPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold">
               {activeRegion === "Todos" ? "Todos os Estados" : activeRegion}
-              <span className="ml-1.5 text-[10px] text-muted-foreground font-normal">({filteredStates.length})</span>
+              <span className="ml-1.5 text-[10px] text-white/65 font-normal">({filteredStates.length})</span>
             </h2>
             <button
               onClick={() => setSortBy(s => s === "users" ? "name" : "users")}
@@ -330,7 +330,7 @@ export default function AdminMapPage() {
 
           <div className="space-y-1 max-h-72 overflow-y-auto no-scrollbar">
             {filteredStates.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">Nenhum dado disponível</p>
+              <p className="text-sm text-white/70 text-center py-8">Nenhum dado disponível</p>
             ) : (
               filteredStates.map((state, i) => {
                 const pct = Math.round((state.count / maxCount) * 100);

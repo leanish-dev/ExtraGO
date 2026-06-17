@@ -113,7 +113,7 @@ export default function CompanyProfilePage() {
   if (!company) {
     return (
       <div className="p-6 text-center">
-        <p className="text-muted-foreground">Empresa não encontrada.</p>
+        <p className="text-white/70">Empresa não encontrada.</p>
         <Button onClick={() => window.history.back()} className="mt-4">Voltar</Button>
       </div>
     );
@@ -185,7 +185,7 @@ export default function CompanyProfilePage() {
                 )}
               </div>
               {company.name !== companyName && (
-                <p className="text-xs text-muted-foreground mt-0.5">{company.name}</p>
+                <p className="text-xs text-white/70 mt-0.5">{company.name}</p>
               )}
               {company.industry && (
                 <p className="text-xs text-muted-foreground/70 mt-0.5">{company.industry}</p>
@@ -304,7 +304,7 @@ export default function CompanyProfilePage() {
                     { label: "Trabalhadores contratados", value: stats?.totalWorkers ?? 0 },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">{item.label}</span>
+                      <span className="text-white/70">{item.label}</span>
                       <span className="font-bold">{item.value}</span>
                     </div>
                   ))}
@@ -364,8 +364,8 @@ export default function CompanyProfilePage() {
                 <div className="rounded-2xl p-8 text-center relative overflow-hidden"
                   style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
                 >
-                  <Briefcase size={28} className="text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Nenhum extra aberto no momento.</p>
+                  <Briefcase size={28} className="text-white/60 mx-auto mb-2" />
+                  <p className="text-sm text-white/70">Nenhum extra aberto no momento.</p>
                   {isFreelancer && (
                     <Link href="/app/jobs">
                       <Button variant="outline" className="mt-4 border-white/15 text-sm">
@@ -389,13 +389,13 @@ export default function CompanyProfilePage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-bold truncate">{job.title}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">{job.category}</p>
+                          <p className="text-xs text-white/70 mt-0.5">{job.category}</p>
                           <div className="flex items-center gap-3 mt-1.5 flex-wrap">
                             <span className="text-[10px] text-primary font-bold">
                               R$ {Number(job.hourlyRate ?? 0).toFixed(2)}/h
                             </span>
                             {job.location && (
-                              <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+                              <span className="text-[10px] text-white/70 flex items-center gap-0.5">
                                 <MapPin size={9} /> {job.location}
                               </span>
                             )}

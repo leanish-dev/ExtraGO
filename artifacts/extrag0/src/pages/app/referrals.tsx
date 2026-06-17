@@ -221,7 +221,7 @@ export default function ReferralsPage() {
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#f59e0b" }}>Rede de Expansão</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Indicações</h1>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight neon-text-gradient">Indicações</h1>
           <p className="text-sm text-white/70 mt-0.5">Expanda sua rede. <span style={{ color: "#f59e0b" }} className="font-semibold">Cresça junto.</span></p>
         </div>
       </div>
@@ -250,7 +250,7 @@ export default function ReferralsPage() {
             >
               <p className={`text-2xl font-black leading-none tabular-nums ${item.color}`}>{item.value}</p>
               <p className="text-[11px] font-bold text-foreground mt-1.5">{item.label}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">{item.sub}</p>
+              <p className="text-[10px] text-white/70 mt-0.5">{item.sub}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -318,7 +318,7 @@ export default function ReferralsPage() {
               );
             })}
           </div>
-          <p className="text-[10px] text-muted-foreground mt-4 leading-relaxed">
+          <p className="text-[10px] text-white/70 mt-4 leading-relaxed">
             <strong className="text-foreground">{REFERRAL_TIERS[currentReferralTierIdx].reqs}</strong>
           </p>
         </motion.div>
@@ -383,7 +383,7 @@ export default function ReferralsPage() {
 
           {nextLevel && (
             <div className="mt-4 pt-4 border-t border-white/8 relative">
-              <div className="flex justify-between text-xs text-muted-foreground mb-2">
+              <div className="flex justify-between text-xs text-white/70 mb-2">
                 <span className={`font-bold ${currentLevel.color}`}>{currentLevel.label}</span>
                 <span className="font-medium text-white/70">
                   {Math.max(0, nextLevel.min - (user?.completedJobs ?? 0))} extras para {nextLevel.label}
@@ -438,7 +438,7 @@ export default function ReferralsPage() {
             </motion.span>
           </div>
 
-          <p className="text-xs text-muted-foreground mb-4 leading-relaxed relative">
+          <p className="text-xs text-white/70 mb-4 leading-relaxed relative">
             Cada indicado que concluir um extra gera{" "}
             <strong className="text-primary">{referralPct}% da taxa de intermediação</strong> para você —
             de forma recorrente, enquanto ele estiver ativo na plataforma.
@@ -560,7 +560,7 @@ export default function ReferralsPage() {
                 Progressão de Carreira
               </h2>
             </div>
-            <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+            <p className="text-xs text-white/70 mb-4 leading-relaxed">
               Suba de nível para reduzir a taxa da plataforma e aumentar seus ganhos líquidos por extra.
             </p>
 
@@ -626,7 +626,7 @@ export default function ReferralsPage() {
               })}
             </div>
 
-            <p className="text-[10px] text-muted-foreground/50 mt-3 flex items-start gap-1.5 leading-relaxed">
+            <p className="text-[10px] text-white/60 mt-3 flex items-start gap-1.5 leading-relaxed">
               <Info size={10} className="flex-shrink-0 mt-0.5" />
               A comissão é descontada automaticamente do pagamento por extra. Quanto mais você trabalha, menor a taxa.
             </p>
@@ -679,7 +679,7 @@ export default function ReferralsPage() {
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                      <p className="text-[11px] text-white/70 mt-0.5">
                         Taxa {lvl.feePercent}% · {lvl.perks[0]}
                       </p>
                     </div>
@@ -752,7 +752,7 @@ export default function ReferralsPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{inv.name ?? "Indicado"}</p>
-                    <p className="text-[11px] text-muted-foreground">{inv.completedJobs ?? 0} extras concluídos</p>
+                    <p className="text-[11px] text-white/70">{inv.completedJobs ?? 0} extras concluídos</p>
                   </div>
                   <div className="flex flex-col items-end gap-1 flex-shrink-0">
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
@@ -791,7 +791,7 @@ export default function ReferralsPage() {
               Você: {referralPct}%
             </span>
           </div>
-          <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+          <p className="text-xs text-white/70 mb-4 leading-relaxed">
             Quanto maior sua rede de indicados ativos, maior a comissão recorrente sobre cada extra que eles concluem.
           </p>
 
@@ -822,17 +822,17 @@ export default function ReferralsPage() {
                     <p className={`text-sm font-bold leading-tight ${isCurrent ? "text-primary" : "text-foreground/80"}`}>
                       {t.label}{isCurrent && <span className="text-[9px] font-bold text-primary ml-1">· Atual</span>}
                     </p>
-                    <p className="text-[11px] text-muted-foreground leading-tight">{t.reqs}</p>
+                    <p className="text-[11px] text-white/70 leading-tight">{t.reqs}</p>
                   </div>
                   <div className="text-right flex-shrink-0">
                     <p className={`text-xl font-bold leading-none ${isCurrent ? "text-primary" : "text-muted-foreground/60"}`}>{t.rate}%</p>
-                    <p className="text-[9px] text-muted-foreground">por extra</p>
+                    <p className="text-[9px] text-white/65">por extra</p>
                   </div>
                 </div>
               );
             })}
           </div>
-          <p className="text-[10px] text-muted-foreground/50 mt-3 flex items-start gap-1.5 leading-relaxed">
+          <p className="text-[10px] text-white/60 mt-3 flex items-start gap-1.5 leading-relaxed">
             <Info size={10} className="flex-shrink-0 mt-0.5" />
             O nível Embaixador (5%) requer aprovação da equipe extraGO.
           </p>
@@ -912,7 +912,7 @@ export default function ReferralsPage() {
           )}
         </motion.div>
 
-        <p className="text-[10px] text-muted-foreground/40 text-center leading-relaxed px-2 pb-2">
+        <p className="text-[10px] text-white/60 text-center leading-relaxed px-2 pb-2">
           Comissões calculadas sobre a taxa de intermediação de cada extra concluído pelo indicado.
           O crédito é aplicado automaticamente na sua carteira.
         </p>

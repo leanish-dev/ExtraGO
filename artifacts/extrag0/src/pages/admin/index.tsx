@@ -17,7 +17,7 @@ function RevenueChart({ data }: { data: Array<{ month: string; amount: number }>
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-sm font-semibold text-foreground">Receita por Mês</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">Últimos 6 meses</p>
+          <p className="text-xs text-white/70 mt-0.5">Últimos 6 meses</p>
         </div>
         <TrendingUp size={15} className="text-primary opacity-60" />
       </div>
@@ -28,13 +28,13 @@ function RevenueChart({ data }: { data: Array<{ month: string; amount: number }>
           const isLast = i === data.length - 1;
           return (
             <div key={i} className="flex-1 flex flex-col items-center gap-1 group">
-              <span className="text-[9px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-[9px] text-white/70 opacity-0 group-hover:opacity-100 transition-opacity">
                 R${(d.amount / 100).toFixed(0)}
               </span>
               <div className="w-full rounded-t-sm relative overflow-hidden" style={{ height: `${Math.max(pct, 4)}%` }}>
                 <div className={`absolute inset-0 ${isLast ? "bg-primary" : "bg-primary/35"} transition-all`} />
               </div>
-              <span className="text-[9px] text-muted-foreground">{month}</span>
+              <span className="text-[9px] text-white/70">{month}</span>
             </div>
           );
         })}
@@ -97,7 +97,7 @@ function LiveOperationsStrip() {
               <>
                 <div className="flex items-center gap-1.5 mb-1">
                   <span className={`w-1.5 h-1.5 rounded-full ${item.dot} opacity-70`} />
-                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">{item.label}</p>
+                  <p className="text-[10px] text-white/75 font-semibold uppercase tracking-wide">{item.label}</p>
                 </div>
                 <p className={`text-2xl sm:text-3xl font-black leading-none ${item.color}`}>
                   <AnimatedCounter value={item.value} />
@@ -187,7 +187,7 @@ function EcosystemBreakdown({ stats }: { stats: any }) {
           <div>
             <div className="flex justify-between text-xs mb-1.5">
               <span className="text-primary font-semibold">Freelancers</span>
-              <span className="text-muted-foreground font-bold">{stats?.freelancerCount ?? 0}</span>
+              <span className="text-white/80 font-bold">{stats?.freelancerCount ?? 0}</span>
             </div>
             <div className="h-1.5 rounded-full bg-white/8 overflow-hidden">
               <div className="h-full rounded-full bg-primary transition-all duration-700" style={{ width: `${freelancerPct}%` }} />
@@ -196,7 +196,7 @@ function EcosystemBreakdown({ stats }: { stats: any }) {
           <div>
             <div className="flex justify-between text-xs mb-1.5">
               <span className="text-secondary font-semibold">Empresas</span>
-              <span className="text-muted-foreground font-bold">{stats?.companyCount ?? 0}</span>
+              <span className="text-white/80 font-bold">{stats?.companyCount ?? 0}</span>
             </div>
             <div className="h-1.5 rounded-full bg-white/8 overflow-hidden">
               <div className="h-full rounded-full bg-secondary transition-all duration-700" style={{ width: `${100 - freelancerPct}%` }} />
@@ -204,8 +204,8 @@ function EcosystemBreakdown({ stats }: { stats: any }) {
           </div>
         </div>
         <div className="mt-4 pt-3 border-t border-white/6 flex items-center justify-between text-xs">
-          <span className="text-muted-foreground">Verificados: <span className="font-bold text-green-400">{stats?.verifiedCount ?? 0}</span></span>
-          <span className="text-muted-foreground">Banidos: <span className="font-bold text-destructive">{stats?.bannedCount ?? 0}</span></span>
+          <span className="text-white/70">Verificados: <span className="font-bold text-green-400">{stats?.verifiedCount ?? 0}</span></span>
+          <span className="text-white/70">Banidos: <span className="font-bold text-destructive">{stats?.bannedCount ?? 0}</span></span>
         </div>
       </div>
 
@@ -228,7 +228,7 @@ function EcosystemBreakdown({ stats }: { stats: any }) {
           {jobItems.map((item, i) => (
             <div key={i} className="flex items-center gap-2 text-xs">
               <div className={`w-2 h-2 rounded-full ${item.color} flex-shrink-0`} />
-              <span className="text-muted-foreground flex-1">{item.label}</span>
+              <span className="text-white/70 flex-1">{item.label}</span>
               <span className="font-bold tabular-nums">{item.value}</span>
             </div>
           ))}
@@ -254,13 +254,13 @@ function TopFreelancers({ users }: { users: any[] }) {
       <div className="space-y-3">
         {users.slice(0, 5).map((u, i) => (
           <div key={u.id} className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground w-5 text-right font-bold tabular-nums">#{i + 1}</span>
+            <span className="text-xs text-white/70 w-5 text-right font-bold tabular-nums">#{i + 1}</span>
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center text-xs font-bold overflow-hidden flex-shrink-0">
               {u.avatarUrl ? <img src={u.avatarUrl} alt={u.name} className="w-full h-full object-cover" /> : u.name?.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold truncate">{u.name}</p>
-              <p className="text-xs text-muted-foreground">{u.completedJobs ?? 0} extras · ⭐ {(u.reputationScore ?? 0).toFixed(1)}</p>
+              <p className="text-xs text-white/70">{u.completedJobs ?? 0} extras · ⭐ {(u.reputationScore ?? 0).toFixed(1)}</p>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/8 border border-primary/18 text-primary capitalize">{u.level ?? "bronze"}</span>
           </div>
@@ -308,7 +308,7 @@ function OperationsNav({ stats }: { stats: any }) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className={`text-sm font-bold ${link.color} truncate group-hover:brightness-125 transition-all`}>{link.label}</p>
-                <p className="text-[11px] text-muted-foreground mt-0.5 truncate">{link.sub}</p>
+                <p className="text-[11px] text-white/70 mt-0.5 truncate">{link.sub}</p>
               </div>
               <ChevronRight size={13} className="text-muted-foreground/30 group-hover:text-muted-foreground/70 flex-shrink-0 transition-all group-hover:translate-x-0.5" />
             </motion.div>
@@ -358,7 +358,7 @@ export default function AdminDashboard() {
               <Shield size={14} className="text-primary opacity-80" />
               <span className="text-[10px] text-primary font-bold uppercase tracking-[0.18em]">extraGO Admin</span>
             </div>
-            <h1 className="text-[22px] sm:text-[26px] font-black tracking-tight leading-tight">Centro Nacional de Operações</h1>
+            <h1 className="text-[22px] sm:text-[26px] font-black tracking-tight leading-tight neon-text-gradient">Centro Nacional de Operações</h1>
             <p className="text-sm text-white/70 mt-1">Infraestrutura de Mão de Obra do Brasil</p>
 
             {/* Module identity strip */}

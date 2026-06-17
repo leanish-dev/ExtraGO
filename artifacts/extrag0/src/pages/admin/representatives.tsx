@@ -57,7 +57,7 @@ function RepCard({ rep, onDelete, deleting }: {
               <p className="text-sm text-foreground/80 font-medium mt-0.5">{(rep as any).userName}</p>
             )}
             {(rep as any).userEmail && (
-              <p className="text-xs text-muted-foreground">{(rep as any).userEmail}</p>
+              <p className="text-xs text-white/70">{(rep as any).userEmail}</p>
             )}
             <div className="flex items-center gap-3 mt-2">
               <div className="flex items-center gap-1.5">
@@ -65,7 +65,7 @@ function RepCard({ rep, onDelete, deleting }: {
                 <span className="text-xs font-bold text-secondary">Comissão: {commissionPct}%</span>
               </div>
               <div className="w-1 h-1 rounded-full bg-white/20" />
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1 text-xs text-white/70">
                 <Shield size={11} className="text-green-400" />
                 <span>Ativo</span>
               </div>
@@ -139,7 +139,7 @@ export default function AdminRepresentativesPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-bold">Representantes Regionais</h1>
+          <h1 className="text-[22px] font-bold neon-text-gradient">Representantes Regionais</h1>
           <p className="text-white/70 mt-1 text-sm">
             Gerencie os representantes por estado — recebem comissão das taxas de plataforma dos extras na sua região
           </p>
@@ -186,7 +186,7 @@ export default function AdminRepresentativesPage() {
               <span className="text-base flex-shrink-0">{s.icon}</span>
               <div>
                 <p className="text-xs font-semibold text-foreground/80">{s.title}</p>
-                <p className="text-[11px] text-muted-foreground">{s.desc}</p>
+                <p className="text-[11px] text-white/70">{s.desc}</p>
               </div>
             </div>
           ))}
@@ -206,13 +206,13 @@ export default function AdminRepresentativesPage() {
               <h3 className="font-bold text-sm flex items-center gap-2">
                 <Plus size={15} className="text-primary" /> Cadastrar Novo Representante
               </h3>
-              <p className="text-xs text-muted-foreground -mt-2">
+              <p className="text-xs text-white/70 -mt-2">
                 O usuário precisa ter conta na plataforma. Informe o ID do usuário.
               </p>
 
               <div className="grid sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-[10px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">ID do Usuário</label>
+                  <label className="text-[10px] font-bold text-white/75 mb-2 block uppercase tracking-widest">ID do Usuário</label>
                   <Input
                     type="number" placeholder="Ex: 42"
                     value={userId} onChange={e => setUserId(e.target.value)}
@@ -220,7 +220,7 @@ export default function AdminRepresentativesPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Estado</label>
+                  <label className="text-[10px] font-bold text-white/75 mb-2 block uppercase tracking-widest">Estado</label>
                   <Select value={state} onValueChange={setState}>
                     <SelectTrigger className="bg-white/5 border-white/12 rounded-xl h-10 focus:border-primary/50">
                       <SelectValue placeholder="Selecione o estado" />
@@ -235,7 +235,7 @@ export default function AdminRepresentativesPage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Comissão (da taxa)</label>
+                  <label className="text-[10px] font-bold text-white/75 mb-2 block uppercase tracking-widest">Comissão (da taxa)</label>
                   <div className="space-y-2">
                     <div className="flex gap-1.5">
                       {COMMISSION_PRESETS.map(p => (
@@ -270,7 +270,7 @@ export default function AdminRepresentativesPage() {
                   Cadastrar Representante
                 </Button>
                 {state && commissionRate && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-white/70">
                     Representante do {BR_STATES.find(s => s.code === state)?.name ?? state} receberá{" "}
                     <strong className="text-primary">{(parseFloat(commissionRate) * 100).toFixed(1)}%</strong> da taxa de plataforma dos extras nesse estado.
                   </p>
@@ -288,7 +288,7 @@ export default function AdminRepresentativesPage() {
         <div className="text-center py-16">
           <MapPin size={44} className="text-muted-foreground mx-auto mb-3 opacity-40" />
           <p className="font-semibold text-foreground/60">Nenhum representante cadastrado</p>
-          <p className="text-sm text-muted-foreground mt-1">Adicione representantes regionais para expandir a cobertura nacional.</p>
+          <p className="text-sm text-white/70 mt-1">Adicione representantes regionais para expandir a cobertura nacional.</p>
           <Button onClick={() => setShowForm(true)} className="mt-4 bg-primary text-black hover:bg-primary/90 gap-2">
             <Plus size={14} /> Cadastrar primeiro representante
           </Button>
@@ -320,7 +320,7 @@ export default function AdminRepresentativesPage() {
             <AlertCircle size={15} className="text-yellow-400 mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-sm font-semibold text-yellow-400">Estados sem cobertura ({uncoveredCount})</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Extras nesses estados não geram comissão regional.</p>
+              <p className="text-xs text-white/70 mt-0.5">Extras nesses estados não geram comissão regional.</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-1.5">

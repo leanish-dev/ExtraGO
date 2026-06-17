@@ -100,7 +100,7 @@ export default function PostJobPage() {
         </button>
         <div>
           <h1 className="text-xl sm:text-2xl font-bold leading-tight">Publicar Novo Extra</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Conecte-se aos melhores profissionais do Brasil</p>
+          <p className="text-sm text-white/70 mt-0.5">Conecte-se aos melhores profissionais do Brasil</p>
         </div>
       </div>
 
@@ -130,7 +130,7 @@ export default function PostJobPage() {
 
             <FormField control={form.control} name="title" render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Título</FormLabel>
+                <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">Título</FormLabel>
                 <FormControl>
                   <Input placeholder="Ex: Garçom para Casamento Premium" {...field} className="bg-white/5 border-white/10 focus:border-primary/60 rounded-xl h-11" />
                 </FormControl>
@@ -139,7 +139,7 @@ export default function PostJobPage() {
             )} />
 
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2 block">Categoria</label>
+              <label className="text-xs font-semibold uppercase tracking-wide text-white/75 mb-2 block">Categoria</label>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map(cat => (
                   <button
@@ -163,7 +163,7 @@ export default function PostJobPage() {
 
             <FormField control={form.control} name="description" render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Descrição</FormLabel>
+                <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">Descrição</FormLabel>
                 <FormControl>
                   <textarea
                     rows={4}
@@ -194,7 +194,7 @@ export default function PostJobPage() {
 
             <FormField control={form.control} name="location" render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Local</FormLabel>
+                <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">Local</FormLabel>
                 <FormControl>
                   <Input placeholder="Ex: WTC Events, Av. das Nações Unidas, São Paulo" {...field} className="bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11" />
                 </FormControl>
@@ -210,7 +210,7 @@ export default function PostJobPage() {
               ].map(({ name, label, type }) => (
                 <FormField key={name} control={form.control} name={name} render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</FormLabel>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">{label}</FormLabel>
                     <FormControl>
                       <Input type={type} {...field} className="bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11" />
                     </FormControl>
@@ -239,7 +239,7 @@ export default function PostJobPage() {
             <div className="grid grid-cols-2 gap-4">
               <FormField control={form.control} name="workersNeeded" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Profissionais</FormLabel>
+                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">Profissionais</FormLabel>
                   <FormControl>
                     <Input type="number" min={1} {...field} className="bg-white/5 border-white/10 focus:border-yellow-400/60 rounded-xl h-11" />
                   </FormControl>
@@ -248,7 +248,7 @@ export default function PostJobPage() {
               )} />
               <FormField control={form.control} name="hourlyRate" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">R$/Hora</FormLabel>
+                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">R$/Hora</FormLabel>
                   <FormControl>
                     <Input type="number" min={20} step={5} {...field} className="bg-white/5 border-white/10 focus:border-yellow-400/60 rounded-xl h-11" />
                   </FormControl>
@@ -274,7 +274,7 @@ export default function PostJobPage() {
                     { label: "Total estimado", value: `R$ ${(watchedHours.total * 1.15).toFixed(2)}`, color: "text-primary", bold: true },
                   ].map((row, i) => (
                     <div key={i} className="flex justify-between items-center">
-                      <span className="text-muted-foreground">{row.label}:</span>
+                      <span className="text-white/70">{row.label}:</span>
                       <span className={`font-semibold ${row.color ?? ""} ${row.bold ? "text-sm font-bold" : ""}`}>{row.value}</span>
                     </div>
                   ))}

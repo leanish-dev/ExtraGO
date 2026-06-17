@@ -22,8 +22,7 @@ export function PageHeader({ title, subtitle, action, className, badge, accent }
       <div className="flex-1 min-w-0">
         {badge && <div className="mb-2">{badge}</div>}
         <h1 className={cn(
-          "text-xl sm:text-2xl font-bold tracking-tight leading-tight",
-          accent && "neon-text-gradient"
+          "text-xl sm:text-2xl font-bold tracking-tight leading-tight neon-text-gradient"
         )}>
           {title}
         </h1>

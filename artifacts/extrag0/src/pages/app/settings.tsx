@@ -66,7 +66,7 @@ function SettingRow({ label, description, children }: {
     <div className="flex items-center justify-between gap-4 py-3.5 border-b border-white/5 last:border-0">
       <div className="min-w-0">
         <p className="text-sm font-medium text-foreground/90">{label}</p>
-        {description && <p className="text-xs text-muted-foreground mt-0.5 leading-snug">{description}</p>}
+        {description && <p className="text-xs text-white/70 mt-0.5 leading-snug">{description}</p>}
       </div>
       <div className="flex-shrink-0">{children}</div>
     </div>
@@ -187,7 +187,7 @@ function ContaSection() {
       <SectionCard title="Conta e E-mail" icon={<Shield size={15} />} variant="security">
         <div className="py-2">
           <SettingRow label="E-mail" description="Seu e-mail de acesso à plataforma">
-            <span className="text-xs text-muted-foreground font-mono">{user?.email}</span>
+            <span className="text-xs text-white/75 font-mono">{user?.email}</span>
           </SettingRow>
           <SettingRow label="Função" description="Tipo de conta na plataforma">
             <span className="text-xs font-semibold capitalize text-primary">
@@ -390,7 +390,7 @@ function FinanceiroSection() {
               placeholder="CPF, CNPJ, e-mail ou celular"
               className="bg-white/5 border-white/10 focus:border-primary/50 h-10 rounded-xl text-sm"
             />
-            <p className="text-[11px] text-muted-foreground mt-1.5">
+            <p className="text-[11px] text-white/70 mt-1.5">
               Usada para receber pagamentos de extras na sua carteira.
             </p>
           </div>
@@ -448,8 +448,8 @@ function ProfissionalSection() {
       <div className="rounded-2xl p-8 text-center relative overflow-hidden"
         style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
       >
-        <Briefcase size={32} className="text-muted-foreground mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">Esta seção é exclusiva para freelancers.</p>
+        <Briefcase size={32} className="text-white/60 mx-auto mb-3" />
+        <p className="text-sm text-white/70">Esta seção é exclusiva para freelancers.</p>
       </div>
     );
   }
@@ -527,7 +527,7 @@ function AssinaturasSection() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-bold text-sm">Plano Gratuito</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Acesso completo às funcionalidades básicas</p>
+              <p className="text-xs text-white/70 mt-0.5">Acesso completo às funcionalidades básicas</p>
             </div>
             <span className="text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full">Ativo</span>
           </div>
@@ -593,8 +593,8 @@ function IndicacoesSection() {
       <div className="rounded-2xl p-8 text-center relative overflow-hidden"
         style={{ background: "linear-gradient(135deg, rgba(245,158,11,0.04) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
       >
-        <Share2 size={32} className="text-muted-foreground mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">Esta seção é exclusiva para freelancers.</p>
+        <Share2 size={32} className="text-white/60 mx-auto mb-3" />
+        <p className="text-sm text-white/70">Esta seção é exclusiva para freelancers.</p>
       </div>
     );
   }
@@ -617,7 +617,7 @@ function IndicacoesSection() {
           <div>
             <label className="text-xs font-semibold text-foreground/70 mb-1.5 block">Link de Cadastro</label>
             <div className="flex items-center gap-2 p-3 rounded-xl bg-white/4 border border-white/8">
-              <span className="flex-1 text-xs text-muted-foreground truncate font-mono">{refLink}</span>
+              <span className="flex-1 text-xs text-white/70 truncate font-mono">{refLink}</span>
               <button
                 onClick={() => copy(refLink)}
                 className="flex-shrink-0 text-primary hover:text-primary/80 transition-colors"
@@ -640,7 +640,7 @@ function IndicacoesSection() {
             </span>
           </SettingRow>
           <SettingRow label="Tier Atual" description="Sua categoria de indicador">
-            <span className="text-xs font-semibold text-muted-foreground">Indicador (2%)</span>
+            <span className="text-xs font-semibold text-white/75">Indicador (2%)</span>
           </SettingRow>
           <div className="py-3">
             <Link href="/app/referrals">
@@ -688,7 +688,7 @@ export default function SettingsPage() {
 
         {/* Page header */}
         <div className="mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold">Configurações</h1>
+          <h1 className="text-xl sm:text-2xl font-bold neon-text-gradient">Configurações</h1>
           <p className="text-white/70 text-sm mt-1">Gerencie sua conta, segurança e preferências</p>
         </div>
 
@@ -708,7 +708,7 @@ export default function SettingsPage() {
                       : "text-muted-foreground hover:bg-white/4 hover:text-foreground"
                   }`}
                 >
-                  <span className={activeTab === tab.id ? "text-primary" : "text-muted-foreground"}>
+                  <span className={activeTab === tab.id ? "text-primary" : "text-white/55"}>
                     {tab.icon}
                   </span>
                   <span className="text-[13px] font-medium">{tab.label}</span>

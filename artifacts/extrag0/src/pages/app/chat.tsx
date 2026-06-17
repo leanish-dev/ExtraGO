@@ -172,7 +172,7 @@ function ForwardModal({ msg, conversations, onClose, onSend }: {
         <div className="px-5 py-3">
           <p className="text-[10px] font-semibold text-muted-foreground/50 uppercase tracking-wider mb-2">Enviar para</p>
           {conversations.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-4">Nenhuma outra conversa disponível.</p>
+            <p className="text-sm text-white/70 text-center py-4">Nenhuma outra conversa disponível.</p>
           ) : (
             <div className="space-y-1 max-h-56 overflow-y-auto -mx-1 px-1">
               {conversations.map(conv => {
@@ -223,7 +223,7 @@ function ConversationItem({ conv, isActive, onClick, currentUserId, isOnline }: 
           <p className={`text-sm truncate ${(conv.unreadCount ?? 0) > 0 ? "font-bold" : "font-semibold"}`}>{name}</p>
           {time && <span className="text-[10px] text-muted-foreground/50 flex-shrink-0 ml-2">{time}</span>}
         </div>
-        <p className={`text-xs truncate ${(conv.unreadCount ?? 0) > 0 ? "text-foreground/70 font-medium" : "text-muted-foreground"}`}>
+        <p className={`text-xs truncate ${(conv.unreadCount ?? 0) > 0 ? "text-foreground/70 font-medium" : "text-white/70"}`}>
           {lastMsg || "Iniciar conversa"}
         </p>
       </div>
@@ -588,7 +588,7 @@ export default function ChatPage() {
                     {searchQuery ? "Nenhuma conversa encontrada." : "Nenhuma conversa ainda"}
                   </p>
                   {!searchQuery && (
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-xs text-white/70 leading-relaxed">
                       Suas mensagens com empresas e freelancers aparecerão aqui.
                     </p>
                   )}
@@ -627,7 +627,7 @@ export default function ChatPage() {
                   <MessageCircle size={34} className="text-primary" />
                 </motion.div>
                 <h2 className="text-xl font-bold mb-2">Suas Mensagens</h2>
-                <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
+                <p className="text-sm text-white/70 max-w-xs leading-relaxed">
                   Selecione uma conversa para começar a trocar mensagens.
                 </p>
               </div>
@@ -665,7 +665,7 @@ export default function ChatPage() {
                         <MessageCircle size={20} className="text-primary" />
                       </div>
                       <p className="text-sm font-semibold text-foreground/60">Comece a conversa!</p>
-                      <p className="text-xs text-muted-foreground mt-1">Envie uma mensagem para {otherName}</p>
+                      <p className="text-xs text-white/70 mt-1">Envie uma mensagem para {otherName}</p>
                     </div>
                   ) : (
                     <>

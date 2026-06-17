@@ -127,7 +127,7 @@ export default function FreelancerProfilePage() {
   if (!user) {
     return (
       <div className="p-6 text-center">
-        <p className="text-muted-foreground">Freelancer não encontrado.</p>
+        <p className="text-white/70">Freelancer não encontrado.</p>
         <Button onClick={() => setLocation("/app/network")} className="mt-4">Voltar à Rede</Button>
       </div>
     );
@@ -210,7 +210,7 @@ export default function FreelancerProfilePage() {
                 <LevelBadgeIcon level={user.level ?? "bronze"} size="lg" />
                 <LevelBadge level={user.level ?? "bronze"} size="md" />
                 {user.categories && user.categories.length > 0 && (
-                  <span className="text-xs text-muted-foreground truncate">{user.categories[0]}</span>
+                  <span className="text-xs text-white/70 truncate">{user.categories[0]}</span>
                 )}
               </div>
             </div>
@@ -337,7 +337,7 @@ export default function FreelancerProfilePage() {
                     <p className="text-sm text-foreground/80 leading-relaxed mb-2">{user.professionalSummary}</p>
                   )}
                   {user.bio && (
-                    <p className="text-sm text-muted-foreground leading-relaxed">{user.bio}</p>
+                    <p className="text-sm text-white/70 leading-relaxed">{user.bio}</p>
                   )}
                 </div>
               )}
@@ -423,7 +423,7 @@ export default function FreelancerProfilePage() {
                   <p className="text-2xl font-black text-primary relative">
                     <AnimatedCounter value={user.followersCount ?? 0} />
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1 flex items-center justify-center gap-1 relative">
+                  <p className="text-xs text-white/70 mt-1 flex items-center justify-center gap-1 relative">
                     <Users size={10} /> Seguidores
                   </p>
                 </div>
@@ -435,7 +435,7 @@ export default function FreelancerProfilePage() {
                   <p className="text-2xl font-black text-secondary relative">
                     <AnimatedCounter value={user.followingCount ?? 0} />
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1 relative">Seguindo</p>
+                  <p className="text-xs text-white/70 mt-1 relative">Seguindo</p>
                 </div>
               </div>
             </motion.div>
@@ -464,7 +464,7 @@ export default function FreelancerProfilePage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold">{exp.role}</p>
-                        <p className="text-xs text-muted-foreground">{exp.company}</p>
+                        <p className="text-xs text-white/70">{exp.company}</p>
                         <p className="text-xs text-muted-foreground/65 mt-0.5">
                           {exp.startDate} — {exp.endDate ?? "Atual"}
                         </p>
@@ -474,7 +474,7 @@ export default function FreelancerProfilePage() {
                         {exp.achievements && exp.achievements.length > 0 && (
                           <ul className="mt-2 space-y-1">
                             {exp.achievements.map((a: string, i: number) => (
-                              <li key={i} className="text-xs text-muted-foreground flex items-start gap-1.5">
+                              <li key={i} className="text-xs text-white/70 flex items-start gap-1.5">
                                 <span className="text-primary mt-0.5">•</span> {a}
                               </li>
                             ))}
@@ -485,7 +485,7 @@ export default function FreelancerProfilePage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">Nenhuma experiência cadastrada.</p>
+                <p className="text-sm text-white/70">Nenhuma experiência cadastrada.</p>
               )}
             </motion.div>
           )}
@@ -513,7 +513,7 @@ export default function FreelancerProfilePage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">Nenhuma especialidade cadastrada.</p>
+                <p className="text-sm text-white/70">Nenhuma especialidade cadastrada.</p>
               )}
             </motion.div>
           )}
@@ -544,7 +544,7 @@ export default function FreelancerProfilePage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">Nenhuma habilidade cadastrada.</p>
+                <p className="text-sm text-white/70">Nenhuma habilidade cadastrada.</p>
               )}
             </motion.div>
           )}

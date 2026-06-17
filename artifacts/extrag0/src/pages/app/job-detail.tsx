@@ -98,13 +98,13 @@ function ApplyModal({
           </div>
           <div>
             <p className="font-bold text-sm">Candidatar-se</p>
-            <p className="text-xs text-muted-foreground truncate max-w-[260px]">{job.title}</p>
+            <p className="text-xs text-white/70 truncate max-w-[260px]">{job.title}</p>
           </div>
         </div>
 
         <div className="mb-5">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">
-            Mensagem para a empresa <span className="text-muted-foreground/50 normal-case font-normal">(opcional)</span>
+          <label className="text-xs font-semibold text-white/75 uppercase tracking-wider mb-2 block">
+            Mensagem para a empresa <span className="text-white/55 normal-case font-normal">(opcional)</span>
           </label>
           <textarea
             value={message}
@@ -113,7 +113,7 @@ function ApplyModal({
             placeholder="Conte por que você é o candidato ideal para este extra…"
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/40 resize-none transition-colors"
           />
-          <p className="text-[10px] text-muted-foreground/60 mt-1.5">
+          <p className="text-[10px] text-white/60 mt-1.5">
             Uma boa mensagem aumenta suas chances de ser selecionado.
           </p>
         </div>
@@ -195,14 +195,14 @@ function ApplicantCard({ app, onApprove, onReject, isActing }: {
             </span>
           </div>
           {freelancer?.categories && freelancer.categories.length > 0 && (
-            <p className="text-xs text-muted-foreground mt-0.5">{freelancer.categories[0]}</p>
+            <p className="text-xs text-white/70 mt-0.5">{freelancer.categories[0]}</p>
           )}
           {app.message && (
             <p className="text-xs text-foreground/70 mt-2 leading-relaxed bg-white/3 rounded-lg p-2 border border-white/5">
               "{app.message}"
             </p>
           )}
-          <p className="text-[10px] text-muted-foreground/60 mt-1.5">
+          <p className="text-[10px] text-white/60 mt-1.5">
             Candidatou-se {format(parseISO(app.appliedAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
           </p>
         </div>
@@ -306,7 +306,7 @@ export default function JobDetailPage() {
           <AlertCircle size={22} className="text-destructive" />
         </div>
         <p className="font-bold text-foreground mb-1">Extra não encontrado</p>
-        <p className="text-sm text-muted-foreground mb-5">Este Extra não existe ou foi removido.</p>
+        <p className="text-sm text-white/70 mb-5">Este Extra não existe ou foi removido.</p>
         <Link href="/app/jobs">
           <Button variant="outline" className="border-white/15">Ver todos os Extras</Button>
         </Link>
@@ -388,7 +388,7 @@ export default function JobDetailPage() {
                   </span>
                 </Link>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-muted-foreground">
+                  <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/70">
                     {job.category}
                   </span>
                 </div>
@@ -438,10 +438,10 @@ export default function JobDetailPage() {
               >
                 <div className="flex items-center gap-1.5">
                   {item.icon}
-                  <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">{item.label}</span>
+                  <span className="text-[10px] text-white/70 font-medium uppercase tracking-wider">{item.label}</span>
                 </div>
                 <p className={`text-sm font-black ${item.accent}`}>{item.value}</p>
-                {item.sub && <p className="text-[10px] text-muted-foreground/70">{item.sub}</p>}
+                {item.sub && <p className="text-[10px] text-white/65">{item.sub}</p>}
               </div>
             ))}
           </motion.div>
@@ -461,7 +461,7 @@ export default function JobDetailPage() {
                 <MapPin size={13} className="text-secondary" />
               </div>
               <div className="relative">
-                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Localização</p>
+                <p className="text-[10px] text-white/70 font-medium uppercase tracking-wider">Localização</p>
                 <p className="text-sm font-semibold mt-0.5">{job.location}</p>
               </div>
             </motion.div>
@@ -496,9 +496,9 @@ export default function JobDetailPage() {
                   <div>
                     <p className={`text-sm font-bold ${myAppStatus.color}`}>{myAppStatus.label}</p>
                     {myApp.message && (
-                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">"{myApp.message}"</p>
+                      <p className="text-xs text-white/70 mt-0.5 line-clamp-1">"{myApp.message}"</p>
                     )}
-                    <p className="text-[10px] text-muted-foreground/60 mt-0.5">
+                    <p className="text-[10px] text-white/60 mt-0.5">
                       Enviada em {format(parseISO(myApp.appliedAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
                     </p>
                   </div>
@@ -515,13 +515,13 @@ export default function JobDetailPage() {
                 <div className="rounded-2xl p-4 text-center relative overflow-hidden"
                   style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.04) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(239,68,68,0.12)" }}
                 >
-                  <p className="text-sm text-muted-foreground">Este extra não está mais disponível para candidaturas.</p>
+                  <p className="text-sm text-white/70">Este extra não está mais disponível para candidaturas.</p>
                 </div>
               ) : spotsLeft === 0 ? (
                 <div className="rounded-2xl p-4 text-center relative overflow-hidden"
                   style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.04) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(239,68,68,0.12)" }}
                 >
-                  <p className="text-sm text-muted-foreground">Todas as posições já foram preenchidas.</p>
+                  <p className="text-sm text-white/70">Todas as posições já foram preenchidas.</p>
                 </div>
               ) : null}
             </motion.div>
@@ -544,7 +544,7 @@ export default function JobDetailPage() {
                     </span>
                   )}
                 </h2>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <div className="flex items-center gap-3 text-xs text-white/70">
                   {pendingCount > 0 && (
                     <span className="flex items-center gap-1">
                       <Clock size={10} className="text-yellow-400" /> {pendingCount} pendente{pendingCount > 1 ? "s" : ""}
@@ -568,8 +568,8 @@ export default function JobDetailPage() {
                 <div className="rounded-2xl p-8 text-center relative overflow-hidden"
                   style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
                 >
-                  <Users size={28} className="text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Ainda não há candidatos para este extra.</p>
+                  <Users size={28} className="text-white/60 mx-auto mb-2" />
+                  <p className="text-sm text-white/70">Ainda não há candidatos para este extra.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -621,11 +621,11 @@ export default function JobDetailPage() {
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium mb-0.5">Empresa</p>
+                  <p className="text-[10px] text-white/70 uppercase tracking-wider font-medium mb-0.5">Empresa</p>
                   <p className="text-sm font-bold truncate">{job.companyName ?? "Empresa"}</p>
                   <p className="text-xs text-secondary">Ver perfil da empresa →</p>
                 </div>
-                <Shield size={14} className="text-muted-foreground flex-shrink-0" />
+                <Shield size={14} className="text-white/60 flex-shrink-0" />
               </div>
             </Link>
           </motion.div>

@@ -192,7 +192,7 @@ function ConfirmDialog({
           </div>
           <div>
             <h3 className="font-bold text-sm">{title}</h3>
-            <p className="text-xs text-muted-foreground mt-1">{description}</p>
+            <p className="text-xs text-white/70 mt-1">{description}</p>
           </div>
         </div>
         <div className="flex gap-2 pt-1">
@@ -565,7 +565,7 @@ export default function GovernancePage() {
         </div>
         <div>
           <h2 className="text-xl font-bold mb-2">Acesso Restrito</h2>
-          <p className="text-sm text-muted-foreground max-w-xs">
+          <p className="text-sm text-white/70 max-w-xs">
             O Centro de Governança é acessível apenas ao CEO da plataforma.
           </p>
         </div>
@@ -621,13 +621,13 @@ export default function GovernancePage() {
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-lg font-bold">Centro de Governança</h1>
+                <h1 className="text-lg font-bold neon-text-gradient">Centro de Governança</h1>
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold"
                   style={{ background: "rgba(236,72,153,0.12)", border: "1px solid rgba(236,72,153,0.30)", color: "#ec4899" }}>
                   <CheckCircle size={9} /> CEO
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground mt-0.5">Acesso verificado · <span className="text-white/60">{user?.email}</span></p>
+              <p className="text-xs text-white/70 mt-0.5">Acesso verificado · <span className="text-white/60">{user?.email}</span></p>
             </div>
           </div>
 
@@ -652,7 +652,7 @@ export default function GovernancePage() {
         {config?.lastUpdatedAt && (
           <div className="relative mt-3 pt-3 border-t flex items-center gap-1.5" style={{ borderColor: "rgba(236,72,153,0.12)" }}>
             <Circle size={6} style={{ color: "#ec4899", fill: "#ec4899" }} />
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-[10px] text-white/70">
               Última alteração: {new Date(config.lastUpdatedAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}
             </span>
           </div>
@@ -741,7 +741,7 @@ export default function GovernancePage() {
                       <div className="flex items-center gap-2">
                         {section.icon}
                         <h3 className="text-sm font-bold">{section.title}</h3>
-                        <span className="text-[10px] text-muted-foreground ml-auto hidden sm:inline">{section.subtitle}</span>
+                        <span className="text-[10px] text-white/70 ml-auto hidden sm:inline">{section.subtitle}</span>
                         <button
                           onClick={() => toggleSection(section.sectionId)}
                           className={`ml-2 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
@@ -786,7 +786,7 @@ export default function GovernancePage() {
                       <div className="flex items-center gap-2">
                         <Shield size={16} className="text-primary" />
                         <h3 className="text-sm font-bold">Requisitos de Evolução</h3>
-                        <span className="text-[10px] text-muted-foreground ml-auto hidden sm:inline">mínimo de extras + reputação para subir de nível</span>
+                        <span className="text-[10px] text-white/70 ml-auto hidden sm:inline">mínimo de extras + reputação para subir de nível</span>
                         <button
                           onClick={() => toggleSection("thresholds")}
                           className={`ml-2 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
@@ -832,7 +832,7 @@ export default function GovernancePage() {
 
                 {/* Action Bar */}
                 <div className="flex items-center justify-between gap-4 pt-2">
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-xs text-white/70">
                     {config?.lastUpdatedAt
                       ? `Salvo em ${new Date(config.lastUpdatedAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}`
                       : "Usando padrões do sistema"}
@@ -843,7 +843,7 @@ export default function GovernancePage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => { setLocalConfig({ ...config!.config }); setUnlockedSections(new Set()); }}
-                        className="text-muted-foreground h-9"
+                        className="text-white/60 h-9"
                       >
                         <RotateCcw size={14} className="mr-1.5" />
                         Reverter
@@ -884,7 +884,7 @@ export default function GovernancePage() {
                 <UserCog size={16} className="text-primary" />
                 <h3 className="text-sm font-bold">Configuração Individual</h3>
               </div>
-              <p className="text-xs text-muted-foreground">Busque um usuário por ID para configurar taxa personalizada, comissão de indicação e notas de governança.</p>
+              <p className="text-xs text-white/70">Busque um usuário por ID para configurar taxa personalizada, comissão de indicação e notas de governança.</p>
               <div className="flex gap-2">
                 <Input
                   value={overrideSearch}
@@ -912,7 +912,7 @@ export default function GovernancePage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{u.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">{u.email} · ID {u.id} · {u.level}</p>
+                    <p className="text-xs text-white/70 truncate">{u.email} · ID {u.id} · {u.level}</p>
                   </div>
                   {(u.customFee !== null || u.customReferralRate !== null) && (
                     <span className="text-[10px] px-2 py-0.5 rounded-full font-bold" style={{ background: "rgba(124,252,0,0.1)", color: "#7CFC00", border: "1px solid rgba(124,252,0,0.2)" }}>
@@ -934,7 +934,7 @@ export default function GovernancePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-bold">{selectedUser.name}</p>
-                    <p className="text-xs text-muted-foreground">{selectedUser.email}</p>
+                    <p className="text-xs text-white/70">{selectedUser.email}</p>
                   </div>
                   <button onClick={() => { setSelectedUser(null); setSearchResults([]); setOverrideSearch(""); }} className="text-muted-foreground hover:text-foreground p-1">
                     <X size={14} />
@@ -943,7 +943,7 @@ export default function GovernancePage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <label className="text-xs font-semibold text-white/75 uppercase tracking-wider flex items-center gap-1.5">
                       <Percent size={11} />
                       Taxa Personalizada (%)
                     </label>
@@ -961,11 +961,11 @@ export default function GovernancePage() {
                         </button>
                       )}
                     </div>
-                    <p className="text-[10px] text-muted-foreground">Deixe vazio para usar a taxa padrão do nível</p>
+                    <p className="text-[10px] text-white/65">Deixe vazio para usar a taxa padrão do nível</p>
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <label className="text-xs font-semibold text-white/75 uppercase tracking-wider flex items-center gap-1.5">
                       <DollarSign size={11} />
                       Comissão de Indicação (%)
                     </label>
@@ -983,12 +983,12 @@ export default function GovernancePage() {
                         </button>
                       )}
                     </div>
-                    <p className="text-[10px] text-muted-foreground">Deixe vazio para usar a comissão padrão</p>
+                    <p className="text-[10px] text-white/65">Deixe vazio para usar a comissão padrão</p>
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <label className="text-xs font-semibold text-white/75 uppercase tracking-wider">
                     Notas de Governança
                   </label>
                   <textarea
@@ -1025,7 +1025,7 @@ export default function GovernancePage() {
               {overridesLoading ? (
                 <div className="flex justify-center py-8"><Loader2 size={18} className="animate-spin text-primary/60" /></div>
               ) : overrides.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground text-sm">
+                <div className="text-center py-8 text-white/70 text-sm">
                   Nenhum override configurado.
                 </div>
               ) : (
@@ -1041,13 +1041,13 @@ export default function GovernancePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold truncate">{u.name}</p>
-                      <div className="flex gap-3 mt-0.5 text-xs text-muted-foreground flex-wrap">
+                      <div className="flex gap-3 mt-0.5 text-xs text-white/70 flex-wrap">
                         {u.customFee !== null && <span className="text-primary font-medium">Taxa: {(u.customFee * 100).toFixed(1)}%</span>}
                         {u.customReferralRate !== null && <span className="text-secondary font-medium">Comissão: {(u.customReferralRate * 100).toFixed(1)}%</span>}
                         {u.governanceNotes && <span className="truncate max-w-[180px]">{u.governanceNotes}</span>}
                       </div>
                     </div>
-                    <Edit2 size={13} className="text-muted-foreground flex-shrink-0" />
+                    <Edit2 size={13} className="text-white/60 flex-shrink-0" />
                   </div>
                 ))
               )}
@@ -1071,7 +1071,7 @@ export default function GovernancePage() {
             {adminsLoading ? (
               <div className="flex justify-center py-16"><Loader2 size={22} className="animate-spin text-primary/60" /></div>
             ) : filteredAdmins.length === 0 ? (
-              <div className="text-center py-16 text-muted-foreground">Nenhum administrador encontrado.</div>
+              <div className="text-center py-16 text-white/70">Nenhum administrador encontrado.</div>
             ) : (
               <div className="space-y-2">
                 {filteredAdmins.map(admin => (
@@ -1099,7 +1099,7 @@ export default function GovernancePage() {
                           <span className="text-[10px] text-primary/60 font-semibold">CEO Access</span>
                         )}
                       </div>
-                      <p className="text-xs text-muted-foreground truncate">{admin.email}</p>
+                      <p className="text-xs text-white/70 truncate">{admin.email}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <span className="text-[10px] px-2 py-1 rounded-full font-semibold" style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)" }}>
@@ -1195,7 +1195,7 @@ export default function GovernancePage() {
             {badgesLoading ? (
               <div className="flex justify-center py-12"><Loader2 size={22} className="animate-spin text-primary/60" /></div>
             ) : badges.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground text-sm">Nenhum badge concedido ainda.</div>
+              <div className="text-center py-12 text-white/70 text-sm">Nenhum badge concedido ainda.</div>
             ) : (
               <div className="space-y-2">
                 {badges.map(b => (
@@ -1214,10 +1214,10 @@ export default function GovernancePage() {
                           <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/8 text-muted-foreground">{b.category}</span>
                         )}
                       </div>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="text-xs text-white/70 truncate">
                         {b.userName ?? `User #${b.userId}`} · {b.userEmail}
                       </p>
-                      {b.description && <p className="text-xs text-muted-foreground/70 mt-0.5">{b.description}</p>}
+                      {b.description && <p className="text-xs text-white/65 mt-0.5">{b.description}</p>}
                     </div>
                     <button
                       onClick={() => handleDeleteBadge(b.id)}
@@ -1284,7 +1284,7 @@ export default function GovernancePage() {
                           {icon}
                           <div>
                             <h3 className="text-sm font-bold">{title}</h3>
-                            <p className="text-[11px] text-muted-foreground">{subtitle}</p>
+                            <p className="text-[11px] text-white/70">{subtitle}</p>
                           </div>
                         </div>
                         <button
@@ -1323,7 +1323,7 @@ export default function GovernancePage() {
                         {sectionId === "escrow" && (
                           <div className="space-y-3">
                             <div className="flex items-center justify-between">
-                              <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Escrow ativo</span>
+                              <span className="text-xs font-semibold text-white/75 uppercase tracking-wider">Escrow ativo</span>
                               <button
                                 disabled={!unlocked}
                                 onClick={() => setLocalFinancial(f => ({
@@ -1334,7 +1334,7 @@ export default function GovernancePage() {
                               >
                                 {localFinancial.escrowRules?.enabled
                                   ? <ToggleRight size={24} className="text-primary" />
-                                  : <ToggleLeft size={24} className="text-muted-foreground" />}
+                                  : <ToggleLeft size={24} className="text-white/60" />}
                               </button>
                             </div>
                             {["autoReleaseHours", "disputeWindowHours"].map(k => (
@@ -1387,7 +1387,7 @@ export default function GovernancePage() {
                 {/* Asaas Status — read-only */}
                 <div className="p-5 rounded-2xl space-y-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
                   <div className="flex items-center gap-2 mb-1">
-                    <Server size={16} className="text-muted-foreground" />
+                    <Server size={16} className="text-white/60" />
                     <h3 className="text-sm font-bold">Status Asaas</h3>
                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/8 text-muted-foreground border border-white/10">Somente leitura</span>
                   </div>
@@ -1418,7 +1418,7 @@ export default function GovernancePage() {
                       </div>
                     ))}
                   </div>
-                  <p className="text-[10px] text-muted-foreground/60 text-center">
+                  <p className="text-[10px] text-white/60 text-center">
                     A integração Asaas é configurada via variáveis de ambiente pelo time de engenharia.
                   </p>
                 </div>
@@ -1481,7 +1481,7 @@ export default function GovernancePage() {
               {categoriesLoading ? (
                 <div className="flex justify-center py-8"><Loader2 size={18} className="animate-spin text-primary/60" /></div>
               ) : categories.length === 0 ? (
-                <div className="text-center py-8 text-sm text-muted-foreground">Nenhuma categoria cadastrada</div>
+                <div className="text-center py-8 text-sm text-white/70">Nenhuma categoria cadastrada</div>
               ) : (
                 <div className="space-y-2">
                   {categories.map(cat => (
@@ -1490,13 +1490,13 @@ export default function GovernancePage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-sm font-bold">{cat.name}</span>
-                          {cat.icon && <span className="text-[10px] text-muted-foreground">{cat.icon}</span>}
+                          {cat.icon && <span className="text-[10px] text-white/70">{cat.icon}</span>}
                           {cat.status === "archived" && (
                             <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/8 text-muted-foreground border border-white/10">Arquivada</span>
                           )}
                         </div>
-                        {cat.description && <p className="text-xs text-muted-foreground truncate mt-0.5">{cat.description}</p>}
-                        <p className="text-[10px] text-muted-foreground/50">{cat.slug} · ordem {cat.displayOrder}</p>
+                        {cat.description && <p className="text-xs text-white/70 truncate mt-0.5">{cat.description}</p>}
+                        <p className="text-[10px] text-white/55">{cat.slug} · ordem {cat.displayOrder}</p>
                       </div>
                       <div className="flex items-center gap-1 flex-shrink-0">
                         <button
@@ -1559,7 +1559,7 @@ export default function GovernancePage() {
                   {ledgerLoading ? (
                     <div className="flex justify-center py-8"><Loader2 size={18} className="animate-spin text-primary/60" /></div>
                   ) : ledgerEntries.length === 0 ? (
-                    <div className="text-center py-8 text-sm text-muted-foreground">Nenhuma entrada no ledger ainda</div>
+                    <div className="text-center py-8 text-sm text-white/70">Nenhuma entrada no ledger ainda</div>
                   ) : (
                     <div className="space-y-1.5">
                       {ledgerEntries.map(entry => (
@@ -1567,7 +1567,7 @@ export default function GovernancePage() {
                           <div className={`w-2 h-2 rounded-full flex-shrink-0 ${entry.amount >= 0 ? "bg-emerald-400" : "bg-red-400"}`} />
                           <div className="flex-1 min-w-0">
                             <p className="font-semibold truncate">{entry.description ?? entry.type}</p>
-                            <p className="text-muted-foreground/60 text-[10px]">
+                            <p className="text-white/60 text-[10px]">
                               {new Date(entry.createdAt).toLocaleString("pt-BR")}
                               {entry.referenceType && ` · ${entry.referenceType}`}
                             </p>
@@ -1576,7 +1576,7 @@ export default function GovernancePage() {
                             <p className={`font-bold tabular-nums ${entry.amount >= 0 ? "text-emerald-400" : "text-red-400"}`}>
                               {entry.amount >= 0 ? "+" : ""}{currFormat(entry.amount)}
                             </p>
-                            <p className="text-[10px] text-muted-foreground/50">{currFormat(entry.balanceAfter)}</p>
+                            <p className="text-[10px] text-white/55">{currFormat(entry.balanceAfter)}</p>
                           </div>
                         </div>
                       ))}
@@ -1585,7 +1585,7 @@ export default function GovernancePage() {
                           <button disabled={ledgerPage <= 1} onClick={() => setLedgerPage(p => p - 1)} className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors">
                             ← Anterior
                           </button>
-                          <span className="text-xs text-muted-foreground">Pág. {ledgerPage} · {ledgerTotal} total</span>
+                          <span className="text-xs text-white/70">Pág. {ledgerPage} · {ledgerTotal} total</span>
                           <button disabled={ledgerPage * 20 >= ledgerTotal} onClick={() => setLedgerPage(p => p + 1)} className="text-xs text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors">
                             Próxima →
                           </button>

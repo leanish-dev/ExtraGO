@@ -101,7 +101,7 @@ function TransactionRow({ tx, index }: { tx: Transaction; index: number }) {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate leading-snug">{tx.description}</p>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <p className="text-xs text-white/70 mt-0.5">
           {tx.createdAt ? format(new Date(tx.createdAt), "dd MMM 'às' HH:mm", { locale: ptBR }) : "—"}
         </p>
       </div>
@@ -142,7 +142,7 @@ function DepositRow({ dep, index }: { dep: DepositRequest; index: number }) {
         <p className="text-sm font-medium">
           Depósito via {dep.paymentMethod === "pix" ? "PIX" : dep.paymentMethod === "credit_card" ? "Cartão" : "Transferência"}
         </p>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <p className="text-xs text-white/70 mt-0.5">
           {dep.createdAt ? format(new Date(dep.createdAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR }) : "—"}
           {dep.adminNote ? ` · ${dep.adminNote}` : ""}
         </p>
@@ -272,7 +272,7 @@ export default function WalletPage() {
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#14b8a6" }}>Módulo Financeiro</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Carteira</h1>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight neon-text-gradient">Carteira</h1>
           <p className="text-sm text-white/70 mt-0.5">{isCompany ? "Gerencie o saldo da empresa" : "Seus ganhos e saques via PIX"}</p>
         </div>
       </div>
@@ -352,7 +352,7 @@ export default function WalletPage() {
                     </motion.div>
                     <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/8 flex-shrink-0" title="Depósitos confirmados manualmente em até 1 dia útil">
                       <Clock size={11} className="text-yellow-400 flex-shrink-0" />
-                      <span className="text-[11px] text-muted-foreground font-medium">Aprovação manual</span>
+                      <span className="text-[11px] text-white/70 font-medium">Aprovação manual</span>
                     </div>
                   </>
                 ) : (
@@ -369,7 +369,7 @@ export default function WalletPage() {
                     </motion.div>
                     <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/8 flex-shrink-0" title="Saques aprovados pela equipe em até 2 dias úteis">
                       <Clock size={11} className="text-yellow-400 flex-shrink-0" />
-                      <span className="text-[11px] text-muted-foreground font-medium">Aprovação manual</span>
+                      <span className="text-[11px] text-white/70 font-medium">Aprovação manual</span>
                     </div>
                   </>
                 )}
@@ -390,13 +390,13 @@ export default function WalletPage() {
             </div>
             <div className="grid grid-cols-3 gap-2.5">
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }} className="balance-card-mini p-3 sm:p-4">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2 leading-tight">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-white/75 mb-2 leading-tight">
                   {isCompany ? "Reservado" : "Pendente"}
                 </p>
                 <p className="text-base sm:text-xl font-bold leading-none tabular-nums">
                   {hideBalance ? "••••" : <>R$ <AnimatedCounter value={(isCompany ? reserved : pending) / 100} decimals={2} /></>}
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
+                <p className="text-[10px] text-white/70 mt-1.5 flex items-center gap-1">
                   {isCompany
                     ? <><Lock size={8} className="text-blue-400" /> Em andamento</>
                     : <><Clock size={8} className="text-yellow-400" /> Processando</>
@@ -404,24 +404,24 @@ export default function WalletPage() {
                 </p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} className="balance-card-mini p-3 sm:p-4">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2 leading-tight">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-white/75 mb-2 leading-tight">
                   {isCompany ? "Total Investido" : "Total Ganho"}
                 </p>
                 <p className="text-base sm:text-xl font-bold leading-none tabular-nums text-secondary">
                   {hideBalance ? "••••" : <>R$ <AnimatedCounter value={totalEarned / 100} decimals={2} /></>}
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
+                <p className="text-[10px] text-white/70 mt-1.5 flex items-center gap-1">
                   <TrendingUp size={8} className="text-secondary" /> Histórico total
                 </p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="balance-card-mini p-3 sm:p-4">
-                <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2 leading-tight">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-white/75 mb-2 leading-tight">
                   Entradas
                 </p>
                 <p className="text-base sm:text-xl font-bold leading-none tabular-nums text-primary">
                   {hideBalance ? "••••" : <>R$ <AnimatedCounter value={creditTotal} decimals={2} /></>}
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
+                <p className="text-[10px] text-white/70 mt-1.5 flex items-center gap-1">
                   <ArrowDownLeft size={8} className="text-primary" /> Créditos totais
                 </p>
               </motion.div>
@@ -439,7 +439,7 @@ export default function WalletPage() {
             <Clock size={16} className="text-yellow-400 flex-shrink-0" />
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-yellow-400">Depósito em análise</p>
-              <p className="text-[11px] text-muted-foreground">R$ {(pendingDeposits / 100).toFixed(2)} aguardando confirmação da equipe</p>
+              <p className="text-[11px] text-white/70">R$ {(pendingDeposits / 100).toFixed(2)} aguardando confirmação da equipe</p>
             </div>
             <button onClick={() => setActiveTab("deposits")} className="text-[11px] text-yellow-400 font-bold flex-shrink-0 border border-yellow-400/30 rounded-lg px-2 py-1">Ver</button>
           </motion.div>
@@ -463,15 +463,15 @@ export default function WalletPage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-sm">Solicitar Saque PIX</h3>
-                    <p className="text-xs text-muted-foreground">Saldo disponível: R$ {(balance / 100).toFixed(2)}</p>
+                    <p className="text-xs text-white/70">Saldo disponível: R$ {(balance / 100).toFixed(2)}</p>
                   </div>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[11px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Valor do Saque</label>
+                    <label className="text-[11px] font-bold text-white/75 mb-2 block uppercase tracking-widest">Valor do Saque</label>
                     <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-muted-foreground font-bold">R$</span>
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-white/70 font-bold">R$</span>
                       <Input
                         type="number" min={20} step={0.01} max={balance / 100}
                         value={amount} onChange={e => setAmount(e.target.value)}
@@ -490,7 +490,7 @@ export default function WalletPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="text-[11px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Chave PIX</label>
+                    <label className="text-[11px] font-bold text-white/75 mb-2 block uppercase tracking-widest">Chave PIX</label>
                     <Input
                       value={pixKey} onChange={e => setPixKey(e.target.value)}
                       placeholder="CPF, CNPJ, e-mail ou celular"
@@ -499,7 +499,7 @@ export default function WalletPage() {
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl text-xs text-muted-foreground space-y-1.5" style={{ background: "rgba(20,184,166,0.12)", border: "1px solid rgba(20,184,166,0.24)" }}>
+                <div className="p-3 rounded-xl text-xs text-white/70 space-y-1.5" style={{ background: "rgba(20,184,166,0.12)", border: "1px solid rgba(20,184,166,0.24)" }}>
                   <p className="font-bold text-foreground flex items-center gap-1.5 mb-1"><Shield size={12} className="text-primary" /> Informações do saque</p>
                   <p>• Prazo de aprovação: até 2 dias úteis</p>
                   <p>• Valor mínimo: R$ 20,00</p>
@@ -542,7 +542,7 @@ export default function WalletPage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-sm">Adicionar Saldo</h3>
-                    <p className="text-xs text-muted-foreground">Valor mínimo R$ 50,00 · Confirmação em até 1 dia útil</p>
+                    <p className="text-xs text-white/70">Valor mínimo R$ 50,00 · Confirmação em até 1 dia útil</p>
                   </div>
                 </div>
 
@@ -560,9 +560,9 @@ export default function WalletPage() {
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold text-muted-foreground mb-2 block uppercase tracking-widest">Valor do Depósito</label>
+                  <label className="text-[11px] font-bold text-white/75 mb-2 block uppercase tracking-widest">Valor do Depósito</label>
                   <div className="relative">
-                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-semibold">R$</span>
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/70 text-sm font-semibold">R$</span>
                     <Input
                       type="number" placeholder="0,00"
                       value={depositAmount} onChange={e => setDepositAmount(e.target.value)}
@@ -587,7 +587,7 @@ export default function WalletPage() {
                   </p>
                   {depositMethod === "pix" ? (
                     <div className="space-y-1.5">
-                      <p className="text-xs text-muted-foreground">Realize o PIX para a chave abaixo e depois confirme:</p>
+                      <p className="text-xs text-white/70">Realize o PIX para a chave abaixo e depois confirme:</p>
                       <div className="flex items-center gap-2 p-2 rounded-lg" style={{ background: "rgba(20,184,166,0.14)", border: "1px solid rgba(20,184,166,0.28)" }}>
                         <code className="text-xs font-mono text-primary flex-1">{PLATFORM_PIX_KEY}</code>
                         <button
@@ -599,10 +599,10 @@ export default function WalletPage() {
                     </div>
                   ) : (
                     <div className="space-y-1.5">
-                      <p className="text-xs text-muted-foreground">Nossa equipe entrará em contato com o link de pagamento após confirmar sua solicitação.</p>
+                      <p className="text-xs text-white/70">Nossa equipe entrará em contato com o link de pagamento após confirmar sua solicitação.</p>
                     </div>
                   )}
-                  <p className="text-[11px] text-muted-foreground mt-2">
+                  <p className="text-[11px] text-white/70 mt-2">
                     Após realizar o pagamento, clique em confirmar. Saldo creditado em até 1 dia útil.
                   </p>
                 </div>
@@ -705,12 +705,12 @@ export default function WalletPage() {
             </div>
             {allTxs.length > 0 && (
               <div className="flex items-center gap-3 py-2 mb-3 border-b border-white/5">
-                <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                <span className="text-[10px] text-white/70 flex items-center gap-1">
                   <ArrowDownLeft size={9} className="text-primary" />
                   Entradas: <span className="text-primary font-bold ml-0.5">R$ {creditTotal.toFixed(2)}</span>
                 </span>
                 <span className="w-px h-3 bg-white/10" />
-                <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                <span className="text-[10px] text-white/70 flex items-center gap-1">
                   <ArrowUpRight size={9} className="text-destructive" />
                   Saídas: <span className="text-destructive font-bold ml-0.5">R$ {debitTotal.toFixed(2)}</span>
                 </span>
@@ -751,7 +751,7 @@ export default function WalletPage() {
                       className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors">
                       <ChevronLeft size={14} /> Anterior
                     </button>
-                    <span className="text-xs text-muted-foreground">{page + 1} / {totalPages}</span>
+                    <span className="text-xs text-white/70">{page + 1} / {totalPages}</span>
                     <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page === totalPages - 1}
                       className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors">
                       Próximo <ChevronRight size={14} />

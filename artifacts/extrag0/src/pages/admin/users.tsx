@@ -69,7 +69,7 @@ function GovernanceModal({
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-white/8">
           <div>
             <p className="text-sm font-bold">{user.name}</p>
-            <p className="text-xs text-muted-foreground">{user.email}</p>
+            <p className="text-xs text-white/70">{user.email}</p>
           </div>
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-white/8 transition-all">
             <X size={16} />
@@ -78,7 +78,7 @@ function GovernanceModal({
 
         {/* Current role info */}
         <div className="px-5 py-3 border-b border-white/5">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">Cargo atual</p>
+          <p className="text-[10px] text-white/70 uppercase tracking-wider mb-2">Cargo atual</p>
           <div className="flex items-center gap-2">
             <span className={`text-xs px-2.5 py-1 rounded-full border font-semibold ${
               adminRole ? (ADMIN_ROLE_COLORS[adminRole] ?? "text-primary bg-primary/10 border-primary/20") : "text-muted-foreground bg-white/5 border-white/10"
@@ -90,7 +90,7 @@ function GovernanceModal({
 
         {/* Role options */}
         <div className="px-3 py-3 space-y-1">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wider px-2 mb-2">Atribuir cargo</p>
+          <p className="text-[10px] text-white/70 uppercase tracking-wider px-2 mb-2">Atribuir cargo</p>
           {ADMIN_ROLE_OPTIONS.map(opt => (
             <button
               key={String(opt.value)}
@@ -103,7 +103,7 @@ function GovernanceModal({
               }`}
             >
               {opt.value === "super_admin" && <Crown size={14} className="text-yellow-400 flex-shrink-0" />}
-              {opt.value !== "super_admin" && opt.value !== null && <Shield size={14} className="text-muted-foreground flex-shrink-0" />}
+              {opt.value !== "super_admin" && opt.value !== null && <Shield size={14} className="text-white/55 flex-shrink-0" />}
               {opt.value === null && <Ban size={14} className="text-destructive/60 flex-shrink-0" />}
               <span className="flex-1">{opt.label}</span>
               {opt.value === adminRole && <CheckCircle size={12} className="text-primary flex-shrink-0" />}
@@ -202,8 +202,8 @@ function UserRow({
               </span>
             )}
           </div>
-          <p className="text-xs text-muted-foreground mt-0.5">{user.email}</p>
-          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
+          <p className="text-xs text-white/70 mt-0.5">{user.email}</p>
+          <div className="flex items-center gap-3 mt-1 text-xs text-white/70 flex-wrap">
             {user.role === "freelancer" && (
               <>
                 <span className="flex items-center gap-1"><Briefcase size={10} /> {user.completedJobs ?? 0} jobs</span>
@@ -335,26 +335,26 @@ export default function AdminUsersPage() {
     <div className="p-4 sm:p-6 max-w-5xl mx-auto space-y-6 pb-20 lg:pb-6">
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-[22px] font-bold">Gerenciar Usuários</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-[22px] font-bold neon-text-gradient">Gerenciar Usuários</h1>
+          <p className="text-white/70 mt-1">
             {filtered.length} usuário{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
           </p>
         </div>
         <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3">
           <div className="glass-card rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-center">
-            <p className="text-[10px] sm:text-xs text-muted-foreground">Verificados</p>
+            <p className="text-[10px] sm:text-xs text-white/70">Verificados</p>
             <p className="text-lg sm:text-xl font-bold text-green-400">{verifiedCount}</p>
           </div>
           <div className="glass-card rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-center">
-            <p className="text-[10px] sm:text-xs text-muted-foreground">Admins</p>
+            <p className="text-[10px] sm:text-xs text-white/70">Admins</p>
             <p className="text-lg sm:text-xl font-bold text-yellow-400">{adminCount}</p>
           </div>
           <div className="glass-card rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-center">
-            <p className="text-[10px] sm:text-xs text-muted-foreground">Banidos</p>
+            <p className="text-[10px] sm:text-xs text-white/70">Banidos</p>
             <p className="text-lg sm:text-xl font-bold text-destructive">{bannedCount}</p>
           </div>
           <div className="glass-card rounded-xl px-3 py-2 sm:px-4 sm:py-2.5 text-center">
-            <p className="text-[10px] sm:text-xs text-muted-foreground">Total</p>
+            <p className="text-[10px] sm:text-xs text-white/70">Total</p>
             <p className="text-lg sm:text-xl font-bold text-foreground">{users.length}</p>
           </div>
         </div>
@@ -371,7 +371,7 @@ export default function AdminUsersPage() {
 
       <div className="space-y-3">
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
           <Input
             placeholder="Buscar por nome ou e-mail..."
             value={search}
@@ -403,8 +403,8 @@ export default function AdminUsersPage() {
 
       {!isLoading && filtered.length === 0 && (
         <div className="text-center py-16">
-          <Users size={40} className="text-muted-foreground mx-auto mb-3" />
-          <p className="text-muted-foreground">Nenhum usuário encontrado</p>
+          <Users size={40} className="text-white/60 mx-auto mb-3" />
+          <p className="text-white/70">Nenhum usuário encontrado</p>
         </div>
       )}
 

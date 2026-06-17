@@ -65,7 +65,7 @@ function SectionCard({ title, icon, children, defaultOpen = true }: { title: str
           {icon}
           {title}
         </div>
-        {open ? <ChevronUp size={15} className="text-muted-foreground" /> : <ChevronDown size={15} className="text-muted-foreground" />}
+        {open ? <ChevronUp size={15} className="text-white/60" /> : <ChevronDown size={15} className="text-white/60" />}
       </button>
       <AnimatePresence>
         {open && (
@@ -111,7 +111,7 @@ function ExperienceSection({ userId }: { userId: number }) {
       {isLoading ? (
         <div className="h-16 rounded-xl bg-white/4 animate-pulse" />
       ) : experiences.length === 0 && !adding ? (
-        <p className="text-sm text-muted-foreground">Nenhuma experiência adicionada ainda.</p>
+        <p className="text-sm text-white/70">Nenhuma experiência adicionada ainda.</p>
       ) : (
         experiences.map((exp: any) => (
           <div key={exp.id} className="flex gap-3 p-3 rounded-xl border border-secondary/14 relative overflow-hidden"
@@ -123,8 +123,8 @@ function ExperienceSection({ userId }: { userId: number }) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold">{exp.role}</p>
-              <p className="text-xs text-muted-foreground">{exp.company}</p>
-              <p className="text-xs text-muted-foreground/65 mt-0.5">{exp.startDate} — {exp.endDate ?? "Atual"}</p>
+              <p className="text-xs text-white/70">{exp.company}</p>
+              <p className="text-xs text-white/70 mt-0.5">{exp.startDate} — {exp.endDate ?? "Atual"}</p>
               {exp.description && <p className="text-xs text-foreground/70 mt-1 leading-relaxed">{exp.description}</p>}
             </div>
             <button onClick={() => deleteExp.mutate(exp.id)} className="text-muted-foreground hover:text-destructive transition-colors flex-shrink-0">
@@ -138,26 +138,26 @@ function ExperienceSection({ userId }: { userId: number }) {
         <div className="p-4 rounded-xl bg-white/3 border border-white/10 space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Empresa</label>
+              <label className="text-[10px] font-semibold text-white/75 uppercase tracking-wide mb-1 block">Empresa</label>
               <Input value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} placeholder="Nome da empresa" className="bg-white/5 border-white/10 rounded-xl h-10 text-sm" />
             </div>
             <div>
-              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Cargo</label>
+              <label className="text-[10px] font-semibold text-white/75 uppercase tracking-wide mb-1 block">Cargo</label>
               <Input value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} placeholder="Seu cargo" className="bg-white/5 border-white/10 rounded-xl h-10 text-sm" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Início</label>
+              <label className="text-[10px] font-semibold text-white/75 uppercase tracking-wide mb-1 block">Início</label>
               <Input type="month" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} className="bg-white/5 border-white/10 rounded-xl h-10 text-sm" />
             </div>
             <div>
-              <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Fim (opcional)</label>
+              <label className="text-[10px] font-semibold text-white/75 uppercase tracking-wide mb-1 block">Fim (opcional)</label>
               <Input type="month" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} className="bg-white/5 border-white/10 rounded-xl h-10 text-sm" />
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wide mb-1 block">Descrição</label>
+            <label className="text-[10px] font-semibold text-white/75 uppercase tracking-wide mb-1 block">Descrição</label>
             <textarea rows={2} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Descreva suas responsabilidades..." className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/10 focus:border-primary/50 focus:outline-none text-sm resize-none transition-colors" />
           </div>
           <div className="flex gap-2">
@@ -210,7 +210,7 @@ function SkillsSection({ userId }: { userId: number }) {
             </button>
           </span>
         ))}
-        {skills.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma habilidade adicionada.</p>}
+        {skills.length === 0 && <p className="text-sm text-white/70">Nenhuma habilidade adicionada.</p>}
       </div>
       <div className="flex gap-2">
         <Input
@@ -449,7 +449,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1 pb-1">
               <h1 className="text-xl font-bold leading-tight">{user?.name}</h1>
-              <p className="text-xs text-muted-foreground">{user?.email}</p>
+              <p className="text-xs text-white/70">{user?.email}</p>
               <div className="flex items-center gap-2 mt-2 flex-wrap">
                 {user?.role === "freelancer" && (
                   <LevelBadge level={user?.level} size="md" />
@@ -499,18 +499,18 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <UserBadgeIcon user={user as any} size="md" />
                 <div>
-                  <p className="text-muted-foreground font-medium leading-none mb-0.5">Nível</p>
+                  <p className="text-white/70 font-medium leading-none mb-0.5">Nível</p>
                   <p className={`font-bold text-sm ${LEVEL_COLORS[user?.level ?? "bronze"]?.text ?? "text-primary"}`}>{LEVEL_LABELS[user?.level ?? "bronze"]}</p>
                 </div>
               </div>
               <div className="w-px h-8 bg-white/8" />
               <div>
-                <p className="text-muted-foreground font-medium leading-none mb-1">Extras feitos</p>
+                <p className="text-white/70 font-medium leading-none mb-1">Extras feitos</p>
                 <p className="font-bold text-primary text-base">{user?.completedJobs ?? 0}</p>
               </div>
               <div className="w-px h-8 bg-white/8" />
               <div>
-                <p className="text-muted-foreground font-medium leading-none mb-1">Reputação</p>
+                <p className="text-white/70 font-medium leading-none mb-1">Reputação</p>
                 <p className="font-bold text-yellow-400 text-base">{(user?.reputationScore ?? 0).toFixed(1)} ★</p>
               </div>
             </div>
@@ -520,13 +520,13 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <CorporateBadgeIcon role={(user as any).corporateRole} size="md" />
                 <div>
-                  <p className="text-muted-foreground font-medium leading-none mb-0.5">Cargo</p>
+                  <p className="text-white/70 font-medium leading-none mb-0.5">Cargo</p>
                   <p className="font-bold text-sm text-yellow-400">{CORPORATE_ROLE_LABELS[(user as any).corporateRole] ?? (user as any).corporateRole}</p>
                 </div>
               </div>
               <div className="w-px h-8 bg-white/8" />
               <div>
-                <p className="text-muted-foreground font-medium leading-none mb-0.5">Permissão</p>
+                <p className="text-white/70 font-medium leading-none mb-0.5">Permissão</p>
                 <p className="font-bold text-sm text-amber-400">Super Admin</p>
               </div>
             </div>
@@ -554,7 +554,7 @@ export default function ProfilePage() {
                 {/* Progression bar */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5 text-xs">
-                    <span className="text-muted-foreground">{jobsDone} extras concluídos · taxa {currentFee}%</span>
+                    <span className="text-white/70">{jobsDone} extras concluídos · taxa {currentFee}%</span>
                     {nextLvl
                       ? <span className="text-primary font-semibold">+{jobsToNext} para {nextLvl.label}</span>
                       : <span className="text-primary font-bold">Nível máximo conquistado</span>
@@ -620,21 +620,21 @@ export default function ProfilePage() {
                 <div className="space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-[10px] font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Nome Completo</label>
+                      <label className="text-[10px] font-semibold text-white/75 mb-1.5 block uppercase tracking-wide">Nome Completo</label>
                       <Input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="bg-white/5 border-white/10 focus:border-primary/60 rounded-xl h-11" />
                     </div>
                     <div>
-                      <label className="text-[10px] font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Telefone / WhatsApp</label>
+                      <label className="text-[10px] font-semibold text-white/75 mb-1.5 block uppercase tracking-wide">Telefone / WhatsApp</label>
                       <Input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+55 11 99999-0000" className="bg-white/5 border-white/10 focus:border-primary/60 rounded-xl h-11" />
                     </div>
                   </div>
                   <div>
-                    <label className="text-[10px] font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Bio / Apresentação</label>
+                    <label className="text-[10px] font-semibold text-white/75 mb-1.5 block uppercase tracking-wide">Bio / Apresentação</label>
                     <textarea rows={3} value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))} placeholder="Conte um pouco sobre você..." className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-primary/60 focus:outline-none text-sm resize-none transition-colors leading-relaxed" />
                   </div>
                   {user?.role === "freelancer" && (
                     <div>
-                      <label className="text-[10px] font-semibold text-muted-foreground mb-1.5 block uppercase tracking-wide">Resumo Profissional</label>
+                      <label className="text-[10px] font-semibold text-white/75 mb-1.5 block uppercase tracking-wide">Resumo Profissional</label>
                       <textarea rows={4} value={form.professionalSummary} onChange={e => setForm(f => ({ ...f, professionalSummary: e.target.value }))} placeholder="Descreva sua trajetória profissional, diferenciais e objetivos..." className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-primary/60 focus:outline-none text-sm resize-none transition-colors leading-relaxed" />
                     </div>
                   )}
@@ -694,7 +694,7 @@ export default function ProfilePage() {
                 <h2 className="font-semibold text-sm mb-1 flex items-center gap-2 relative">
                   <Award size={14} className="text-yellow-400" /> Minhas Especialidades
                 </h2>
-                <p className="text-xs text-muted-foreground mb-4">Selecione as funções que você exerce</p>
+                <p className="text-xs text-white/70 mb-4">Selecione as funções que você exerce</p>
                 <div className="flex flex-wrap gap-2">
                   {CATEGORIES.map((cat, i) => {
                     const isSelected = categories.includes(cat.name);
@@ -722,7 +722,7 @@ export default function ProfilePage() {
                 </div>
                 {categories.length > 0 && (
                   <div className="mt-4 pt-4 border-t border-white/6">
-                    <p className="text-xs text-muted-foreground font-semibold mb-2">Selecionadas:</p>
+                    <p className="text-xs text-white/75 font-semibold mb-2">Selecionadas:</p>
                     <div className="flex flex-wrap gap-2">
                       {categories.map((cat, i) => (
                         <motion.span
@@ -789,15 +789,15 @@ export default function ProfilePage() {
                 style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.08)" }}
               >
                 <h2 className="font-semibold text-sm flex items-center gap-2 relative">
-                  <Shield size={14} className="text-muted-foreground" /> Configurações
+                  <Shield size={14} className="text-white/60" /> Configurações
                 </h2>
                 <div className="p-3 rounded-xl bg-white/3 border border-white/6">
                   <p className="text-xs font-semibold">Email</p>
-                  <p className="text-sm text-muted-foreground mt-0.5">{user?.email}</p>
+                  <p className="text-sm text-white/70 mt-0.5">{user?.email}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-white/3 border border-white/6">
                   <p className="text-xs font-semibold">Função</p>
-                  <p className="text-sm text-muted-foreground mt-0.5 capitalize">{user?.role}</p>
+                  <p className="text-sm text-white/70 mt-0.5 capitalize">{user?.role}</p>
                 </div>
                 <div className="p-3 rounded-xl bg-white/3 border border-white/6">
                   <p className="text-xs font-semibold">Código de Referência</p>

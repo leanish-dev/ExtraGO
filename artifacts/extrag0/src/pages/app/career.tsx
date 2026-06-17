@@ -167,9 +167,9 @@ function ActivityFeedItem({ title, sub, time, icon, iconBg }: {
       <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${iconBg}`}>{icon}</div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate">{title}</p>
-        {sub && <p className="text-xs text-muted-foreground mt-0.5 truncate">{sub}</p>}
+        {sub && <p className="text-xs text-white/70 mt-0.5 truncate">{sub}</p>}
       </div>
-      {time && <p className="text-[11px] text-muted-foreground flex-shrink-0">{time}</p>}
+      {time && <p className="text-[11px] text-white/65 flex-shrink-0">{time}</p>}
     </motion.div>
   );
 }
@@ -241,7 +241,7 @@ function ActivityFeed() {
         </svg>
       </div>
       <div className="flex items-center gap-2 mb-4 relative">
-        <Activity size={14} className="text-muted-foreground" />
+        <Activity size={14} className="text-white/60" />
         <h2 className="font-semibold text-sm flex-1">Atividade Recente</h2>
         <Link href="/app/feed" className="text-[11px] text-muted-foreground hover:text-primary transition-colors font-medium mr-1.5">Ver tudo</Link>
         <span className="live-dot" />
@@ -309,8 +309,8 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
         </motion.div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-muted-foreground font-medium">{greeting}</p>
-          <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate">{firstName}</h1>
+          <p className="text-xs text-white/70 font-medium">{greeting}</p>
+          <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate neon-text-gradient">{firstName}</h1>
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             <UserBadge user={user} size="sm" />
             {user?.isVerified && (
@@ -327,10 +327,10 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
         </div>
 
         <div className="flex-shrink-0 text-right">
-          <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-bold mb-0.5">Taxa atual</p>
+          <p className="text-[11px] text-white/75 uppercase tracking-widest font-bold mb-0.5">Taxa atual</p>
           <p className="text-3xl sm:text-4xl font-black text-primary leading-none">{currentFee}%</p>
           {nextInfo && (
-            <p className="text-[11px] text-muted-foreground mt-1">→ <span className="text-foreground font-semibold">{nextInfo.fee}%</span> no próximo</p>
+            <p className="text-[11px] text-white/70 mt-1">→ <span className="text-foreground font-semibold">{nextInfo.fee}%</span> no próximo</p>
           )}
         </div>
       </div>
@@ -338,7 +338,7 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
       {!isMax && nextInfo && (
         <div className="relative space-y-2 mb-5">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">{completed} extras concluídos</span>
+            <span className="text-white/70">{completed} extras concluídos</span>
             <span className="font-semibold text-foreground">
               {remaining === 0
                 ? <span className="text-primary font-bold">✓ Pronto para subir de nível!</span>
@@ -359,7 +359,7 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
             </motion.div>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-[11px] text-muted-foreground">{Math.round(progress)}% do caminho para {nextInfo.label}</p>
+            <p className="text-[11px] text-white/70">{Math.round(progress)}% do caminho para {nextInfo.label}</p>
             {monthlySavings > 0 && (
               <motion.span
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -388,12 +388,12 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
           {!isLoading && (
             <>
               <div>
-                <p className="text-muted-foreground font-medium leading-none mb-1">Ganhos totais</p>
+                <p className="text-white/70 font-medium leading-none mb-1">Ganhos totais</p>
                 <p className="font-bold text-foreground">R$<AnimatedCounter value={(stats?.totalEarned ?? 0) / 100} decimals={0} /></p>
               </div>
               <div className="w-px h-7 bg-white/8" />
               <div>
-                <p className="text-muted-foreground font-medium leading-none mb-1">Extras feitos</p>
+                <p className="text-white/70 font-medium leading-none mb-1">Extras feitos</p>
                 <p className="font-bold text-primary"><AnimatedCounter value={completed} /></p>
               </div>
             </>
@@ -488,10 +488,10 @@ export default function CareerPage() {
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#22c55e" }}>Minha Carreira</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight neon-text-gradient">
             Olá, {user?.name?.split(" ")[0] ?? "Profissional"}
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Acompanhe sua evolução e oportunidades</p>
+          <p className="text-sm text-white/70 mt-0.5">Acompanhe sua evolução e oportunidades</p>
         </div>
       </div>
 
@@ -532,7 +532,7 @@ export default function CareerPage() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold">Nenhuma missão ativa</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Busque extras e candidate-se agora</p>
+                  <p className="text-xs text-white/70 mt-0.5">Busque extras e candidate-se agora</p>
                 </div>
                 <Link href="/app/jobs">
                   <button className="text-xs text-primary border border-primary/25 px-3 py-1.5 rounded-full hover:bg-primary/8 transition-all font-semibold">
@@ -555,7 +555,7 @@ export default function CareerPage() {
                       <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold truncate">{app.job?.title ?? "Extra"}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">Aguardando resposta</p>
+                        <p className="text-xs text-white/70 mt-0.5">Aguardando resposta</p>
                       </div>
                       <span className="text-[11px] font-bold text-yellow-400/80 flex-shrink-0 tracking-wide">PEND.</span>
                     </motion.div>
@@ -625,17 +625,17 @@ export default function CareerPage() {
             <div className="flex items-center justify-center gap-6 pt-4 border-t border-white/6">
               <div className="text-center">
                 <ReputationRingSmall score={reputationScore} size={52} />
-                <p className="text-[9px] text-white/60 uppercase tracking-widest mt-1">Reputação</p>
+                <p className="text-[9px] text-white/80 uppercase tracking-widest mt-1">Reputação</p>
               </div>
               <div className="w-px h-14 bg-white/8" />
               <div className="text-center">
                 <p className={`text-2xl font-black ${colors.text}`}>{completedJobs}</p>
-                <p className="text-[9px] text-white/60 uppercase tracking-widest mt-0.5">Extras feitos</p>
+                <p className="text-[9px] text-white/80 uppercase tracking-widest mt-0.5">Extras feitos</p>
               </div>
               <div className="w-px h-14 bg-white/8" />
               <div className="text-center">
                 <p className="text-2xl font-black text-yellow-400">{reputationScore.toFixed(1)}</p>
-                <p className="text-[9px] text-white/60 uppercase tracking-widest mt-0.5">Avaliação</p>
+                <p className="text-[9px] text-white/80 uppercase tracking-widest mt-0.5">Avaliação</p>
               </div>
             </div>
           </div>
@@ -693,24 +693,24 @@ export default function CareerPage() {
                     <div className={`flex-1 min-w-0 pt-1.5 ${isLocked ? "opacity-45" : ""}`}>
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <span className={`text-sm font-bold ${isCurrent ? lc.text : isDone ? lc.text : "text-white/55"}`}>{lv.label}</span>
+                          <span className={`text-sm font-bold ${isCurrent ? lc.text : isDone ? lc.text : "text-white/80"}`}>{lv.label}</span>
                           {isCurrent && (
                             <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide ${lc.bg} ${lc.text} border ${lc.border}`}>Atual</span>
                           )}
                         </div>
-                        <span className={`text-xs font-semibold flex-shrink-0 ${isCurrent ? lc.text : isDone ? "text-white/65" : "text-white/40"}`}>
+                        <span className={`text-xs font-semibold flex-shrink-0 ${isCurrent ? lc.text : isDone ? "text-white/80" : "text-white/75"}`}>
                           Taxa {lv.feePercent}%
                         </span>
                       </div>
                       {idx > 0 && (
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
-                          <span className="text-[10px] text-white/55">{lv.minJobs}+ extras • {lv.minStars}★</span>
+                          <span className="text-[10px] text-white/80">{lv.minJobs}+ extras • {lv.minStars}★</span>
                         </div>
                       )}
                       {isCurrent && nextLevelData && (
                         <div className="mt-2.5">
                           <div className="flex justify-between items-center mb-1">
-                            <span className="text-[10px] text-white/65">Progresso para {nextLevelData.label}</span>
+                            <span className="text-[10px] text-white/80">Progresso para {nextLevelData.label}</span>
                             <span className={`text-[10px] font-bold ${lc.text}`}>{Math.round(progressPct)}%</span>
                           </div>
                           <Progress value={progressPct} className="h-1.5" />
@@ -763,7 +763,7 @@ export default function CareerPage() {
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-xs text-white/80 flex items-center gap-1.5"><Zap size={11} />{nextLevelData.minJobs} extras concluídos</span>
-                    <span className={`text-xs font-bold ${jobsLeft === 0 ? "text-primary" : "text-white/60"}`}>
+                    <span className={`text-xs font-bold ${jobsLeft === 0 ? "text-primary" : "text-white/80"}`}>
                       {jobsLeft === 0 ? "✓ Concluído" : `Faltam ${jobsLeft}`}
                     </span>
                   </div>
@@ -772,7 +772,7 @@ export default function CareerPage() {
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-xs text-white/80 flex items-center gap-1.5"><Star size={11} />Avaliação ≥ {nextLevelData.minStars}★</span>
-                    <span className={`text-xs font-bold ${starsLeft <= 0 ? "text-primary" : "text-white/60"}`}>
+                    <span className={`text-xs font-bold ${starsLeft <= 0 ? "text-primary" : "text-white/80"}`}>
                       {starsLeft <= 0 ? "✓ Atingido" : `+${starsLeft.toFixed(1)}★`}
                     </span>
                   </div>
@@ -812,12 +812,12 @@ export default function CareerPage() {
             <DollarSign size={15} className="text-primary" />
             <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Simulador de Ganhos</h3>
           </div>
-          <p className="text-xs text-white/40 mb-4">Veja quanto você recebe em cada nível</p>
+          <p className="text-xs text-white/75 mb-4">Veja quanto você recebe em cada nível</p>
 
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-xs text-white/50 flex-shrink-0">Valor do Extra</span>
+            <span className="text-xs text-white/80 flex-shrink-0">Valor do Extra</span>
             <div className="flex items-center gap-2 flex-1">
-              <span className="text-xs text-white/40">R$</span>
+              <span className="text-xs text-white/75">R$</span>
               <input
                 type="number"
                 min={10}
@@ -840,14 +840,14 @@ export default function CareerPage() {
                 >
                   <div className="flex items-center gap-2.5">
                     <LevelBadgeIcon level={lv.key} size="sm" />
-                    <span className={`text-sm font-semibold ${isCur ? lc.text : "text-white/60"}`}>{lv.label}</span>
+                    <span className={`text-sm font-semibold ${isCur ? lc.text : "text-white/80"}`}>{lv.label}</span>
                     {isCur && <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide ${lc.bg} ${lc.text} border ${lc.border}`}>Você</span>}
                   </div>
                   <div className="text-right">
-                    <p className={`text-sm font-bold ${isCur ? "text-white" : "text-white/55"}`}>
+                    <p className={`text-sm font-bold ${isCur ? "text-white" : "text-white/80"}`}>
                       R$ {lv.earnings.toFixed(2).replace(".", ",")}
                     </p>
-                    <p className="text-[9px] text-white/30">{100 - lv.feePercent}% retido</p>
+                    <p className="text-[9px] text-white/70">{100 - lv.feePercent}% retido</p>
                   </div>
                 </div>
               );
@@ -856,7 +856,7 @@ export default function CareerPage() {
 
           {nextLevelData && (
             <div className="mt-3 rounded-xl bg-white/[0.08] border border-white/12 px-4 py-3">
-              <p className="text-xs text-white/50 text-center">
+              <p className="text-xs text-white/80 text-center">
                 No nível <span className={`font-bold ${LEVEL_COLORS[nextLevelData.key].text}`}>{nextLevelData.label}</span>, você ganharia{" "}
                 <span className="font-bold text-white">
                   R$ {(simValue * (1 - nextLevelData.feePercent / 100)).toFixed(2).replace(".", ",")}
@@ -872,7 +872,7 @@ export default function CareerPage() {
         {/* ── SECTION: CONQUISTAS ── */}
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/8 to-transparent" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/25 px-2">Conquistas</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/65 px-2">Conquistas</span>
           <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/8 to-transparent" />
         </div>
 
@@ -901,7 +901,7 @@ export default function CareerPage() {
               <Trophy size={15} className="text-primary" />
               <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Conquistas</h3>
             </div>
-            <span className="text-xs text-white/40">
+            <span className="text-xs text-white/75">
               {ACHIEVEMENTS.filter(a => a.unlocked(completedJobs, reputationScore, isVerified)).length}/{ACHIEVEMENTS.length}
             </span>
           </div>
@@ -917,7 +917,7 @@ export default function CareerPage() {
                   </div>
                   <div>
                     <p className={`text-xs font-bold leading-tight ${unlocked ? "text-white/90" : "text-white/30"}`}>{a.label}</p>
-                    <p className="text-[10px] text-white/35 mt-0.5 leading-tight">{a.desc}</p>
+                    <p className="text-[10px] text-white/65 mt-0.5 leading-tight">{a.desc}</p>
                   </div>
                   {unlocked && (
                     <div className="flex items-center gap-1">
@@ -953,7 +953,7 @@ export default function CareerPage() {
             <Star size={15} className="text-yellow-400" />
             <h3 className="text-sm font-bold uppercase tracking-widest text-white/80">Impacto da Reputação</h3>
           </div>
-          <p className="text-xs text-white/40 mb-4">Como sua nota influencia a sua carreira na plataforma</p>
+          <p className="text-xs text-white/75 mb-4">Como sua nota influencia a sua carreira na plataforma</p>
           <div className="space-y-2.5">
             {REPUTATION_IMPACTS.map((item, i) => (
               <div key={i} className="card-summary-career flex items-start gap-3 px-4 py-3.5 relative overflow-hidden">
@@ -962,18 +962,18 @@ export default function CareerPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-white/90">{item.label}</p>
-                  <p className="text-xs text-white/45 mt-0.5 leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-white/75 mt-0.5 leading-relaxed">{item.desc}</p>
                 </div>
                 <ChevronRight size={14} className="text-white/20 flex-shrink-0 mt-2" />
               </div>
             ))}
           </div>
           <div className="mt-4 rounded-xl bg-primary/[0.07] border border-primary/20 px-4 py-4 text-center">
-            <p className="text-xs text-white/60 leading-relaxed">
+            <p className="text-xs text-white/80 leading-relaxed">
               Cada extra que você conclui com qualidade<br />
               <span className="text-primary font-bold">constrói sua carreira dentro da extraGO.</span>
             </p>
-            <div className="mt-2 flex items-center justify-center gap-4 text-[10px] text-white/35 font-semibold">
+            <div className="mt-2 flex items-center justify-center gap-4 text-[10px] text-white/70 font-semibold">
               <span>↑ Reputação</span>
               <span className="text-white/15">•</span>
               <span>↑ Nível</span>

@@ -113,7 +113,7 @@ export default function AdminOpsPage() {
         <AlertTriangle size={36} className="text-yellow-400/60" />
         <div className="text-center">
           <p className="text-sm font-bold tracking-widest">SISTEMA OFFLINE</p>
-          <p className="text-xs text-muted-foreground mt-1">Conexão com o servidor perdida</p>
+          <p className="text-xs text-white/70 mt-1">Conexão com o servidor perdida</p>
         </div>
         <button
           onClick={() => { setLoading(true); fetchOps(); }}
@@ -136,7 +136,7 @@ export default function AdminOpsPage() {
     { label: "NOVOS HOJE",       value: data.newUsersToday,                                     color: "text-cyan-400" },
     { label: "CANDIDATURAS",     value: data.appsToday,                                         color: "text-yellow-400" },
     { label: "APROVADOS",        value: data.approvedToday,                                     color: "text-green-400" },
-    { label: "SAQUES PEND.",     value: data.pendingWithdrawals,                                color: data.pendingWithdrawals > 5 ? "text-destructive" : "text-muted-foreground" },
+    { label: "SAQUES PEND.",     value: data.pendingWithdrawals,                                color: data.pendingWithdrawals > 5 ? "text-destructive" : "text-white/70" },
     { label: "PAGAMENTOS HOJE",  value: `R$${(data.todayPayments / 100).toFixed(0)}`,           color: "text-green-400" },
     { label: "PROFISSIONAIS",    value: data.totalUsers.toLocaleString("pt-BR"),                color: "text-foreground" },
   ];
@@ -163,7 +163,7 @@ export default function AdminOpsPage() {
           {lastUpdate && (
             <>
               <span className="hidden md:block w-px h-4 bg-white/10" />
-              <span className="text-[10px] text-muted-foreground/50 hidden md:block">
+              <span className="text-[10px] text-white/70 hidden md:block">
                 {format(lastUpdate, "HH:mm:ss", { locale: ptBR })}
               </span>
             </>
@@ -184,7 +184,7 @@ export default function AdminOpsPage() {
             FLUXO OPERACIONAL
         ══════════════════════════════════ */}
         <div className="py-6 border-b border-white/5">
-          <p className="text-[9px] text-muted-foreground/40 tracking-[0.25em] uppercase font-bold mb-5">
+          <p className="text-[9px] text-white/65 tracking-[0.25em] uppercase font-bold mb-5">
             Fluxo Operacional · atualiza 10s
           </p>
           <div className="overflow-x-auto no-scrollbar -mx-1 px-1">
@@ -197,7 +197,7 @@ export default function AdminOpsPage() {
                   transition={{ delay: i * 0.035 }}
                   className="px-3 py-2 first:pl-0"
                 >
-                  <p className="text-[8px] text-muted-foreground/40 tracking-[0.2em] mb-2 leading-none">{m.label}</p>
+                  <p className="text-[8px] text-white/65 tracking-[0.2em] mb-2 leading-none">{m.label}</p>
                   <p className={`text-2xl font-black tabular-nums leading-none ${m.color}`}>{m.value}</p>
                 </motion.div>
               ))}
@@ -210,7 +210,7 @@ export default function AdminOpsPage() {
         ══════════════════════════════════ */}
         <div className="py-6 border-b border-white/5">
           <div className="flex items-center justify-between mb-5">
-            <p className="text-[9px] text-muted-foreground/40 tracking-[0.25em] uppercase font-bold">
+            <p className="text-[9px] text-white/65 tracking-[0.25em] uppercase font-bold">
               Rede Nacional · {BRAZIL_NODES.length} regiões
             </p>
             <div className="flex items-center gap-1.5">
@@ -233,7 +233,7 @@ export default function AdminOpsPage() {
                       {node.primary ? "NODO ATIVO" : "EXPANSÃO"}
                     </p>
                   </div>
-                  <span className="text-[9px] text-muted-foreground/25 font-bold">{node.sigla}</span>
+                  <span className="text-[9px] text-white/60 font-bold">{node.sigla}</span>
                 </div>
               ))}
             </div>
@@ -266,7 +266,7 @@ export default function AdminOpsPage() {
               className="overflow-hidden"
             >
               <div className="py-4 border-b border-white/5">
-                <p className="text-[9px] text-muted-foreground/40 tracking-[0.25em] uppercase font-bold mb-3">
+                <p className="text-[9px] text-white/65 tracking-[0.25em] uppercase font-bold mb-3">
                   Alertas Operacionais
                 </p>
                 <div className="space-y-2">
@@ -294,7 +294,7 @@ export default function AdminOpsPage() {
             INFRAESTRUTURA
         ══════════════════════════════════ */}
         <div className="py-6">
-          <p className="text-[9px] text-muted-foreground/40 tracking-[0.25em] uppercase font-bold mb-4">
+          <p className="text-[9px] text-white/65 tracking-[0.25em] uppercase font-bold mb-4">
             Infraestrutura · atualiza 30s
           </p>
           <div className="flex flex-wrap gap-x-8 gap-y-3">
@@ -319,7 +319,7 @@ export default function AdminOpsPage() {
               );
             })}
           </div>
-          <p className="text-[8px] text-muted-foreground/20 tracking-[0.2em] mt-6">
+          <p className="text-[8px] text-white/55 tracking-[0.2em] mt-6">
             EXTRAG0 SISTEMAS NACIONAIS · OPERAÇÕES EM TEMPO REAL
           </p>
         </div>

@@ -56,9 +56,9 @@ function ActivityFeedItem({ title, sub, time, icon, iconBg }: {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate">{title}</p>
-        {sub && <p className="text-xs text-muted-foreground mt-0.5 truncate">{sub}</p>}
+        {sub && <p className="text-xs text-white/70 mt-0.5 truncate">{sub}</p>}
       </div>
-      {time && <p className="text-[11px] text-muted-foreground flex-shrink-0">{time}</p>}
+      {time && <p className="text-[11px] text-white/70 flex-shrink-0">{time}</p>}
     </motion.div>
   );
 }
@@ -130,9 +130,9 @@ function ActivityFeed({ role, isLoading }: { role: string; isLoading?: boolean }
         </svg>
       </div>
       <div className="flex items-center gap-2 mb-4 relative">
-        <Activity size={14} className="text-muted-foreground" />
+        <Activity size={14} className="text-white/70" />
         <h2 className="font-semibold text-sm flex-1">Atividade Recente</h2>
-        <Link href="/app/feed" className="text-[11px] text-muted-foreground hover:text-primary transition-colors font-medium mr-1.5">Ver tudo</Link>
+        <Link href="/app/feed" className="text-[11px] text-white/70 hover:text-primary transition-colors font-medium mr-1.5">Ver tudo</Link>
         <span className="live-dot" />
       </div>
       {loading ? (
@@ -214,8 +214,8 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
         </motion.div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-muted-foreground font-medium">{greeting}</p>
-          <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate">{firstName}</h1>
+          <p className="text-xs text-white/70 font-medium">{greeting}</p>
+          <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate neon-text-gradient">{firstName}</h1>
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             <UserBadge user={user} size="sm" />
             {user?.isVerified && (
@@ -232,10 +232,10 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
         </div>
 
         <div className="flex-shrink-0 text-right">
-          <p className="text-[11px] text-muted-foreground uppercase tracking-widest font-bold mb-0.5">Taxa atual</p>
+          <p className="text-[11px] text-white/75 uppercase tracking-widest font-bold mb-0.5">Taxa atual</p>
           <p className="text-3xl sm:text-4xl font-black text-primary leading-none">{currentFee}%</p>
           {nextInfo && (
-            <p className="text-[11px] text-muted-foreground mt-1">→ <span className="text-foreground font-semibold">{nextInfo.fee}%</span> no próximo</p>
+            <p className="text-[11px] text-white/70 mt-1">→ <span className="text-foreground font-semibold">{nextInfo.fee}%</span> no próximo</p>
           )}
         </div>
       </div>
@@ -244,7 +244,7 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
       {!isMax && nextInfo && (
         <div className="relative space-y-2 mb-5">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">{completed} extras concluídos</span>
+            <span className="text-white/70">{completed} extras concluídos</span>
             <span className="font-semibold text-foreground">
               {remaining === 0
                 ? <span className="text-primary font-bold">✓ Pronto para subir de nível!</span>
@@ -265,7 +265,7 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
             </motion.div>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-[11px] text-muted-foreground">{Math.round(progress)}% do caminho para {nextInfo.label}</p>
+            <p className="text-[11px] text-white/70">{Math.round(progress)}% do caminho para {nextInfo.label}</p>
             {monthlySavings > 0 && (
               <motion.span
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -295,12 +295,12 @@ function CareerHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
           {!isLoading && (
             <>
               <div>
-                <p className="text-muted-foreground font-medium leading-none mb-1">Ganhos totais</p>
+                <p className="text-white/70 font-medium leading-none mb-1">Ganhos totais</p>
                 <p className="font-bold text-foreground">R$<AnimatedCounter value={(stats?.totalEarned ?? 0) / 100} decimals={0} /></p>
               </div>
               <div className="w-px h-7 bg-white/8" />
               <div>
-                <p className="text-muted-foreground font-medium leading-none mb-1">Extras feitos</p>
+                <p className="text-white/70 font-medium leading-none mb-1">Extras feitos</p>
                 <p className="font-bold text-primary"><AnimatedCounter value={completed} /></p>
               </div>
             </>
@@ -383,8 +383,8 @@ function CompanyHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-muted-foreground font-medium">{greeting} 👋</p>
-          <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate">{displayName}</h1>
+          <p className="text-xs text-white/70 font-medium">{greeting} 👋</p>
+          <h1 className="text-xl sm:text-2xl font-black leading-tight mt-0.5 truncate neon-text-gradient">{displayName}</h1>
           {user?.isVerified && (
             <span className="inline-flex items-center gap-1 text-[11px] font-bold text-primary bg-primary/8 border border-primary/18 px-2 py-0.5 rounded-full mt-2">
               <CheckCircle size={8} /> Empresa Verificada
@@ -394,28 +394,28 @@ function CompanyHero({ stats, isLoading }: { stats: any; isLoading: boolean }) {
           {/* Inline stats — no cards, just data */}
           <div className="flex items-center gap-5 mt-4 text-xs flex-wrap">
             <div>
-              <p className="text-muted-foreground font-medium leading-none mb-1">Extras abertos</p>
+              <p className="text-white/70 font-medium leading-none mb-1">Extras abertos</p>
               <p className="font-bold text-secondary text-lg leading-none">
                 {isLoading ? "—" : <AnimatedCounter value={stats?.activeJobs ?? 0} />}
               </p>
             </div>
             <div className="w-px h-8 bg-white/8" />
             <div>
-              <p className="text-muted-foreground font-medium leading-none mb-1">Profissionais</p>
+              <p className="text-white/70 font-medium leading-none mb-1">Profissionais</p>
               <p className="font-bold text-foreground text-lg leading-none">
                 {isLoading ? "—" : <AnimatedCounter value={stats?.totalWorkers ?? 0} />}
               </p>
             </div>
             <div className="w-px h-8 bg-white/8" />
             <div>
-              <p className="text-muted-foreground font-medium leading-none mb-1">Investido</p>
+              <p className="text-white/70 font-medium leading-none mb-1">Investido</p>
               <p className="font-bold text-foreground text-lg leading-none">
                 {isLoading ? "—" : <>R$<AnimatedCounter value={(stats?.totalSpent ?? 0) / 100} decimals={0} /></>}
               </p>
             </div>
             <div className="w-px h-8 bg-white/8 hidden sm:block" />
             <div className="hidden sm:block">
-              <p className="text-muted-foreground font-medium leading-none mb-1">Publicados</p>
+              <p className="text-white/70 font-medium leading-none mb-1">Publicados</p>
               <p className="font-bold text-foreground text-lg leading-none">
                 {isLoading ? "—" : <AnimatedCounter value={stats?.totalJobsPosted ?? 0} />}
               </p>
@@ -469,7 +469,7 @@ function CompanyDashboard() {
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#22c55e" }}>Painel Empresa</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight neon-text-gradient">
             Olá, {user?.name?.split(" ")[0] ?? "Empresa"}
           </h1>
           <p className="text-sm text-white/70 mt-0.5">Gerencie seus extras e contratações</p>
@@ -483,7 +483,7 @@ function CompanyDashboard() {
         {/* Section divider */}
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/8 to-transparent" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55 px-2">Operações</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/70 px-2">Operações</span>
           <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/8 to-transparent" />
         </div>
 
@@ -528,11 +528,11 @@ function CompanyDashboard() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-sm truncate group-hover:text-primary transition-colors">{job.title}</p>
-                          <p className="text-xs text-muted-foreground mt-0.5">{job.location} · {job.date ? format(new Date(job.date), "dd MMM", { locale: ptBR }) : ""}</p>
+                          <p className="text-xs text-white/70 mt-0.5">{job.location} · {job.date ? format(new Date(job.date), "dd MMM", { locale: ptBR }) : ""}</p>
                         </div>
                         <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
                           <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${s.class}`}>{s.label}</span>
-                          <span className="text-[11px] text-muted-foreground">{job.workersApproved}/{job.workersNeeded} vagas</span>
+                          <span className="text-[11px] text-white/70">{job.workersApproved}/{job.workersNeeded} vagas</span>
                         </div>
                       </div>
                     </Link>
@@ -580,7 +580,7 @@ function CompanyDashboard() {
                   </div>
                   <div className="relative">
                     <p className={`text-sm font-bold ${action.color}`}>{action.label}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{action.sub}</p>
+                    <p className="text-xs text-white/70 mt-0.5">{action.sub}</p>
                   </div>
                 </motion.div>
               </Link>
@@ -625,7 +625,7 @@ function FreelancerDashboard() {
             </div>
             <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#22c55e" }}>Painel Carreira</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight neon-text-gradient">
             Olá, {user?.name?.split(" ")[0] ?? "Freelancer"}
           </h1>
           <p className="text-sm text-white/70 mt-0.5">Acompanhe sua evolução e oportunidades</p>
@@ -639,7 +639,7 @@ function FreelancerDashboard() {
         {/* Section divider */}
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/8 to-transparent" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/55 px-2">Missões & Atividade</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/70 px-2">Missões & Atividade</span>
           <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/8 to-transparent" />
         </div>
 
@@ -669,7 +669,7 @@ function FreelancerDashboard() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold">Nenhuma missão ativa</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Busque extras e candidate-se agora</p>
+                  <p className="text-xs text-white/70 mt-0.5">Busque extras e candidate-se agora</p>
                 </div>
                 <Link href="/app/jobs">
                   <button className="text-xs text-primary border border-primary/25 px-3 py-1.5 rounded-full hover:bg-primary/8 transition-all font-semibold">
@@ -693,7 +693,7 @@ function FreelancerDashboard() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-semibold truncate">{app.job?.title ?? "Extra"}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">Aguardando resposta</p>
+                        <p className="text-xs text-white/70 mt-0.5">Aguardando resposta</p>
                       </div>
                       <span className="text-[11px] font-bold text-yellow-400/80 flex-shrink-0 tracking-wide">PEND.</span>
                     </motion.div>

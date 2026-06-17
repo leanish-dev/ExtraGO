@@ -158,8 +158,8 @@ export default function NotificationsPage() {
             <Bell size={16} className="text-primary relative z-10" />
           </div>
           <div>
-            <h1 className="text-xl font-bold leading-tight">Notificações</h1>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <h1 className="text-xl font-bold leading-tight neon-text-gradient">Notificações</h1>
+            <p className="text-xs text-white/70 mt-0.5">
               {unread > 0
                 ? <span className="text-primary font-semibold">{unread} não lida{unread !== 1 ? "s" : ""}</span>
                 : <span>Tudo em dia</span>}
@@ -200,11 +200,11 @@ export default function NotificationsPage() {
                 border: "1px solid rgba(34,197,94,0.20)",
               }}>
               <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, rgba(34,197,94,0.45), rgba(59,130,246,0.30))" }} />
-              <BellOff size={22} className="text-muted-foreground" />
+              <BellOff size={22} className="text-white/60" />
             </div>
             <div>
               <p className="font-semibold">Tudo em dia!</p>
-              <p className="text-xs text-muted-foreground mt-1 max-w-[200px] leading-relaxed">
+              <p className="text-xs text-white/70 mt-1 max-w-[200px] leading-relaxed">
                 Novas notificações sobre Extras, candidaturas e pagamentos aparecerão aqui.
               </p>
             </div>
@@ -244,8 +244,8 @@ export default function NotificationsPage() {
                       {meta.group}
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{notif.message}</p>
-                  <p className="text-[10px] text-muted-foreground/60 mt-1.5 font-medium">
+                  <p className="text-xs text-white/80 leading-relaxed">{notif.message}</p>
+                  <p className="text-[10px] text-white/60 mt-1.5 font-medium">
                     {notif.createdAt ? format(new Date(notif.createdAt), "dd 'de' MMM 'às' HH:mm", { locale: ptBR }) : ""}
                   </p>
                 </div>

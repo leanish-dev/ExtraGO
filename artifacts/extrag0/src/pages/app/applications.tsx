@@ -71,7 +71,7 @@ function ApplicationCard({ app, isCompany, onApprove, onReject, index }: {
             <p className="font-semibold text-sm truncate">
               {isCompany ? (app.freelancer?.name ?? "Profissional") : (app.job?.title ?? "Extra")}
             </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-xs text-white/70 mt-0.5">
               {app.appliedAt ? format(new Date(app.appliedAt), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR }) : ""}
             </p>
           </div>
@@ -178,7 +178,7 @@ export default function ApplicationsPage() {
               {isCompany ? "Gestão de Equipe" : "Módulo Candidaturas"}
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight neon-text-gradient">
             {isCompany ? "Candidaturas Recebidas" : "Minhas Candidaturas"}
           </h1>
           <p className="text-sm text-white/70 mt-0.5">

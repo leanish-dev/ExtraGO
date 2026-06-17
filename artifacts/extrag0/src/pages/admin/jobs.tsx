@@ -50,13 +50,13 @@ function JobRow({ job }: { job: Job }) {
       <div className="flex items-start justify-between gap-3 relative">
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm">{job.title}</p>
-          <p className="text-xs text-muted-foreground mt-0.5">{job.category}</p>
+          <p className="text-xs text-white/70 mt-0.5">{job.category}</p>
         </div>
         <span className={`text-xs px-2 py-0.5 rounded-full border flex-shrink-0 ${statusColors[job.status ?? "open"]}`}>
           {statusLabels[job.status ?? "open"]}
         </span>
       </div>
-      <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground relative">
+      <div className="grid grid-cols-2 gap-1 text-xs text-white/70 relative">
         <span className="flex items-center gap-1"><MapPin size={11} /> {job.location}</span>
         <span className="flex items-center gap-1"><Clock size={11} /> {job.date ? format(new Date(job.date), "dd/MM/yyyy", { locale: ptBR }) : ""}</span>
         <span className="flex items-center gap-1"><Users size={11} /> {job.workersApproved}/{job.workersNeeded} contratados</span>
@@ -81,13 +81,13 @@ export default function AdminJobsPage() {
   return (
     <div className="p-4 sm:p-6 max-w-5xl mx-auto space-y-6 pb-20 lg:pb-6">
       <div>
-        <h1 className="text-[22px] font-bold">Gerenciar Extras</h1>
-        <p className="text-muted-foreground mt-1">{filtered.length} extra{filtered.length !== 1 ? "s" : ""}</p>
+        <h1 className="text-[22px] font-bold neon-text-gradient">Gerenciar Extras</h1>
+        <p className="text-white/70 mt-1">{filtered.length} extra{filtered.length !== 1 ? "s" : ""}</p>
       </div>
 
       <div className="space-y-3">
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
           <Input
             placeholder="Buscar por título ou categoria..."
             value={search}
@@ -119,8 +119,8 @@ export default function AdminJobsPage() {
 
       {!isLoading && filtered.length === 0 && (
         <div className="text-center py-16">
-          <Briefcase size={40} className="text-muted-foreground mx-auto mb-3" />
-          <p className="text-muted-foreground">Nenhum extra encontrado</p>
+          <Briefcase size={40} className="text-white/60 mx-auto mb-3" />
+          <p className="text-white/70">Nenhum extra encontrado</p>
         </div>
       )}
 
