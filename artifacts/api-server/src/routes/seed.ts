@@ -110,7 +110,7 @@ router.post("/setup/seed", async (_req, res) => {
     // ─── 3. CCO — Qaialla Pereira ─────────────────────────────────────────
     const qaiallaid = await upsertUser({
       email: "qaialla.exclusive@gmail.com",
-      passwordHash: hashPassword("Gremory26@"),
+      passwordHash: hashPassword("Qaialla27@"),
       name: "Qaialla Pereira",
       role: "admin",
       adminRole: "super_admin",

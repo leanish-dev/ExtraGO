@@ -72,20 +72,34 @@ Refinamento da identidade visual alinhada com posicionamento de infraestrutura n
 ### ✅ 3. Test Data Isolation
 Política documentada e helpers implementados:
 - `canUseMockData()` — isolamento de dados de demonstração
-- `isMasterAccount()` — proteção de 3 contas de governança
+- `isMasterAccount()` — proteção de 4 contas de governança
 - Contas de teste oficiais registradas (2 contas)
-- Contas master oficiais registradas (3 contas: Leonardo, Jean Dick, extrago.ceo)
-- Seeder reescrito para provisionar apenas 5 contas aprovadas — sem dados de ecossistema
+- Contas master oficiais registradas (4 contas: Leonardo, Jean Dick, Qaialla, extrago.ceo)
+- Seeder reescrito para provisionar apenas 6 contas aprovadas — sem dados de ecossistema
 
 ---
 
-### ✅ 4. Limpeza de Dados de Produção
-O banco de dados foi completamente limpo. Apenas 5 contas aprovadas permanecem:
-- `leonardoscheffel2000@gmail.com` (CEO)
-- `jeandick2000@gmail.com` (CMO)
+### ✅ 4. Limpeza de Dados de Produção e Estrutura Administrativa Final
+O banco de dados foi completamente limpo. Apenas 6 contas aprovadas permanecem:
+- `leonardoscheffel2000@gmail.com` (CEO — `corporateRole: "ceo"`)
+- `jeandick2000@gmail.com` (CMO — `corporateRole: "cmo"`)
+- `qaialla.exclusive@gmail.com` (CCO — `corporateRole: "cco"`)
 - `extrago.ceo@yahoo.com` (CEO Master)
 - `teste.f@extrago.com` (freelancer de teste)
 - `teste.e@extrago.com` (empresa de teste)
+
+**Hierarquia administrativa final:**
+```
+CEO (Leonardo) — Controle máximo
+    CMO (Jean Dick) — Marketing e crescimento
+    CCO (Qaialla Pereira) — Comercial, expansão, representantes
+    CEO Master (extrago.ceo@yahoo.com) — Conta reserva
+```
+
+**Badges administrativas:**
+- Navbar exibe `corporateRole` como badge colorido e auto-width (`inline-flex` sem `w-[...]`)
+- CEO = dourado, CMO = ciano, CCO = índigo
+- Leonardo nunca aparece como "SuperAdmin" — classificação institucional é "CEO"
 
 ---
 
