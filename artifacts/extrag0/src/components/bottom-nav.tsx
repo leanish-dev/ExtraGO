@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Briefcase, Globe, Wallet, User } from "lucide-react";
+import { LayoutDashboard, Briefcase, Globe, Wallet, User, TrendingUp } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 interface BottomNavItem {
@@ -11,7 +11,40 @@ interface BottomNavItem {
   activeIcon?: React.ReactNode;
 }
 
-const NAV_ITEMS: BottomNavItem[] = [
+const FREELANCER_NAV: BottomNavItem[] = [
+  {
+    label: "Carreira",
+    href: "/app/career",
+    icon: <TrendingUp size={22} strokeWidth={1.8} />,
+    activeIcon: <TrendingUp size={22} strokeWidth={2.4} />,
+  },
+  {
+    label: "Extras",
+    href: "/app/jobs",
+    icon: <Briefcase size={22} strokeWidth={1.8} />,
+    activeIcon: <Briefcase size={22} strokeWidth={2.4} />,
+  },
+  {
+    label: "Rede",
+    href: "/app/network",
+    icon: <Globe size={22} strokeWidth={1.8} />,
+    activeIcon: <Globe size={22} strokeWidth={2.4} />,
+  },
+  {
+    label: "Carteira",
+    href: "/app/wallet",
+    icon: <Wallet size={22} strokeWidth={1.8} />,
+    activeIcon: <Wallet size={22} strokeWidth={2.4} />,
+  },
+  {
+    label: "Perfil",
+    href: "/app/profile",
+    icon: <User size={22} strokeWidth={1.8} />,
+    activeIcon: <User size={22} strokeWidth={2.4} />,
+  },
+];
+
+const COMPANY_NAV: BottomNavItem[] = [
   {
     label: "Dashboard",
     href: "/app/dashboard",
@@ -50,8 +83,12 @@ export default function BottomNav() {
 
   if (!user) return null;
 
+  const NAV_ITEMS = user.role === "freelancer" ? FREELANCER_NAV : COMPANY_NAV;
+
   const isActive = (href: string) =>
-    href === "/app/dashboard" ? loc === href : loc.startsWith(href);
+    href === "/app/dashboard" || href === "/app/career"
+      ? loc === href
+      : loc.startsWith(href);
 
   return (
     <nav

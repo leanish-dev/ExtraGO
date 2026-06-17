@@ -57,6 +57,7 @@ function SectionCard({ title, icon, children, defaultOpen = true }: { title: str
   return (
     <div className="card-profile-section overflow-hidden">
       <button
+        type="button"
         onClick={() => setOpen(v => !v)}
         className="w-full flex items-center justify-between p-5 hover:bg-white/[0.025] transition-colors relative"
       >

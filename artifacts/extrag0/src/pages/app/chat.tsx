@@ -504,27 +504,44 @@ export default function ChatPage() {
             transition={{ duration: 0.2 }}
             className={`flex flex-col border-r border-white/6 bg-[#040608]/80 flex-shrink-0 ${isMobile ? "w-full" : "w-[300px] xl:w-[320px]"}`}
           >
-            <div className="p-4 border-b border-white/6 flex-shrink-0">
-              <div className="flex items-center justify-between mb-3.5">
-                <div className="flex items-center gap-2">
-                  <h1 className="text-base font-bold">Mensagens</h1>
-                  {totalUnread > 0 && (
-                    <span className="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-black">
-                      {totalUnread > 9 ? "9+" : totalUnread}
-                    </span>
-                  )}
+            {/* Branded conversation list header */}
+            <div className="relative overflow-hidden flex-shrink-0" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              {/* Ambient fills */}
+              <div className="absolute inset-0 pointer-events-none" style={{
+                background: `
+                  radial-gradient(ellipse 80% 100% at 10% 30%, rgba(22,163,74,0.14) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 80% at 85% 70%, rgba(59,130,246,0.10) 0%, transparent 55%),
+                  linear-gradient(180deg, rgba(6,9,14,0.97) 0%, rgba(6,9,14,0.92) 100%)
+                `,
+              }} />
+              {/* Top accent line */}
+              <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                style={{ background: "linear-gradient(90deg, rgba(34,197,94,0.50) 0%, rgba(59,130,246,0.35) 50%, rgba(20,184,166,0.25) 100%)" }} />
+
+              <div className="relative p-4">
+                <div className="flex items-center justify-between mb-3.5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-lg bg-primary/10 border border-primary/22 flex items-center justify-center">
+                      <MessageCircle size={11} className="text-primary" />
+                    </div>
+                    <h1 className="text-base font-bold">Mensagens</h1>
+                    {totalUnread > 0 && (
+                      <span className="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-black">
+                        {totalUnread > 9 ? "9+" : totalUnread}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    {sseConnected ? (
+                      <span className="flex items-center gap-1 text-[10px] text-green-400/70">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                        Live
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-muted-foreground/40">polling</span>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  {sseConnected ? (
-                    <span className="flex items-center gap-1 text-[10px] text-green-400/70">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                      Live
-                    </span>
-                  ) : (
-                    <span className="text-[10px] text-muted-foreground/40">polling</span>
-                  )}
-                </div>
-              </div>
               <div className="relative">
                 <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/50" />
                 <Input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
@@ -532,6 +549,7 @@ export default function ChatPage() {
                   className="pl-8 bg-white/5 border-white/8 rounded-xl h-9 text-sm focus:border-primary/40"
                 />
               </div>
+            </div>
             </div>
 
             <div className="flex-1 overflow-y-auto">

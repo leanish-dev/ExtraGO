@@ -23,8 +23,32 @@ function StatBadge({ value, label, color = "text-primary" }: { value: React.Reac
   );
 }
 
+function MessageButton({ recipientId, setLocation }: { recipientId: number; setLocation: (path: string) => void }) {
+  const [loading, setLoading] = useState(false);
+  const handleOpen = async () => {
+    setLoading(true);
+    try {
+      await apiFetch("/api/chat/conversations", { method: "POST", body: JSON.stringify({ recipientId }) });
+    } catch { /* conversation may already exist */ } finally {
+      setLoading(false);
+      setLocation("/app/chat");
+    }
+  };
+  return (
+    <Button
+      onClick={handleOpen}
+      disabled={loading}
+      className="w-full h-12 font-bold text-sm rounded-xl bg-white/8 border border-white/15 text-foreground hover:bg-white/12"
+    >
+      {loading ? <Loader2 size={15} className="mr-2 animate-spin" /> : <MessageCircle size={15} className="mr-2" />}
+      Mensagem
+    </Button>
+  );
+}
+
 export default function CompanyProfilePage() {
   const [, params] = useRoute("/app/companies/:id");
+  const [, setLocation] = useLocation();
   const { user: me } = useAuth();
   const qc = useQueryClient();
   const userId = params?.id ? parseInt(params.id) : 0;
@@ -211,11 +235,7 @@ export default function CompanyProfilePage() {
             </Button>
 
             {isFreelancer && (
-              <Link href="/app/chat">
-                <Button className="w-full h-12 font-bold text-sm rounded-xl bg-white/8 border border-white/15 text-foreground hover:bg-white/12">
-                  <MessageCircle size={15} className="mr-2" /> Mensagem
-                </Button>
-              </Link>
+              <MessageButton recipientId={userId} setLocation={setLocation} />
             )}
           </div>
         )}

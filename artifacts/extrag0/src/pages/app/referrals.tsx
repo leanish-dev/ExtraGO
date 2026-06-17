@@ -809,13 +809,14 @@ export default function ReferralsPage() {
           <div className="space-y-2">
             {REFERRAL_TIERS.map((t, i) => {
               const isCurrent = i === currentReferralTierIdx;
+              const tierKey = t.key === "indicador" ? "indicador" : t.key === "agente" ? "agente_captacao" : "embaixador_regional";
               return (
                 <div
                   key={t.key}
                   className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${isCurrent ? "bg-primary/8 border-primary/25" : "bg-white/2 border-white/6"}`}
                 >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0 ${isCurrent ? "bg-primary/15 border border-primary/30" : "bg-white/4 border border-white/8"}`}>
-                    {t.emoji}
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isCurrent ? "bg-primary/15 border border-primary/30 shadow-[0_0_16px_rgba(124,252,0,0.20)]" : "bg-white/4 border border-white/8"}`}>
+                    <ReferralBadgeIcon tier={tierKey} size="lg" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm font-bold leading-tight ${isCurrent ? "text-primary" : "text-foreground/80"}`}>

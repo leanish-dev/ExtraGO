@@ -36,49 +36,13 @@ function CommandCenterHeader({ unreadCount }: { unreadCount: number }) {
         `,
       }} />
 
-      {/* SVG: connection network + sparklines */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 320 110" preserveAspectRatio="none" aria-hidden="true">
-        {/* Connection lines */}
-        <line x1="30" y1="35" x2="80" y2="55" stroke="rgba(34,197,94,0.25)" strokeWidth="0.8" strokeDasharray="3,2"/>
-        <line x1="80" y1="55" x2="140" y2="40" stroke="rgba(20,184,166,0.22)" strokeWidth="0.8" strokeDasharray="3,2"/>
-        <line x1="140" y1="40" x2="200" y2="60" stroke="rgba(59,130,246,0.22)" strokeWidth="0.8" strokeDasharray="3,2"/>
-        <line x1="200" y1="60" x2="260" y2="45" stroke="rgba(139,92,246,0.20)" strokeWidth="0.8" strokeDasharray="3,2"/>
-        <line x1="260" y1="45" x2="300" y2="65" stroke="rgba(245,158,11,0.20)" strokeWidth="0.8" strokeDasharray="3,2"/>
-        <line x1="80" y1="55" x2="80" y2="85" stroke="rgba(34,197,94,0.15)" strokeWidth="0.6"/>
-        <line x1="200" y1="60" x2="200" y2="90" stroke="rgba(59,130,246,0.15)" strokeWidth="0.6"/>
-
-        {/* Activity sparkline — growth curve */}
-        <path d="M10,95 L30,88 L55,92 L80,78 L105,82 L130,70 L155,75 L180,62 L205,67 L230,55 L255,60 L280,48 L310,52"
-          stroke="rgba(124,252,0,0.35)" strokeWidth="1.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M10,99 L30,94 L55,97 L80,86 L105,89 L130,80 L155,83 L180,72 L205,76 L230,66 L255,70 L280,60 L310,63"
-          stroke="rgba(20,184,166,0.20)" strokeWidth="0.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-
-        {/* Node dots */}
-        <circle cx="30" cy="35" r="3" fill="rgba(34,197,94,0.7)" />
-        <circle cx="30" cy="35" r="6" fill="none" stroke="rgba(34,197,94,0.25)" strokeWidth="1"/>
-        <circle cx="80" cy="55" r="2.5" fill="rgba(20,184,166,0.7)" />
-        <circle cx="140" cy="40" r="3" fill="rgba(59,130,246,0.7)" />
-        <circle cx="140" cy="40" r="6" fill="none" stroke="rgba(59,130,246,0.22)" strokeWidth="1"/>
-        <circle cx="200" cy="60" r="2.5" fill="rgba(139,92,246,0.7)" />
-        <circle cx="260" cy="45" r="3" fill="rgba(245,158,11,0.7)" />
-        <circle cx="300" cy="65" r="2.5" fill="rgba(236,72,153,0.6)" />
-
-        {/* Dot grid — bottom left */}
-        {[0,1,2,3,4].map(r => [0,1,2,3].map(c => (
-          <circle key={`${r}-${c}`} cx={8 + c * 10} cy={75 + r * 8} r="0.9"
-            fill={`rgba(34,197,94,${0.12 - r * 0.02})`} />
-        )))}
-
-        {/* Dot grid — top right */}
-        {[0,1,2].map(r => [0,1,2,3].map(c => (
-          <circle key={`tr-${r}-${c}`} cx={288 + c * 9} cy={10 + r * 9} r="0.8"
-            fill={`rgba(59,130,246,${0.12 - r * 0.02})`} />
-        )))}
-
-        {/* "GO" watermark */}
-        <text x="155" y="58" fill="rgba(124,252,0,0.06)" fontSize="38" fontWeight="900"
-          fontFamily="system-ui" letterSpacing="-2" textAnchor="middle">GO</text>
-      </svg>
+      {/* CSS dot-grid texture */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        backgroundImage: "radial-gradient(circle, rgba(34,197,94,0.13) 1px, transparent 1px)",
+        backgroundSize: "18px 18px",
+        WebkitMaskImage: "linear-gradient(135deg, rgba(0,0,0,0.5) 0%, transparent 55%, rgba(0,0,0,0.25) 100%)",
+        maskImage: "linear-gradient(135deg, rgba(0,0,0,0.5) 0%, transparent 55%, rgba(0,0,0,0.25) 100%)",
+      }} />
 
       {/* Dark overlay for content readability */}
       <div className="absolute inset-0" style={{
