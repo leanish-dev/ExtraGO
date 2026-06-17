@@ -376,97 +376,126 @@ export default function LandingPage() {
         </div>
 
         {/* ══════════════════════════════════════════
-            PAINEL EM TEMPO REAL
+            PAINEL EM TEMPO REAL — image-integrated
         ══════════════════════════════════════════ */}
         <section className="px-5 pb-8">
           <ScrollSection>
             <div className="max-w-5xl mx-auto">
-              <div className="relative">
-                {/* Background image */}
-                <div className="absolute inset-0" style={{ backgroundImage: `url(${painelCentroBgImg})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }} />
-                {/* Dark overlay for readability */}
-                <div className="absolute inset-0" style={{ background: "rgba(4,10,20,0.60)" }} />
-                {/* Volumetric light — brand glows */}
-                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 55% at 8% 50%,rgba(22,163,74,0.10) 0%,transparent 58%), radial-gradient(ellipse 55% 60% at 93% 15%,rgba(0,229,255,0.07) 0%,transparent 55%), radial-gradient(ellipse 45% 35% at 50% 95%,rgba(124,252,0,0.06) 0%,transparent 62%)" }} />
-                {/* Network grid */}
-                <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(0,229,255,0.020) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.020) 1px,transparent 1px)", backgroundSize: "44px 44px" }} />
-                {/* Live indicator */}
-                <div className="absolute top-3 right-4 flex items-center gap-1.5">
-                  <span className="live-dot" />
-                  <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "rgba(0,229,255,0.80)" }}>Ao vivo</span>
-                </div>
+              {/* Outer frame — matches image border style */}
+              <div className="relative overflow-hidden rounded-2xl"
+                style={{ border: "1px solid rgba(0,229,255,0.22)", boxShadow: "0 0 0 1px rgba(124,252,0,0.06), 0 24px 80px rgba(0,0,0,0.70), 0 0 60px rgba(0,100,255,0.08)" }}
+              >
+                {/* Full-bleed background image — Brazil map on right half */}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: "url(/painel-centro-bg.png)",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center right",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                />
 
-                <div className="relative px-3 sm:px-7 pt-4 pb-3 sm:pt-5 sm:pb-4">
-                  {/* Header */}
-                  <div className="mb-2.5 flex items-center justify-between">
+                {/* Desktop: left-to-right gradient — opaque where KPIs are, transparent where map is */}
+                <div className="absolute inset-0 hidden sm:block" style={{
+                  background: "linear-gradient(100deg, rgba(3,8,18,0.97) 0%, rgba(3,8,18,0.92) 32%, rgba(3,8,18,0.72) 48%, rgba(3,8,18,0.25) 62%, rgba(3,8,18,0.06) 78%, transparent 94%)",
+                }} />
+                {/* Mobile: uniform dark overlay — full readability over the image */}
+                <div className="absolute inset-0 sm:hidden" style={{ background: "rgba(3,8,18,0.78)" }} />
+
+                {/* Brand glows — left zone */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                  background: "radial-gradient(ellipse 55% 70% at 4% 50%, rgba(22,163,74,0.13) 0%, transparent 60%), radial-gradient(ellipse 35% 55% at 28% 90%, rgba(124,252,0,0.07) 0%, transparent 65%)",
+                }} />
+
+                {/* Subtle HUD grid — fades to right before map */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                  backgroundImage: "linear-gradient(rgba(0,229,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.018) 1px,transparent 1px)",
+                  backgroundSize: "44px 44px",
+                  WebkitMaskImage: "linear-gradient(90deg, black 0%, black 38%, rgba(0,0,0,0.3) 52%, transparent 66%)",
+                  maskImage: "linear-gradient(90deg, black 0%, black 38%, rgba(0,0,0,0.3) 52%, transparent 66%)",
+                }} />
+
+                {/* Top neon accent line */}
+                <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                  style={{ background: "linear-gradient(90deg, rgba(0,229,255,0.55), rgba(124,252,0,0.35) 40%, rgba(0,229,255,0.12) 65%, transparent 85%)" }} />
+
+                {/* CONTENT — left half on desktop, full width on mobile */}
+                <div className="relative px-5 sm:px-8 pt-5 sm:pt-6 pb-4 sm:pb-5 sm:w-[52%]">
+                  {/* Header row with Live indicator */}
+                  <div className="flex items-center justify-between mb-3">
                     <div>
-                      <p className="text-[9px] font-black tracking-[0.18em] uppercase" style={{ color: "rgba(0,201,167,0.70)" }}>Painel em Tempo Real</p>
-                      <div className="h-px w-14 mt-0.5" style={{ background: "linear-gradient(90deg,rgba(0,229,255,0.50),transparent)" }} />
+                      <p className="text-[9px] font-black tracking-[0.20em] uppercase" style={{ color: "rgba(0,201,167,0.80)" }}>Painel em Tempo Real</p>
+                      <div className="h-px w-16 mt-0.5" style={{ background: "linear-gradient(90deg, rgba(0,229,255,0.60), transparent)" }} />
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="live-dot" />
+                      <span className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "rgba(0,229,255,0.85)" }}>Ao vivo</span>
                     </div>
                   </div>
 
-                  {/* Row 1 */}
-                  <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-2">
+                  {/* Row 1 — three primary KPIs */}
+                  <div className="grid grid-cols-3 gap-2 sm:gap-5 mb-2.5">
                     {STATS_ROW1.map((stat, i) => (
                       <motion.div
                         key={i}
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 12 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: i * 0.07, duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+                        transition={{ delay: i * 0.08, duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
                         className="text-center group"
                       >
-                        <div className={`flex items-center justify-center mb-1 ${stat.color} opacity-60 group-hover:opacity-100 transition-opacity`} style={{ transform: "scale(0.85)" }}>
+                        <div className={`flex items-center justify-center mb-1.5 ${stat.color} opacity-55 group-hover:opacity-100 transition-opacity`} style={{ transform: "scale(0.82)" }}>
                           {stat.icon}
                         </div>
-                        <p className={`text-xl sm:text-2xl font-bold ${stat.color} leading-none`}>
+                        <p className={`text-xl sm:text-[26px] font-black ${stat.color} leading-none tabular-nums`}>
                           {statsLoading ? (
-                            <span className="inline-block w-8 h-5 rounded skeleton" />
+                            <span className="inline-block w-10 h-6 rounded skeleton" />
                           ) : (
                             <CountUp target={stat.value ?? stat.fallback} suffix={stat.suffix} />
                           )}
                         </p>
-                        <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium leading-tight">{stat.label}</p>
+                        <p className="text-[9px] sm:text-[10px] mt-1 font-semibold leading-tight" style={{ color: "rgba(255,255,255,0.52)" }}>{stat.label}</p>
                       </motion.div>
                     ))}
                   </div>
 
                   {/* Divider */}
-                  <div className="h-px mb-2" style={{ background: "linear-gradient(90deg,transparent,rgba(0,229,255,0.18),rgba(124,252,0,0.14),transparent)" }} />
+                  <div className="h-px mb-2.5" style={{ background: "linear-gradient(90deg, rgba(0,229,255,0.22), rgba(124,252,0,0.16), transparent)" }} />
 
-                  {/* Row 2 */}
-                  <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-2.5">
+                  {/* Row 2 — secondary KPIs */}
+                  <div className="grid grid-cols-3 gap-2 sm:gap-5 mb-3">
                     {STATS_ROW2.map((stat, i) => (
                       <motion.div
                         key={i}
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.2 + i * 0.07, duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+                        transition={{ delay: 0.22 + i * 0.08, duration: 0.45, ease: [0.19, 1, 0.22, 1] }}
                         className="text-center group"
                       >
-                        <div className={`flex items-center justify-center mb-1 ${stat.color} opacity-60 group-hover:opacity-100 transition-opacity`} style={{ transform: "scale(0.85)" }}>
+                        <div className={`flex items-center justify-center mb-1.5 ${stat.color} opacity-55 group-hover:opacity-100 transition-opacity`} style={{ transform: "scale(0.82)" }}>
                           {stat.icon}
                         </div>
-                        <p className={`text-xl sm:text-2xl font-bold ${stat.color} leading-none`}>
+                        <p className={`text-xl sm:text-[26px] font-black ${stat.color} leading-none tabular-nums`}>
                           {statsLoading ? (
-                            <span className="inline-block w-8 h-5 rounded skeleton" />
+                            <span className="inline-block w-10 h-6 rounded skeleton" />
                           ) : (
                             <CountUp target={stat.value ?? stat.fallback} suffix={stat.suffix} />
                           )}
                         </p>
-                        <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium leading-tight">{stat.label}</p>
+                        <p className="text-[9px] sm:text-[10px] mt-1 font-semibold leading-tight" style={{ color: "rgba(255,255,255,0.52)" }}>{stat.label}</p>
                       </motion.div>
                     ))}
                   </div>
 
                   {/* Footer — Sistema Online */}
-                  <div className="border-t pt-2" style={{ borderColor: "rgba(0,229,255,0.10)" }}>
-                    <div className="flex items-center justify-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#7CFC00", boxShadow: "0 0 5px #7CFC00" }} />
-                      <span className="text-[9px] font-bold tracking-wide" style={{ color: "rgba(124,252,0,0.85)" }}>Sistema Online</span>
-                      <span className="hidden sm:inline text-[9px]" style={{ color: "rgba(255,255,255,0.32)" }}>·</span>
-                      <span className="hidden sm:inline text-[9px]" style={{ color: "rgba(255,255,255,0.42)" }}>Brasil conectado em tempo real — profissionais, empresas e oportunidades.</span>
+                  <div className="pt-2.5 border-t" style={{ borderColor: "rgba(0,229,255,0.12)" }}>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#7CFC00", boxShadow: "0 0 6px #7CFC00" }} />
+                      <span className="text-[9px] font-bold tracking-wide" style={{ color: "rgba(124,252,0,0.90)" }}>Sistema Online</span>
+                      <span className="hidden sm:inline text-[9px]" style={{ color: "rgba(255,255,255,0.28)" }}>·</span>
+                      <span className="hidden sm:inline text-[9px]" style={{ color: "rgba(255,255,255,0.44)" }}>Brasil conectado em tempo real.</span>
                     </div>
                   </div>
                 </div>

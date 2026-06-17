@@ -237,15 +237,8 @@ function PostCard({ post, onDelete }: { post: FeedPost; onDelete: (id: number) =
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl overflow-hidden relative"
-        style={{
-          background: "linear-gradient(135deg, rgba(59,130,246,0.035) 0%, rgba(8,17,26,0.92) 70%, rgba(124,252,0,0.02) 100%)",
-          border: "1px solid rgba(255,255,255,0.09)",
-        }}
+        className="card-feed-post overflow-hidden relative"
       >
-        {/* Top accent stripe */}
-        <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(59,130,246,0.28), rgba(124,252,0,0.15), transparent)" }} />
         {/* Post type indicator */}
         {post.postType !== "general" && (
           <div className={`px-5 py-2 border-b border-white/5 flex items-center gap-1.5 text-xs font-semibold ${typeInfo.color}`}>

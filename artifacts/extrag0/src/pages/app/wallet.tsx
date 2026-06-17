@@ -436,10 +436,11 @@ export default function WalletPage() {
               transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
               className="overflow-hidden"
             >
-              <div className="glass-card rounded-2xl p-5 sm:p-6 space-y-5 border border-primary/14 bg-gradient-to-br from-primary/4 to-transparent">
+              <div className="card-wallet-secondary p-5 sm:p-6 space-y-5 rounded-2xl">
+                <div className="absolute top-0 left-0 right-0 h-px pointer-events-none" style={{ background: "linear-gradient(90deg, rgba(20,184,166,0.45), rgba(0,229,255,0.22) 50%, transparent)" }} />
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-primary/12 border border-primary/22 flex items-center justify-center flex-shrink-0">
-                    <Send size={15} className="text-primary" />
+                  <div className="w-9 h-9 rounded-xl bg-teal-400/12 border border-teal-400/22 flex items-center justify-center flex-shrink-0">
+                    <Send size={15} className="text-teal-400" />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-sm">Solicitar Saque PIX</h3>
@@ -514,10 +515,11 @@ export default function WalletPage() {
               transition={{ duration: 0.32, ease: [0.4, 0, 0.2, 1] }}
               className="overflow-hidden"
             >
-              <div className="glass-card rounded-2xl p-5 sm:p-6 space-y-5 border border-primary/14 bg-gradient-to-br from-primary/4 to-transparent">
+              <div className="card-wallet-secondary p-5 sm:p-6 space-y-5 rounded-2xl">
+                <div className="absolute top-0 left-0 right-0 h-px pointer-events-none" style={{ background: "linear-gradient(90deg, rgba(20,184,166,0.45), rgba(0,229,255,0.22) 50%, transparent)" }} />
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-primary/12 border border-primary/22 flex items-center justify-center flex-shrink-0">
-                    <Building2 size={15} className="text-primary" />
+                  <div className="w-9 h-9 rounded-xl bg-teal-400/12 border border-teal-400/22 flex items-center justify-center flex-shrink-0">
+                    <Building2 size={15} className="text-teal-400" />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-sm">Adicionar Saldo</h3>

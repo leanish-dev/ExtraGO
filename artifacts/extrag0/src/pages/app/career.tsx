@@ -222,13 +222,15 @@ export default function CareerPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className={`relative glass-card rounded-2xl border overflow-hidden ${colors.border} ${currentLevelData?.glow ?? ""}`}
+          className={`card-career-level-hero border ${colors.border} ${currentLevelData?.glow ?? ""}`}
+          style={{ boxShadow: "0 0 0 1px rgba(255,255,255,0.04) inset, 0 20px 60px rgba(0,0,0,0.60)" }}
         >
-          {/* Ambient radial glow matching level color */}
-          <div className="absolute inset-0 pointer-events-none"
-            style={{ backgroundImage: "radial-gradient(circle at 50% 0%, rgba(124,252,0,0.06) 0%, transparent 65%)" }} />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-56 h-24 pointer-events-none"
-            style={{ background: "radial-gradient(ellipse, rgba(124,252,0,0.09) 0%, transparent 70%)", filter: "blur(20px)" }} />
+          {/* Ambient radial glow matching level color — top center */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-28 pointer-events-none"
+            style={{ background: "radial-gradient(ellipse, rgba(124,252,0,0.10) 0%, transparent 70%)", filter: "blur(24px)" }} />
+          {/* Top accent stripe */}
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(34,197,94,0.55), rgba(124,252,0,0.30), transparent)" }} />
 
           <div className="relative p-6">
             {/* Badge centered as hero focal point */}
@@ -590,9 +592,7 @@ export default function CareerPage() {
               return (
                 <div
                   key={a.id}
-                  className={`rounded-xl border p-3 flex flex-col gap-2 transition-all
-                    ${unlocked ? "bg-white/[0.05] border-white/12" : "bg-white/[0.02] border-white/6 opacity-40"}
-                  `}
+                  className={`card-career-achievement p-3 flex flex-col gap-2 transition-all ${!unlocked ? "locked" : ""}`}
                 >
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${unlocked ? `${a.color} bg-white/8` : "text-white/20 bg-white/[0.03]"}`}>
                     {unlocked ? a.icon : <Lock size={14} />}
@@ -639,9 +639,9 @@ export default function CareerPage() {
           </div>
           <p className="text-xs text-white/40 mb-4">Como sua nota influencia a sua carreira na plataforma</p>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {REPUTATION_IMPACTS.map((item, i) => (
-              <div key={i} className="flex items-start gap-3 rounded-xl bg-white/[0.03] border border-white/8 px-4 py-3">
+              <div key={i} className="card-summary-career flex items-start gap-3 px-4 py-3.5 relative overflow-hidden">
                 <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mt-0.5">
                   {item.icon}
                 </div>

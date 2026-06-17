@@ -292,8 +292,7 @@ function OperationsNav({ stats }: { stats: any }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               whileHover={{ y: -1 }}
-              className={`rounded-xl p-4 flex items-center gap-3 border border-white/8 ${link.border} transition-all cursor-pointer group relative overflow-hidden`}
-              style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(8,17,26,0.88) 100%)" }}
+              className={`card-admin-stat p-4 flex items-center gap-3 ${link.border} transition-all cursor-pointer group`}
             >
               <div className={`w-9 h-9 rounded-xl border border-white/8 flex items-center justify-center flex-shrink-0 ${link.color} opacity-70 group-hover:opacity-100 transition-opacity`}>
                 {link.icon}
@@ -338,9 +337,7 @@ export default function AdminDashboard() {
       <LiveOperationsStrip />
 
       {/* 2nd — Main KPIs as typography, not colored cards */}
-      <div className="rounded-2xl p-5 space-y-2 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.035) 0%, rgba(8,17,26,0.92) 60%)", border: "1px solid rgba(255,255,255,0.07)" }}
-      >
+      <div className="card-admin-stat p-5 space-y-2">
         <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
           style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.25), rgba(0,229,255,0.15), transparent)" }} />
         <h2 className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Indicadores Gerais</h2>
