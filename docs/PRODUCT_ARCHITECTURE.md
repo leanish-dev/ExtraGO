@@ -289,6 +289,17 @@ extrago.ceo@yahoo.com
 jeandick2000@gmail.com
 ```
 
+### Estrutura Administrativa Completa
+
+| Nome | Email | Cargo Institucional | corporateRole |
+|---|---|---|---|
+| Leonardo Scheffel | `leonardoscheffel2000@gmail.com` | CEO & Founder | `ceo` |
+| Jean Dick | `jeandick2000@gmail.com` | CMO & Co-Founder | `cmo` |
+| Qaialla Pereira | `qaialla.exclusive@gmail.com` | CCO & Co-Founder | `cco` |
+| extraGO CEO | `extrago.ceo@yahoo.com` | CEO Master | `ceo` |
+
+> **Nota de UX:** A navbar exibe o `corporateRole` como badge colorido (CEO=dourado, CMO=ciano, CCO=índigo) em vez de "Super Admin". Widths automáticas via `inline-flex`.
+
 ---
 
 ## `ecosystem.ts` — Fluxo de Conclusão de Extra

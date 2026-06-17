@@ -19,14 +19,17 @@ Garantir que dados simulados, métricas artificiais e cenários de demonstraçã
 
 ## Contas de Governança / Master Oficiais
 
-| Nome | Email | Role | Imagem de Perfil |
-|---|---|---|---|
-| Leonardo Scheffel | `leonardoscheffel2000@gmail.com` | CEO / SUPER_ADMIN | `Leonardo.jpg` |
-| Jean Dick | `jeandick2000@gmail.com` | CMO / SUPER_ADMIN | `Jean.jpg` |
-| extraGO CEO | `extrago.ceo@yahoo.com` | CEO Master / SUPER_ADMIN | — |
+| Nome | Email | Role | Cargo | Imagem de Perfil |
+|---|---|---|---|---|
+| Leonardo Scheffel | `leonardoscheffel2000@gmail.com` | CEO / SUPER_ADMIN | CEO | `Leonardo-profile.jpg` → `team-leonardo.jpg` |
+| Jean Dick | `jeandick2000@gmail.com` | CMO / SUPER_ADMIN | CMO | `Jean-profile.jpg` → `team-jean.jpg` |
+| Qaialla Pereira | `qaialla.exclusive@gmail.com` | CCO / SUPER_ADMIN | CCO | `Qaialla-profile.jpg` → `team-qaialla.jpg` |
+| extraGO CEO | `extrago.ceo@yahoo.com` | CEO Master / SUPER_ADMIN | CEO Master | — |
 
 > **Fonte de verdade da implementação:** `artifacts/extrag0/src/config/master-accounts.ts`
-> As 3 contas acima estão registradas no array `MASTER_ACCOUNTS` do helper `isMasterAccount()`.
+> As 4 contas acima estão registradas no array `MASTER_ACCOUNTS` do helper `isMasterAccount()`.
+>
+> **NOTA:** O seeder (`POST /api/setup/seed`) agora provisiona 6 contas: as 4 de governança + 2 de teste.
 
 ---
 
@@ -138,10 +141,11 @@ As contas de governança possuem imagens de perfil oficiais permanentes que faze
 
 ### Atribuições Oficiais
 
-| Email | Arquivo de Imagem |
-|---|---|
-| `leonardoscheffel2000@gmail.com` | `Leonardo.jpg` |
-| `jeandick2000@gmail.com` | `Jean.jpg` |
+| Email | Arquivo de Imagem | Caminho Público |
+|---|---|---|
+| `leonardoscheffel2000@gmail.com` | `Leonardo-profile.jpg` | `/team-leonardo.jpg` |
+| `jeandick2000@gmail.com` | `Jean-profile.jpg` | `/team-jean.jpg` |
+| `qaialla.exclusive@gmail.com` | `Qaialla-profile.jpg` | `/team-qaialla.jpg` |
 
 ### Regras Permanentes
 
@@ -168,7 +172,7 @@ As contas de governança possuem imagens de perfil oficiais permanentes que faze
 
 **Comportamento atual (pós-auditoria de dados de produção):**
 
-Este endpoint foi **completamente reescrito** para provisionar SOMENTE as 5 contas aprovadas.
+Este endpoint foi **completamente reescrito** para provisionar SOMENTE as 6 contas aprovadas.
 
 **O endpoint NUNCA:**
 - Cria usuários de ecossistema, demo ou seed
@@ -180,11 +184,12 @@ Este endpoint foi **completamente reescrito** para provisionar SOMENTE as 5 cont
 - Cria qualquer dado de demonstração ou atividade simulada
 
 **O endpoint APENAS provisiona (idempotente):**
-1. `leonardoscheffel2000@gmail.com` — CEO / super_admin
-2. `jeandick2000@gmail.com` — CMO / super_admin
-3. `extrago.ceo@yahoo.com` — CEO Master / super_admin
-4. `teste.f@extrago.com` — freelancer de teste autorizado
-5. `teste.e@extrago.com` — empresa de teste autorizada
+1. `leonardoscheffel2000@gmail.com` — CEO / super_admin (corporateRole: ceo)
+2. `jeandick2000@gmail.com` — CMO / super_admin (corporateRole: cmo)
+3. `qaialla.exclusive@gmail.com` — CCO / super_admin (corporateRole: cco)
+4. `extrago.ceo@yahoo.com` — CEO Master / super_admin
+5. `teste.f@extrago.com` — freelancer de teste autorizado
+6. `teste.e@extrago.com` — empresa de teste autorizada
 
 Cada conta recebe wallet correspondente com saldo zero.
 

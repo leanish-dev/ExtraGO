@@ -334,8 +334,21 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                     <span className="text-[10px] text-white/50 font-medium truncate">{effectiveUser.companyName}</span>
                   )}
                   {isAdmin && (
-                    <span className="inline-flex items-center gap-1 text-[10px] text-primary font-bold px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/20">
-                      <Shield size={9} /> {effectiveUser.adminRole === "super_admin" ? "Super Admin" : "Admin"}
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full border whitespace-nowrap" style={
+                      (effectiveUser as any).corporateRole === "ceo"
+                        ? { color: "#facc15", background: "rgba(250,204,21,0.12)", borderColor: "rgba(250,204,21,0.28)" }
+                        : (effectiveUser as any).corporateRole === "cmo"
+                        ? { color: "#22d3ee", background: "rgba(34,211,238,0.12)", borderColor: "rgba(34,211,238,0.28)" }
+                        : (effectiveUser as any).corporateRole === "cco"
+                        ? { color: "#818cf8", background: "rgba(129,140,248,0.12)", borderColor: "rgba(129,140,248,0.28)" }
+                        : (effectiveUser as any).corporateRole === "cto"
+                        ? { color: "#67e8f9", background: "rgba(103,232,249,0.12)", borderColor: "rgba(103,232,249,0.28)" }
+                        : { color: "hsl(var(--primary))", background: "rgba(var(--primary),0.10)", borderColor: "rgba(var(--primary),0.20)" }
+                    }>
+                      <Shield size={9} />
+                      {(effectiveUser as any).corporateRole
+                        ? ((effectiveUser as any).corporateRole as string).toUpperCase()
+                        : effectiveUser.adminRole === "super_admin" ? "Super Admin" : "Admin"}
                     </span>
                   )}
                 </div>

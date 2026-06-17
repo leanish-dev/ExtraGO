@@ -75,13 +75,13 @@ router.post("/setup/seed", async (_req, res) => {
       role: "admin",
       adminRole: "super_admin",
       corporateRole: "ceo",
-      bio: "CEO e co-fundador da plataforma extraGO.",
+      bio: "CEO e fundador da plataforma extraGO. Responsável pela visão estratégica, produto, operações e expansão nacional.",
       isVerified: true,
       isBanned: false,
       profileCompletion: 100,
       level: "diamond",
       referralCode: "CEO2024LS",
-      avatarUrl: "/team-leonardo.webp",
+      avatarUrl: "/team-leonardo.jpg",
       isDemo: false,
     });
     await ensureWallet(leonardoId, "platform");
@@ -101,13 +101,33 @@ router.post("/setup/seed", async (_req, res) => {
       profileCompletion: 100,
       level: "diamond",
       referralCode: "CMO2024JD",
-      avatarUrl: "/team-jean.webp",
+      avatarUrl: "/team-jean.jpg",
       isDemo: false,
     });
     await ensureWallet(jeanDickId, "platform");
     results.push(`CMO Jean Dick: id=${jeanDickId}`);
 
-    // ─── 3. CEO Master account — extrago.ceo@yahoo.com ───────────────────
+    // ─── 3. CCO — Qaialla Pereira ─────────────────────────────────────────
+    const qaiallaid = await upsertUser({
+      email: "qaialla.exclusive@gmail.com",
+      passwordHash: hashPassword("Gremory26@"),
+      name: "Qaialla Pereira",
+      role: "admin",
+      adminRole: "super_admin",
+      corporateRole: "cco",
+      bio: "CCO e co-fundadora da plataforma extraGO. Responsável pela expansão comercial, parcerias estratégicas, relacionamento corporativo e desenvolvimento de mercado.",
+      isVerified: true,
+      isBanned: false,
+      profileCompletion: 100,
+      level: "diamond",
+      referralCode: "CCO2024QP",
+      avatarUrl: "/team-qaialla.jpg",
+      isDemo: false,
+    });
+    await ensureWallet(qaiallaid, "platform");
+    results.push(`CCO Qaialla: id=${qaiallaid}`);
+
+    // ─── 4. CEO Master account — extrago.ceo@yahoo.com ───────────────────
     const ceoYahooId = await upsertUser({
       email: "extrago.ceo@yahoo.com",
       passwordHash: hashPassword("Gremory26@"),
@@ -125,7 +145,7 @@ router.post("/setup/seed", async (_req, res) => {
     await ensureWallet(ceoYahooId, "platform");
     results.push(`CEO Yahoo: id=${ceoYahooId}`);
 
-    // ─── 4. Authorized test freelancer ────────────────────────────────────
+    // ─── 5. Authorized test freelancer ────────────────────────────────────
     const testeFId = await upsertUser({
       email: "teste.f@extrago.com",
       passwordHash: hashPassword("ext123@"),
@@ -150,7 +170,7 @@ router.post("/setup/seed", async (_req, res) => {
     await ensureWallet(testeFId, "freelancer");
     results.push(`Test freelancer (teste.f): id=${testeFId}`);
 
-    // ─── 5. Authorized test company ───────────────────────────────────────
+    // ─── 6. Authorized test company ───────────────────────────────────────
     const testeEId = await upsertUser({
       email: "teste.e@extrago.com",
       passwordHash: hashPassword("ext123@"),
@@ -177,6 +197,7 @@ router.post("/setup/seed", async (_req, res) => {
       accounts: {
         ceo: { email: "leonardoscheffel2000@gmail.com", id: leonardoId },
         cmo: { email: "jeandick2000@gmail.com", id: jeanDickId },
+        cco: { email: "qaialla.exclusive@gmail.com", id: qaiallaid },
         ceoMaster: { email: "extrago.ceo@yahoo.com", id: ceoYahooId },
         testFreelancer: { email: "teste.f@extrago.com", id: testeFId },
         testCompany: { email: "teste.e@extrago.com", id: testeEId },

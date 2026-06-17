@@ -2,6 +2,7 @@ export const MASTER_ACCOUNTS = [
   "leonardoscheffel2000@gmail.com",
   "extrago.ceo@yahoo.com",
   "jeandick2000@gmail.com",
+  "qaialla.exclusive@gmail.com",
 ];
 
 export const CEO_GOVERNANCE_EMAILS = [

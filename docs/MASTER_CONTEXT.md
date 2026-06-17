@@ -204,6 +204,45 @@ Mais Indicações → Rede cresce organicamente
 
 ---
 
+## Estrutura Administrativa Oficial
+
+| Nome | Email | Cargo | Badge |
+|---|---|---|---|
+| Leonardo Scheffel | `leonardoscheffel2000@gmail.com` | CEO | CEO |
+| Jean Dick | `jeandick2000@gmail.com` | CMO | CMO |
+| Qaialla Pereira | `qaialla.exclusive@gmail.com` | CCO | CCO |
+| extraGO CEO | `extrago.ceo@yahoo.com` | CEO Master | CEO |
+
+### Hierarquia de Autoridade
+
+```
+CEO (Leonardo) — Controle máximo: institucional, financeiro, operacional, de cargos e permissões
+    → Pode promover/remover admins, criar/remover cargos, alterar permissões de SuperAdmins
+    → Classificação institucional: CEO (não "SuperAdmin")
+CMO (Jean Dick) — Marketing, crescimento, branding, expansão de marca
+CCO (Qaialla Pereira) — Comercial, expansão, representantes, parcerias, institucional
+CEO Master (extrago.ceo@yahoo.com) — Conta master reserva com acesso CEO
+```
+
+### Permissões por Cargo
+
+**CEO (Leonardo):**
+- Controle máximo da plataforma
+- Controle institucional, financeiro, operacional
+- Controle de cargos e permissões
+- Pode promover/remover administradores
+- Pode criar/remover cargos
+- Pode alterar permissões de SuperAdmins
+
+**CCO (Qaialla Pereira):**
+- Gestão comercial
+- Gestão de expansão
+- Gestão de representantes
+- Gestão de parcerias
+- Visualização de analytics
+- Gestão institucional
+- Acesso administrativo avançado
+
 ## Controladores de Governança Financeira
 
 As seguintes contas têm controle exclusivo sobre todos os parâmetros financeiros da plataforma:
