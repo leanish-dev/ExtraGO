@@ -381,9 +381,9 @@ export default function LandingPage() {
         <section className="px-5 pb-8">
           <ScrollSection>
             <div className="max-w-5xl mx-auto">
-              {/* Outer frame — matches image border style */}
+              {/* Panel — image IS the frame */}
               <div className="relative overflow-hidden rounded-2xl"
-                style={{ border: "1px solid rgba(0,229,255,0.22)", boxShadow: "0 0 0 1px rgba(124,252,0,0.06), 0 24px 80px rgba(0,0,0,0.70), 0 0 60px rgba(0,100,255,0.08)" }}
+                style={{ boxShadow: "0 24px 80px rgba(0,0,0,0.70), 0 0 60px rgba(0,100,255,0.08)" }}
               >
                 {/* Full-bleed background image — Brazil map on right half */}
                 <div

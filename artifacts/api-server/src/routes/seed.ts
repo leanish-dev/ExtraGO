@@ -81,7 +81,7 @@ router.post("/setup/seed", async (_req, res) => {
       profileCompletion: 100,
       level: "diamond",
       referralCode: "CEO2024LS",
-      avatarUrl: "/team-leonardo.jpg",
+      avatarUrl: "/team-leonardo.webp",
       isDemo: false,
     });
     await ensureWallet(leonardoId, "platform");
@@ -101,7 +101,7 @@ router.post("/setup/seed", async (_req, res) => {
       profileCompletion: 100,
       level: "diamond",
       referralCode: "CMO2024JD",
-      avatarUrl: "/team-jean.jpg",
+      avatarUrl: "/team-jean.webp",
       isDemo: false,
     });
     await ensureWallet(jeanDickId, "platform");

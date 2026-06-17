@@ -536,20 +536,28 @@ function CompanyDashboard() {
           </div>
           <div className="space-y-3">
             {[
-              { href: "/app/applications", icon: <Users size={16} />, label: "Candidaturas", sub: "Aprovar ou recusar profissionais", color: "text-secondary", border: "hover:border-secondary/25" },
-              { href: "/app/wallet", icon: <DollarSign size={16} />, label: "Carteira", sub: "Pagamentos e histórico", color: "text-primary", border: "hover:border-primary/25" },
+              { href: "/app/applications", icon: <Users size={16} />, label: "Candidaturas", sub: "Aprovar ou recusar profissionais", color: "text-secondary", accentRgb: "0,229,255", borderHover: "rgba(0,229,255,0.22)" },
+              { href: "/app/wallet", icon: <DollarSign size={16} />, label: "Carteira", sub: "Pagamentos e histórico", color: "text-teal-400", accentRgb: "20,184,166", borderHover: "rgba(20,184,166,0.22)" },
             ].map((action) => (
               <Link key={action.href} href={action.href}>
                 <motion.div
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className={`rounded-xl p-4 cursor-pointer flex items-center gap-3 border border-white/6 ${action.border} transition-all`}
-                  style={{ background: "rgba(255,255,255,0.060)" }}
+                  className="rounded-xl p-4 cursor-pointer flex items-center gap-3 border transition-all group relative overflow-hidden"
+                  style={{
+                    background: `linear-gradient(135deg, rgba(${action.accentRgb},0.08) 0%, rgba(8,17,26,0.90) 60%, rgba(${action.accentRgb},0.04) 100%)`,
+                    borderColor: `rgba(${action.accentRgb},0.14)`,
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.borderColor = action.borderHover)}
+                  onMouseLeave={e => (e.currentTarget.style.borderColor = `rgba(${action.accentRgb},0.14)`)}
                 >
-                  <div className={`w-9 h-9 rounded-xl border border-white/8 flex items-center justify-center ${action.color}`}>
+                  <div className="absolute top-0 left-0 right-0 h-px opacity-50"
+                    style={{ background: `linear-gradient(90deg, transparent, rgba(${action.accentRgb},0.40), transparent)` }} />
+                  <div className={`relative w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${action.color}`}
+                    style={{ background: `rgba(${action.accentRgb},0.10)`, border: `1px solid rgba(${action.accentRgb},0.20)` }}>
                     {action.icon}
                   </div>
-                  <div>
+                  <div className="relative">
                     <p className={`text-sm font-bold ${action.color}`}>{action.label}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{action.sub}</p>
                   </div>
@@ -611,8 +619,12 @@ function FreelancerDashboard() {
             {appsLoading ? (
               <div className="space-y-2">{[1,2,3].map(i => <div key={i} className="rounded-xl h-14 skeleton" />)}</div>
             ) : pendingApps.length === 0 ? (
-              <div className="rounded-2xl border border-white/5 p-6 flex flex-col items-center text-center gap-3" style={{ background: "rgba(255,255,255,0.050)" }}>
-                <Briefcase size={22} className="text-muted-foreground/30" />
+              <div className="rounded-2xl border p-6 flex flex-col items-center text-center gap-3 relative overflow-hidden"
+                style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.05) 0%, rgba(8,17,26,0.92) 60%, rgba(0,229,255,0.03) 100%)", borderColor: "rgba(124,252,0,0.10)" }}>
+                <div className="absolute top-0 left-0 right-0 h-px opacity-40" style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.35), transparent)" }} />
+                <div className="w-10 h-10 rounded-xl bg-primary/8 border border-primary/18 flex items-center justify-center">
+                  <Briefcase size={18} className="text-primary/50" />
+                </div>
                 <div>
                   <p className="text-sm font-semibold">Nenhuma missão ativa</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Busque extras e candidate-se agora</p>
@@ -624,7 +636,7 @@ function FreelancerDashboard() {
                 </Link>
               </div>
             ) : (
-              <div className="divide-y divide-white/4 rounded-2xl border border-white/5 overflow-hidden" style={{ background: "rgba(255,255,255,0.050)" }}>
+              <div className="rounded-2xl border divide-y divide-white/5 overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(8,17,26,0.92) 100%)", borderColor: "rgba(124,252,0,0.10)", boxShadow: "0 0 0 1px rgba(124,252,0,0.04) inset" }}>
                 <AnimatePresence>
                   {pendingApps.map((app, i) => (
                     <motion.div

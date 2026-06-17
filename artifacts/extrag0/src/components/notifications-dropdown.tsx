@@ -1,31 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useListNotifications, useMarkNotificationRead } from "@workspace/api-client-react";
-import { Bell, BellOff, Briefcase, DollarSign, FileText, ChevronRight, X } from "lucide-react";
+import { Bell, BellOff, Briefcase, DollarSign, FileText, ChevronRight, X, CheckCheck } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useAuth } from "@/hooks/use-auth";
 
-const TYPE_ICONS: Record<string, React.ReactNode> = {
-  job_applied: <FileText size={13} />,
-  application_approved: <Briefcase size={13} />,
-  application_rejected: <Briefcase size={13} />,
-  job_completed: <Briefcase size={13} />,
-  payment_received: <DollarSign size={13} />,
-  withdrawal_approved: <DollarSign size={13} />,
-  system: <Bell size={13} />,
+const TYPE_META: Record<string, { icon: React.ReactNode; bg: string; text: string; accent: string }> = {
+  job_applied:            { icon: <FileText size={13} />,    bg: "bg-yellow-500/12",    text: "text-yellow-400",   accent: "#eab308" },
+  application_approved:   { icon: <Briefcase size={13} />,  bg: "bg-primary/12",       text: "text-primary",      accent: "#7CFC00" },
+  application_rejected:   { icon: <Briefcase size={13} />,  bg: "bg-red-500/12",       text: "text-red-400",      accent: "#ef4444" },
+  job_completed:          { icon: <CheckCheck size={13} />, bg: "bg-emerald-500/12",   text: "text-emerald-400",  accent: "#10b981" },
+  payment_received:       { icon: <DollarSign size={13} />, bg: "bg-teal-500/12",      text: "text-teal-400",     accent: "#14b8a6" },
+  withdrawal_approved:    { icon: <DollarSign size={13} />, bg: "bg-purple-500/12",    text: "text-purple-400",   accent: "#a855f7" },
+  system:                 { icon: <Bell size={13} />,        bg: "bg-white/6",          text: "text-muted-foreground", accent: "rgba(255,255,255,0.20)" },
 };
-
-const TYPE_COLORS: Record<string, string> = {
-  job_applied: "bg-yellow-400/10 text-yellow-400",
-  application_approved: "bg-primary/10 text-primary",
-  application_rejected: "bg-destructive/10 text-destructive",
-  job_completed: "bg-green-500/10 text-green-400",
-  payment_received: "bg-secondary/10 text-secondary",
-  withdrawal_approved: "bg-purple-400/10 text-purple-400",
-  system: "bg-white/5 text-muted-foreground",
-};
+const fallbackMeta = TYPE_META.system;
 
 interface NotificationsDropdownProps {
   unread: number;
@@ -84,27 +75,38 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
   const panelContent = (
     <motion.div
       ref={panelRef}
-      initial={{ opacity: 0, scale: 0.95, y: isMobile ? -6 : -8 }}
+      initial={{ opacity: 0, scale: 0.96, y: isMobile ? -4 : -6 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95, y: isMobile ? -6 : -8 }}
-      transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
+      exit={{ opacity: 0, scale: 0.96, y: isMobile ? -4 : -6 }}
+      transition={{ duration: 0.16, ease: [0.4, 0, 0.2, 1] }}
       className={
         isMobile
-          ? "fixed left-3 right-3 z-[9999] bg-[#0A0C0F] border border-white/12 rounded-2xl overflow-hidden"
-          : "absolute right-0 top-12 w-80 bg-[#0A0C0F] border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden"
+          ? "fixed left-3 right-3 z-[9999] rounded-2xl overflow-hidden"
+          : "absolute right-0 top-12 w-80 rounded-2xl z-50 overflow-hidden"
       }
       style={{
-        boxShadow: "0 20px 60px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06)",
+        background: "linear-gradient(160deg, rgba(10,14,20,0.99) 0%, rgba(6,9,14,0.99) 100%)",
+        border: "1px solid rgba(255,255,255,0.09)",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.04) inset",
+        backdropFilter: "blur(24px)",
         ...(isMobile ? { top: "calc(66px + env(safe-area-inset-top, 0px))" } : {}),
       }}
     >
+      {/* Top accent — matches notification identity color */}
+      <div className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: "linear-gradient(90deg, transparent 5%, rgba(124,252,0,0.50) 35%, rgba(0,229,255,0.30) 65%, transparent 95%)" }} />
+
       {/* Panel header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/8">
-        <div className="flex items-center gap-2">
-          <Bell size={14} className="text-muted-foreground" />
-          <p className="text-sm font-semibold">Notificações</p>
+      <div className="flex items-center justify-between px-4 py-3.5"
+        style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <div className="flex items-center gap-2.5">
+          <div className="w-6 h-6 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+            <Bell size={12} className="text-primary" />
+          </div>
+          <p className="text-sm font-bold tracking-tight">Notificações</p>
           {unread > 0 && (
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/25">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+              style={{ background: "rgba(239,68,68,0.15)", color: "#f87171", border: "1px solid rgba(239,68,68,0.25)" }}>
               {unread} nova{unread !== 1 ? "s" : ""}
             </span>
           )}
@@ -112,24 +114,29 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
         {isMobile && (
           <button
             onClick={() => setOpen(false)}
-            className="w-7 h-7 rounded-full bg-white/6 border border-white/8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            className="w-7 h-7 rounded-full flex items-center justify-center transition-colors"
+            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)" }}
           >
-            <X size={13} />
+            <X size={13} className="text-muted-foreground" />
           </button>
         )}
       </div>
 
-      <div className={isMobile ? "max-h-[60vh] overflow-y-auto overscroll-contain" : "max-h-72 overflow-y-auto"}>
+      {/* Notification list */}
+      <div className={isMobile ? "max-h-[62vh] overflow-y-auto overscroll-contain" : "max-h-72 overflow-y-auto"}>
         {recent.length === 0 ? (
           <div className="flex flex-col items-center py-10 px-4 text-center">
-            <BellOff size={24} className="text-muted-foreground mb-2" />
-            <p className="text-sm font-medium">Você está em dia!</p>
-            <p className="text-xs text-muted-foreground mt-1">Nenhuma notificação não lida.</p>
+            <div className="w-12 h-12 rounded-2xl bg-white/4 border border-white/8 flex items-center justify-center mb-3">
+              <BellOff size={18} className="text-muted-foreground" />
+            </div>
+            <p className="text-sm font-semibold">Você está em dia</p>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed max-w-[180px]">
+              Sem notificações não lidas no momento.
+            </p>
           </div>
         ) : (
-          recent.map(n => {
-            const iconBg = TYPE_COLORS[n.type ?? "system"] ?? TYPE_COLORS.system;
-            const icon = TYPE_ICONS[n.type ?? "system"] ?? <Bell size={13} />;
+          recent.map((n, idx) => {
+            const meta = TYPE_META[n.type ?? "system"] ?? fallbackMeta;
             const timeStr = n.createdAt
               ? formatDistanceToNow(new Date(n.createdAt), { addSuffix: true, locale: ptBR })
               : "";
@@ -137,27 +144,43 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
               <button
                 key={n.id}
                 onClick={() => n.id && handleMarkRead(n.id)}
-                className="w-full text-left flex items-start gap-3 px-4 py-3.5 hover:bg-white/4 active:bg-white/6 transition-colors border-b border-white/5 last:border-0 group"
+                className="w-full text-left flex items-start gap-3 px-4 py-3.5 transition-all group relative"
+                style={{
+                  borderBottom: idx < recent.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none",
+                }}
               >
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${iconBg}`}>
-                  {icon}
+                {/* Type accent strip on left edge */}
+                <div className="absolute left-0 top-3 bottom-3 w-0.5 rounded-full opacity-60"
+                  style={{ background: meta.accent }} />
+
+                {/* Hover bg */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ background: "rgba(255,255,255,0.030)" }} />
+
+                <div className={`relative w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${meta.bg} ${meta.text}`}>
+                  {meta.icon}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold truncate">{n.title}</p>
+                <div className="relative flex-1 min-w-0">
+                  <p className="text-xs font-semibold leading-snug">{n.title}</p>
                   <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">{n.message}</p>
-                  <p className="text-[10px] text-muted-foreground/60 mt-1">{timeStr}</p>
+                  <p className="text-[10px] mt-1.5 font-medium" style={{ color: "rgba(255,255,255,0.30)" }}>{timeStr}</p>
                 </div>
-                <div className="w-2 h-2 rounded-full bg-primary flex-shrink-0 mt-1.5" />
+                {/* Unread dot */}
+                <div className="relative w-1.5 h-1.5 rounded-full flex-shrink-0 mt-2"
+                  style={{ background: meta.accent, boxShadow: `0 0 6px ${meta.accent}` }} />
               </button>
             );
           })
         )}
       </div>
 
-      <div className="border-t border-white/8 px-4 py-2.5">
+      {/* Footer CTA */}
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}>
         <Link href="/app/notifications" onClick={() => setOpen(false)}>
-          <button className="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 transition-colors py-1">
-            Ver todas as notificações <ChevronRight size={12} />
+          <button className="w-full flex items-center justify-center gap-1.5 px-4 py-3 text-xs font-bold transition-all group"
+            style={{ color: "rgba(124,252,0,0.80)" }}>
+            <span className="group-hover:underline underline-offset-2">Ver todas as notificações</span>
+            <ChevronRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
           </button>
         </Link>
       </div>
@@ -187,7 +210,7 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
         </AnimatePresence>
       </motion.button>
 
-      {/* Mobile backdrop overlay */}
+      {/* Mobile backdrop */}
       <AnimatePresence>
         {open && isMobile && (
           <motion.div
@@ -195,7 +218,8 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-[9998] bg-black/40 backdrop-blur-[2px]"
+            className="fixed inset-0 z-[9998]"
+            style={{ background: "rgba(0,0,0,0.50)", backdropFilter: "blur(3px)" }}
             onClick={() => setOpen(false)}
           />
         )}
