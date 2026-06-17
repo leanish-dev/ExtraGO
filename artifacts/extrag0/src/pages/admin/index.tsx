@@ -47,9 +47,9 @@ function RevenueChart({ data }: { data: Array<{ month: string; amount: number }>
 function MetricItem({ label, value, sub, color }: { label: string; value: React.ReactNode; sub?: string; color?: string }) {
   return (
     <div>
-      <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-1">{label}</p>
+      <p className="text-[10px] text-white/75 uppercase tracking-widest font-bold mb-1">{label}</p>
       <p className={`text-2xl sm:text-3xl font-black leading-none ${color ?? "text-foreground"}`}>{value}</p>
-      {sub && <p className="text-[11px] text-muted-foreground mt-1">{sub}</p>}
+      {sub && <p className="text-[11px] text-white/65 mt-1">{sub}</p>}
     </div>
   );
 }
@@ -359,7 +359,7 @@ export default function AdminDashboard() {
               <span className="text-[10px] text-primary font-bold uppercase tracking-[0.18em]">extraGO Admin</span>
             </div>
             <h1 className="text-[22px] sm:text-[26px] font-black tracking-tight leading-tight">Centro Nacional de Operações</h1>
-            <p className="text-sm text-muted-foreground mt-1">Infraestrutura de Mão de Obra do Brasil</p>
+            <p className="text-sm text-white/70 mt-1">Infraestrutura de Mão de Obra do Brasil</p>
 
             {/* Module identity strip */}
             <div className="flex items-center gap-2.5 mt-3">
@@ -394,7 +394,7 @@ export default function AdminDashboard() {
       <div className="card-admin-stat p-5 space-y-2">
         <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
           style={{ background: "linear-gradient(90deg, transparent, rgba(124,252,0,0.25), rgba(0,229,255,0.15), transparent)" }} />
-        <h2 className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Indicadores Gerais</h2>
+        <h2 className="text-[10px] text-white/80 uppercase tracking-widest font-bold mb-4">Indicadores Gerais</h2>
         <MainKPIs stats={stats} isLoading={isLoading} />
       </div>
 

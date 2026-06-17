@@ -19,7 +19,7 @@ function StatBadge({ value, label, color = "text-primary" }: { value: React.Reac
   return (
     <div className="text-center px-3 py-3 rounded-xl bg-white/3 border border-white/6 flex flex-col items-center justify-center gap-0.5">
       <p className={`text-lg font-black ${color}`}>{value}</p>
-      <p className="text-[10px] text-muted-foreground leading-tight">{label}</p>
+      <p className="text-[10px] text-white/70 leading-tight">{label}</p>
     </div>
   );
 }
@@ -353,20 +353,20 @@ export default function FreelancerProfilePage() {
                 </h2>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Extras concluídos</span>
+                    <span className="text-white/70">Extras concluídos</span>
                     <span className="font-bold text-primary">{completedJobs}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Avaliação média</span>
+                    <span className="text-white/70">Avaliação média</span>
                     <span className="font-bold text-yellow-400">{avgRating.toFixed(1)} ★</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Taxa de resposta</span>
+                    <span className="text-white/70">Taxa de resposta</span>
                     <span className="font-bold">{responseRate}%</span>
                   </div>
                   {totalEarnings > 0 && (
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Total ganho</span>
+                      <span className="text-white/70">Total ganho</span>
                       <span className="font-bold text-green-400">
                         R$ {(totalEarnings / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </span>

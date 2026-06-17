@@ -689,7 +689,7 @@ export default function SettingsPage() {
         {/* Page header */}
         <div className="mb-6">
           <h1 className="text-xl sm:text-2xl font-bold">Configurações</h1>
-          <p className="text-muted-foreground text-sm mt-1">Gerencie sua conta, segurança e preferências</p>
+          <p className="text-white/70 text-sm mt-1">Gerencie sua conta, segurança e preferências</p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-5">

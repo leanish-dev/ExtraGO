@@ -129,7 +129,7 @@ export default function AdminMapPage() {
           <h1 className="text-[22px] font-bold flex items-center gap-2">
             <Globe size={20} className="text-primary" /> Mapa Brasil
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5 flex items-center gap-1.5">
+          <p className="text-sm text-white/70 mt-0.5 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
             Distribuição geográfica em tempo real
           </p>
@@ -137,15 +137,15 @@ export default function AdminMapPage() {
         <div className="grid grid-cols-3 gap-2 flex-shrink-0">
           <div className="glass-card rounded-xl px-3.5 py-2.5 border border-primary/15 text-center">
             <p className="text-lg font-bold text-primary leading-none">{totalFreelancers}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">Freelancers</p>
+            <p className="text-[10px] text-white/65 mt-0.5">Freelancers</p>
           </div>
           <div className="glass-card rounded-xl px-3.5 py-2.5 border border-secondary/15 text-center">
             <p className="text-lg font-bold text-secondary leading-none">{totalCompanies}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">Empresas</p>
+            <p className="text-[10px] text-white/65 mt-0.5">Empresas</p>
           </div>
           <div className="glass-card rounded-xl px-3.5 py-2.5 border border-white/10 text-center">
             <p className="text-lg font-bold leading-none">{totalUsers}</p>
-            <p className="text-[10px] text-muted-foreground mt-0.5">Total</p>
+            <p className="text-[10px] text-white/65 mt-0.5">Total</p>
           </div>
         </div>
       </div>
@@ -157,7 +157,7 @@ export default function AdminMapPage() {
             <MapPin size={15} className="text-primary" />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Região Líder</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/70">Região Líder</p>
             <p className={`text-sm font-bold ${REGION_COLORS[topRegionName] ?? "text-foreground"}`}>{topRegionName}</p>
           </div>
         </div>
@@ -166,7 +166,7 @@ export default function AdminMapPage() {
             <Award size={15} className="text-secondary" />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Estado #1</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/70">Estado #1</p>
             <p className="text-sm font-bold text-foreground">{top5States[0]?.name ?? "—"}</p>
           </div>
         </div>
@@ -175,7 +175,7 @@ export default function AdminMapPage() {
             <Activity size={15} className="text-yellow-400" />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Cobertura</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/70">Cobertura</p>
             <p className="text-sm font-bold text-yellow-400">
               {allStatesWithCount.filter(s => s.count > 0).length}/{BRAZIL_STATES.length} estados
             </p>

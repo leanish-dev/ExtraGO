@@ -18,7 +18,7 @@ function StatBadge({ value, label, color = "text-primary" }: { value: React.Reac
   return (
     <div className="text-center px-3 py-3 rounded-xl bg-white/3 border border-white/6 flex flex-col items-center justify-center gap-0.5">
       <p className={`text-lg font-black ${color}`}>{value}</p>
-      <p className="text-[10px] text-muted-foreground leading-tight">{label}</p>
+      <p className="text-[10px] text-white/70 leading-tight">{label}</p>
     </div>
   );
 }

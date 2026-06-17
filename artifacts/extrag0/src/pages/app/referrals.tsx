@@ -222,7 +222,7 @@ export default function ReferralsPage() {
             <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#f59e0b" }}>Rede de Expansão</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Indicações</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Expanda sua rede. <span style={{ color: "#f59e0b" }} className="font-semibold">Cresça junto.</span></p>
+          <p className="text-sm text-white/70 mt-0.5">Expanda sua rede. <span style={{ color: "#f59e0b" }} className="font-semibold">Cresça junto.</span></p>
         </div>
       </div>
 
@@ -285,7 +285,7 @@ export default function ReferralsPage() {
           </div>
           {/* Top stripe */}
           <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.45), transparent)" }} />
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-4">Progressão na Rede</p>
+          <p className="text-[10px] text-white/80 uppercase tracking-widest font-bold mb-4">Progressão na Rede</p>
           <div className="flex items-stretch gap-0 relative">
             {/* connector line */}
             <div className="absolute top-7 left-[calc(16.67%+1px)] right-[calc(16.67%+1px)] h-px bg-white/10 z-0" />
@@ -354,10 +354,10 @@ export default function ReferralsPage() {
               className="flex-shrink-0 mt-1"
             ><LevelBadgeIcon level={currentLevel.level} size="lg" /></motion.div>
             <div className="flex-1 min-w-0">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold mb-0.5">Seu nível atual</p>
+              <p className="text-[10px] text-white/75 uppercase tracking-widest font-bold mb-0.5">Seu nível atual</p>
               <p className={`text-2xl font-bold ${currentLevel.color} leading-tight`}>{currentLevel.label}</p>
               <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                <span className="text-xs text-muted-foreground">{user?.completedJobs ?? 0} extras concluídos</span>
+                <span className="text-xs text-white/65">{user?.completedJobs ?? 0} extras concluídos</span>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${currentLevel.bg} ${currentLevel.color}`}>
                   Taxa {currentLevel.feePercent}%
                 </span>
@@ -371,7 +371,7 @@ export default function ReferralsPage() {
               </div>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="text-xs text-muted-foreground mb-1">Avaliação</p>
+              <p className="text-xs text-white/70 mb-1">Avaliação</p>
               <p className="text-2xl font-bold leading-none">{(user?.reputationScore ?? 0).toFixed(1)}</p>
               <div className="flex justify-end gap-0.5 mt-1.5">
                 {[1, 2, 3, 4, 5].map(i => (
@@ -391,7 +391,7 @@ export default function ReferralsPage() {
               </div>
               <Progress value={progress} glow={currentLevel.level === "diamond"} />
               <div className="flex items-center justify-between mt-2">
-                <p className="text-[10px] text-muted-foreground">{Math.round(progress)}% completo</p>
+                <p className="text-[10px] text-white/65">{Math.round(progress)}% completo</p>
                 <p className={`text-[10px] font-bold ${nextLevel.color}`}>
                   {nextLevel.label} → {nextLevel.feePercent}% taxa
                 </p>
@@ -453,7 +453,7 @@ export default function ReferralsPage() {
               onClick={copyCode}
             >
               <p className="text-2xl sm:text-3xl font-bold text-primary font-mono tracking-[0.25em]">{code}</p>
-              <p className="text-[9px] text-muted-foreground mt-0.5 uppercase tracking-widest font-bold">Toque para copiar</p>
+              <p className="text-[9px] text-white/65 mt-0.5 uppercase tracking-widest font-bold">Toque para copiar</p>
             </motion.div>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -483,7 +483,7 @@ export default function ReferralsPage() {
 
           {/* Share buttons */}
           <div className="space-y-2 relative">
-            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">Compartilhar via</p>
+            <p className="text-[10px] font-bold text-white/75 uppercase tracking-widest mb-2">Compartilhar via</p>
             <div className="grid grid-cols-5 gap-2">
               <motion.button
                 whileHover={{ scale: 1.05, y: -2 }}
@@ -570,13 +570,13 @@ export default function ReferralsPage() {
                 <LevelBadgeIcon level={currentLevel.level} size="sm" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-muted-foreground font-medium">Sua taxa atual — {currentLevel.label}</p>
+                <p className="text-xs text-white/70 font-medium">Sua taxa atual — {currentLevel.label}</p>
                 <p className={`text-xl font-bold leading-tight ${currentLevel.color}`}>
                   {currentLevel.feePercent}% de comissão
                 </p>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="text-[10px] text-muted-foreground mb-0.5">Você recebe</p>
+                <p className="text-[10px] text-white/70 mb-0.5">Você recebe</p>
                 <p className={`text-2xl font-bold leading-none ${currentLevel.color}`}>
                   {100 - currentLevel.feePercent}%
                 </p>
@@ -586,10 +586,10 @@ export default function ReferralsPage() {
             {/* Level table */}
             <div className="rounded-xl border border-white/8 overflow-hidden">
               <div className="grid grid-cols-4 gap-0 bg-white/4 border-b border-white/6">
-                <div className="px-3 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide">Nível</div>
-                <div className="px-2 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide text-center">Extras</div>
-                <div className="px-2 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide text-center">Taxa</div>
-                <div className="px-3 py-2.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wide text-right">Recebe</div>
+                <div className="px-3 py-2.5 text-[10px] font-bold text-white/75 uppercase tracking-wide">Nível</div>
+                <div className="px-2 py-2.5 text-[10px] font-bold text-white/75 uppercase tracking-wide text-center">Extras</div>
+                <div className="px-2 py-2.5 text-[10px] font-bold text-white/75 uppercase tracking-wide text-center">Taxa</div>
+                <div className="px-3 py-2.5 text-[10px] font-bold text-white/75 uppercase tracking-wide text-right">Recebe</div>
               </div>
               {LEVEL_CONFIG.map((lvl, i) => {
                 const isCurrent = lvl.level === (user?.level ?? "bronze");
@@ -798,11 +798,11 @@ export default function ReferralsPage() {
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div className="rounded-xl border border-secondary/35 bg-secondary/18 p-3 text-center">
               <p className="text-lg font-bold text-secondary">{activeReferrals}</p>
-              <p className="text-[10px] text-muted-foreground">Indicados ativos</p>
+              <p className="text-[10px] text-white/65">Indicados ativos</p>
             </div>
             <div className="rounded-xl border border-primary/35 bg-primary/18 p-3 text-center">
               <p className="text-lg font-bold text-primary">{networkExtras}</p>
-              <p className="text-[10px] text-muted-foreground">Extras na sua rede</p>
+              <p className="text-[10px] text-white/65">Extras na sua rede</p>
             </div>
           </div>
 
@@ -904,7 +904,7 @@ export default function ReferralsPage() {
                     <span className={`text-sm font-bold tabular-nums ${i === 0 ? "text-yellow-400" : i === 1 ? "text-slate-300" : i === 2 ? "text-orange-400" : "text-primary"}`}>
                       {entry.totalConverted ?? 0}
                     </span>
-                    <p className="text-[10px] text-muted-foreground">indicações</p>
+                    <p className="text-[10px] text-white/65">indicações</p>
                   </div>
                 </motion.div>
               ))}

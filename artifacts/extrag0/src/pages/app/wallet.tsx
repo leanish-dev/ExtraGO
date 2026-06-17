@@ -273,7 +273,7 @@ export default function WalletPage() {
             <span className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: "#14b8a6" }}>Módulo Financeiro</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Carteira</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">{isCompany ? "Gerencie o saldo da empresa" : "Seus ganhos e saques via PIX"}</p>
+          <p className="text-sm text-white/70 mt-0.5">{isCompany ? "Gerencie o saldo da empresa" : "Seus ganhos e saques via PIX"}</p>
         </div>
       </div>
 

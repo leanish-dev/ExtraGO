@@ -134,7 +134,7 @@ function SliderField({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</span>
+        <span className="text-xs font-semibold text-white/75 uppercase tracking-wider">{label}</span>
         <span className="text-sm font-bold text-primary tabular-nums">{display}</span>
       </div>
       <input
@@ -641,7 +641,7 @@ export default function GovernancePage() {
               ].map((stat) => (
                 <div key={stat.label} className="text-center min-w-[52px]">
                   <p className="text-lg font-black leading-none" style={{ color: stat.color }}>{stat.value}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap">{stat.label}</p>
+                  <p className="text-[10px] text-white/65 mt-0.5 whitespace-nowrap">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -1017,7 +1017,7 @@ export default function GovernancePage() {
             {/* Active overrides list */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Overrides Ativos</h4>
+                <h4 className="text-xs font-bold text-white/80 uppercase tracking-wider">Overrides Ativos</h4>
                 <button onClick={fetchOverrides} className="text-muted-foreground hover:text-foreground p-1">
                   <RefreshCw size={12} />
                 </button>
@@ -1124,7 +1124,7 @@ export default function GovernancePage() {
               className="p-4 rounded-2xl space-y-3"
               style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
             >
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Badges Predefinidos</p>
+              <p className="text-xs font-bold text-white/80 uppercase tracking-wider">Badges Predefinidos</p>
               <div className="flex flex-wrap gap-2">
                 {PREDEFINED_BADGES.map(b => (
                   <button
@@ -1410,7 +1410,7 @@ export default function GovernancePage() {
                       },
                     ].map(({ label, value, ok }) => (
                       <div key={label} className="p-3 rounded-xl text-center" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">{label}</p>
+                        <p className="text-[10px] text-white/70 uppercase tracking-wider mb-1">{label}</p>
                         <div className="flex items-center justify-center gap-1.5">
                           <Circle size={7} className={ok ? "text-emerald-400 fill-emerald-400" : "text-red-400 fill-red-400"} />
                           <span className="text-xs font-bold">{value}</span>
@@ -1467,7 +1467,7 @@ export default function GovernancePage() {
             {/* List */}
             <div className="p-4 rounded-2xl space-y-3" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <div className="flex items-center justify-between">
-                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <p className="text-xs font-bold text-white/80 uppercase tracking-wider">
                   {categories.length} categoria{categories.length !== 1 ? "s" : ""}
                 </p>
                 <button

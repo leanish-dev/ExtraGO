@@ -297,7 +297,7 @@ export default function AdminWithdrawalsPage() {
       {/* Header */}
       <div>
         <h1 className="text-[22px] font-bold">Financeiro — Aprovações</h1>
-        <p className="text-muted-foreground mt-1 text-sm">Gerencie saques de freelancers e depósitos de empresas</p>
+        <p className="text-white/70 mt-1 text-sm">Gerencie saques de freelancers e depósitos de empresas</p>
       </div>
 
       {/* Summary cards */}
@@ -309,7 +309,7 @@ export default function AdminWithdrawalsPage() {
             <p className="text-xs font-bold text-yellow-400 uppercase tracking-wider">Saques</p>
           </div>
           <p className="text-2xl font-bold tabular-nums">R$ {pendingWithdrawTotal.toFixed(0)}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">
+          <p className="text-[11px] text-white/65 mt-0.5">
             {(withdrawals as any[]).filter((w: any) => w.status === "pending").length} pendentes
           </p>
         </div>
@@ -320,7 +320,7 @@ export default function AdminWithdrawalsPage() {
             <p className="text-xs font-bold text-primary uppercase tracking-wider">Depósitos</p>
           </div>
           <p className="text-2xl font-bold tabular-nums text-primary">R$ {pendingDepositTotal.toFixed(0)}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">
+          <p className="text-[11px] text-white/65 mt-0.5">
             {(deposits as any[]).filter((d: any) => d.status === "pending" || d.status === "confirmed").length} para processar
           </p>
         </div>

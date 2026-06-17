@@ -212,20 +212,20 @@ function JobDetailSheet({ job, open, onClose, onApply, isCompany }: {
                   style={{ color: item.accent, opacity: 0.07 }}>
                   {item.watermark}
                 </div>
-                <div className="relative flex items-center gap-1.5 mb-2">{item.icon}<span className="text-[9px] text-muted-foreground uppercase tracking-widest font-bold">{item.label}</span></div>
+                <div className="relative flex items-center gap-1.5 mb-2">{item.icon}<span className="text-[9px] text-white/70 uppercase tracking-widest font-bold">{item.label}</span></div>
                 <p className="relative text-sm font-semibold">{item.value}</p>
               </motion.div>
             ))}
           </div>
           {job.description && (
             <div>
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">Descrição</p>
+              <p className="text-xs font-bold text-white/75 uppercase tracking-widest mb-3">Descrição</p>
               <p className="text-sm leading-relaxed text-foreground/80">{job.description}</p>
             </div>
           )}
           {(job as any).requirements && (
             <div>
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3">Requisitos</p>
+              <p className="text-xs font-bold text-white/75 uppercase tracking-widest mb-3">Requisitos</p>
               <p className="text-sm leading-relaxed text-foreground/80">{(job as any).requirements}</p>
             </div>
           )}
@@ -568,7 +568,7 @@ export default function JobsPage() {
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
               {user?.role === "company" ? "Meus Extras" : "Buscar Extras"}
             </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <p className="text-sm text-white/70 mt-0.5">
               <span className="font-bold" style={{ color: "#8b5cf6" }}>{filtered.length}</span> extra{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
             </p>
           </div>

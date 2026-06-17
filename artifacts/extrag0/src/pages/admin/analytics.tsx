@@ -59,9 +59,9 @@ function MetricCard({ icon, label, value, sub, color, gradientFrom = "rgba(124,2
       <div className="flex items-start justify-between mb-3">
         <div className="opacity-80">{icon}</div>
       </div>
-      <p className="text-xs text-muted-foreground mb-1">{label}</p>
+      <p className="text-xs text-white/70 mb-1">{label}</p>
       <p className="text-2xl font-bold">{value}</p>
-      {sub && <p className="text-[11px] text-muted-foreground mt-1">{sub}</p>}
+      {sub && <p className="text-[11px] text-white/65 mt-1">{sub}</p>}
     </motion.div>
   );
 }
@@ -117,7 +117,7 @@ export default function AdminAnalyticsPage() {
       {/* Header */}
       <div>
         <h1 className="text-[22px] font-bold">Analytics</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Visão executiva da plataforma extraGO</p>
+        <p className="text-sm text-white/70 mt-0.5">Visão executiva da plataforma extraGO</p>
       </div>
 
       {/* KPI Cards */}

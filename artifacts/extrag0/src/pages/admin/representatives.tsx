@@ -140,7 +140,7 @@ export default function AdminRepresentativesPage() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-[22px] font-bold">Representantes Regionais</h1>
-          <p className="text-muted-foreground mt-1 text-sm">
+          <p className="text-white/70 mt-1 text-sm">
             Gerencie os representantes por estado — recebem comissão das taxas de plataforma dos extras na sua região
           </p>
         </div>
@@ -155,21 +155,21 @@ export default function AdminRepresentativesPage() {
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-3">
         <div className="glass-card rounded-xl p-4 border border-white/8">
-          <p className="text-xs text-muted-foreground mb-1">Representantes</p>
+          <p className="text-xs text-white/70 mb-1">Representantes</p>
           <p className="text-2xl font-bold">{(reps as any[]).length}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">estados cobertos</p>
+          <p className="text-[11px] text-white/60 mt-0.5">estados cobertos</p>
         </div>
         <div className="glass-card rounded-xl p-4 border border-white/8">
-          <p className="text-xs text-muted-foreground mb-1">Sem cobertura</p>
+          <p className="text-xs text-white/70 mb-1">Sem cobertura</p>
           <p className="text-2xl font-bold text-yellow-400">{uncoveredCount}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">de 27 estados</p>
+          <p className="text-[11px] text-white/60 mt-0.5">de 27 estados</p>
         </div>
         <div className="glass-card rounded-xl p-4 border border-white/8">
-          <p className="text-xs text-muted-foreground mb-1">Cobertura</p>
+          <p className="text-xs text-white/70 mb-1">Cobertura</p>
           <p className="text-2xl font-bold text-primary">
             {Math.round((coveredStates.size / 27) * 100)}%
           </p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">do território nacional</p>
+          <p className="text-[11px] text-white/60 mt-0.5">do território nacional</p>
         </div>
       </div>
 
@@ -296,7 +296,7 @@ export default function AdminRepresentativesPage() {
       ) : (
         <>
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
+            <h2 className="font-semibold text-sm text-white/80 uppercase tracking-wider">
               {(reps as any[]).length} representante{(reps as any[]).length !== 1 ? "s" : ""} ativo{(reps as any[]).length !== 1 ? "s" : ""}
             </h2>
           </div>

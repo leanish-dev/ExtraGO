@@ -83,7 +83,7 @@ function ApplicationCard({ app, isCompany, onApprove, onReject, index }: {
 
       {(app as any).message && (
         <div className="p-3 rounded-xl bg-white/3 border border-white/6">
-          <p className="text-[11px] text-muted-foreground uppercase tracking-wide font-semibold mb-1.5">Mensagem</p>
+          <p className="text-[11px] text-white/75 uppercase tracking-wide font-semibold mb-1.5">Mensagem</p>
           <p className="text-xs leading-relaxed line-clamp-3 text-foreground/80">{(app as any).message}</p>
         </div>
       )}
@@ -181,7 +181,7 @@ export default function ApplicationsPage() {
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
             {isCompany ? "Candidaturas Recebidas" : "Minhas Candidaturas"}
           </h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
+          <p className="text-sm text-white/70 mt-0.5">
             <span className="font-bold" style={{ color: "#8b5cf6" }}>{apps.length}</span> candidatura{apps.length !== 1 ? "s" : ""} {isCompany ? "recebida" : "enviada"}{apps.length !== 1 ? "s" : ""}
           </p>
         </div>
