@@ -92,9 +92,29 @@ export function NotificationBell({ unread }: NotificationsDropdownProps) {
         ...(isMobile ? { top: "calc(66px + env(safe-area-inset-top, 0px))" } : {}),
       }}
     >
-      {/* Top accent — matches notification identity color */}
+      {/* Top accent */}
       <div className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, transparent 5%, rgba(124,252,0,0.50) 35%, rgba(0,229,255,0.30) 65%, transparent 95%)" }} />
+        style={{ background: "linear-gradient(90deg, rgba(34,197,94,0.50) 0%, rgba(59,130,246,0.35) 60%, transparent 95%)" }} />
+
+      {/* Bell watermark — top right */}
+      <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"
+        className="absolute top-0 right-0 pointer-events-none select-none"
+        style={{ width: 80, height: 80, opacity: 1 }} aria-hidden="true">
+        <path d="M40 8C29 8 20 17 20 28v2c-7 3-12 10-12 18v3h64v-3c0-8-5-15-12-18v-2c0-11-9-20-20-20z"
+          stroke="rgba(59,130,246,0.18)" strokeWidth="1.8" fill="none" />
+        <path d="M33 51c0 4 3 7 7 7s7-3 7-7" stroke="rgba(59,130,246,0.18)" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+        <circle cx="58" cy="20" r="8" stroke="rgba(34,197,94,0.22)" strokeWidth="1.5" fill="none" />
+        <text x="55" y="24" fill="rgba(34,197,94,0.30)" fontSize="8" fontWeight="bold" fontFamily="system-ui">1</text>
+      </svg>
+
+      {/* Dot grid — bottom left corner */}
+      <div className="absolute bottom-0 left-0 w-16 h-16 pointer-events-none select-none" aria-hidden="true"
+        style={{
+          backgroundImage: "radial-gradient(circle, rgba(34,197,94,0.18) 1px, transparent 1px)",
+          backgroundSize: "8px 8px",
+          WebkitMaskImage: "radial-gradient(ellipse at 0% 100%, black 0%, transparent 70%)",
+          maskImage: "radial-gradient(ellipse at 0% 100%, black 0%, transparent 70%)",
+        }} />
 
       {/* Panel header */}
       <div className="flex items-center justify-between px-4 py-3.5"

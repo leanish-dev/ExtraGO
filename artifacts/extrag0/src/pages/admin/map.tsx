@@ -152,7 +152,7 @@ export default function AdminMapPage() {
 
       {/* KPI strip */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="glass-card rounded-2xl p-4 border border-white/8 flex items-center gap-3">
+        <div className="card-admin-stat rounded-2xl p-4 flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
             <MapPin size={15} className="text-primary" />
           </div>
@@ -161,7 +161,7 @@ export default function AdminMapPage() {
             <p className={`text-sm font-bold ${REGION_COLORS[topRegionName] ?? "text-foreground"}`}>{topRegionName}</p>
           </div>
         </div>
-        <div className="glass-card rounded-2xl p-4 border border-white/8 flex items-center gap-3">
+        <div className="card-admin-stat rounded-2xl p-4 flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center flex-shrink-0">
             <Award size={15} className="text-secondary" />
           </div>
@@ -170,7 +170,7 @@ export default function AdminMapPage() {
             <p className="text-sm font-bold text-foreground">{top5States[0]?.name ?? "—"}</p>
           </div>
         </div>
-        <div className="glass-card rounded-2xl p-4 border border-white/8 flex items-center gap-3">
+        <div className="card-admin-stat rounded-2xl p-4 flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center flex-shrink-0">
             <Activity size={15} className="text-yellow-400" />
           </div>

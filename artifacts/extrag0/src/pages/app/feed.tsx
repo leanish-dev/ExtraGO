@@ -531,8 +531,13 @@ export default function FeedPage() {
   return (
     <div className="relative p-4 sm:p-6 max-w-2xl mx-auto space-y-5 pb-24">
       <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
-        <div className="absolute top-0 left-0 right-0 h-72 bg-gradient-to-br from-primary/6 via-transparent to-secondary/3" />
-        <div className="absolute top-12 right-0 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(0,229,255,0.05) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        <div className="mod-network-ambient absolute inset-0" />
+        <div className="absolute top-0 left-0 right-0 h-72 bg-gradient-to-br from-blue-500/5 via-transparent to-primary/3" />
+        <div className="absolute top-12 right-0 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        {/* GO watermark — page level */}
+        <div className="absolute bottom-20 right-4 select-none pointer-events-none text-[160px] font-black leading-none"
+          style={{ color: "rgba(59,130,246,0.04)", fontFamily: "var(--font-display, system-ui)", letterSpacing: "-8px", filter: "blur(1px)" }}
+          aria-hidden="true">GO</div>
       </div>
       <PageHeader title="Atividade da Rede" subtitle="Acompanhe conquistas, disponibilidades e extras da comunidade" />
 

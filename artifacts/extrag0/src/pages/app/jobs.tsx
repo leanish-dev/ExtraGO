@@ -325,11 +325,18 @@ function JobCard({ job, onClick, isCompany, index = 0 }: { job: Job; onClick: (j
       transition={{ duration: 0.4, delay: index * 0.05, ease: [0.19, 1, 0.22, 1] }}
       whileTap={{ scale: 0.98 }}
       onClick={() => onClick(job)}
-      className={`glass-card card-hover card-shimmer-hover rounded-2xl p-5 flex flex-col h-full group cursor-pointer border border-l-2 transition-all relative overflow-hidden tilt-card ${leftBorderClass} ${
+      className={`card-hover card-shimmer-hover rounded-2xl p-5 flex flex-col h-full group cursor-pointer border border-l-2 transition-all relative overflow-hidden tilt-card ${leftBorderClass} ${
         liveStatus === "happening" ? "border-green-500/25" :
         liveStatus === "soon" ? "border-amber-500/20" :
-        "border-white/6 hover:border-primary/20"
+        "border-white/8 hover:border-purple-400/25"
       }`}
+      style={{
+        background: liveStatus === "happening"
+          ? "linear-gradient(135deg, rgba(34,197,94,0.10) 0%, rgba(8,17,26,0.95) 55%, rgba(34,197,94,0.04) 100%)"
+          : liveStatus === "soon"
+          ? "linear-gradient(135deg, rgba(245,158,11,0.09) 0%, rgba(8,17,26,0.95) 55%, rgba(245,158,11,0.04) 100%)"
+          : "linear-gradient(135deg, rgba(139,92,246,0.07) 0%, rgba(8,17,26,0.95) 55%, rgba(59,130,246,0.04) 100%)",
+      }}
     >
       {liveStatus === "happening" && (
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent" />
