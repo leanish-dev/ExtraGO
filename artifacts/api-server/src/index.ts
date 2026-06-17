@@ -1,5 +1,8 @@
+import fs from "node:fs";
+import path from "node:path";
 import app from "./app";
 import { logger } from "./lib/logger";
+import { SERVER_BUILD_ISO } from "./lib/build-info";
 import { pool, db, usersTable, sessionsTable } from "@workspace/db";
 import { eq, lt } from "drizzle-orm";
 import { hashPassword, generateReferralCode, storeToken, generateToken } from "./lib/auth";
@@ -83,13 +86,34 @@ async function cleanExpiredSessions() {
   }
 }
 
+// ─── Dev-mode: watch critical source files and warn when they change ──────────
+if (process.env.NODE_ENV === "development") {
+  const watchTargets = [
+    path.resolve(process.cwd(), "src/routes/seed.ts"),
+    path.resolve(process.cwd(), "src/lib/auth.ts"),
+  ];
+  for (const target of watchTargets) {
+    if (fs.existsSync(target)) {
+      fs.watch(target, () => {
+        const rel = path.relative(process.cwd(), target);
+        logger.warn(
+          `⚠️  SOURCE CHANGED: ${rel}\n` +
+          `   The running server was compiled BEFORE this edit.\n` +
+          `   → Restart the "API Server" workflow to recompile.\n` +
+          `   → Then re-run: POST /api/setup/seed`
+        );
+      });
+    }
+  }
+}
+
 app.listen(port, async (err) => {
   if (err) {
     logger.error({ err }, "Error listening on port");
     process.exit(1);
   }
 
-  logger.info({ port }, "Server listening");
+  logger.info({ port, builtAt: SERVER_BUILD_ISO }, "Server listening");
 
   try {
     await waitForDatabase();

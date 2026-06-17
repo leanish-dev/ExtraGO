@@ -1,23 +1,27 @@
+import fs from "node:fs";
+import path from "node:path";
 import { Router } from "express";
 import { db, usersTable, walletsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { hashPassword, generateReferralCode } from "../lib/auth";
+import { SERVER_BUILD_TIME, SERVER_BUILD_ISO } from "../lib/build-info";
 
 const router = Router();
 
 /**
  * POST /api/setup/seed
  *
- * Idempotent bootstrap for the FIVE approved production accounts only.
+ * Idempotent bootstrap for the SIX approved production accounts only.
  * This endpoint NEVER creates ecosystem/demo/seed users, jobs, transactions,
  * notifications, conversations, or any other synthetic data.
  *
  * Approved accounts:
  *   1. leonardoscheffel2000@gmail.com  — CEO / super_admin
  *   2. jeandick2000@gmail.com          — CMO / super_admin
- *   3. extrago.ceo@yahoo.com           — CEO master / super_admin
- *   4. teste.f@extrago.com             — authorized test freelancer
- *   5. teste.e@extrago.com             — authorized test company
+ *   3. qaialla.exclusive@gmail.com     — CCO / super_admin
+ *   4. extrago.ceo@yahoo.com           — CEO master / super_admin
+ *   5. teste.f@extrago.com             — authorized test freelancer
+ *   6. teste.e@extrago.com             — authorized test company
  */
 router.post("/setup/seed", async (_req, res) => {
   try {
@@ -192,8 +196,29 @@ router.post("/setup/seed", async (_req, res) => {
     await ensureWallet(testeEId, "company");
     results.push(`Test company (teste.e): id=${testeEId}`);
 
+    // ── Stale-build detection ──────────────────────────────────────────────────
+    // If seed.ts source file is newer than the compiled bundle, the UPDATE above
+    // ran with OLD code. Warn explicitly so the operator knows to restart+reseed.
+    let staleBuildWarning: string | null = null;
+    try {
+      const seedSrc = path.resolve(process.cwd(), "src/routes/seed.ts");
+      if (fs.existsSync(seedSrc)) {
+        const srcMtime = fs.statSync(seedSrc).mtimeMs;
+        if (srcMtime > SERVER_BUILD_TIME) {
+          staleBuildWarning =
+            `⚠️  STALE BUILD DETECTED: seed.ts was modified after the server was compiled (built at ${SERVER_BUILD_ISO}). ` +
+            `Passwords and data written by this seed call used OLD compiled code. ` +
+            `Restart the API Server workflow and re-run POST /api/setup/seed.`;
+        }
+      }
+    } catch {
+      // non-critical
+    }
+
     res.json({
       message: "Approved accounts provisioned — no demo/seed data created",
+      builtAt: SERVER_BUILD_ISO,
+      ...(staleBuildWarning ? { warning: staleBuildWarning } : {}),
       accounts: {
         ceo: { email: "leonardoscheffel2000@gmail.com", id: leonardoId },
         cmo: { email: "jeandick2000@gmail.com", id: jeanDickId },
