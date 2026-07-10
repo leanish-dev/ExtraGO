@@ -398,7 +398,7 @@ export default function InvestidoresParceirosPage() {
         <section className="relative py-5 sm:py-16" style={{ background: "rgba(4,10,22,0.10)" }}>
           {/* Content surface depth — within VISUAL_GUIDELINES §overlay 0.16-0.30 */}
           <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(4,10,22,0.28) 0%, rgba(4,10,22,0.14) 30%, rgba(4,10,22,0.14) 70%, rgba(4,10,22,0.28) 100%)" }} />
-          <div className="relative z-10 px-5 sm:px-10 max-w-6xl mx-auto mb-6">
+          <div className="relative z-10 px-5 sm:px-10 max-w-7xl mx-auto mb-6">
             <Reveal>
               <Pill label="Vantagens Competitivas" color={G} icon={<Shield size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
@@ -451,8 +451,8 @@ export default function InvestidoresParceirosPage() {
               </Link>
             </Reveal>
 
-          <div className="relative z-10 px-5 sm:px-10 max-w-6xl mx-auto">
-            <div className="divide-y divide-white/6">
+          <div className="relative z-10 px-5 sm:px-10 max-w-7xl mx-auto">
+            <div className="grid sm:grid-cols-2 gap-x-10 divide-y divide-white/6 sm:divide-y-0">
               {ADVANTAGES.map((adv, i) => (
                 <Reveal key={i} delay={i * 0.04}>
                   <div className="flex items-start gap-5 py-5">
@@ -548,89 +548,76 @@ export default function InvestidoresParceirosPage() {
         </div>
 
         {/* ═══════════════════════════════
-            08 · BUSINESS MODEL
+            08 · ARQUITETURA FINANCEIRA DA extraGO
+            (merged: former "Modelo de Receita" + "Os 4 Motores de Receita")
         ═══════════════════════════════ */}
-        <section id="modelo" className="px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(4,10,22,0.10)" }}>
-          <div className="max-w-6xl mx-auto">
-            <Reveal className="mb-8">
+        <section id="modelo" className="px-5 sm:px-10 py-6 sm:py-20" style={{ background: "rgba(4,10,22,0.10)" }}>
+          <div className="max-w-7xl mx-auto">
+            <Reveal className="mb-10">
               <Pill label="Modelo de Negócio" color={G} icon={<DollarSign size={10} />} />
-              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
-                Múltiplas camadas de receita.<br />Todas recorrentes.
+              <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(24px,4vw,46px)" }}>
+                Arquitetura Financeira da extraGO.
               </h2>
-              <p style={{ color: "rgba(255,255,255,0.92)", fontSize: "14px", lineHeight: 1.72, maxWidth: "560px" }}>
-                O modelo financeiro da extraGO combina intermediação por performance, assinaturas mensais e receita de rede — criando previsibilidade e escalabilidade.
+              <p style={{ color: "rgba(255,255,255,0.92)", fontSize: "14px", lineHeight: 1.72, maxWidth: "680px" }}>
+                O modelo financeiro da extraGO combina intermediação por performance, assinaturas mensais e receita de rede — quatro camadas recorrentes que se reforçam mutuamente, criando previsibilidade e escalabilidade.
               </p>
             </Reveal>
 
-            {/* Camada 1 */}
-            <Reveal className="mb-4">
-              <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                <img src="/camada1-card.webp" alt="Camada 1 — Intermediação por Performance" className="w-full h-auto block" />
+            {/* Editorial two-column layout: motores artwork (left) + 4 camadas stacked (right) */}
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+              {/* LEFT — 4 Motores de Receita artwork */}
+              <Reveal className="lg:sticky lg:top-24">
+                <img
+                  src="/motores-receita-card.webp"
+                  alt="Os 4 Motores de Receita da extraGO"
+                  className="w-full h-auto block rounded-2xl"
+                  style={{ display: "block", objectFit: "contain", width: "100%", boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)" }}
+                />
+              </Reveal>
+
+              {/* RIGHT — Camadas 1-4 stacked vertically, separated editorially */}
+              <div className="flex flex-col divide-y divide-white/8">
+                {/* Camada 1 */}
+                <Reveal className="pb-6">
+                  <img src="/camada1-card.webp" alt="Camada 1 — Intermediação por Performance" className="w-full h-auto block rounded-xl" />
+                </Reveal>
+
+                {/* Camada 2 */}
+                <Reveal className="py-6" delay={0.05}>
+                  <img src="/camada2-indicacoes-card.webp" alt="Camada 2 — Sistema de Indicações Multinível" className="w-full h-auto block rounded-xl" />
+                </Reveal>
+
+                {/* Camada 3 — Assinaturas Profissionais */}
+                <Reveal className="py-6" delay={0.1}>
+                  <img
+                    src={assProfissionaisArqImg}
+                    alt="Camada 3 — Assinaturas Profissionais — FREE Gratuito, extraGO PRO R$19,90/mês, PREMIUM R$49,90/mês, ELITE R$99,90/mês"
+                    className="w-full h-auto block rounded-xl"
+                    style={{ display: "block", objectFit: "contain", width: "100%" }}
+                  />
+                </Reveal>
+
+                {/* Camada 4 — Assinaturas Empresariais */}
+                <Reveal className="pt-6" delay={0.15}>
+                  <img
+                    src={assEmpresariaisInvestImg}
+                    alt="Camada 4 — Assinaturas Empresariais — Starter R$99,90/mês, Business R$299,90/mês, Corporate R$799,90/mês, Enterprise sob consulta"
+                    className="w-full h-auto block rounded-xl"
+                    style={{ display: "block", objectFit: "contain", width: "100%" }}
+                  />
+                </Reveal>
               </div>
-            </Reveal>
+            </div>
 
-            {/* Camada 2 */}
-            <Reveal className="mb-4" delay={0.06}>
-              <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                <img src="/camada2-indicacoes-card.webp" alt="Camada 2 — Sistema de Indicações Multinível" className="w-full h-auto block" />
-              </div>
-            </Reveal>
-
-          </div>
-        </section>
-
-        {/* Camada 3 — Assinaturas Profissionais */}
-        <section className="py-2">
-          <Reveal className="mb-2">
-            <img
-              src={assProfissionaisArqImg}
-              alt="Assinaturas Profissionais — FREE Gratuito, extraGO PRO R$19,90/mês, PREMIUM R$49,90/mês, ELITE R$99,90/mês"
-              className="w-full h-auto block"
-              style={{ display: "block", objectFit: "contain", width: "100%" }}
-            />
-          </Reveal>
-        </section>
-
-        {/* Camada 4 — Assinaturas Empresariais */}
-        <section className="py-2">
-          <Reveal className="mb-4">
-            <img
-              src={assEmpresariaisInvestImg}
-              alt="Assinaturas Empresariais — Starter R$99,90/mês, Business R$299,90/mês, Corporate R$799,90/mês, Enterprise sob consulta"
-              className="w-full h-auto block"
-              style={{ display: "block", objectFit: "contain", width: "100%" }}
-            />
-          </Reveal>
-        </section>
-
-        <section className="px-5 sm:px-10 pb-5 sm:pb-16">
-          <div className="max-w-6xl mx-auto">
-            {/* Estrutura Financeira */}
-            <Reveal delay={0.18}>
+            {/* Estrutura Financeira — full width, spans both columns */}
+            <Reveal delay={0.18} className="mt-10">
               <div className="w-full rounded-2xl overflow-hidden" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.28), 0 2px 12px rgba(0,0,0,0.18)", border: "1px solid rgba(255,255,255,0.07)" }}>
                 <img src="/estrutura-finan-card.webp" alt="Estrutura Financeira — Alocação da Receita Operacional" className="w-full h-auto block" />
               </div>
             </Reveal>
-          </div>
-        </section>
 
-        <Divider />
-
-        {/* ═══════════════════════════════
-            08b · 4 MOTORES DE RECEITA
-        ═══════════════════════════════ */}
-        <section id="camadas" className="py-6 sm:py-20">
-          <Reveal className="mb-8">
-            <img
-              src="/motores-receita-card.webp"
-              alt="Os 4 Motores de Receita da extraGO"
-              className="w-full h-auto block"
-              style={{ display: "block", objectFit: "contain", width: "100%" }}
-            />
-          </Reveal>
-          <div className="px-5 sm:px-10 max-w-6xl mx-auto">
-            {/* CTA → dedicated model page */}
-            <Reveal delay={0.15} className="flex justify-center">
+            {/* CTA → dedicated model page, kept at the bottom of the unified section */}
+            <Reveal delay={0.22} className="flex justify-center mt-10">
               <Link href="/modelo-de-negocio">
                 <button
                   className="flex items-center gap-2.5 rounded-full font-bold text-black border-none cursor-pointer"
@@ -656,7 +643,6 @@ export default function InvestidoresParceirosPage() {
                 </button>
               </Link>
             </Reveal>
-
           </div>
         </section>
 
@@ -677,18 +663,18 @@ export default function InvestidoresParceirosPage() {
             <div className="absolute inset-0"
               style={{ background: "radial-gradient(ellipse 80% 60% at 20% 30%, rgba(5,12,26,0.48) 0%, transparent 70%)" }} />
           </div>
-          <div className="relative z-10 max-w-6xl mx-auto">
-            <Reveal className="mb-8">
+          <div className="relative z-10 max-w-7xl mx-auto">
+            <Reveal className="mb-10 max-w-2xl">
               <Pill label="Governança & Estrutura Operacional" color="#a855f7" icon={<Cpu size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 1px 8px rgba(0,0,0,0.38)" }}>
                 Infraestrutura de gestão<br />para escala nacional.
               </h2>
-              <p className="text-[14px] leading-relaxed max-w-xl" style={{ color: "rgba(255,255,255,0.92)" }}>
+              <p className="text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.92)" }}>
                 A extraGO possui uma arquitetura operacional completa, coordenada por cinco pilares que garantem execução nacional, regional e local.
               </p>
             </Reveal>
 
-            <div className="grid sm:grid-cols-2 gap-0">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-0 divide-y divide-white/5 sm:divide-y-0 lg:divide-x lg:divide-y-0 sm:gap-x-8 lg:gap-x-10">
               {[
                 {
                   icon: <Cpu size={17} />, color: G, title: "Plataforma Nacional",
@@ -716,7 +702,7 @@ export default function InvestidoresParceirosPage() {
                 },
               ].map((block, i) => (
                 <Reveal key={i} delay={i * 0.04}>
-                  <div className="flex items-start gap-4 py-5 border-b border-white/5">
+                  <div className="flex items-start gap-4 py-5 lg:px-2">
                     <div className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
                       style={{ background: `${block.color}12`, border: `1px solid ${block.color}20` }}>
                       <span style={{ color: block.color }}>{block.icon}</span>
@@ -758,22 +744,22 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             09c · WHY THE STRUCTURE SCALES
         ═══════════════════════════════ */}
-        <section className="relative px-5 sm:px-10 py-5 sm:py-16" style={{ background: "rgba(4,10,22,0.10)" }}>
+        <section className="relative px-5 sm:px-10 py-6 sm:py-20" style={{ background: "rgba(4,10,22,0.10)" }}>
           {/* Content surface depth — within VISUAL_GUIDELINES §overlay 0.16-0.30 */}
           <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(4,10,22,0.26) 0%, rgba(4,10,22,0.12) 25%, rgba(4,10,22,0.12) 75%, rgba(4,10,22,0.26) 100%)" }} />
-          <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="relative z-10 max-w-7xl mx-auto">
 
-            <Reveal className="mb-8">
+            <Reveal className="mb-10 max-w-2xl">
               <Pill label="Por Que a Estrutura Escala" color={G} icon={<BarChart3 size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
                 Um modelo desenhado para<br />crescimento sustentável nacional.
               </h2>
-              <p style={{ color: "rgba(255,255,255,0.92)", fontSize: "14px", lineHeight: 1.72, maxWidth: "680px" }}>
+              <p style={{ color: "rgba(255,255,255,0.92)", fontSize: "14px", lineHeight: 1.72 }}>
                 A receita da extraGO é distribuída intencionalmente para financiar cada pilar do crescimento — garantindo que expansão, tecnologia, operação e retorno para parceiros coexistam de forma equilibrada.
               </p>
             </Reveal>
 
-            <div className="grid sm:grid-cols-2 gap-0 divide-y divide-white/5 sm:gap-x-10 sm:divide-y-0">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-0 divide-y divide-white/5 sm:gap-x-10 lg:gap-x-8 sm:divide-y-0">
               {[
                 {
                   icon: <Shield size={16} />, color: G, pct: "25%", label: "Caixa e Reserva Estratégica",
@@ -837,8 +823,8 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             10 · TEAM
         ═══════════════════════════════ */}
-        <section id="equipe" className="py-5 sm:py-16" style={{ background: "rgba(4,10,22,0.08)" }}>
-          <div className="px-5 sm:px-10 max-w-5xl mx-auto">
+        <section id="equipe" className="py-6 sm:py-20" style={{ background: "rgba(4,10,22,0.08)" }}>
+          <div className="px-5 sm:px-10 max-w-7xl mx-auto">
             <Reveal className="text-center mb-8">
               <Pill label="Liderança" color={C} icon={<Users size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
@@ -895,66 +881,56 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             12b · BUILT FOR NATIONAL SCALE
         ═══════════════════════════════ */}
-        <section className="px-5 sm:px-10 py-5 sm:py-16">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="relative rounded-2xl overflow-hidden border"
-                style={{
-                  borderColor: "rgba(0,229,255,0.22)",
-                  boxShadow: "0 0 80px rgba(0,229,255,0.08), inset 0 0 60px rgba(0,0,0,0.3)",
-                }}>
-                {/* City skyline background */}
-                <div className="absolute inset-0">
-                  <div className="absolute inset-0"
-                    style={{ backgroundImage: "url(/sec-escala-nacional.webp)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.90, filter: "saturate(1.70) contrast(1.12)" }} />
-                  <div className="absolute inset-0"
-                    style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.08) 0%,rgba(5,12,26,0.16) 35%,rgba(124,252,0,0.05) 100%)" }} />
-                </div>
-                {/* Top accent */}
-                <div className="absolute inset-x-0 top-0 h-[2px]"
-                  style={{ background: "linear-gradient(90deg,transparent,#00E5FF 35%,#7CFC00 65%,transparent)" }} />
+        <section className="relative overflow-hidden px-5 sm:px-10 py-8 sm:py-24">
+          {/* City skyline background — full-bleed, same asset as before */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0"
+              style={{ backgroundImage: "url(/sec-escala-nacional.webp)", backgroundSize: "cover", backgroundPosition: "center 30%", opacity: 0.90, filter: "saturate(1.70) contrast(1.12)" }} />
+            <div className="absolute inset-0"
+              style={{ background: "linear-gradient(145deg,rgba(0,229,255,0.08) 0%,rgba(5,12,26,0.16) 35%,rgba(124,252,0,0.05) 100%)" }} />
+          </div>
+          {/* Top accent */}
+          <div className="absolute inset-x-0 top-0 h-[2px]"
+            style={{ background: "linear-gradient(90deg,transparent,#00E5FF 35%,#7CFC00 65%,transparent)" }} />
 
-                <div className="relative z-10 p-8 sm:p-12">
-                  <div className="max-w-3xl mx-auto text-center">
-                    <Pill label="Oportunidade de Investimento" color={C} icon={<Globe size={10} />} />
+          <div className="relative z-10 max-w-7xl mx-auto">
+            <Reveal className="mb-10 max-w-2xl">
+              <Pill label="Oportunidade de Investimento" color={C} icon={<Globe size={10} />} />
 
-                    <h2 className="font-black leading-tight mb-4" style={{ fontSize: "clamp(24px,4vw,48px)", filter: "drop-shadow(0 1px 8px rgba(0,0,0,0.38))" }}>
-                      <span style={{
-                        background: `linear-gradient(90deg,${C},#9aff1c 50%,${G})`,
-                        WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                      }}>Construída para Escala Nacional.</span>
-                    </h2>
+              <h2 className="font-black leading-tight mb-4" style={{ fontSize: "clamp(24px,4vw,48px)", filter: "drop-shadow(0 1px 8px rgba(0,0,0,0.38))" }}>
+                <span style={{
+                  background: `linear-gradient(90deg,${C},#9aff1c 50%,${G})`,
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                }}>Construída para Escala Nacional.</span>
+              </h2>
 
-                    <p className="text-[14px] leading-relaxed mb-8 max-w-2xl mx-auto" style={{ color: "rgba(255,255,255,0.90)", textShadow: "0 1px 5px rgba(0,0,0,0.28)" }}>
-                      A extraGO foi estruturada desde o primeiro dia para suportar expansão nacional, parcerias estratégicas e participação de investidores de longo prazo.
-                    </p>
-
-                    {/* Three proof points — editorial */}
-                    <div className="divide-y divide-white/8 text-left max-w-xl mx-auto w-full">
-                      {[
-                        { icon: <Shield size={15} />, color: G,        label: "Governança Sólida",         desc: "Estrutura operacional completa com analytics em tempo real por estado e KPIs nacionais centralizados." },
-                        { icon: <TrendingUp size={15} />, color: C,    label: "Planejamento Sustentável",  desc: "Receita distribuída intencionalmente para suportar cada pilar do crescimento sem dependência de capital externo." },
-                        { icon: <Globe size={15} />, color: "#a855f7", label: "Escalabilidade Nacional",   desc: "27 estados, rede de representantes, infraestrutura tecnológica e modelo de expansão preparados para o Brasil." },
-                      ].map((p, i) => (
-                        <motion.div key={i}
-                          initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                          className="flex items-start gap-3 py-4">
-                          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                            style={{ background: `${p.color}14` }}>
-                            <span style={{ color: p.color }}>{p.icon}</span>
-                          </div>
-                          <div>
-                            <p className="text-[13px] font-bold text-[rgba(255,255,255,0.88)] mb-0.5">{p.label}</p>
-                            <p className="text-[12px] text-[rgba(255,255,255,0.68)] leading-relaxed">{p.desc}</p>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <p className="text-[14px] leading-relaxed" style={{ color: "rgba(255,255,255,0.90)", textShadow: "0 1px 5px rgba(0,0,0,0.28)" }}>
+                A extraGO foi estruturada desde o primeiro dia para suportar expansão nacional, parcerias estratégicas e participação de investidores de longo prazo.
+              </p>
             </Reveal>
+
+            {/* Three proof points — editorial columns, full width */}
+            <div className="grid sm:grid-cols-3 gap-0 divide-y divide-white/8 sm:divide-y-0 sm:divide-x">
+              {[
+                { icon: <Shield size={17} />, color: G,        label: "Governança Sólida",         desc: "Estrutura operacional completa com analytics em tempo real por estado e KPIs nacionais centralizados." },
+                { icon: <TrendingUp size={17} />, color: C,    label: "Planejamento Sustentável",  desc: "Receita distribuída intencionalmente para suportar cada pilar do crescimento sem dependência de capital externo." },
+                { icon: <Globe size={17} />, color: "#a855f7", label: "Escalabilidade Nacional",   desc: "27 estados, rede de representantes, infraestrutura tecnológica e modelo de expansão preparados para o Brasil." },
+              ].map((p, i) => (
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                  className="flex items-start gap-3 py-5 sm:py-0 sm:px-6 first:sm:pl-0">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{ background: `${p.color}14` }}>
+                    <span style={{ color: p.color }}>{p.icon}</span>
+                  </div>
+                  <div>
+                    <p className="text-[13px] font-bold text-[rgba(255,255,255,0.90)] mb-1">{p.label}</p>
+                    <p className="text-[12px] text-[rgba(255,255,255,0.70)] leading-relaxed">{p.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
