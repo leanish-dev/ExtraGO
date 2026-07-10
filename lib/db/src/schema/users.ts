@@ -1,6 +1,7 @@
 import { pgTable, serial, text, integer, boolean, real, timestamp, pgEnum, jsonb, uniqueIndex } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
+import { accountStatusEnum } from "./verification";
 
 export const roleEnum = pgEnum("role", ["company", "freelancer", "admin"]);
 // Internal enum keys map to official 5-tier labels (see LEVEL_LABELS in ecosystem.ts):
@@ -45,6 +46,15 @@ export const usersTable = pgTable("users", {
   isVerified: boolean("is_verified").notNull().default(false),
   isBanned: boolean("is_banned").notNull().default(false),
   profileCompletion: integer("profile_completion").notNull().default(0),
+  // ── Phase 1: Auth / KYC / Legal foundation ──
+  accountStatus: accountStatusEnum("account_status").notNull().default("draft"),
+  cpf: text("cpf").unique(),
+  cnpj: text("cnpj").unique(),
+  emailVerifiedAt: timestamp("email_verified_at"),
+  phoneVerifiedAt: timestamp("phone_verified_at"),
+  failedLoginAttempts: integer("failed_login_attempts").notNull().default(0),
+  lockedUntil: timestamp("locked_until"),
+  lastLoginAt: timestamp("last_login_at"),
   referralCode: text("referral_code").notNull().unique(),
   referredById: integer("referred_by_id"),
   // Embaixador Regional (5% referral tier) requires explicit platform approval

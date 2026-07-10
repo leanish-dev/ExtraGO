@@ -70,6 +70,50 @@ export async function requireAdmin(req: Request, res: Response, next: NextFuncti
   });
 }
 
+/**
+ * Phase 1 — additional middleware for the verification/KYC/legal system.
+ * These are NOT applied to any existing route yet (so current auth flows
+ * are unaffected). Phase 2 wires them into the relevant routes once the
+ * corresponding UI/flows exist.
+ */
+export async function requireVerifiedEmail(req: Request, res: Response, next: NextFunction) {
+  const user = (req as any).user;
+  if (!user?.emailVerifiedAt) {
+    res.status(403).json({ error: "Email verification required" });
+    return;
+  }
+  next();
+}
+
+export async function requireVerifiedPhone(req: Request, res: Response, next: NextFunction) {
+  const user = (req as any).user;
+  if (!user?.phoneVerifiedAt) {
+    res.status(403).json({ error: "Phone verification required" });
+    return;
+  }
+  next();
+}
+
+export function requireAccountStatus(...allowed: string[]) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const user = (req as any).user;
+    if (!user || !allowed.includes(user.accountStatus)) {
+      res.status(403).json({ error: "Account status does not allow this action", accountStatus: user?.accountStatus ?? null });
+      return;
+    }
+    next();
+  };
+}
+
+export async function requireNotLocked(req: Request, res: Response, next: NextFunction) {
+  const user = (req as any).user;
+  if (user?.lockedUntil && new Date(user.lockedUntil) > new Date()) {
+    res.status(423).json({ error: "Account temporarily locked", lockedUntil: user.lockedUntil });
+    return;
+  }
+  next();
+}
+
 export function formatUser(user: any) {
   return {
     id: user.id,
