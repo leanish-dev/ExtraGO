@@ -398,7 +398,7 @@ export default function InvestidoresParceirosPage() {
         <section className="relative py-5 sm:py-16" style={{ background: "rgba(4,10,22,0.10)" }}>
           {/* Content surface depth — within VISUAL_GUIDELINES §overlay 0.16-0.30 */}
           <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(4,10,22,0.28) 0%, rgba(4,10,22,0.14) 30%, rgba(4,10,22,0.14) 70%, rgba(4,10,22,0.28) 100%)" }} />
-          <div className="relative z-10 px-3 sm:px-10 max-w-7xl mx-auto mb-6">
+          <div className="relative z-10 px-5 sm:px-10 -mx-2 sm:mx-0 max-w-7xl mx-auto mb-6">
             <Reveal>
               <Pill label="Vantagens Competitivas" color={G} icon={<Shield size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
@@ -451,7 +451,7 @@ export default function InvestidoresParceirosPage() {
               </Link>
             </Reveal>
 
-          <div className="relative z-10 px-3 sm:px-10 max-w-7xl mx-auto">
+          <div className="relative z-10 px-5 sm:px-10 -mx-2 sm:mx-0 max-w-7xl mx-auto">
             <div className="grid sm:grid-cols-2 gap-x-10 divide-y divide-white/6 sm:divide-y-0">
               {ADVANTAGES.map((adv, i) => (
                 <Reveal key={i} delay={i * 0.04}>
@@ -551,8 +551,8 @@ export default function InvestidoresParceirosPage() {
             08 · ARQUITETURA FINANCEIRA DA extraGO
             (merged: former "Modelo de Receita" + "Os 4 Motores de Receita")
         ═══════════════════════════════ */}
-        <section id="modelo" className="px-3 sm:px-10 py-6 sm:py-20" style={{ background: "rgba(4,10,22,0.10)" }}>
-          <div className="max-w-7xl mx-auto">
+        <section id="modelo" className="px-5 sm:px-10 py-6 sm:py-20" style={{ background: "rgba(4,10,22,0.10)" }}>
+          <div className="max-w-7xl mx-auto -mx-2 sm:mx-auto">
             <Reveal className="mb-10">
               <Pill label="Modelo de Negócio" color={G} icon={<DollarSign size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(24px,4vw,46px)" }}>
@@ -651,7 +651,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             09 · GOVERNANCE & OPS
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden px-3 sm:px-10 py-6 sm:py-24">
+        <section className="relative overflow-hidden px-5 sm:px-10 py-6 sm:py-24">
           {/* Background — Brazil map network */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
@@ -663,7 +663,7 @@ export default function InvestidoresParceirosPage() {
             <div className="absolute inset-0"
               style={{ background: "radial-gradient(ellipse 80% 60% at 20% 30%, rgba(5,12,26,0.48) 0%, transparent 70%)" }} />
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto">
+          <div className="relative z-10 max-w-7xl mx-auto -mx-2 sm:mx-auto">
             <Reveal className="mb-10 max-w-2xl">
               <Pill label="Governança & Estrutura Operacional" color="#a855f7" icon={<Cpu size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)", textShadow: "0 1px 8px rgba(0,0,0,0.38)" }}>
@@ -744,10 +744,10 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             09c · WHY THE STRUCTURE SCALES
         ═══════════════════════════════ */}
-        <section className="relative px-3 sm:px-10 py-6 sm:py-20" style={{ background: "rgba(4,10,22,0.10)" }}>
+        <section className="relative px-5 sm:px-10 py-6 sm:py-20" style={{ background: "rgba(4,10,22,0.10)" }}>
           {/* Content surface depth — within VISUAL_GUIDELINES §overlay 0.16-0.30 */}
           <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(4,10,22,0.26) 0%, rgba(4,10,22,0.12) 25%, rgba(4,10,22,0.12) 75%, rgba(4,10,22,0.26) 100%)" }} />
-          <div className="relative z-10 max-w-7xl mx-auto">
+          <div className="relative z-10 max-w-7xl mx-auto -mx-2 sm:mx-auto">
 
             <Reveal className="mb-10 max-w-2xl">
               <Pill label="Por Que a Estrutura Escala" color={G} icon={<BarChart3 size={10} />} />
@@ -824,7 +824,7 @@ export default function InvestidoresParceirosPage() {
             10 · TEAM
         ═══════════════════════════════ */}
         <section id="equipe" className="py-6 sm:py-20" style={{ background: "rgba(4,10,22,0.08)" }}>
-          <div className="px-3 sm:px-10 max-w-7xl mx-auto">
+          <div className="px-5 sm:px-10 -mx-2 sm:mx-0 max-w-7xl mx-auto">
             <Reveal className="text-center mb-8">
               <Pill label="Liderança" color={C} icon={<Users size={10} />} />
               <h2 className="font-black leading-tight mb-3" style={{ fontSize: "clamp(22px,3.8vw,42px)" }}>
@@ -881,7 +881,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             12b · BUILT FOR NATIONAL SCALE
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden px-3 sm:px-10 py-8 sm:py-24">
+        <section className="relative overflow-hidden px-5 sm:px-10 py-8 sm:py-24">
           {/* City skyline background — full-bleed, same asset as before */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute inset-0"
@@ -893,7 +893,7 @@ export default function InvestidoresParceirosPage() {
           <div className="absolute inset-x-0 top-0 h-[2px]"
             style={{ background: "linear-gradient(90deg,transparent,#00E5FF 35%,#7CFC00 65%,transparent)" }} />
 
-          <div className="relative z-10 max-w-7xl mx-auto">
+          <div className="relative z-10 max-w-7xl mx-auto -mx-2 sm:mx-auto">
             <Reveal className="mb-10 max-w-2xl">
               <Pill label="Oportunidade de Investimento" color={C} icon={<Globe size={10} />} />
 
@@ -939,7 +939,7 @@ export default function InvestidoresParceirosPage() {
         {/* ═══════════════════════════════
             13 · FINAL CTA
         ═══════════════════════════════ */}
-        <section className="relative overflow-hidden px-3 sm:px-10 py-6 sm:py-20">
+        <section className="relative overflow-hidden px-5 sm:px-10 py-6 sm:py-20">
           <div className="relative z-10 max-w-4xl mx-auto">
             <Reveal>
               <div className="relative rounded-2xl border overflow-hidden"
