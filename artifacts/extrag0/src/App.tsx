@@ -11,7 +11,8 @@ import { ErrorBoundary } from "@/components/error-boundary";
 import NotFound from "@/pages/not-found";
 import LandingPage from "@/pages/landing";
 import LoginPage from "@/pages/login";
-import RegisterPage from "@/pages/register";
+import OnboardingPage from "@/pages/onboarding";
+import VerificationCenterPage from "@/pages/verification-center";
 import DashboardRedirect from "@/pages/dashboard-redirect";
 import InvestidoresParceirosPage from "@/pages/investidores-parceiros";
 import ModeloDeNegocioPage from "@/pages/modelo-de-negocio";
@@ -137,7 +138,9 @@ function Router() {
       <Route path="/blog" component={BlogPage} />
       <Route path="/seguranca" component={SegurancaPage} />
       <Route path="/login" component={LoginPage} />
-      <Route path="/register" component={RegisterPage} />
+      <Route path="/register" component={OnboardingPage} />
+      <Route path="/onboarding" component={OnboardingPage} />
+      <Route path="/verification-center" component={() => <ProtectedRoute component={VerificationCenterPage} allowedRoles={ALL_USER_ROLES} layout="app" />} />
       <Route path="/dashboard" component={() => <ProtectedRoute component={DashboardRedirect} layout="none" />} />
 
       {/* App routes — admins can also access these for platform monitoring */}
@@ -182,6 +185,7 @@ const INSTITUTIONAL_PREFIXES = [
   "/seguranca",
   "/login",
   "/register",
+  "/onboarding",
 ];
 
 function InstitutionalPageEffect() {

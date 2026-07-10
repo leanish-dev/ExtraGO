@@ -18,3 +18,7 @@ KYC documents accept a `fileUrl` string (base64 data URI or path), same conventi
 Gotcha: `lib/db` ships pre-built `.d.ts` files in `dist/` used by TS project references. After adding/renaming exports in `lib/db/src/schema/*`, run `npx tsc -b --force` inside `lib/db` or downstream packages get stale "no exported member" type errors even though runtime (esbuild) works fine.
 
 Gotcha: `drizzle-kit push` blocks non-interactively on destructive-looking confirmations (e.g. adding a unique constraint to a non-empty table) even with `--force`, because the prompt is an Ink UI needing a TTY. Workaround: apply the specific ALTER TABLE/constraint manually via `psql` first, then re-run `drizzle-kit push` for the remaining non-destructive diff.
+
+Frontend (Phase 2): the multi-step onboarding wizard lives at `pages/onboarding.tsx` (mounted at both `/register` and `/onboarding`), with a companion `pages/verification-center.tsx` and `lib/verification-api.ts` (thin fetch wrappers, since these endpoints predate/aren't in the generated `@workspace/api-client-react`). Login redirects non-admin users by `accountStatus` via `nextOnboardingRoute()`.
+
+**Important:** when introducing `accountStatus`, all pre-existing users in the DB had `NULL`/`draft` — they had to be bulk-backfilled to `verified` (except any genuinely new pending signup) or every legacy user gets forced back into onboarding on next login. Admins are always exempted from onboarding redirects regardless of status.

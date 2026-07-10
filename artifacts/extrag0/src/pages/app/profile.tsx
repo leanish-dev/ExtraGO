@@ -52,6 +52,35 @@ function ReputationRing({ score, size = 80 }: { score: number; size?: number }) 
   );
 }
 
+function VerificationStatusBadge({ accountStatus, isVerified }: { accountStatus?: string; isVerified?: boolean }) {
+  if (accountStatus === "verified" || (!accountStatus && isVerified)) {
+    return (
+      <span className="text-[10px] text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">
+        <CheckCircle size={9} /> Verificado
+      </span>
+    );
+  }
+  if (accountStatus === "pending_review") {
+    return (
+      <span className="text-[10px] text-blue-400 bg-blue-400/10 border border-blue-400/20 px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">
+        <Loader2 size={9} className="animate-spin" /> Em análise
+      </span>
+    );
+  }
+  if (accountStatus === "blocked" || accountStatus === "rejected") {
+    return (
+      <span className="text-[10px] text-red-400 bg-red-400/10 border border-red-400/20 px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">
+        <AlertCircle size={9} /> {accountStatus === "blocked" ? "Bloqueado" : "Rejeitado"}
+      </span>
+    );
+  }
+  return (
+    <span className="text-[10px] text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
+      <AlertCircle size={9} /> Verificação necessária
+    </span>
+  );
+}
+
 function SectionCard({ title, icon, children, defaultOpen = true }: { title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
@@ -462,16 +491,11 @@ export default function ProfilePage() {
                     <Crown size={11} /> Admin
                   </span>
                 )}
-                {user?.isVerified ? (
-                  <span className="text-[10px] text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">
-                    <CheckCircle size={9} /> Verificado
-                  </span>
-                ) : (
-                  <span className="text-[10px] text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1">
-                    <AlertCircle size={9} /> Pendente verificação
-                  </span>
-                )}
+                <VerificationStatusBadge accountStatus={(user as any)?.accountStatus} isVerified={user?.isVerified} />
               </div>
+              <Link href="/verification-center" className="text-[11px] text-primary/70 hover:text-primary font-semibold mt-1 inline-block">
+                Ver central de verificação →
+              </Link>
             </div>
             {user?.role === "freelancer" && (
               <div className="flex-shrink-0 hidden sm:block">

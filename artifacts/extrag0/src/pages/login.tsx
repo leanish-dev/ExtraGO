@@ -14,6 +14,7 @@ import {
   LogIn,
 } from "lucide-react";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
+import { requestPasswordReset, nextOnboardingRoute, type AccountStatus } from "@/lib/verification-api";
 
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -48,9 +49,22 @@ export default function LoginPage() {
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     setIsLoading(true);
     try {
-      await login({ data: values });
+      const res = await login({ data: values });
+      const role = (res as any)?.user?.role;
+      const status = ((res as any)?.user?.accountStatus ?? "verified") as AccountStatus;
+      if (role === "admin") {
+        toast.success("Bem-vindo de volta!");
+        setLocation("/dashboard");
+        return;
+      }
+      if (status === "blocked" || status === "rejected") {
+        toast.error(status === "blocked" ? "Sua conta está bloqueada." : "Sua verificação foi rejeitada.");
+        setLocation("/verification-center");
+        return;
+      }
+      const redirect = nextOnboardingRoute(status);
       toast.success("Bem-vindo de volta!");
-      setLocation("/dashboard");
+      setLocation(redirect ?? "/dashboard");
     } catch (error: any) {
       const msg = error?.response?.data?.error || error?.message || "";
       toast.error(
@@ -63,11 +77,16 @@ export default function LoginPage() {
     }
   };
 
-  const onForgotSubmit = async () => {
+  const onForgotSubmit = async (values: z.infer<typeof forgotSchema>) => {
     setForgotLoading(true);
-    await new Promise(r => setTimeout(r, 1400));
-    setForgotLoading(false);
-    setView("forgot-success");
+    try {
+      await requestPasswordReset(values.email);
+    } catch {
+      // Intentionally silent — never reveal whether an email exists.
+    } finally {
+      setForgotLoading(false);
+      setView("forgot-success");
+    }
   };
 
   return (

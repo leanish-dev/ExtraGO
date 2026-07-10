@@ -136,5 +136,11 @@ export function formatUser(user: any) {
     profileCompletion: user.profileCompletion,
     referralCode: user.referralCode,
     createdAt: user.createdAt?.toISOString(),
+    // ── Phase 1/2: onboarding & verification lifecycle ──
+    accountStatus: user.accountStatus ?? "draft",
+    emailVerified: !!user.emailVerifiedAt,
+    phoneVerified: !!user.phoneVerifiedAt,
+    cpf: user.cpf ?? null,
+    cnpj: user.cnpj ?? null,
   };
 }
