@@ -16,6 +16,7 @@ import setupRouter from "./setup";
 import seedRouter from "./seed";
 import governanceRouter from "./governance";
 import categoriesRouter from "./categories";
+import verificationRouter from "./verification";
 
 const router: IRouter = Router();
 
@@ -40,5 +41,6 @@ router.use(setupRouter);
 router.use(seedRouter);
 router.use(governanceRouter);
 router.use(categoriesRouter);
+router.use(verificationRouter);
 
 export default router;

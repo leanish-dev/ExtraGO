@@ -72,11 +72,18 @@ export const legalAcceptancesTable = pgTable("legal_acceptances", {
   acceptedAt: timestamp("accepted_at").notNull().defaultNow(),
 });
 
-// ── Email verification ──────────────────────────────────────
+// ── Email verification (also backs password-reset & email-change flows) ──
+export const emailVerificationPurposeEnum = pgEnum("email_verification_purpose", [
+  "verify_email",
+  "password_reset",
+  "change_email",
+]);
+
 export const emailVerificationsTable = pgTable("email_verifications", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),
   email: text("email").notNull(),
+  purpose: emailVerificationPurposeEnum("purpose").notNull().default("verify_email"),
   token: text("token").notNull().unique(),
   otpCode: text("otp_code"),
   expiresAt: timestamp("expires_at").notNull(),
