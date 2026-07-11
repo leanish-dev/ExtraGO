@@ -15,6 +15,7 @@ import {
   FileCheck2, Building2, User as UserIcon, CreditCard,
 } from "lucide-react";
 import InstitutionalNavbar from "@/components/layout/InstitutionalNavbar";
+import { FaceScanCapture } from "@/components/facescan-capture";
 import {
   requestEmailVerification, confirmEmailVerification,
   requestPhoneVerification, confirmPhoneVerification,
@@ -109,7 +110,7 @@ export default function OnboardingPage() {
     if (authLoading || !user) return;
     const status = (user as any).accountStatus as string | undefined;
     if (status === "pending_phone") setStep(4);
-    else if (status === "pending_documents") setStep(8);
+    else if (status === "pending_documents" || status === "rejected" || status === "correction_requested") setStep(8);
     else if (status === "pending_review" || status === "verified") setLocation("/verification-center");
     else if (status === "pending_email" || !status) setStep(3);
   }, [authLoading, user]);
@@ -781,6 +782,11 @@ function DocumentUploadStep({ accountType, onNext, onBack }: { accountType: Acco
   const [bankData, setBankData] = useState("");
   const [saving, setSaving] = useState(false);
 
+  const submitFaceScan = async (dataUrl: string, captureMetadata: string) => {
+    await submitKycDocument({ documentType: "selfie", fileUrl: dataUrl, captureMetadata });
+    setUploaded(u => ({ ...u, selfie: dataUrl }));
+  };
+
   const requiredDone = slots.filter(s => s.required).every(s => uploaded[s.key]);
 
   const finish = async () => {
@@ -800,7 +806,11 @@ function DocumentUploadStep({ accountType, onNext, onBack }: { accountType: Acco
     <StepShell step={7} title="Envio de documentos" subtitle="Precisamos verificar sua identidade antes de liberar sua conta." icon={<UploadCloud size={24} />}>
       <div className="space-y-2.5">
         {slots.map(slot => (
-          <UploadRow key={slot.key} slot={slot} onUploaded={(k, url) => setUploaded(u => ({ ...u, [k]: url }))} />
+          slot.key === "selfie" ? (
+            <FaceScanCapture key={slot.key} label={slot.label} onCaptured={submitFaceScan} />
+          ) : (
+            <UploadRow key={slot.key} slot={slot} onUploaded={(k, url) => setUploaded(u => ({ ...u, [k]: url }))} />
+          )
         ))}
 
         <div className="grid grid-cols-2 gap-3 pt-2">

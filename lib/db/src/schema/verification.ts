@@ -139,6 +139,8 @@ export const kycDocumentsTable = pgTable("kyc_documents", {
   userId: integer("user_id").notNull(),
   documentType: kycDocumentTypeEnum("document_type").notNull(),
   fileUrl: text("file_url").notNull(),
+  /** Capture metadata for facescan/selfie documents: timestamp, device, browser, camera info. Null for regular file uploads. */
+  captureMetadata: text("capture_metadata"),
   version: integer("version").notNull().default(1),
   status: kycDocumentStatusEnum("status").notNull().default("pending"),
   reviewerId: integer("reviewer_id"),

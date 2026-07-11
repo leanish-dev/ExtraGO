@@ -244,14 +244,23 @@ router.get("/legal/acceptances/me", requireAuth, async (req, res) => {
 const kycDocTypeSchema = z.enum(["rg", "cnh", "cpf_card", "cnpj_card", "proof_of_address", "selfie", "company_contract", "other"]);
 
 router.post("/kyc/documents", requireAuth, async (req, res) => {
-  const parsed = z.object({ documentType: kycDocTypeSchema, fileUrl: z.string().min(1) }).safeParse(req.body);
+  const parsed = z.object({
+    documentType: kycDocTypeSchema,
+    fileUrl: z.string().min(1),
+    captureMetadata: z.string().optional(),
+  }).safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid input" });
     return;
   }
   const user = (req as any).user;
-  const record = await submitKycDocument({ userId: user.id, documentType: parsed.data.documentType, fileUrl: parsed.data.fileUrl });
-  await recordAuditLog({ userId: user.id, action: "kyc_document_submitted", details: { documentType: parsed.data.documentType }, req });
+  const record = await submitKycDocument({
+    userId: user.id,
+    documentType: parsed.data.documentType,
+    fileUrl: parsed.data.fileUrl,
+    captureMetadata: parsed.data.captureMetadata ?? null,
+  });
+  await recordAuditLog({ userId: user.id, action: "kyc_document_submitted", details: { documentType: parsed.data.documentType, hasCaptureMetadata: !!parsed.data.captureMetadata }, req });
 
   // Once documents are pending review, move the account state forward.
   const [dbUser] = await db.select().from(usersTable).where(eq(usersTable.id, user.id)).limit(1);

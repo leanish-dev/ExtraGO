@@ -413,6 +413,7 @@ export async function submitKycDocument(params: {
   userId: number;
   documentType: (typeof kycDocumentsTable.$inferInsert)["documentType"];
   fileUrl: string;
+  captureMetadata?: string | null;
 }) {
   const [previous] = await db
     .select()
@@ -425,6 +426,7 @@ export async function submitKycDocument(params: {
     userId: params.userId,
     documentType: params.documentType,
     fileUrl: params.fileUrl,
+    captureMetadata: params.captureMetadata ?? null,
     version: (previous?.version ?? 0) + 1,
     status: "pending",
   }).returning();

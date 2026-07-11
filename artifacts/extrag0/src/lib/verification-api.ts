@@ -14,6 +14,7 @@ export type AccountStatus =
   | "pending_review"
   | "verified"
   | "rejected"
+  | "correction_requested"
   | "blocked"
   | "inactive";
 
@@ -131,8 +132,22 @@ export const acceptLegalDocument = (documentId: number) =>
 export const getMyLegalAcceptances = (): Promise<any[]> => apiFetch("/api/legal/acceptances/me");
 
 // ── KYC documents ─────────────────────────────────────────────
-export const submitKycDocument = (input: { documentType: string; fileUrl: string }): Promise<KycDocument> =>
+export const submitKycDocument = (input: { documentType: string; fileUrl: string; captureMetadata?: string }): Promise<KycDocument> =>
   apiFetch("/api/kyc/documents", { method: "POST", body: JSON.stringify(input) });
+
+/** Gathers non-sensitive client capture context for FaceScan/selfie submissions (timestamp, device, camera). */
+export function buildCaptureMetadata(extra?: { cameraLabel?: string; facingMode?: string }): string {
+  return JSON.stringify({
+    capturedAt: new Date().toISOString(),
+    userAgent: navigator.userAgent,
+    platform: (navigator as any).userAgentData?.platform ?? navigator.platform,
+    screen: { width: window.screen.width, height: window.screen.height },
+    language: navigator.language,
+    cameraLabel: extra?.cameraLabel ?? null,
+    facingMode: extra?.facingMode ?? null,
+    source: extra?.cameraLabel !== undefined ? "camera" : "file_upload",
+  });
+}
 
 export const getMyKycDocuments = (): Promise<KycDocument[]> => apiFetch("/api/kyc/documents/me");
 
@@ -154,6 +169,7 @@ export const ACCOUNT_STATUS_LABELS: Record<AccountStatus, string> = {
   pending_review: "Em análise",
   verified: "Verificado",
   rejected: "Verificação rejeitada",
+  correction_requested: "Correção de documentos solicitada",
   blocked: "Conta bloqueada",
   inactive: "Inativa",
 };
@@ -194,17 +210,18 @@ export function nextOnboardingRoute(status: AccountStatus): string | null {
   switch (status) {
     case "draft":
     case "pending_email":
-      return "/onboarding/verify-email";
     case "pending_phone":
-      return "/onboarding/verify-phone";
     case "pending_documents":
-      return "/onboarding/documents";
+    case "rejected":
+    case "correction_requested":
+      // The onboarding wizard is a single route that resumes at the right
+      // internal step based on the user's accountStatus — there are no
+      // separate sub-routes per stage.
+      return "/onboarding";
     case "pending_review":
       return "/verification-center";
     case "blocked":
-      return "/onboarding/blocked";
-    case "rejected":
-      return "/onboarding/rejected";
+      return "/verification-center";
     default:
       return null; // verified / inactive — no forced redirect
   }

@@ -7,7 +7,7 @@ import {
   Shield, CheckCircle2, XCircle, AlertCircle, Clock, Search,
   ChevronRight, User, FileText, History, MessageSquare, Loader2,
   Eye, EyeOff, RefreshCw, Camera, Ban, Play, FileCheck2,
-  ArrowLeft, X,
+  ArrowLeft, X, ZoomIn, ZoomOut, RotateCw, Columns2, Info,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -40,6 +40,7 @@ interface KycDocument {
   id: number;
   documentType: string;
   fileUrl: string;
+  captureMetadata?: string | null;
   version: number;
   status: "pending" | "approved" | "rejected" | "correction_requested";
   reviewNotes: string | null;
@@ -145,13 +146,142 @@ const kycApi = {
   resume: (id: number) => apiFetch(`/api/admin/kyc/users/${id}/resume`, { method: "POST" }),
 };
 
-// ─── Image Viewer ─────────────────────────────────────────────
+// ─── Document Viewer (image / PDF / HEIC, with zoom + rotate) ──
 
-function ImageViewer({ url, onClose }: { url: string; onClose: () => void }) {
+function isPdfUrl(url: string) {
+  return /\.pdf($|\?)/i.test(url) || url.startsWith("data:application/pdf");
+}
+function isHeicUrl(url: string) {
+  return /\.hei[cf]($|\?)/i.test(url) || url.startsWith("data:image/heic") || url.startsWith("data:image/heif");
+}
+
+function DocumentSurface({ url, zoom, rotation }: { url: string; zoom: number; rotation: number }) {
+  if (isPdfUrl(url)) {
+    return (
+      <iframe
+        src={url}
+        title="Documento PDF"
+        className="w-full h-full rounded-xl border border-white/10 bg-white"
+        style={{ minHeight: 480 }}
+      />
+    );
+  }
+  if (isHeicUrl(url)) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center gap-3 p-8">
+        <FileText size={32} className="text-muted-foreground/40" />
+        <p className="text-sm text-muted-foreground">
+          Este arquivo está em formato HEIC/HEIF, que não é suportado para pré-visualização direta no navegador.
+        </p>
+        <a href={url} download className="text-xs font-semibold text-primary hover:underline">Baixar arquivo original</a>
+      </div>
+    );
+  }
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90" onClick={onClose}>
-      <button className="absolute top-4 right-4 text-white/70 hover:text-white" onClick={onClose}><X size={24} /></button>
-      <img src={url} alt="Document" className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain" onClick={(e) => e.stopPropagation()} />
+    <img
+      src={url}
+      alt="Documento"
+      className="max-h-full max-w-full object-contain transition-transform"
+      style={{ transform: `scale(${zoom}) rotate(${rotation}deg)` }}
+    />
+  );
+}
+
+function ZoomRotateControls({ zoom, setZoom, rotation, setRotation }: {
+  zoom: number; setZoom: (v: number) => void; rotation: number; setRotation: (v: number) => void;
+}) {
+  return (
+    <div className="flex items-center gap-1.5 bg-black/60 rounded-xl border border-white/10 px-1.5 py-1" onClick={(e) => e.stopPropagation()}>
+      <button onClick={() => setZoom(Math.max(0.5, zoom - 0.25))} className="p-1.5 text-white/70 hover:text-white rounded-lg hover:bg-white/10"><ZoomOut size={15} /></button>
+      <span className="text-xs text-white/60 w-10 text-center">{Math.round(zoom * 100)}%</span>
+      <button onClick={() => setZoom(Math.min(3, zoom + 0.25))} className="p-1.5 text-white/70 hover:text-white rounded-lg hover:bg-white/10"><ZoomIn size={15} /></button>
+      <div className="w-px h-4 bg-white/15 mx-0.5" />
+      <button onClick={() => setRotation((rotation + 90) % 360)} className="p-1.5 text-white/70 hover:text-white rounded-lg hover:bg-white/10"><RotateCw size={15} /></button>
+    </div>
+  );
+}
+
+function ImageViewer({ url, onClose, compareUrl, compareLabel, captureMetadata }: {
+  url: string; onClose: () => void; compareUrl?: string | null; compareLabel?: string; captureMetadata?: string | null;
+}) {
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [compareZoom, setCompareZoom] = useState(1);
+  const [compareRotation, setCompareRotation] = useState(0);
+  const [showCompare, setShowCompare] = useState(!!compareUrl);
+  const [showMeta, setShowMeta] = useState(false);
+
+  let parsedMeta: Record<string, any> | null = null;
+  if (captureMetadata) {
+    try { parsedMeta = JSON.parse(captureMetadata); } catch { parsedMeta = null; }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-black/90" onClick={onClose}>
+      <div className="flex items-center justify-between px-4 py-3" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-2">
+          {compareUrl && (
+            <button
+              onClick={() => setShowCompare(v => !v)}
+              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border ${showCompare ? "bg-primary/20 text-primary border-primary/30" : "bg-white/5 text-white/60 border-white/10"}`}
+            >
+              <Columns2 size={13} /> Comparar com {compareLabel ?? "documento"}
+            </button>
+          )}
+          {parsedMeta && (
+            <button
+              onClick={() => setShowMeta(v => !v)}
+              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border ${showMeta ? "bg-primary/20 text-primary border-primary/30" : "bg-white/5 text-white/60 border-white/10"}`}
+            >
+              <Info size={13} /> Metadados da captura
+            </button>
+          )}
+        </div>
+        <button className="text-white/70 hover:text-white p-1.5 rounded-lg hover:bg-white/10" onClick={onClose}><X size={22} /></button>
+      </div>
+
+      {showMeta && parsedMeta && (
+        <div className="mx-4 mb-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-xs text-white/70 grid grid-cols-2 gap-x-6 gap-y-1" onClick={(e) => e.stopPropagation()}>
+          <span><strong className="text-white/90">Capturado em:</strong> {parsedMeta.capturedAt ? new Date(parsedMeta.capturedAt).toLocaleString("pt-BR") : "—"}</span>
+          <span><strong className="text-white/90">Origem:</strong> {parsedMeta.source === "camera" ? "Câmera em tempo real" : "Upload de arquivo"}</span>
+          <span><strong className="text-white/90">Dispositivo:</strong> {parsedMeta.platform ?? "—"}</span>
+          <span><strong className="text-white/90">Câmera:</strong> {parsedMeta.cameraLabel ?? "—"}</span>
+          <span><strong className="text-white/90">Resolução da tela:</strong> {parsedMeta.screen ? `${parsedMeta.screen.width}×${parsedMeta.screen.height}` : "—"}</span>
+          <span><strong className="text-white/90">Navegador:</strong> {parsedMeta.userAgent ?? "—"}</span>
+        </div>
+      )}
+
+      <div className={`flex-1 flex ${showCompare && compareUrl ? "flex-row gap-3 px-4" : "items-center justify-center"} overflow-hidden`} onClick={showCompare && compareUrl ? undefined : onClose}>
+        {showCompare && compareUrl ? (
+          <>
+            <div className="flex-1 flex flex-col gap-2 min-w-0" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-white/70">Selfie / FaceScan</span>
+                <ZoomRotateControls zoom={zoom} setZoom={setZoom} rotation={rotation} setRotation={setRotation} />
+              </div>
+              <div className="flex-1 rounded-xl border border-white/10 bg-white/3 flex items-center justify-center overflow-hidden">
+                <DocumentSurface url={url} zoom={zoom} rotation={rotation} />
+              </div>
+            </div>
+            <div className="flex-1 flex flex-col gap-2 min-w-0" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-white/70">{compareLabel ?? "Documento de identidade"}</span>
+                <ZoomRotateControls zoom={compareZoom} setZoom={setCompareZoom} rotation={compareRotation} setRotation={setCompareRotation} />
+              </div>
+              <div className="flex-1 rounded-xl border border-white/10 bg-white/3 flex items-center justify-center overflow-hidden">
+                <DocumentSurface url={compareUrl} zoom={compareZoom} rotation={compareRotation} />
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="relative max-h-[85vh] max-w-[90vw] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <DocumentSurface url={url} zoom={zoom} rotation={rotation} />
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2">
+              <ZoomRotateControls zoom={zoom} setZoom={setZoom} rotation={rotation} setRotation={setRotation} />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -362,7 +492,7 @@ function UserDetailPanel({
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"docs" | "audit" | "legal">("docs");
   const [action, setAction] = useState<ActionType | null>(null);
-  const [viewingImage, setViewingImage] = useState<string | null>(null);
+  const [viewingImage, setViewingImage] = useState<{ url: string; compareUrl?: string | null; compareLabel?: string; captureMetadata?: string | null } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
