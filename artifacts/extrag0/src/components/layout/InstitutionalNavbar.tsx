@@ -11,7 +11,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useListNotifications } from "@workspace/api-client-react";
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api-fetch";
-import { NotificationBell } from "@/components/notifications-dropdown";
+import { Bell } from "lucide-react";
 import { LevelBadge, LevelBadgeIcon } from "@/components/level-badge";
 import { toast } from "sonner";
 import { visibleSections, isItemLocked, type Role, type NavItem } from "./nav-config";
@@ -229,8 +229,10 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
   const navUser = user;
 
   /* ── Authenticated badge data (Phase 8) ── */
-  const { data: notifs } = useListNotifications(undefined, { query: { queryKey: ["notifications"], enabled: !!user } });
-  const unread = notifs?.filter((n: any) => !n.isRead).length ?? 0;
+  const { data: notifs } = useListNotifications({ unreadOnly: true, limit: 1 }, {
+    query: { queryKey: ["notifications-badge"], enabled: !!user, refetchInterval: 30000, refetchIntervalInBackground: false },
+  });
+  const unread = notifs?.unreadCount ?? 0;
 
   const { data: unreadMsgsData } = useQuery({
     queryKey: ["chat-unread"],
@@ -463,8 +465,20 @@ export default function UnifiedNavbar({ onSearchOpen }: { onSearchOpen?: () => v
                   </Link>
                 )}
 
-                {/* Notifications (authenticated only) */}
-                <NotificationBell unread={unread} />
+                {/* Notifications (authenticated only) — always opens the full Notification Center */}
+                <Link href="/app/notifications" aria-label="Notificações">
+                  <button
+                    className="relative flex items-center justify-center w-9 h-9 rounded-xl text-white/55 hover:text-white/90 hover:bg-white/8 transition-all"
+                    title="Notificações"
+                  >
+                    <Bell size={18} />
+                    {unread > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] rounded-full bg-red-500 flex items-center justify-center text-[9px] font-bold text-white px-0.5 leading-none">
+                        {unread > 9 ? "9+" : unread}
+                      </span>
+                    )}
+                  </button>
+                </Link>
 
                 {/* Avatar → /app/profile */}
                 <Link href="/app/profile" aria-label="Meu perfil">

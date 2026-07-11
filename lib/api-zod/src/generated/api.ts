@@ -871,20 +871,32 @@ export const GetReferralLeaderboardResponse = zod.array(GetReferralLeaderboardRe
  * @summary List notifications
  */
 export const ListNotificationsQueryParams = zod.object({
-  "unreadOnly": zod.coerce.boolean().optional()
+  "unreadOnly": zod.coerce.boolean().optional(),
+  "category": zod.enum(['applications', 'messages', 'payments', 'verification', 'system', 'security', 'admin']).optional(),
+  "search": zod.coerce.string().optional(),
+  "page": zod.coerce.number().optional(),
+  "limit": zod.coerce.number().optional()
 })
 
-export const ListNotificationsResponseItem = zod.object({
+export const ListNotificationsResponse = zod.object({
+  "items": zod.array(zod.object({
   "id": zod.number(),
   "userId": zod.number(),
   "type": zod.string(),
-  "title": zod.string(),
-  "message": zod.string(),
-  "isRead": zod.boolean(),
-  "createdAt": zod.string(),
+  "category": zod.enum(['applications', 'messages', 'payments', 'verification', 'system', 'security', 'admin']).optional(),
+  "priority": zod.enum(['low', 'normal', 'high', 'urgent']).optional(),
+  "title": zod.string().optional(),
+  "message": zod.string().optional(),
+  "isRead": zod.boolean().optional(),
+  "createdAt": zod.string().optional(),
   "link": zod.string().nullish()
+})),
+  "total": zod.number(),
+  "unreadCount": zod.number(),
+  "page": zod.number(),
+  "limit": zod.number(),
+  "hasMore": zod.boolean()
 })
-export const ListNotificationsResponse = zod.array(ListNotificationsResponseItem)
 
 
 /**
@@ -895,6 +907,18 @@ export const MarkNotificationReadParams = zod.object({
 })
 
 export const MarkNotificationReadResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
+ * @summary Delete a notification
+ */
+export const DeleteNotificationParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const DeleteNotificationResponse = zod.object({
   "message": zod.string()
 })
 

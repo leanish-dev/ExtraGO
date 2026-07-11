@@ -2,7 +2,7 @@ import React from "react";
 import {
   LayoutDashboard, Briefcase, FileText, Wallet, Trophy, Globe, Rss,
   User as UserIcon, Settings, Mail, Home, LogOut, BarChart3, Users,
-  CreditCard, LineChart, Activity, TrendingUp, MapPin, Shield,
+  CreditCard, LineChart, Activity, TrendingUp, MapPin, Shield, BadgeCheck,
 } from "lucide-react";
 
 export type Role = "company" | "freelancer" | "admin";
@@ -77,6 +77,7 @@ export const APP_NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "Painel Administrativo", href: "/admin", icon: <BarChart3 size={16} />, unlocked: ["admin"] },
       { label: "Usuários", href: "/admin/users", icon: <Users size={16} />, unlocked: ["admin"] },
+      { label: "Fila de Verificação KYC", href: "/admin/kyc", icon: <BadgeCheck size={16} />, unlocked: ["admin"] },
       { label: "Moderação de Extras", href: "/admin/jobs", icon: <Briefcase size={16} />, unlocked: ["admin"] },
       { label: "Financeiro", href: "/admin/withdrawals", icon: <CreditCard size={16} />, unlocked: ["admin"] },
       { label: "Analytics", href: "/admin/analytics", icon: <LineChart size={16} />, unlocked: ["admin"] },

@@ -5,7 +5,12 @@
  * extraGO — Workforce Marketplace API
  * OpenAPI spec version: 0.1.0
  */
+import type { ListNotificationsCategory } from './listNotificationsCategory';
 
 export type ListNotificationsParams = {
 unreadOnly?: boolean;
+category?: ListNotificationsCategory;
+search?: string;
+page?: number;
+limit?: number;
 };

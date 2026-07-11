@@ -1,6 +1,7 @@
 import { db, usersTable, walletsTable, transactionsTable, notificationsTable, depositRequestsTable, stateRepresentativesTable, applicationsTable, ratingsTable } from "@workspace/db";
 import { eq, sql, and } from "drizzle-orm";
 import { loadSplitConfig, calculateReferralRate as calcRefRate, type SplitConfig } from "./split-engine";
+import { createNotification } from "./notifications";
 
 // Official 5-tier level system. Internal enum keys map to public labels:
 // bronze=Iniciante, silver=Júnior, gold=Intermediário, elite=Sênior, diamond=Elite
@@ -425,40 +426,36 @@ export async function completeJobCascade(
 
     // Notifications inside the transaction so they are atomic with all financial/stat mutations.
     // If the transaction rolls back (e.g. insufficient funds), no notifications are sent.
-    await tx.insert(notificationsTable).values({
+    await createNotification({
       userId: freelancerId,
       type: "job_completed",
       title: "✅ Extra concluído!",
-      message: `Seu trabalho em "${jobTitle}" foi concluído. R$${(freelancerEarnings / 100).toFixed(2)} disponível na carteira.`,
-      isRead: false,
-    });
+      message: `Seu trabalho em "${jobTitle}" foi concluído. R${(freelancerEarnings / 100).toFixed(2)} disponível na carteira.`,
+    }, tx);
 
-    await tx.insert(notificationsTable).values({
+    await createNotification({
       userId: companyId,
       type: "job_completed",
       title: "✅ Extra finalizado",
       message: `O Extra "${jobTitle}" foi concluído com sucesso.`,
-      isRead: false,
-    });
+    }, tx);
 
     if (levelChanged) {
-      await tx.insert(notificationsTable).values({
+      await createNotification({
         userId: freelancerId,
         type: "level_up",
         title: "🎉 Você subiu de nível!",
         message: `Parabéns! Você agora é ${LEVEL_LABELS[newLevel]}. Taxa reduzida para ${(LEVEL_FEE[newLevel] * 100).toFixed(0)}%.`,
-        isRead: false,
-      });
+      }, tx);
     }
 
     if (freelancer.referredById && referralCommission > 0) {
-      await tx.insert(notificationsTable).values({
+      await createNotification({
         userId: freelancer.referredById,
         type: "commission_received",
         title: "💰 Comissão de indicação!",
-        message: `+R$${(referralCommission / 100).toFixed(2)} pelo Extra concluído por ${freelancer.name}`,
-        isRead: false,
-      });
+        message: `+R${(referralCommission / 100).toFixed(2)} pelo Extra concluído por ${freelancer.name}`,
+      }, tx);
     }
 
     return { completedApp, freelancer, freelancerEarnings, platformFee, feeRate, newLevel, levelChanged, newReputationScore };

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useGetMe, useLogin, useLogout, useRegister } from "@workspace/api-client-react";
 import type { User, LoginInput, RegisterInput } from "@workspace/api-client-react";
 import { setAuthTokenGetter } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 
 interface AuthContextType {
@@ -36,23 +37,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setTokenState(newToken);
   };
 
-  const { data: user, isLoading, error, refetch } = useGetMe({
+  const queryClient = useQueryClient();
+
+  const { data: user, isLoading, error } = useGetMe({
     query: {
       queryKey: ["me", token],
       enabled: !!token,
       retry: false,
+      // We already have the freshly-authenticated user seeded into this
+      // exact cache entry right after login/register (see below), so a
+      // background revalidation on mount/focus should never flash a
+      // false "unauthenticated" state while it's in flight.
+      refetchOnMount: false,
     }
   });
 
-  // Clear stale token when server rejects it (e.g. after restart)
+  // Clear stale token when the server genuinely rejects it (e.g. after a
+  // restart or manual token tampering). Guarded by `!user` so a transient
+  // network hiccup right after login — where we've already seeded the
+  // cache with a valid user from the login response — can never clear a
+  // perfectly good session and cause a false auth error / redirect flash.
   useEffect(() => {
-    if (!isLoading && error && token) {
+    if (!isLoading && error && token && !user) {
       const httpStatus = (error as any)?.response?.status;
       if (httpStatus === 401 || httpStatus === 403) {
         setToken(null);
       }
     }
-  }, [error, isLoading, token]);
+  }, [error, isLoading, token, user]);
 
   const loginMutation = useLogin();
   const registerMutation = useRegister();
@@ -76,14 +88,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         login: async (data, opts) => {
           const res = await loginMutation.mutateAsync(data, opts);
+          // Seed the exact cache entry the next render will read from
+          // BEFORE flipping the token, so the query never has to hit the
+          // network (and never has a window to briefly error out) before
+          // the rest of the app sees a fully-authenticated user.
+          queryClient.setQueryData(["me", res.token], res.user);
           setToken(res.token);
-          await refetch();
           return res;
         },
         register: async (data, opts) => {
           const res = await registerMutation.mutateAsync(data, opts);
+          queryClient.setQueryData(["me", res.token], res.user);
           setToken(res.token);
-          await refetch();
           return res;
         },
         logout: handleLogout,

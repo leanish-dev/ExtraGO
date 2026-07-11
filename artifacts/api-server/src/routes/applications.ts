@@ -4,6 +4,7 @@ import { eq, and, sql } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { ApplyToJobBody, ListApplicationsQueryParams } from "@workspace/api-zod";
 import { calculateLevel, LEVEL_FEE, LEVEL_LABELS, completeJobCascade, reserveCompanyFunds, adjustCounterOfferReservation, recalculateReputation } from "../lib/ecosystem";
+import { createNotification } from "../lib/notifications";
 
 const router = Router();
 
@@ -102,14 +103,13 @@ router.post("/applications", requireAuth, async (req, res) => {
     message: message ?? null,
   }).returning();
 
-  await db.insert(notificationsTable).values({
+  await createNotification({
     userId: job.companyId,
     type: "new_application",
     title: "Nova candidatura",
     message: `${user.name} se candidatou para ${job.title}`,
     link: `/jobs/${job.id}`,
-    isRead: false,
-  }).catch(() => {});
+  }, db).catch(() => {});
 
   const [company] = await db.select().from(usersTable).where(eq(usersTable.id, job.companyId));
   res.status(201).json(formatApp(app, formatJob(job, company), user));
@@ -172,14 +172,13 @@ router.post("/applications/:id/approve", requireAuth, async (req, res) => {
       .where(eq(jobsTable.id, job.id));
   }
 
-  await db.insert(notificationsTable).values({
+  await createNotification({
     userId: app.freelancerId,
     type: "application_approved",
     title: "Candidatura aprovada!",
     message: `Você foi aprovado para ${job.title}`,
     link: `/my-jobs`,
-    isRead: false,
-  }).catch(() => {});
+  }, db).catch(() => {});
 
   const [freelancer] = await db.select().from(usersTable).where(eq(usersTable.id, app.freelancerId));
   const [company] = await db.select().from(usersTable).where(eq(usersTable.id, job.companyId));
@@ -235,13 +234,12 @@ router.post("/applications/:id/reject", requireAuth, async (req, res) => {
     .where(eq(applicationsTable.id, id))
     .returning();
 
-  await db.insert(notificationsTable).values({
+  await createNotification({
     userId: app.freelancerId,
     type: "application_rejected",
     title: "Candidatura não aprovada",
     message: `Sua candidatura para ${job.title} não foi selecionada desta vez`,
-    isRead: false,
-  }).catch(() => {});
+  }, db).catch(() => {});
 
   // Rejection affects completionRate and attendance score — recalculate reputation post-commit
   recalculateReputation(app.freelancerId).catch(() => {});
@@ -320,14 +318,13 @@ router.patch("/applications/:id/counter-offer", requireAuth, async (req, res) =>
     .where(eq(applicationsTable.id, id))
     .returning();
 
-  await db.insert(notificationsTable).values({
+  await createNotification({
     userId: job.companyId,
     type: "counter_offer",
     title: "💼 Proposta de valor recebida",
-    message: `${user.name} propôs R$${(proposedRate / 100).toFixed(2)} para ${job.title}`,
+    message: `${user.name} propôs R${(proposedRate / 100).toFixed(2)} para ${job.title}`,
     link: `/applications/${id}`,
-    isRead: false,
-  }).catch(() => {});
+  }, db).catch(() => {});
 
   const [company] = await db.select().from(usersTable).where(eq(usersTable.id, job.companyId));
   res.json(formatApp(updated, formatJob(job, company), user));
@@ -373,13 +370,12 @@ router.post("/applications/:id/accept-counter", requireAuth, async (req, res) =>
       .where(eq(jobsTable.id, job.id));
   }
 
-  await db.insert(notificationsTable).values({
+  await createNotification({
     userId: app.freelancerId,
     type: "counter_accepted",
     title: "✅ Proposta aceita!",
     message: `A empresa aceitou seu valor proposto para ${job.title}`,
-    isRead: false,
-  }).catch(() => {});
+  }, db).catch(() => {});
 
   const [freelancer] = await db.select().from(usersTable).where(eq(usersTable.id, app.freelancerId));
   const [company] = await db.select().from(usersTable).where(eq(usersTable.id, job.companyId));
@@ -412,13 +408,12 @@ router.post("/applications/:id/reject-counter", requireAuth, async (req, res) =>
     .where(eq(applicationsTable.id, id))
     .returning();
 
-  await db.insert(notificationsTable).values({
+  await createNotification({
     userId: app.freelancerId,
     type: "counter_rejected",
     title: "Proposta não aceita",
     message: `A empresa não aceitou o valor proposto para ${job.title}`,
-    isRead: false,
-  }).catch(() => {});
+  }, db).catch(() => {});
 
   const [freelancer] = await db.select().from(usersTable).where(eq(usersTable.id, app.freelancerId));
   const [company] = await db.select().from(usersTable).where(eq(usersTable.id, job.companyId));

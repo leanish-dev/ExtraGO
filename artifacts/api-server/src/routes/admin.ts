@@ -4,6 +4,7 @@ import { eq, sql, desc, and } from "drizzle-orm";
 import { requireAdmin, formatUser } from "../lib/auth";
 import { AdminListUsersQueryParams, AdminListJobsQueryParams, AdminListWithdrawalsQueryParams } from "@workspace/api-zod";
 import { ensureWallet, LEVEL_FEE } from "../lib/ecosystem";
+import { createNotification } from "../lib/notifications";
 
 const router = Router();
 
@@ -222,13 +223,12 @@ router.post("/admin/deposit-requests/:id/confirm", requireAdmin, async (req, res
     updatedAt: new Date(),
   }).where(eq(depositRequestsTable.id, id));
 
-  await db.insert(notificationsTable).values({
+  await createNotification({
     userId: deposit.userId,
     type: "deposit_confirmed",
     title: "📋 Pagamento recebido",
-    message: `Recebemos seu pagamento de R$${(deposit.amount / 100).toFixed(2)}. O saldo será creditado em breve.`,
-    isRead: false,
-  }).catch(() => {});
+    message: `Recebemos seu pagamento de R${(deposit.amount / 100).toFixed(2)}. O saldo será creditado em breve.`,
+  }, db).catch(() => {});
 
   res.json({ message: "Deposit confirmed — payment received, pending credit" });
 });
@@ -267,13 +267,12 @@ router.post("/admin/deposit-requests/:id/approve", requireAdmin, async (req, res
     .catch(() => {});
 
   // Notify user
-  await db.insert(notificationsTable).values({
+  await createNotification({
     userId: deposit.userId,
     type: "deposit_confirmed",
     title: "✅ Depósito confirmado!",
-    message: `R$${(deposit.amount / 100).toFixed(2)} creditado na sua carteira.`,
-    isRead: false,
-  }).catch(() => {});
+    message: `R${(deposit.amount / 100).toFixed(2)} creditado na sua carteira.`,
+  }, db).catch(() => {});
 
   res.json({ message: "Deposit approved and credited" });
 });
@@ -299,13 +298,12 @@ router.post("/admin/deposit-requests/:id/reject", requireAdmin, async (req, res)
     .where(eq(transactionsTable.referenceId, `deposit:${id}`))
     .catch(() => {});
 
-  await db.insert(notificationsTable).values({
+  await createNotification({
     userId: deposit.userId,
     type: "deposit_rejected",
     title: "Depósito não confirmado",
-    message: `Sua solicitação de depósito de R$${(deposit.amount / 100).toFixed(2)} não foi aprovada.${adminNote ? ` Motivo: ${adminNote}` : ""}`,
-    isRead: false,
-  }).catch(() => {});
+    message: `Sua solicitação de depósito de R${(deposit.amount / 100).toFixed(2)} não foi aprovada.${adminNote ? ` Motivo: ${adminNote}` : ""}`,
+  }, db).catch(() => {});
 
   res.json({ message: "Deposit rejected" });
 });

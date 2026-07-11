@@ -158,6 +158,38 @@ export const ACCOUNT_STATUS_LABELS: Record<AccountStatus, string> = {
   inactive: "Inativa",
 };
 
+// ── Admin KYC API ──────────────────────────────────────────────
+
+export const getAdminKycQueue = (status: string): Promise<any[]> =>
+  apiFetch(`/api/admin/kyc/queue?status=${status}`);
+
+export const getAdminKycUser = (userId: number): Promise<any> =>
+  apiFetch(`/api/admin/kyc/users/${userId}`);
+
+export const getAdminKycStats = (): Promise<Record<string, number>> =>
+  apiFetch("/api/admin/kyc/stats");
+
+export const approveKycAccount = (userId: number, notes?: string) =>
+  apiFetch(`/api/admin/kyc/users/${userId}/approve`, { method: "POST", body: JSON.stringify({ notes }) });
+
+export const rejectKycAccount = (userId: number, reason: string, notes?: string, publicMessage?: string) =>
+  apiFetch(`/api/admin/kyc/users/${userId}/reject`, { method: "POST", body: JSON.stringify({ reason, notes, publicMessage }) });
+
+export const requestKycDocuments = (userId: number, documentTypes: string[], message?: string) =>
+  apiFetch(`/api/admin/kyc/users/${userId}/request-documents`, { method: "POST", body: JSON.stringify({ documentTypes, message }) });
+
+export const requestKycSelfie = (userId: number, message?: string) =>
+  apiFetch(`/api/admin/kyc/users/${userId}/request-selfie`, { method: "POST", body: JSON.stringify({ message }) });
+
+export const addKycNote = (userId: number, content: string, isPublic: boolean) =>
+  apiFetch(`/api/admin/kyc/users/${userId}/note`, { method: "POST", body: JSON.stringify({ content, isPublic }) });
+
+export const suspendKycVerification = (userId: number, reason?: string) =>
+  apiFetch(`/api/admin/kyc/users/${userId}/suspend`, { method: "POST", body: JSON.stringify({ reason }) });
+
+export const resumeKycVerification = (userId: number) =>
+  apiFetch(`/api/admin/kyc/users/${userId}/resume`, { method: "POST" });
+
 export function nextOnboardingRoute(status: AccountStatus): string | null {
   switch (status) {
     case "draft":

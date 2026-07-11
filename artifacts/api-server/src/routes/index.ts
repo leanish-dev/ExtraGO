@@ -17,6 +17,7 @@ import seedRouter from "./seed";
 import governanceRouter from "./governance";
 import categoriesRouter from "./categories";
 import verificationRouter from "./verification";
+import kycAdminRouter from "./kyc-admin";
 
 const router: IRouter = Router();
 
@@ -42,5 +43,6 @@ router.use(seedRouter);
 router.use(governanceRouter);
 router.use(categoriesRouter);
 router.use(verificationRouter);
+router.use(kycAdminRouter);
 
 export default router;

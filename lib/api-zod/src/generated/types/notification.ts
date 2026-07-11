@@ -5,15 +5,19 @@
  * extraGO — Workforce Marketplace API
  * OpenAPI spec version: 0.1.0
  */
+import type { NotificationCategory } from './notificationCategory';
+import type { NotificationPriority } from './notificationPriority';
 
 export interface Notification {
   id: number;
   userId: number;
   type: string;
-  title: string;
-  message: string;
-  isRead: boolean;
-  createdAt: string;
+  category?: NotificationCategory;
+  priority?: NotificationPriority;
+  title?: string;
+  message?: string;
+  isRead?: boolean;
+  createdAt?: string;
   /** @nullable */
   link?: string | null;
 }

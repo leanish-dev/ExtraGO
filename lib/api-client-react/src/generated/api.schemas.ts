@@ -386,16 +386,50 @@ export interface LeaderboardEntry {
   reputationScore: number;
 }
 
+export type NotificationCategory = typeof NotificationCategory[keyof typeof NotificationCategory];
+
+
+export const NotificationCategory = {
+  applications: 'applications',
+  messages: 'messages',
+  payments: 'payments',
+  verification: 'verification',
+  system: 'system',
+  security: 'security',
+  admin: 'admin',
+} as const;
+
+export type NotificationPriority = typeof NotificationPriority[keyof typeof NotificationPriority];
+
+
+export const NotificationPriority = {
+  low: 'low',
+  normal: 'normal',
+  high: 'high',
+  urgent: 'urgent',
+} as const;
+
 export interface Notification {
   id: number;
   userId: number;
   type: string;
-  title: string;
-  message: string;
-  isRead: boolean;
-  createdAt: string;
+  category?: NotificationCategory;
+  priority?: NotificationPriority;
+  title?: string;
+  message?: string;
+  isRead?: boolean;
+  createdAt?: string;
   /** @nullable */
   link?: string | null;
+}
+
+export interface NotificationListResponse {
+  items: Notification[];
+  total: number;
+  unreadCount: number;
+  page: number;
+  limit: number;
+  hasMore: boolean;
 }
 
 export interface CategoryCount {
@@ -617,7 +651,24 @@ to?: string;
 
 export type ListNotificationsParams = {
 unreadOnly?: boolean;
+category?: ListNotificationsCategory;
+search?: string;
+page?: number;
+limit?: number;
 };
+
+export type ListNotificationsCategory = typeof ListNotificationsCategory[keyof typeof ListNotificationsCategory];
+
+
+export const ListNotificationsCategory = {
+  applications: 'applications',
+  messages: 'messages',
+  payments: 'payments',
+  verification: 'verification',
+  system: 'system',
+  security: 'security',
+  admin: 'admin',
+} as const;
 
 export type AdminListUsersParams = {
 role?: string;

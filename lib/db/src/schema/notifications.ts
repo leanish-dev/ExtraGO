@@ -6,6 +6,8 @@ export const notificationsTable = pgTable("notifications", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull(),
   type: text("type").notNull(),
+  category: text("category").notNull().default("system"),
+  priority: text("priority").notNull().default("normal"),
   title: text("title").notNull(),
   message: text("message").notNull(),
   isRead: boolean("is_read").notNull().default(false),

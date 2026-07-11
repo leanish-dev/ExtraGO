@@ -1,10 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Router } from "express";
-import { db, usersTable, walletsTable } from "@workspace/db";
+import { db, usersTable, walletsTable, legalDocumentsTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { hashPassword, generateReferralCode } from "../lib/auth";
 import { SERVER_BUILD_TIME, SERVER_BUILD_ISO } from "../lib/build-info";
+import { LEGAL_DOCUMENTS, hashDocumentContent } from "../lib/legal-documents-seed";
 
 const router = Router();
 
@@ -195,6 +196,47 @@ router.post("/setup/seed", async (_req, res) => {
     });
     await ensureWallet(testeEId, "company");
     results.push(`Test company (teste.e): id=${testeEId}`);
+
+    // ── Legal documents — upsert all 9 documents ──────────────────────────────
+    const legalResults: string[] = [];
+    for (const doc of LEGAL_DOCUMENTS) {
+      const contentHash = hashDocumentContent(doc.content);
+      const [existing] = await db.select().from(legalDocumentsTable)
+        .where(eq(legalDocumentsTable.type, doc.type as any))
+        .limit(1);
+
+      if (existing) {
+        // Only update if content actually changed (hash mismatch)
+        if (existing.contentHash !== contentHash) {
+          await db.update(legalDocumentsTable).set({
+            version: doc.version,
+            title: doc.title,
+            content: doc.content,
+            contentHash,
+            status: "published",
+            publicationDate: new Date(),
+            effectiveDate: new Date(),
+          }).where(eq(legalDocumentsTable.id, existing.id));
+          legalResults.push(`updated: ${doc.type} v${doc.version}`);
+        } else {
+          legalResults.push(`unchanged: ${doc.type} v${doc.version}`);
+        }
+      } else {
+        await db.insert(legalDocumentsTable).values({
+          type: doc.type as any,
+          version: doc.version,
+          title: doc.title,
+          content: doc.content,
+          contentHash,
+          status: "published",
+          publicationDate: new Date(),
+          effectiveDate: new Date(),
+          createdBy: leonardoId,
+        } as any);
+        legalResults.push(`created: ${doc.type} v${doc.version}`);
+      }
+    }
+    results.push(`Legal documents: ${legalResults.join(", ")}`);
 
     // ── Stale-build detection ──────────────────────────────────────────────────
     // If seed.ts source file is newer than the compiled bundle, the UPDATE above

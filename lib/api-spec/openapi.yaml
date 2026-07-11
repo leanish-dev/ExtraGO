@@ -713,15 +713,30 @@ paths:
           in: query
           schema:
             type: boolean
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [applications, messages, payments, verification, system, security, admin]
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
       responses:
         "200":
           description: Notifications
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Notification"
+                $ref: "#/components/schemas/NotificationListResponse"
 
   /notifications/{id}/read:
     post:
@@ -737,6 +752,25 @@ paths:
       responses:
         "200":
           description: Marked as read
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /notifications/{id}:
+    delete:
+      operationId: deleteNotification
+      tags: [notifications]
+      summary: Delete a notification
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
           content:
             application/json:
               schema:
@@ -1808,6 +1842,12 @@ components:
           type: integer
         type:
           type: string
+        category:
+          type: string
+          enum: [applications, messages, payments, verification, system, security, admin]
+        priority:
+          type: string
+          enum: [low, normal, high, urgent]
         title:
           type: string
         message:
@@ -1822,6 +1862,31 @@ components:
         - id
         - userId
         - type
+
+    NotificationListResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Notification"
+        total:
+          type: integer
+        unreadCount:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        hasMore:
+          type: boolean
+      required:
+        - items
+        - total
+        - unreadCount
+        - page
+        - limit
+        - hasMore
         - title
         - message
         - isRead

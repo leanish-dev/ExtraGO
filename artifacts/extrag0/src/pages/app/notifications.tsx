@@ -1,152 +1,160 @@
-import React from "react";
-import { useListNotifications, useMarkAllNotificationsRead, useMarkNotificationRead } from "@workspace/api-client-react";
-import { Bell, CheckCheck, BellOff, Briefcase, DollarSign, FileText, AlertCircle } from "lucide-react";
+import React, { useMemo, useRef, useState } from "react";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getListNotificationsQueryOptions,
+  listNotifications,
+  useMarkAllNotificationsRead,
+  useMarkNotificationRead,
+  useDeleteNotification,
+  type NotificationCategory,
+  type Notification,
+} from "@workspace/api-client-react";
+import {
+  Bell, CheckCheck, BellOff, Briefcase, DollarSign, FileText, AlertCircle,
+  MessageCircle, ShieldCheck, ShieldAlert, Settings2, Search, Trash2, X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { SkeletonListRow } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
-const TYPE_META: Record<string, { icon: React.ReactNode; color: string; bg: string; accent: string; group: string }> = {
-  job_applied:          { icon: <FileText size={14} />,   color: "text-yellow-400",  bg: "bg-yellow-500/12",  accent: "#eab308", group: "Vagas" },
-  application_approved: { icon: <CheckCheck size={14} />, color: "text-primary",     bg: "bg-primary/12",     accent: "#7CFC00", group: "Vagas" },
-  application_rejected: { icon: <AlertCircle size={14} />,color: "text-red-400",     bg: "bg-red-500/12",     accent: "#ef4444", group: "Vagas" },
-  job_completed:        { icon: <Briefcase size={14} />,  color: "text-emerald-400", bg: "bg-emerald-500/12", accent: "#10b981", group: "Vagas" },
-  payment_received:     { icon: <DollarSign size={14} />, color: "text-teal-400",    bg: "bg-teal-500/12",    accent: "#14b8a6", group: "Pagamentos" },
-  withdrawal_approved:  { icon: <DollarSign size={14} />, color: "text-purple-400",  bg: "bg-purple-500/12",  accent: "#a855f7", group: "Pagamentos" },
-  system:               { icon: <Bell size={14} />,       color: "text-blue-400",    bg: "bg-blue-500/10",    accent: "#3b82f6", group: "Sistema" },
+const PAGE_SIZE = 20;
+
+const TYPE_META: Record<string, { icon: React.ReactNode; color: string; bg: string; accent: string }> = {
+  new_application:      { icon: <FileText size={14} />,    color: "text-yellow-400",  bg: "bg-yellow-500/12",  accent: "#eab308" },
+  application_submitted:{ icon: <FileText size={14} />,    color: "text-yellow-400",  bg: "bg-yellow-500/12",  accent: "#eab308" },
+  application_approved: { icon: <CheckCheck size={14} />,  color: "text-primary",     bg: "bg-primary/12",     accent: "#7CFC00" },
+  application_rejected: { icon: <AlertCircle size={14} />, color: "text-red-400",     bg: "bg-red-500/12",     accent: "#ef4444" },
+  counter_offer:        { icon: <Briefcase size={14} />,   color: "text-blue-400",    bg: "bg-blue-500/10",    accent: "#3b82f6" },
+  counter_accepted:     { icon: <CheckCheck size={14} />,  color: "text-primary",     bg: "bg-primary/12",     accent: "#7CFC00" },
+  counter_rejected:     { icon: <AlertCircle size={14} />, color: "text-red-400",     bg: "bg-red-500/12",     accent: "#ef4444" },
+  job_completed:        { icon: <Briefcase size={14} />,   color: "text-emerald-400", bg: "bg-emerald-500/12", accent: "#10b981" },
+  level_up:             { icon: <CheckCheck size={14} />,  color: "text-purple-400",  bg: "bg-purple-500/12",  accent: "#a855f7" },
+  commission_received:  { icon: <DollarSign size={14} />,  color: "text-teal-400",    bg: "bg-teal-500/12",    accent: "#14b8a6" },
+  payment_received:     { icon: <DollarSign size={14} />,  color: "text-teal-400",    bg: "bg-teal-500/12",    accent: "#14b8a6" },
+  deposit_confirmed:    { icon: <DollarSign size={14} />,  color: "text-teal-400",    bg: "bg-teal-500/12",    accent: "#14b8a6" },
+  deposit_rejected:     { icon: <AlertCircle size={14} />, color: "text-red-400",     bg: "bg-red-500/12",     accent: "#ef4444" },
+  withdrawal_approved:  { icon: <DollarSign size={14} />,  color: "text-purple-400",  bg: "bg-purple-500/12",  accent: "#a855f7" },
+  new_message:          { icon: <MessageCircle size={14} />, color: "text-blue-400",  bg: "bg-blue-500/10",    accent: "#3b82f6" },
+  account_approved:     { icon: <ShieldCheck size={14} />, color: "text-primary",     bg: "bg-primary/12",     accent: "#7CFC00" },
+  account_rejected:     { icon: <ShieldAlert size={14} />, color: "text-red-400",     bg: "bg-red-500/12",     accent: "#ef4444" },
+  documents_requested:  { icon: <ShieldAlert size={14} />, color: "text-amber-400",   bg: "bg-amber-500/12",   accent: "#f59e0b" },
+  selfie_requested:      { icon: <ShieldAlert size={14} />, color: "text-amber-400",   bg: "bg-amber-500/12",   accent: "#f59e0b" },
+  verification_suspended:{ icon: <ShieldAlert size={14} />, color: "text-red-400",    bg: "bg-red-500/12",     accent: "#ef4444" },
+  verification_resumed: { icon: <ShieldCheck size={14} />, color: "text-primary",     bg: "bg-primary/12",     accent: "#7CFC00" },
+  system:                { icon: <Bell size={14} />,        color: "text-blue-400",   bg: "bg-blue-500/10",    accent: "#3b82f6" },
 };
 const fallbackMeta = TYPE_META.system;
 
-function getCardClass(type: string | null | undefined): string {
-  const group = TYPE_META[type ?? "system"]?.group ?? "Sistema";
-  if (group === "Vagas") return "notif-card notif-card-jobs";
-  if (group === "Pagamentos") return "notif-card notif-card-payment";
-  return "notif-card notif-card-system";
-}
+const CATEGORIES: { value: NotificationCategory | "all"; label: string; icon: React.ReactNode }[] = [
+  { value: "all",           label: "Todas",         icon: <Bell size={13} /> },
+  { value: "applications",  label: "Extras",        icon: <Briefcase size={13} /> },
+  { value: "messages",      label: "Mensagens",     icon: <MessageCircle size={13} /> },
+  { value: "payments",      label: "Pagamentos",    icon: <DollarSign size={13} /> },
+  { value: "verification",  label: "Verificação",   icon: <ShieldCheck size={13} /> },
+  { value: "security",      label: "Segurança",     icon: <ShieldAlert size={13} /> },
+  { value: "admin",         label: "Admin",         icon: <Settings2 size={13} /> },
+  { value: "system",        label: "Sistema",       icon: <Bell size={13} /> },
+];
 
-/* ── Inline SVG Bell Watermark ── */
-function BellWatermark() {
-  return (
-    <svg
-      viewBox="0 0 120 120"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="absolute pointer-events-none select-none"
-      style={{ top: -10, right: -10, width: 140, height: 140 }}
-      aria-hidden="true"
-    >
-      <path
-        d="M60 10C44 10 31 23 31 39v3C21 46 14 54 14 64v4h92v-4c0-10-7-18-17-22v-3c0-16-13-29-29-29z"
-        stroke="rgba(59,130,246,0.22)" strokeWidth="2.5" fill="none"
-      />
-      <path d="M50 68c0 6 4 10 10 10s10-4 10-10" stroke="rgba(59,130,246,0.22)" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-      <circle cx="88" cy="28" r="12" stroke="rgba(34,197,94,0.28)" strokeWidth="2" fill="none" />
-      <text x="84" y="33" fill="rgba(34,197,94,0.40)" fontSize="11" fontWeight="bold" fontFamily="system-ui">1</text>
-    </svg>
-  );
-}
+const PRIORITY_META: Record<string, { label: string; color: string }> = {
+  urgent: { label: "Urgente", color: "#ef4444" },
+  high:   { label: "Alta",    color: "#f59e0b" },
+  normal: { label: "Normal",  color: "#3b82f6" },
+  low:    { label: "Baixa",   color: "rgba(255,255,255,0.35)" },
+};
 
-/* ── Inline SVG Wave Lines — bottom of page ── */
-function WaveLines() {
-  return (
-    <svg
-      viewBox="0 0 600 80"
-      preserveAspectRatio="none"
-      className="absolute bottom-0 left-0 right-0 w-full pointer-events-none select-none"
-      style={{ height: 80 }}
-      aria-hidden="true"
-    >
-      {/* Green wave */}
-      <path
-        d="M0,60 C80,40 160,70 240,55 C320,40 400,65 480,50 C540,38 580,55 600,48"
-        stroke="rgba(34,197,94,0.18)" strokeWidth="1.5" fill="none"
-      />
-      <path
-        d="M0,68 C70,52 150,72 230,62 C310,50 390,68 470,58 C530,48 570,62 600,56"
-        stroke="rgba(34,197,94,0.10)" strokeWidth="1" fill="none"
-      />
-      {/* Blue wave */}
-      <path
-        d="M0,72 C100,58 200,76 300,65 C400,54 500,70 600,62"
-        stroke="rgba(59,130,246,0.18)" strokeWidth="1.5" fill="none"
-      />
-      <path
-        d="M0,78 C120,66 220,78 320,70 C420,62 520,74 600,68"
-        stroke="rgba(0,229,255,0.10)" strokeWidth="1" fill="none"
-      />
-      {/* Glow dots on waves */}
-      <circle cx="240" cy="55" r="2" fill="rgba(34,197,94,0.45)" />
-      <circle cx="470" cy="58" r="1.5" fill="rgba(34,197,94,0.35)" />
-      <circle cx="300" cy="65" r="2" fill="rgba(59,130,246,0.40)" />
-    </svg>
-  );
-}
-
-/* ── Dot grid — top-left corner ── */
-function DotGrid() {
-  return (
-    <div
-      className="absolute top-0 left-0 pointer-events-none select-none"
-      style={{
-        width: 120, height: 100,
-        backgroundImage: "radial-gradient(circle, rgba(34,197,94,0.22) 1.5px, transparent 1.5px)",
-        backgroundSize: "12px 12px",
-        WebkitMaskImage: "radial-gradient(ellipse at 0% 0%, black 0%, transparent 75%)",
-        maskImage: "radial-gradient(ellipse at 0% 0%, black 0%, transparent 75%)",
-      }}
-      aria-hidden="true"
-    />
-  );
-}
+type ReadFilter = "all" | "unread" | "read";
 
 export default function NotificationsPage() {
-  const { data: notifs = [], isLoading, refetch } = useListNotifications(undefined, {
-    query: {
-      queryKey: ["notifications-page"],
-      refetchInterval: 30000,
-      refetchIntervalInBackground: false,
-    },
+  const queryClient = useQueryClient();
+  const [category, setCategory] = useState<NotificationCategory | "all">("all");
+  const [readFilter, setReadFilter] = useState<ReadFilter>("all");
+  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  const queryKey = ["notifications-center", category, readFilter, search];
+
+  const {
+    data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage, refetch,
+  } = useInfiniteQuery({
+    queryKey,
+    queryFn: ({ pageParam }) => listNotifications({
+      page: pageParam,
+      limit: PAGE_SIZE,
+      ...(category !== "all" ? { category } : {}),
+      ...(readFilter === "unread" ? { unreadOnly: true } : {}),
+      ...(search ? { search } : {}),
+    }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.page + 1 : undefined),
+    refetchInterval: 30000,
+    refetchIntervalInBackground: false,
   });
+
   const markAll = useMarkAllNotificationsRead();
   const markOne = useMarkNotificationRead();
+  const deleteOne = useDeleteNotification();
+
+  const pages = data?.pages ?? [];
+  const allItems = useMemo(() => pages.flatMap(p => p.items), [pages]);
+  const items = readFilter === "read" ? allItems.filter(n => n.isRead) : allItems;
+  const total = pages[0]?.total ?? 0;
+  const unreadCount = pages[0]?.unreadCount ?? 0;
+
+  React.useEffect(() => {
+    const el = loadMoreRef.current;
+    if (!el || !hasNextPage) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    }, { rootMargin: "200px" });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, items.length]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearch(searchInput.trim());
+  };
 
   const handleMarkAll = async () => {
     try {
       await markAll.mutateAsync();
-      refetch();
+      await queryClient.invalidateQueries({ queryKey: ["notifications-center"] });
+      await queryClient.invalidateQueries({ queryKey: ["notifications-badge"] });
       toast.success("Todas as notificações marcadas como lidas");
-    } catch {}
+    } catch {
+      toast.error("Não foi possível marcar as notificações");
+    }
   };
 
   const handleMarkOne = async (id: number) => {
     await markOne.mutateAsync({ id });
-    refetch();
+    await queryClient.invalidateQueries({ queryKey: ["notifications-center"] });
+    await queryClient.invalidateQueries({ queryKey: ["notifications-badge"] });
   };
 
-  const unread = notifs.filter(n => !n.isRead).length;
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteOne.mutateAsync({ id });
+      await queryClient.invalidateQueries({ queryKey: ["notifications-center"] });
+      await queryClient.invalidateQueries({ queryKey: ["notifications-badge"] });
+      toast.success("Notificação removida");
+    } catch {
+      toast.error("Não foi possível remover a notificação");
+    }
+  };
 
   return (
-    <div className="relative p-4 sm:p-6 max-w-2xl mx-auto space-y-5 pb-28 lg:pb-8">
-      {/* ── Page ambient background ── */}
-      <div className="mod-notif-ambient absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -1 }}>
-        <DotGrid />
-        <WaveLines />
-        {/* Bell watermark top-right */}
-        <div className="absolute top-0 right-0 pointer-events-none select-none">
-          <BellWatermark />
-        </div>
-        {/* Soft green left glow */}
-        <div className="absolute top-24 left-0 w-56 h-56 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(34,197,94,0.10) 0%, transparent 70%)", filter: "blur(48px)" }} />
-        {/* Soft blue right glow */}
-        <div className="absolute top-8 right-8 w-48 h-48 rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, rgba(59,130,246,0.09) 0%, transparent 70%)", filter: "blur(48px)" }} />
-      </div>
-
+    <div className="relative p-4 sm:p-6 max-w-2xl mx-auto space-y-4 pb-28 lg:pb-8">
       {/* ── Page header ── */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl flex items-center justify-center relative overflow-hidden flex-shrink-0"
             style={{
@@ -154,19 +162,19 @@ export default function NotificationsPage() {
               border: "1px solid rgba(34,197,94,0.25)",
               boxShadow: "0 0 20px rgba(34,197,94,0.15)",
             }}>
-            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, rgba(34,197,94,0.50), rgba(59,130,246,0.30))" }} />
             <Bell size={16} className="text-primary relative z-10" />
           </div>
           <div>
-            <h1 className="text-xl font-bold leading-tight neon-text-gradient">Notificações</h1>
+            <h1 className="text-xl font-bold leading-tight neon-text-gradient">Central de Notificações</h1>
             <p className="text-xs text-white/70 mt-0.5">
-              {unread > 0
-                ? <span className="text-primary font-semibold">{unread} não lida{unread !== 1 ? "s" : ""}</span>
+              {unreadCount > 0
+                ? <span className="text-primary font-semibold">{unreadCount} não lida{unreadCount !== 1 ? "s" : ""}</span>
                 : <span>Tudo em dia</span>}
+              {total > 0 && <span className="text-white/40"> · {total} no total</span>}
             </p>
           </div>
         </div>
-        {unread > 0 && (
+        {unreadCount > 0 && (
           <Button
             variant="outline"
             size="sm"
@@ -177,6 +185,63 @@ export default function NotificationsPage() {
             <CheckCheck size={12} /> Marcar todas lidas
           </Button>
         )}
+      </div>
+
+      {/* ── Search ── */}
+      <form onSubmit={handleSearchSubmit} className="relative">
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
+        <Input
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Buscar notificações..."
+          className="pl-9 pr-9 h-9 text-sm rounded-xl bg-white/5 border-white/10"
+        />
+        {searchInput && (
+          <button
+            type="button"
+            onClick={() => { setSearchInput(""); setSearch(""); }}
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70"
+          >
+            <X size={14} />
+          </button>
+        )}
+      </form>
+
+      {/* ── Read filter tabs ── */}
+      <div className="flex items-center gap-1 rounded-xl bg-white/5 p-1 w-fit">
+        {([
+          { value: "all", label: "Todas" },
+          { value: "unread", label: "Não lidas" },
+          { value: "read", label: "Lidas" },
+        ] as { value: ReadFilter; label: string }[]).map(tab => (
+          <button
+            key={tab.value}
+            onClick={() => setReadFilter(tab.value)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              readFilter === tab.value ? "bg-primary/20 text-primary" : "text-white/55 hover:text-white/80"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Category filter chips ── */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
+        {CATEGORIES.map(cat => (
+          <button
+            key={cat.value}
+            onClick={() => setCategory(cat.value)}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold whitespace-nowrap transition-all ${
+              category === cat.value
+                ? "bg-primary/15 text-primary border border-primary/30"
+                : "bg-white/5 text-white/55 border border-transparent hover:text-white/80"
+            }`}
+          >
+            {cat.icon}
+            {cat.label}
+          </button>
+        ))}
       </div>
 
       {/* ── Loading skeletons ── */}
@@ -191,7 +256,7 @@ export default function NotificationsPage() {
       )}
 
       {/* ── Empty state ── */}
-      {!isLoading && notifs.length === 0 && (
+      {!isLoading && items.length === 0 && (
         <div className="card-notif-page rounded-2xl overflow-hidden">
           <div className="flex flex-col items-center py-14 px-6 text-center gap-4">
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center relative overflow-hidden"
@@ -199,13 +264,16 @@ export default function NotificationsPage() {
                 background: "linear-gradient(135deg, rgba(34,197,94,0.12) 0%, rgba(59,130,246,0.10) 100%)",
                 border: "1px solid rgba(34,197,94,0.20)",
               }}>
-              <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(90deg, rgba(34,197,94,0.45), rgba(59,130,246,0.30))" }} />
               <BellOff size={22} className="text-white/60" />
             </div>
             <div>
-              <p className="font-semibold">Tudo em dia!</p>
-              <p className="text-xs text-white/70 mt-1 max-w-[200px] leading-relaxed">
-                Novas notificações sobre Extras, candidaturas e pagamentos aparecerão aqui.
+              <p className="font-semibold">
+                {search || category !== "all" || readFilter !== "all" ? "Nenhum resultado" : "Tudo em dia!"}
+              </p>
+              <p className="text-xs text-white/70 mt-1 max-w-[220px] leading-relaxed">
+                {search || category !== "all" || readFilter !== "all"
+                  ? "Ajuste os filtros ou busque por outro termo."
+                  : "Novas notificações sobre Extras, candidaturas, pagamentos e verificação aparecerão aqui."}
               </p>
             </div>
           </div>
@@ -214,52 +282,72 @@ export default function NotificationsPage() {
 
       {/* ── Notification list ── */}
       <div className="space-y-2">
-        <AnimatePresence>
-          {notifs.map((notif, i) => {
+        <AnimatePresence initial={false}>
+          {items.map((notif: Notification, i) => {
             const meta = TYPE_META[notif.type ?? "system"] ?? fallbackMeta;
+            const priority = PRIORITY_META[notif.priority ?? "normal"] ?? PRIORITY_META.normal;
             const isUnread = !notif.isRead;
             return (
-              <motion.button
+              <motion.div
                 key={notif.id}
+                layout
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.28, delay: i * 0.04 }}
-                onClick={() => isUnread && handleMarkOne(notif.id!)}
-                className={`w-full text-left rounded-xl p-4 flex items-start gap-3.5 transition-all ${getCardClass(notif.type)} ${
-                  isUnread ? "hover:opacity-95 cursor-pointer" : "opacity-55 hover:opacity-70 cursor-default"
+                exit={{ opacity: 0, x: -12, height: 0, marginBottom: 0 }}
+                transition={{ duration: 0.22 }}
+                className={`group relative w-full text-left rounded-xl p-4 flex items-start gap-3.5 transition-all card-notif-page ${
+                  isUnread ? "hover:opacity-95" : "opacity-60 hover:opacity-80"
                 }`}
               >
-                {/* Type icon */}
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${meta.bg} ${meta.color}`}>
-                  {meta.icon}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  {/* Title row */}
-                  <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                    <p className="text-sm font-semibold leading-snug">{notif.title}</p>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold"
-                      style={{ background: `${meta.accent}18`, color: meta.accent, border: `1px solid ${meta.accent}30` }}>
-                      {meta.group}
-                    </span>
+                <button
+                  onClick={() => isUnread && handleMarkOne(notif.id!)}
+                  className="flex items-start gap-3.5 flex-1 min-w-0 text-left"
+                  disabled={!isUnread}
+                >
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${meta.bg} ${meta.color}`}>
+                    {meta.icon}
                   </div>
-                  <p className="text-xs text-white/80 leading-relaxed">{notif.message}</p>
-                  <p className="text-[10px] text-white/60 mt-1.5 font-medium">
-                    {notif.createdAt ? format(new Date(notif.createdAt), "dd 'de' MMM 'às' HH:mm", { locale: ptBR }) : ""}
-                  </p>
-                </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                      <p className="text-sm font-semibold leading-snug">{notif.title}</p>
+                      {notif.priority && notif.priority !== "normal" && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wide"
+                          style={{ background: `${priority.color}18`, color: priority.color, border: `1px solid ${priority.color}30` }}>
+                          {priority.label}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-white/80 leading-relaxed">{notif.message}</p>
+                    <p className="text-[10px] text-white/60 mt-1.5 font-medium">
+                      {notif.createdAt ? format(new Date(notif.createdAt), "dd 'de' MMM 'às' HH:mm", { locale: ptBR }) : ""}
+                    </p>
+                  </div>
+                  {isUnread && (
+                    <div className="w-2 h-2 rounded-full flex-shrink-0 mt-2"
+                      style={{ background: meta.accent, boxShadow: `0 0 6px ${meta.accent}` }} />
+                  )}
+                </button>
 
-                {/* Unread indicator */}
-                {isUnread && (
-                  <div className="w-2 h-2 rounded-full flex-shrink-0 mt-2"
-                    style={{ background: meta.accent, boxShadow: `0 0 6px ${meta.accent}` }} />
-                )}
-              </motion.button>
+                <button
+                  onClick={() => handleDelete(notif.id!)}
+                  className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100"
+                  title="Remover notificação"
+                  disabled={deleteOne.isPending}
+                >
+                  <Trash2 size={13} />
+                </button>
+              </motion.div>
             );
           })}
         </AnimatePresence>
       </div>
+
+      {/* ── Infinite scroll sentinel ── */}
+      {hasNextPage && (
+        <div ref={loadMoreRef} className="flex justify-center py-4">
+          {isFetchingNextPage && <SkeletonListRow />}
+        </div>
+      )}
     </div>
   );
 }
