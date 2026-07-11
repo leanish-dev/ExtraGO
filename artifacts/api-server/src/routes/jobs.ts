@@ -141,48 +141,73 @@ router.post("/jobs", requireAuth, async (req, res) => {
   const reservationCents = Math.round(reservationBRL * 100); // convert to cents for wallet
 
   const wallet = await ensureWallet(user.id, "company");
-  const availableBalance = wallet.balance - wallet.reservedBalance; // both in cents
+  const reservationRef = `job_reservation:${Date.now()}_${user.id}`;
 
-  if (availableBalance < reservationCents) {
-    const requiredBRL = reservationBRL;
-    const availableBRL = availableBalance / 100;
-    res.status(402).json({
-      error: `Saldo insuficiente. Necessário: R$ ${requiredBRL.toFixed(2)}, Disponível: R$ ${availableBRL.toFixed(2)}. Por favor, faça um depósito antes de publicar um Extra.`,
-      required: reservationCents,
-      available: availableBalance,
+  // ── Reserve funds + create job atomically ──────────────────────────────────
+  // A single DB transaction guarantees exactly ONE reservation is ever created
+  // per Extra: if any step fails (insufficient balance, job insert failure,
+  // etc.) the whole operation rolls back and no reservation/transaction/job
+  // row is left behind — preventing the "phantom reservation from a failed
+  // request that gets retried" class of bug.
+  let job: any;
+  try {
+    job = await db.transaction(async (tx) => {
+      // Re-read the wallet inside the transaction to get a consistent balance.
+      const [freshWallet] = await tx.select().from(walletsTable).where(eq(walletsTable.id, wallet.id));
+      const availableBalance = freshWallet.balance - freshWallet.reservedBalance; // both in cents
+
+      if (availableBalance < reservationCents) {
+        const err: any = new Error("insufficient_balance");
+        err.availableBalance = availableBalance;
+        throw err;
+      }
+
+      // Reserve the amount (in cents)
+      await tx.update(walletsTable)
+        .set({ reservedBalance: sql`${walletsTable.reservedBalance} + ${reservationCents}` })
+        .where(eq(walletsTable.id, freshWallet.id));
+
+      await tx.insert(transactionsTable).values({
+        walletId: freshWallet.id,
+        type: "reservation",
+        amount: reservationCents,
+        description: `Reserva para Extra — ${d.title}`,
+        status: "completed",
+        referenceId: reservationRef,
+      });
+
+      // ── Create job ──────────────────────────────────────────────────────────
+      const [insertedJob] = await tx.insert(jobsTable).values({
+        ...d,
+        shiftType,
+        dailyRate: shiftType === "daily" ? ((d as any).dailyRate ?? null) : null,
+        totalValue,
+        companyId: user.id,
+        workersApproved: 0,
+        walletReservationId: reservationRef,
+      } as any).returning();
+
+      return insertedJob;
     });
+  } catch (e: any) {
+    if (e?.message === "insufficient_balance") {
+      const availableBRL = e.availableBalance / 100;
+      res.status(402).json({
+        error: `Saldo insuficiente. Necessário: R$ ${reservationBRL.toFixed(2)}, Disponível: R$ ${availableBRL.toFixed(2)}. Por favor, faça um depósito antes de publicar um Extra.`,
+        required: reservationCents,
+        available: e.availableBalance,
+      });
+      return;
+    }
+    console.error("[jobs] create job error:", e);
+    res.status(500).json({ error: "Erro ao publicar Extra. Nenhuma reserva foi criada." });
     return;
   }
 
-  // Reserve the amount (in cents)
-  await db.update(walletsTable)
-    .set({ reservedBalance: wallet.reservedBalance + reservationCents })
-    .where(eq(walletsTable.id, wallet.id));
-
-  const reservationRef = `job_reservation:${Date.now()}`;
-  await db.insert(transactionsTable).values({
-    walletId: wallet.id,
-    type: "reservation",
-    amount: reservationCents,
-    description: `Reserva para Extra — ${d.title}`,
-    status: "completed",
-    referenceId: reservationRef,
-  }).catch(() => {});
-
-  // ── Create job ────────────────────────────────────────────────────────────
-  const [job] = await db.insert(jobsTable).values({
-    ...d,
-    shiftType,
-    dailyRate: shiftType === "daily" ? ((d as any).dailyRate ?? null) : null,
-    totalValue,
-    companyId: user.id,
-    workersApproved: 0,
-    walletReservationId: reservationRef,
-  } as any).returning();
-
-  // Log creation event
-  await logJobEvent({ jobId: job.id, eventType: "created", actorId: user.id, actorRole: user.role, req, metadata: { totalValue, reservationAmount, shiftType } });
-  await logJobEvent({ jobId: job.id, eventType: "wallet_reserved", actorId: user.id, actorRole: user.role, req, metadata: { amount: reservationAmount, ref: reservationRef } });
+  // Log creation event (best-effort, never throws — logJobEvent already
+  // swallows its own errors internally)
+  await logJobEvent({ jobId: job.id, eventType: "created", actorId: user.id, actorRole: user.role, req, metadata: { totalValue, reservationAmount: reservationCents, shiftType } });
+  await logJobEvent({ jobId: job.id, eventType: "wallet_reserved", actorId: user.id, actorRole: user.role, req, metadata: { amount: reservationCents, ref: reservationRef } });
 
   const [company] = await db.select().from(usersTable).where(eq(usersTable.id, user.id));
   res.status(201).json(formatJob(job, company));

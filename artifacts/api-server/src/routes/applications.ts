@@ -3,7 +3,7 @@ import { db, applicationsTable, jobsTable, usersTable, notificationsTable, walle
 import { eq, and, sql } from "drizzle-orm";
 import { requireAuth, formatUser } from "../lib/auth";
 import { ApplyToJobBody, ListApplicationsQueryParams } from "@workspace/api-zod";
-import { calculateLevel, LEVEL_FEE, LEVEL_LABELS, completeJobCascade, reserveCompanyFunds, adjustCounterOfferReservation, recalculateReputation } from "../lib/ecosystem";
+import { calculateLevel, LEVEL_FEE, LEVEL_LABELS, completeJobCascade, adjustCounterOfferReservation, recalculateReputation } from "../lib/ecosystem";
 import { createNotification } from "../lib/notifications";
 
 const router = Router();
@@ -150,15 +150,12 @@ router.post("/applications/:id/approve", requireAuth, async (req, res) => {
     return;
   }
 
-  // Only reserve funds on the first approval (pending → approved).
-  // counter_rejected always comes from counter_offered which came from approved,
-  // so funds are already reserved — do not double-reserve.
-  if (app.status === "pending") {
-    const jobValue = job.totalValue ?? 0;
-    if (jobValue > 0) {
-      await reserveCompanyFunds(job.companyId, jobValue, job.title, id);
-    }
-  }
+  // NOTE: funds for the ENTIRE Extra (all worker slots) are already reserved
+  // once, atomically, when the company published the job (see POST /jobs).
+  // Approving an application must NOT reserve funds again — doing so used to
+  // double-count the job's value on top of the publication-time reservation,
+  // inflating reservedBalance far beyond the actual cost. Do not re-add a
+  // reserveCompanyFunds() call here.
 
   const [updated] = await db.update(applicationsTable)
     .set({ status: "approved" })
@@ -204,30 +201,12 @@ router.post("/applications/:id/reject", requireAuth, async (req, res) => {
     return;
   }
 
-  // If the app was approved, release reserved funds back to company balance
-  if (["approved", "counter_accepted"].includes(app.status)) {
-    const reservedAmount = app.proposedRate ?? job.totalValue ?? 0;
-    if (reservedAmount > 0) {
-      const [companyWallet] = await db.select().from(walletsTable).where(eq(walletsTable.userId, job.companyId));
-      if (companyWallet) {
-        const toRelease = Math.min(companyWallet.reservedBalance, reservedAmount);
-        if (toRelease > 0) {
-          await db.update(walletsTable).set({
-            reservedBalance: sql`${walletsTable.reservedBalance} - ${toRelease}`,
-            balance: sql`${walletsTable.balance} + ${toRelease}`,
-          }).where(eq(walletsTable.id, companyWallet.id));
-          db.insert(transactionsTable).values({
-            walletId: companyWallet.id,
-            type: "release",
-            amount: toRelease,
-            description: `Liberação de reserva: ${job.title}`,
-            status: "completed",
-            referenceId: `app:${id}`,
-          }).catch(() => {});
-        }
-      }
-    }
-  }
+  // NOTE: the wallet reservation lives at the Extra (job) level, not per
+  // application — it covers all workersNeeded slots collectively and was
+  // created once when the job was published. Rejecting a single application
+  // frees up a slot that the company may fill with another candidate, so the
+  // shared reservation must stay intact here. It is only released when the
+  // job itself is cancelled or when it completes (see jobs.ts / job-execution.ts).
 
   const [updated] = await db.update(applicationsTable)
     .set({ status: "rejected" })

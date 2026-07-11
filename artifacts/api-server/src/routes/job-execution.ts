@@ -85,17 +85,14 @@ router.post("/jobs/:id/generate-checkin-codes", requireAuth, async (req, res) =>
 
   const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
 
-  // Invalidate old active codes for this job
-  // (We don't delete, just expire them by not querying them)
-
+  // Only ONE code is generated: the company's code. The company never types a
+  // code themselves — they generate it and send it to the freelancer, who is
+  // the one who enters it to validate the check-in.
   const companyCode = generateCode();
-  const freelancerCode = generateCode();
-
   const applicationId = req.body.applicationId ?? null;
 
   await db.insert(jobCodesTable as any).values([
     { jobId, applicationId, codeType: "checkin_company", code: companyCode, expiresAt },
-    { jobId, applicationId, codeType: "checkin_freelancer", code: freelancerCode, expiresAt },
   ]);
 
   // Update job to waiting_checkin
@@ -105,12 +102,10 @@ router.post("/jobs/:id/generate-checkin-codes", requireAuth, async (req, res) =>
 
   logEvent({ jobId, eventType: "checkin_code_generated", actorId: user.id, actorRole: user.role, req });
 
-  // Return company code to the company user; freelancer needs to get theirs separately
   res.json({
     companyCode,
-    freelancerCode,
     expiresAt: expiresAt.toISOString(),
-    message: "Share the freelancer code with the professional",
+    message: "Envie este código para o profissional. Ele deve digitá-lo para confirmar o check-in.",
   });
 });
 
@@ -137,14 +132,12 @@ router.get("/jobs/:id/codes/active", requireAuth, async (req, res) => {
       )
     );
 
-  // Filter by role: company sees company codes, freelancer sees freelancer codes
-  const filtered = user.role === "admin"
-    ? codes
-    : codes.filter((c: any) =>
-        user.role === "company"
-          ? c.codeType.startsWith("checkin_company") || c.codeType.startsWith("checkout_company")
-          : c.codeType.startsWith("checkin_freelancer") || c.codeType.startsWith("checkout_freelancer")
-      );
+  // Only the company's code exists now (single-code flow: company generates
+  // and shares it, freelancer types it in). Both the company owner and the
+  // approved freelancer(s) on this job may see it — the company to re-display
+  // it after a refresh, the freelancer as a fallback if it wasn't shared via
+  // another channel.
+  const filtered = codes.filter((c: any) => c.codeType === "checkin_company" || c.codeType === "checkout_company");
 
   res.json(filtered.map((c: any) => ({
     id: c.id,
@@ -170,9 +163,14 @@ router.post("/jobs/:id/validate-checkin", requireAuth, async (req, res) => {
     res.status(400).json({ error: `Job is not in a check-in-able state (current: ${job.status})` }); return;
   }
 
-  // Determine which code type to match
-  const codeType = user.role === "company" ? "checkin_freelancer" : "checkin_company";
+  // The company generates the code and never types one. Only the freelancer
+  // (the approved professional) enters the company's code to confirm check-in.
+  if (user.role === "company") {
+    res.status(403).json({ error: "A empresa não digita código — apenas gera e envia para o profissional." });
+    return;
+  }
 
+  const codeType = "checkin_company";
   const now = new Date();
   const [matchingCode] = await db.select().from(jobCodesTable as any)
     .where(
@@ -194,44 +192,25 @@ router.post("/jobs/:id/validate-checkin", requireAuth, async (req, res) => {
     .set({ usedAt: now, usedByUserId: user.id, ipAddress: req.headers["x-forwarded-for"] as string ?? null, gps: gps ?? null })
     .where(eq((jobCodesTable as any).id, (matchingCode as any).id));
 
-  // Check if BOTH sides have validated (company validated freelancer's code AND freelancer validated company's code)
-  const usedCodes = await db.select().from(jobCodesTable as any)
-    .where(
-      and(
-        eq((jobCodesTable as any).jobId, jobId),
-      )
-    );
+  // A single freelancer validation is enough to start the job — the company
+  // never needs to validate anything on their side.
+  await db.update(jobsTable)
+    .set({ status: "in_progress", updatedAt: new Date() })
+    .where(eq(jobsTable.id, jobId));
 
-  const companyValidated = (usedCodes as any[]).some(c =>
-    c.codeType === "checkin_company" && c.usedAt !== null);
-  const freelancerValidated = (usedCodes as any[]).some(c =>
-    c.codeType === "checkin_freelancer" && c.usedAt !== null);
+  logEvent({ jobId, eventType: "checkin_validated", actorId: user.id, actorRole: user.role, req, metadata: { gps, code: "***" } });
+  logEvent({ jobId, eventType: "started", actorId: user.id, actorRole: user.role, req, metadata: { gps } });
 
-  // Start job if both sides validated (or if single-side: company or freelancer)
-  const bothValidated = companyValidated || freelancerValidated;
+  // Notify company and approved freelancers
+  createNotification({ userId: job.companyId, type: "checkin_completed", title: "Check-in validado!", message: `O Extra "${job.title}" está em andamento.`, link: `/app/jobs/${jobId}` }, db).catch(() => {});
+  try {
+    const approvedApps = await db.select().from(applicationsTable).where(and(eq(applicationsTable.jobId, jobId), eq(applicationsTable.status, "approved")));
+    for (const app of approvedApps) {
+      createNotification({ userId: app.freelancerId, type: "checkin_completed", title: "Check-in validado! 🎉", message: "Seu check-in foi registrado. Bom trabalho!", link: `/app/jobs/${jobId}` }, db).catch(() => {});
+    }
+  } catch {}
 
-  if (bothValidated && job.status !== "in_progress") {
-    await db.update(jobsTable)
-      .set({ status: "in_progress", updatedAt: new Date() })
-      .where(eq(jobsTable.id, jobId));
-
-    logEvent({ jobId, eventType: "checkin_validated", actorId: user.id, actorRole: user.role, req, metadata: { gps, code: "***" } });
-    logEvent({ jobId, eventType: "started", actorId: user.id, actorRole: user.role, req, metadata: { gps } });
-
-    // Notify company and approved freelancers
-    createNotification({ userId: job.companyId, type: "checkin_completed", title: "Check-in validado!", message: `O Extra "${job.title}" está em andamento.`, link: `/app/jobs/${jobId}` }, db).catch(() => {});
-    try {
-      const approvedApps = await db.select().from(applicationsTable).where(and(eq(applicationsTable.jobId, jobId), eq(applicationsTable.status, "approved")));
-      for (const app of approvedApps) {
-        createNotification({ userId: app.freelancerId, type: "checkin_completed", title: "Check-in validado! 🎉", message: "Seu check-in foi registrado. Bom trabalho!", link: `/app/jobs/${jobId}` }, db).catch(() => {});
-      }
-    } catch {}
-
-    res.json({ success: true, status: "in_progress", message: "Check-in validado! Extra em andamento." });
-  } else {
-    logEvent({ jobId, eventType: "checkin_validated", actorId: user.id, actorRole: user.role, req, metadata: { gps, partial: true } });
-    res.json({ success: true, status: job.status, message: "Código validado. Aguardando o outro lado confirmar." });
-  }
+  res.json({ success: true, status: "in_progress", message: "Check-in validado! Extra em andamento." });
 });
 
 // ── POST /jobs/:id/generate-checkout-codes ───────────────────────────────────
@@ -254,12 +233,11 @@ router.post("/jobs/:id/generate-checkout-codes", requireAuth, async (req, res) =
   const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
   const applicationId = req.body.applicationId ?? null;
 
+  // Only ONE code — the company's — the freelancer types it to confirm checkout.
   const companyCode = generateCode();
-  const freelancerCode = generateCode();
 
   await db.insert(jobCodesTable as any).values([
     { jobId, applicationId, codeType: "checkout_company", code: companyCode, expiresAt },
-    { jobId, applicationId, codeType: "checkout_freelancer", code: freelancerCode, expiresAt },
   ]);
 
   await db.update(jobsTable)
@@ -270,9 +248,8 @@ router.post("/jobs/:id/generate-checkout-codes", requireAuth, async (req, res) =
 
   res.json({
     companyCode,
-    freelancerCode,
     expiresAt: expiresAt.toISOString(),
-    message: "Share the freelancer checkout code with the professional",
+    message: "Envie este código para o profissional. Ele deve digitá-lo para confirmar o checkout.",
   });
 });
 
@@ -292,7 +269,14 @@ router.post("/jobs/:id/validate-checkout", requireAuth, async (req, res) => {
     res.status(400).json({ error: `Job cannot be checked out in status '${job.status}'` }); return;
   }
 
-  const codeType = user.role === "company" ? "checkout_freelancer" : "checkout_company";
+  // Same rule as check-in: the company only generates/sends the code. The
+  // freelancer is the one who types it in to confirm checkout.
+  if (user.role === "company") {
+    res.status(403).json({ error: "A empresa não digita código — apenas gera e envia para o profissional." });
+    return;
+  }
+
+  const codeType = "checkout_company";
   const now = new Date();
 
   const [matchingCode] = await db.select().from(jobCodesTable as any)

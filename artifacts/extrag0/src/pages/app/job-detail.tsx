@@ -93,6 +93,8 @@ function CodeValidationPanel({
   const qc = useQueryClient();
   const code = digits.join("");
   const isCheckin = mode === "checkin";
+  // Only the freelancer validates a code (the code the company generated and
+  // sent them). The company never types anything here.
 
   const handleDigit = (idx: number, value: string) => {
     const digit = value.replace(/\D/g, "").slice(-1);
@@ -158,7 +160,7 @@ function CodeValidationPanel({
         <div>
           <p className="font-bold">{isCheckin ? "Validar Check-in" : "Validar Checkout"}</p>
           <p className="text-xs text-white/55 mt-0.5">
-            {isCheckin ? "Digite o código de 6 dígitos da empresa" : "Digite o código de 6 dígitos da empresa"}
+            Digite o código de 6 dígitos enviado pela empresa
           </p>
         </div>
       </div>
@@ -213,10 +215,31 @@ function GenerateCodesPanel({
   onSuccess: () => void;
 }) {
   const [loading, setLoading] = useState(false);
-  const [codes, setCodes] = useState<{ companyCode: string; freelancerCode: string; expiresAt: string } | null>(null);
+  const [codes, setCodes] = useState<{ companyCode: string; expiresAt: string } | null>(null);
+  const [sentConfirmed, setSentConfirmed] = useState(false);
   const [timeLeft, setTimeLeft] = useState("");
   const qc = useQueryClient();
   const isCheckin = mode === "checkin";
+
+  // Restore the already-generated code after a refresh/remount (the panel
+  // must stay visible through the "waiting_*" job status — see job-detail
+  // status derivation — rather than disappear the instant a code is created).
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (codes) return;
+      try {
+        const active = await apiFetch(`/api/jobs/${jobId}/codes/active`);
+        const codeType = isCheckin ? "checkin_company" : "checkout_company";
+        const match = (active ?? []).find((c: any) => c.codeType === codeType);
+        if (match && !cancelled) {
+          setCodes({ companyCode: match.code, expiresAt: match.expiresAt });
+        }
+      } catch { /* no active code yet — fine */ }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobId, mode]);
 
   useEffect(() => {
     if (!codes?.expiresAt) return;
@@ -238,12 +261,13 @@ function GenerateCodesPanel({
       const endpoint = mode === "checkin" ? "generate-checkin-codes" : "generate-checkout-codes";
       const result = await apiFetch(`/api/jobs/${jobId}/${endpoint}`, { method: "POST" });
       setCodes(result);
+      setSentConfirmed(false);
       qc.invalidateQueries({ queryKey: ["job-detail", jobId] });
       qc.invalidateQueries({ queryKey: ["job-events", jobId] });
       onSuccess();
-      toast.success("Códigos gerados!");
+      toast.success("Código gerado!");
     } catch (e: any) {
-      toast.error(e?.data?.error ?? e?.message ?? "Erro ao gerar códigos");
+      toast.error(e?.data?.error ?? e?.message ?? "Erro ao gerar código");
     } finally {
       setLoading(false);
     }
@@ -275,7 +299,7 @@ function GenerateCodesPanel({
         </div>
         <div>
           <p className="font-bold">{isCheckin ? "Iniciar Check-in" : "Iniciar Checkout"}</p>
-          <p className="text-xs text-white/55 mt-0.5">Gere e compartilhe os códigos de validação</p>
+          <p className="text-xs text-white/55 mt-0.5">Gere o código e envie para o profissional</p>
         </div>
       </div>
 
@@ -283,15 +307,15 @@ function GenerateCodesPanel({
         <div className="px-5 pb-5 space-y-3">
           <p className="text-xs text-white/60 leading-relaxed">
             {isCheckin
-              ? "Gere os códigos de check-in. Envie o código do profissional via WhatsApp, SMS ou chat."
-              : "Gere os códigos de checkout para encerrar o Extra. Envie o código do profissional."}
+              ? "Gere o código de check-in e envie para o profissional via WhatsApp, SMS ou chat. Você não precisa digitar nada."
+              : "Gere o código de checkout e envie para o profissional. Você não precisa digitar nada."}
           </p>
           <Button
             onClick={handleGenerate}
             disabled={loading}
             className={`w-full h-12 rounded-xl font-bold text-sm border ${btnBorderClass}`}
           >
-            {loading ? <><Loader2 size={14} className="animate-spin mr-2" />Gerando...</> : <><QrCode size={14} className="mr-2" />Gerar Códigos</>}
+            {loading ? <><Loader2 size={14} className="animate-spin mr-2" />Gerando...</> : <><QrCode size={14} className="mr-2" />Gerar Código</>}
           </Button>
         </div>
       ) : (
@@ -299,57 +323,61 @@ function GenerateCodesPanel({
           {/* Countdown */}
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-1.5 text-white/45">
-              <Timer size={12} /> Validade dos códigos
+              <Timer size={12} /> Validade do código
             </div>
             <span className={`font-bold tabular-nums ${timeLeft === "Expirado" ? "text-red-400" : accentClass}`}>
               {timeLeft}
             </span>
           </div>
 
-          {/* Freelancer code — HERO display */}
+          {/* Company code — HERO display, sent to the freelancer */}
           <div className="rounded-2xl p-5 bg-white/5 border border-white/10 space-y-3">
             <p className="text-[10px] font-bold text-white/45 uppercase tracking-widest">
-              Código do Profissional — Compartilhe este
+              Seu Código — Envie para o profissional
             </p>
             <p className={`text-6xl font-black tracking-[0.28em] tabular-nums leading-none ${accentClass}`}>
-              {codes.freelancerCode}
+              {codes.companyCode}
             </p>
             <div className="flex gap-2 pt-1">
               <button
-                onClick={() => copyCode(codes.freelancerCode)}
+                onClick={() => copyCode(codes.companyCode)}
                 className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl text-xs font-bold bg-white/6 border border-white/12 hover:bg-white/12 text-white/70 hover:text-foreground transition-all"
               >
                 <Copy size={13} /> Copiar
               </button>
               <button
-                onClick={() => shareCode(codes.freelancerCode)}
+                onClick={() => shareCode(codes.companyCode)}
                 className={`flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl text-xs font-bold border transition-all ${shareBtnClass}`}
               >
                 <Share2 size={13} /> Compartilhar
               </button>
             </div>
             <p className="text-[10px] text-white/35 leading-relaxed">
-              O profissional deve inserir este código no dispositivo dele.
+              O profissional deve digitar este código no dispositivo dele. Você não digita nenhum código.
             </p>
           </div>
 
-          {/* Company's own code */}
-          <div className="rounded-xl p-4 bg-white/3 border border-white/8">
-            <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-2">
-              Seu Código — O profissional digitará este no sistema
-            </p>
-            <div className="flex items-center justify-between">
-              <p className="text-3xl font-black tracking-[0.28em] tabular-nums text-white/65">
-                {codes.companyCode}
-              </p>
-              <button
-                onClick={() => copyCode(codes.companyCode)}
-                className="text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-white/45 hover:text-white/70 transition-all"
-              >
-                Copiar
-              </button>
-            </div>
-          </div>
+          {timeLeft === "Expirado" ? (
+            <Button
+              onClick={handleGenerate}
+              disabled={loading}
+              className={`w-full h-11 rounded-xl font-bold text-sm border ${btnBorderClass}`}
+            >
+              {loading ? <><Loader2 size={14} className="animate-spin mr-2" />Gerando...</> : <><RefreshCw size={14} className="mr-2" />Gerar Novo Código</>}
+            </Button>
+          ) : (
+            <button
+              onClick={() => setSentConfirmed(true)}
+              disabled={sentConfirmed}
+              className={`w-full h-11 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
+                sentConfirmed
+                  ? "bg-green-400/10 text-green-400 border-green-400/25"
+                  : "bg-white/5 text-white/60 border-white/10 hover:bg-white/10"
+              }`}
+            >
+              <CheckCircle2 size={13} /> {sentConfirmed ? "Código enviado" : "Marcar como enviado"}
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -657,10 +685,14 @@ export default function JobDetailPage() {
   const pendingCount = applications.filter(a => a.status === "pending").length;
   const approvedCount = applications.filter(a => a.status === "approved").length;
 
-  // Execution flow states
-  const showGenerateCheckin = isOwner && ["open", "scheduled"].includes(job.status);
-  const showValidateCheckin = ["waiting_checkin"].includes(job.status);
-  const showGenerateCheckout = isOwner && ["in_progress", "on_break"].includes(job.status);
+  // Execution flow states.
+  // The company only ever GENERATES and shares codes — it never types one in.
+  // Keep the generate panel visible through the "waiting_*" status too, since
+  // that status is set by the same request that creates the code: without
+  // this, the panel would unmount itself the instant the code is generated.
+  const showGenerateCheckin = isOwner && ["open", "scheduled", "waiting_checkin"].includes(job.status);
+  const showValidateCheckin = ["waiting_checkin"].includes(job.status) && !isOwner;
+  const showGenerateCheckout = isOwner && ["in_progress", "on_break", "waiting_checkout"].includes(job.status);
   const showValidateCheckout = ["waiting_checkout", "in_progress"].includes(job.status) && !isOwner;
   const showFreelancerValidateCheckin = me?.role === "freelancer" && myApp?.status === "approved" && ["waiting_checkin", "open"].includes(job.status);
 
