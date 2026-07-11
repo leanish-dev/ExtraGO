@@ -36,7 +36,10 @@ const authLimiter = rateLimit({ windowMs: 60_000, max: 10, keyPrefix: "auth-core
 router.post("/auth/register", authLimiter, async (req, res) => {
   const parsed = RegisterBody.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: "Invalid input" });
+    res.status(400).json({
+      error: "Invalid input",
+      ...(process.env.NODE_ENV !== "production" ? { details: parsed.error.flatten() } : {}),
+    });
     return;
   }
   const { email, password, name, role, referralCode, companyName } = parsed.data;

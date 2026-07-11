@@ -26,6 +26,28 @@ import {
 
 type AccountType = "freelancer" | "company";
 
+const REGISTER_ERROR_MESSAGES: Record<string, string> = {
+  "email already in use": "Este e-mail já está cadastrado.",
+  "cpf already registered": "Este CPF já está cadastrado.",
+  "cnpj already registered": "Este CNPJ já está cadastrado.",
+  "phone already registered": "Este telefone já está cadastrado.",
+  "disposable email addresses are not allowed": "Não aceitamos e-mails temporários. Use um e-mail permanente.",
+  "network_error": "Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.",
+};
+
+function translateRegisterError(err: any): string {
+  const raw = String(err?.message ?? "").trim();
+  const known = REGISTER_ERROR_MESSAGES[raw.toLowerCase()];
+  if (known) return known;
+  if (raw.toLowerCase() === "invalid input") {
+    return "Alguns dados informados são inválidos. Revise os campos e tente novamente.";
+  }
+  // Show the server's own message when we don't have a friendlier translation for it —
+  // better than a silent generic fallback that hides the real cause from the user.
+  if (raw && raw !== "0" && !/^\d+$/.test(raw)) return raw;
+  return "Não foi possível criar a conta. Tente novamente.";
+}
+
 const TOTAL_STEPS = 9;
 const STEP_LABELS = [
   "Tipo de conta", "Dados básicos", "E-mail", "Telefone", "Documentos legais",
@@ -140,16 +162,9 @@ export default function OnboardingPage() {
       toast.success("Conta criada! Vamos verificar seus dados.");
       goNext();
     } catch (err: any) {
-      const msg = String(err?.message ?? "");
-      if (msg.toLowerCase().includes("email")) {
-        toast.error("Este e-mail já está cadastrado.");
-      } else if (msg.toLowerCase().includes("cpf")) {
-        toast.error("Este CPF já está cadastrado.");
-      } else if (msg.toLowerCase().includes("cnpj")) {
-        toast.error("Este CNPJ já está cadastrado.");
-      } else {
-        toast.error("Não foi possível criar a conta. Tente novamente.");
-      }
+      toast.error(translateRegisterError(err));
+      // Surface the real cause during development so failures are never silently masked.
+      if (err?.body) console.error("Register failed:", err.status, err.body);
     } finally {
       setSaving(false);
     }
