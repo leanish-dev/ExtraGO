@@ -134,31 +134,36 @@ router.post("/jobs", requireAuth, async (req, res) => {
   }
 
   // ── Wallet reservation ───────────────────────────────────────────────────
+  // Wallet balance / transactions are stored in INTEGER CENTS.
+  // Job rates (hourlyRate, dailyRate, totalValue) are stored in BRL (float).
   const platformFeeRate = 0.15;
-  const reservationAmount = Math.round(totalValue * (1 + platformFeeRate) * 100) / 100;
+  const reservationBRL = Math.round(totalValue * (1 + platformFeeRate) * 100) / 100;
+  const reservationCents = Math.round(reservationBRL * 100); // convert to cents for wallet
 
   const wallet = await ensureWallet(user.id, "company");
-  const availableBalance = wallet.balance - wallet.reservedBalance;
+  const availableBalance = wallet.balance - wallet.reservedBalance; // both in cents
 
-  if (availableBalance < reservationAmount) {
+  if (availableBalance < reservationCents) {
+    const requiredBRL = reservationBRL;
+    const availableBRL = availableBalance / 100;
     res.status(402).json({
-      error: `Saldo insuficiente. Necessário: R$ ${reservationAmount.toFixed(2)}, Disponível: R$ ${availableBalance.toFixed(2)}. Por favor, faça um depósito antes de publicar um Extra.`,
-      required: reservationAmount,
+      error: `Saldo insuficiente. Necessário: R$ ${requiredBRL.toFixed(2)}, Disponível: R$ ${availableBRL.toFixed(2)}. Por favor, faça um depósito antes de publicar um Extra.`,
+      required: reservationCents,
       available: availableBalance,
     });
     return;
   }
 
-  // Reserve the amount
+  // Reserve the amount (in cents)
   await db.update(walletsTable)
-    .set({ reservedBalance: wallet.reservedBalance + reservationAmount })
+    .set({ reservedBalance: wallet.reservedBalance + reservationCents })
     .where(eq(walletsTable.id, wallet.id));
 
   const reservationRef = `job_reservation:${Date.now()}`;
   await db.insert(transactionsTable).values({
     walletId: wallet.id,
     type: "reservation",
-    amount: reservationAmount,
+    amount: reservationCents,
     description: `Reserva para Extra — ${d.title}`,
     status: "completed",
     referenceId: reservationRef,
@@ -234,13 +239,15 @@ router.delete("/jobs/:id", requireAuth, async (req, res) => {
     return;
   }
 
-  // Release any reserved balance
+  // Release any reserved balance (wallet in cents, job.totalValue in BRL)
   if (job.walletReservationId) {
     try {
       const wallet = await ensureWallet(job.companyId, "company");
-      if (wallet.reservedBalance >= job.totalValue) {
+      const releaseCents = Math.round(job.totalValue * 1.15 * 100);
+      const actualRelease = Math.min(wallet.reservedBalance, releaseCents);
+      if (actualRelease > 0) {
         await db.update(walletsTable)
-          .set({ reservedBalance: wallet.reservedBalance - job.totalValue * 1.15 })
+          .set({ reservedBalance: Math.max(0, wallet.reservedBalance - actualRelease) })
           .where(eq(walletsTable.id, wallet.id));
       }
     } catch {}
@@ -263,11 +270,12 @@ router.post("/jobs/:id/cancel", requireAuth, async (req, res) => {
     return;
   }
 
-  // Release wallet reservation on cancel
+  // Release wallet reservation on cancel (wallet in cents, job.totalValue in BRL)
   if (job.walletReservationId && job.totalValue > 0) {
     try {
       const wallet = await ensureWallet(job.companyId, "company");
-      const release = Math.min(wallet.reservedBalance, job.totalValue * 1.15);
+      const releaseCents = Math.round(job.totalValue * 1.15 * 100);
+      const release = Math.min(wallet.reservedBalance, releaseCents);
       await db.update(walletsTable)
         .set({ reservedBalance: Math.max(0, wallet.reservedBalance - release) })
         .where(eq(walletsTable.id, wallet.id));

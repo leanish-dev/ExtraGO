@@ -106,14 +106,17 @@ export default function OnboardingPage() {
 
   // If already authenticated but not verified, jump straight into the flow
   // at the right stage instead of re-registering.
+  // IMPORTANT: Never redirect while on step 7 (document upload) or 8 (complete),
+  // because uploading documents may update accountStatus to pending_review mid-flow.
   useEffect(() => {
     if (authLoading || !user) return;
+    if (step >= 7) return; // Don't interfere while uploading documents or showing completion
     const status = (user as any).accountStatus as string | undefined;
     if (status === "pending_phone") setStep(4);
-    else if (status === "pending_documents" || status === "rejected" || status === "correction_requested") setStep(8);
+    else if (status === "pending_documents" || status === "rejected" || status === "correction_requested") setStep(7);
     else if (status === "pending_review" || status === "verified") setLocation("/verification-center");
     else if (status === "pending_email" || !status) setStep(3);
-  }, [authLoading, user]);
+  }, [authLoading, user, step]);
 
   const goNext = () => setStep(s => Math.min(TOTAL_STEPS, s + 1));
   const goBack = () => setStep(s => Math.max(1, s - 1));

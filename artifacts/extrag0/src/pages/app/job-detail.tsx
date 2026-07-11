@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,7 +7,7 @@ import {
   Calendar, CheckCircle, XCircle, Loader2, Building2, Zap,
   AlertCircle, Send, CheckCircle2, Timer, Star, Shield, UserCheck,
   QrCode, KeyRound, LogIn, LogOut, RefreshCw, Play, Square,
-  Activity, ChevronDown, ChevronUp, History,
+  Activity, ChevronDown, ChevronUp, History, Copy, Share2,
 } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -76,7 +76,7 @@ function formatTime(t: string) {
   return `${h}:${m}`;
 }
 
-// ── Code Validation Panel ────────────────────────────────────────────────────
+// ── Code Validation Panel ── OTP-style, with high visual prominence ──────────
 
 function CodeValidationPanel({
   jobId,
@@ -87,9 +87,41 @@ function CodeValidationPanel({
   mode: "checkin" | "checkout";
   onSuccess: () => void;
 }) {
-  const [code, setCode] = useState("");
+  const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [loading, setLoading] = useState(false);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const qc = useQueryClient();
+  const code = digits.join("");
+  const isCheckin = mode === "checkin";
+
+  const handleDigit = (idx: number, value: string) => {
+    const digit = value.replace(/\D/g, "").slice(-1);
+    const next = [...digits];
+    next[idx] = digit;
+    setDigits(next);
+    if (digit && idx < 5) inputRefs.current[idx + 1]?.focus();
+  };
+
+  const handleKeyDown = (idx: number, e: React.KeyboardEvent) => {
+    if (e.key === "Backspace") {
+      if (!digits[idx] && idx > 0) {
+        inputRefs.current[idx - 1]?.focus();
+      } else {
+        const next = [...digits];
+        next[idx] = "";
+        setDigits(next);
+      }
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    const next = Array(6).fill("");
+    for (let i = 0; i < pasted.length; i++) next[i] = pasted[i];
+    setDigits(next);
+    inputRefs.current[Math.min(pasted.length, 5)]?.focus();
+  };
 
   const handleValidate = async () => {
     if (code.length !== 6) { toast.error("Insira o código de 6 dígitos"); return; }
@@ -100,7 +132,7 @@ function CodeValidationPanel({
         method: "POST",
         body: JSON.stringify({ code }),
       });
-      toast.success(result.message ?? (mode === "checkin" ? "Check-in realizado!" : "Checkout realizado!"));
+      toast.success(result.message ?? (isCheckin ? "Check-in realizado!" : "Checkout realizado!"));
       qc.invalidateQueries({ queryKey: ["job-detail", jobId] });
       qc.invalidateQueries({ queryKey: ["job-events", jobId] });
       onSuccess();
@@ -111,51 +143,65 @@ function CodeValidationPanel({
     }
   };
 
+  const borderColor = isCheckin ? "rgba(250,204,21,0.25)" : "rgba(139,92,246,0.25)";
+  const bgColor = isCheckin ? "rgba(250,204,21,0.05)" : "rgba(139,92,246,0.05)";
+  const accentClass = isCheckin ? "text-yellow-400" : "text-primary";
+  const filledClass = isCheckin ? "bg-yellow-400/12 border-yellow-400/50 text-yellow-300" : "bg-primary/12 border-primary/50 text-primary";
+
   return (
-    <div className="rounded-xl p-4 space-y-3"
-      style={{
-        background: mode === "checkin"
-          ? "linear-gradient(135deg, rgba(250,204,21,0.06) 0%, rgba(8,17,26,0.92) 70%)"
-          : "linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(8,17,26,0.92) 70%)",
-        border: mode === "checkin" ? "1px solid rgba(250,204,21,0.18)" : "1px solid rgba(139,92,246,0.18)",
-      }}
-    >
-      <div className="flex items-center gap-2">
-        <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${mode === "checkin" ? "bg-yellow-400/10 text-yellow-400" : "bg-primary/10 text-primary"}`}>
-          <KeyRound size={13} />
+    <div className="rounded-2xl overflow-hidden" style={{ background: bgColor, border: `1px solid ${borderColor}` }}>
+      {/* Header */}
+      <div className="px-5 pt-5 pb-4 flex items-center gap-3">
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isCheckin ? "bg-yellow-400/15" : "bg-primary/15"}`}>
+          <KeyRound size={18} className={accentClass} />
         </div>
-        <p className="text-sm font-bold">
-          {mode === "checkin" ? "Validar Check-in" : "Validar Checkout"}
-        </p>
+        <div>
+          <p className="font-bold">{isCheckin ? "Validar Check-in" : "Validar Checkout"}</p>
+          <p className="text-xs text-white/55 mt-0.5">
+            {isCheckin ? "Digite o código de 6 dígitos da empresa" : "Digite o código de 6 dígitos da empresa"}
+          </p>
+        </div>
       </div>
-      <p className="text-xs text-white/65 leading-relaxed">
-        {mode === "checkin"
-          ? "Insira o código de 6 dígitos recebido da outra parte para confirmar o início do Extra."
-          : "Insira o código de 6 dígitos recebido da outra parte para confirmar o encerramento do Extra."}
-      </p>
-      <div className="flex gap-2">
-        <Input
-          value={code}
-          onChange={e => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-          placeholder="000000"
-          maxLength={6}
-          className="bg-white/5 border-white/10 rounded-xl h-11 text-center text-lg font-bold tracking-widest focus:border-primary/50"
-          inputMode="numeric"
-          pattern="[0-9]*"
-        />
+
+      {/* OTP digit boxes */}
+      <div className="px-5 pb-4" onPaste={handlePaste}>
+        <div className="flex gap-2 justify-center">
+          {digits.map((d, i) => (
+            <input
+              key={i}
+              ref={el => { inputRefs.current[i] = el; }}
+              type="tel"
+              inputMode="numeric"
+              maxLength={2}
+              value={d}
+              onChange={e => handleDigit(i, e.target.value)}
+              onKeyDown={e => handleKeyDown(i, e)}
+              className={`w-11 h-14 sm:w-12 sm:h-16 text-center text-2xl font-black rounded-xl border-2 transition-all outline-none select-none
+                ${d ? filledClass : "bg-white/5 border-white/10 text-foreground focus:border-white/35"}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Action */}
+      <div className="px-5 pb-5">
         <Button
           onClick={handleValidate}
           disabled={loading || code.length !== 6}
-          className={`h-11 px-5 rounded-xl font-bold text-sm ${mode === "checkin" ? "bg-yellow-400 text-black hover:bg-yellow-300" : "bg-primary text-black hover:bg-primary/90 neon-glow"}`}
+          className={`w-full h-12 rounded-xl font-bold text-sm disabled:opacity-40 ${
+            isCheckin ? "bg-yellow-400 text-black hover:bg-yellow-300" : "bg-primary text-black hover:bg-primary/90 neon-glow"
+          }`}
         >
-          {loading ? <Loader2 size={14} className="animate-spin" /> : "Validar"}
+          {loading
+            ? <><Loader2 size={14} className="animate-spin mr-2" />Validando...</>
+            : <><CheckCircle2 size={15} className="mr-2" />{isCheckin ? "Confirmar Check-in" : "Confirmar Checkout"}</>}
         </Button>
       </div>
     </div>
   );
 }
 
-// ── Generate Codes Panel (company only) ──────────────────────────────────────
+// ── Generate Codes Panel ── Large code display, countdown, copy, share ────────
 
 function GenerateCodesPanel({
   jobId,
@@ -168,7 +214,23 @@ function GenerateCodesPanel({
 }) {
   const [loading, setLoading] = useState(false);
   const [codes, setCodes] = useState<{ companyCode: string; freelancerCode: string; expiresAt: string } | null>(null);
+  const [timeLeft, setTimeLeft] = useState("");
   const qc = useQueryClient();
+  const isCheckin = mode === "checkin";
+
+  useEffect(() => {
+    if (!codes?.expiresAt) return;
+    const tick = () => {
+      const diff = new Date(codes.expiresAt).getTime() - Date.now();
+      if (diff <= 0) { setTimeLeft("Expirado"); return; }
+      const m = Math.floor(diff / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      setTimeLeft(`${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [codes?.expiresAt]);
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -179,7 +241,7 @@ function GenerateCodesPanel({
       qc.invalidateQueries({ queryKey: ["job-detail", jobId] });
       qc.invalidateQueries({ queryKey: ["job-events", jobId] });
       onSuccess();
-      toast.success("Códigos gerados com sucesso!");
+      toast.success("Códigos gerados!");
     } catch (e: any) {
       toast.error(e?.data?.error ?? e?.message ?? "Erro ao gerar códigos");
     } finally {
@@ -187,62 +249,107 @@ function GenerateCodesPanel({
     }
   };
 
-  const accentColor = mode === "checkin" ? "rgba(250,204,21" : "rgba(139,92,246";
-  const textClass = mode === "checkin" ? "text-yellow-400" : "text-primary";
+  const copyCode = (c: string) => { navigator.clipboard.writeText(c); toast.success("Código copiado!"); };
+
+  const shareCode = async (c: string) => {
+    const text = `Seu código de ${isCheckin ? "check-in" : "checkout"} extraGO: ${c}`;
+    if (navigator.share) {
+      try { await navigator.share({ text, title: "Código extraGO" }); } catch {}
+    } else {
+      copyCode(c);
+    }
+  };
+
+  const borderColor = isCheckin ? "rgba(250,204,21,0.22)" : "rgba(139,92,246,0.22)";
+  const bgColor = isCheckin ? "rgba(250,204,21,0.04)" : "rgba(139,92,246,0.04)";
+  const accentClass = isCheckin ? "text-yellow-400" : "text-primary";
+  const btnBorderClass = isCheckin ? "bg-yellow-400/10 text-yellow-400 border-yellow-400/25 hover:bg-yellow-400/20" : "bg-primary/10 text-primary border-primary/25 hover:bg-primary/20";
+  const shareBtnClass = isCheckin ? "bg-yellow-400/12 text-yellow-400 border-yellow-400/25 hover:bg-yellow-400/22" : "bg-primary/12 text-primary border-primary/25 hover:bg-primary/22";
 
   return (
-    <div className="rounded-xl p-4 space-y-3"
-      style={{
-        background: `linear-gradient(135deg, ${accentColor},0.06) 0%, rgba(8,17,26,0.92) 70%)`,
-        border: `1px solid ${accentColor},0.18)`,
-      }}
-    >
-      <div className="flex items-center gap-2">
-        <div className={`w-7 h-7 rounded-lg flex items-center justify-center bg-white/5`}>
-          <QrCode size={13} className={textClass} />
+    <div className="rounded-2xl overflow-hidden" style={{ background: bgColor, border: `1px solid ${borderColor}` }}>
+      {/* Header */}
+      <div className="px-5 pt-5 pb-4 flex items-center gap-3">
+        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isCheckin ? "bg-yellow-400/15" : "bg-primary/15"}`}>
+          <QrCode size={18} className={accentClass} />
         </div>
-        <p className="text-sm font-bold">
-          {mode === "checkin" ? "Iniciar Check-in" : "Iniciar Checkout"}
-        </p>
+        <div>
+          <p className="font-bold">{isCheckin ? "Iniciar Check-in" : "Iniciar Checkout"}</p>
+          <p className="text-xs text-white/55 mt-0.5">Gere e compartilhe os códigos de validação</p>
+        </div>
       </div>
 
       {!codes ? (
-        <>
-          <p className="text-xs text-white/65 leading-relaxed">
-            {mode === "checkin"
-              ? "Gere os códigos de check-in. Envie o código do freelancer para ele via WhatsApp, SMS ou chat."
-              : "Gere os códigos de checkout para encerrar o Extra. Envie o código do freelancer para ele."}
+        <div className="px-5 pb-5 space-y-3">
+          <p className="text-xs text-white/60 leading-relaxed">
+            {isCheckin
+              ? "Gere os códigos de check-in. Envie o código do profissional via WhatsApp, SMS ou chat."
+              : "Gere os códigos de checkout para encerrar o Extra. Envie o código do profissional."}
           </p>
           <Button
             onClick={handleGenerate}
             disabled={loading}
-            className={`w-full h-10 rounded-xl font-bold text-sm ${mode === "checkin" ? "bg-yellow-400/15 text-yellow-400 border border-yellow-400/25 hover:bg-yellow-400/25" : "bg-primary/15 text-primary border border-primary/25 hover:bg-primary/25"}`}
+            className={`w-full h-12 rounded-xl font-bold text-sm border ${btnBorderClass}`}
           >
-            {loading ? <Loader2 size={14} className="animate-spin mr-2" /> : <QrCode size={14} className="mr-2" />}
-            Gerar Códigos
+            {loading ? <><Loader2 size={14} className="animate-spin mr-2" />Gerando...</> : <><QrCode size={14} className="mr-2" />Gerar Códigos</>}
           </Button>
-        </>
+        </div>
       ) : (
-        <div className="space-y-3">
-          {/* Freelancer code to share */}
-          <div className="rounded-xl p-3 bg-white/5 border border-white/10">
-            <p className="text-[10px] text-white/55 font-semibold uppercase tracking-wide mb-1">Código do Freelancer (enviar para ele)</p>
-            <div className="flex items-center gap-2">
-              <p className="text-2xl font-black tracking-[0.35em] text-primary">{codes.freelancerCode}</p>
+        <div className="px-5 pb-5 space-y-4">
+          {/* Countdown */}
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-1.5 text-white/45">
+              <Timer size={12} /> Validade dos códigos
+            </div>
+            <span className={`font-bold tabular-nums ${timeLeft === "Expirado" ? "text-red-400" : accentClass}`}>
+              {timeLeft}
+            </span>
+          </div>
+
+          {/* Freelancer code — HERO display */}
+          <div className="rounded-2xl p-5 bg-white/5 border border-white/10 space-y-3">
+            <p className="text-[10px] font-bold text-white/45 uppercase tracking-widest">
+              Código do Profissional — Compartilhe este
+            </p>
+            <p className={`text-6xl font-black tracking-[0.28em] tabular-nums leading-none ${accentClass}`}>
+              {codes.freelancerCode}
+            </p>
+            <div className="flex gap-2 pt-1">
               <button
-                onClick={() => { navigator.clipboard.writeText(codes.freelancerCode); toast.success("Código copiado!"); }}
-                className="text-xs text-white/50 hover:text-white/80 px-2 py-1 rounded-lg border border-white/10 hover:border-white/20 transition-all"
+                onClick={() => copyCode(codes.freelancerCode)}
+                className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl text-xs font-bold bg-white/6 border border-white/12 hover:bg-white/12 text-white/70 hover:text-foreground transition-all"
+              >
+                <Copy size={13} /> Copiar
+              </button>
+              <button
+                onClick={() => shareCode(codes.freelancerCode)}
+                className={`flex-1 flex items-center justify-center gap-1.5 h-10 rounded-xl text-xs font-bold border transition-all ${shareBtnClass}`}
+              >
+                <Share2 size={13} /> Compartilhar
+              </button>
+            </div>
+            <p className="text-[10px] text-white/35 leading-relaxed">
+              O profissional deve inserir este código no dispositivo dele.
+            </p>
+          </div>
+
+          {/* Company's own code */}
+          <div className="rounded-xl p-4 bg-white/3 border border-white/8">
+            <p className="text-[10px] font-bold text-white/40 uppercase tracking-wider mb-2">
+              Seu Código — O profissional digitará este no sistema
+            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-3xl font-black tracking-[0.28em] tabular-nums text-white/65">
+                {codes.companyCode}
+              </p>
+              <button
+                onClick={() => copyCode(codes.companyCode)}
+                className="text-xs px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-white/45 hover:text-white/70 transition-all"
               >
                 Copiar
               </button>
             </div>
           </div>
-          {/* Company code (they'll enter the freelancer's code into their device) */}
-          <div className="rounded-xl p-3 bg-white/5 border border-white/10">
-            <p className="text-[10px] text-white/55 font-semibold uppercase tracking-wide mb-1">Seu código (o freelancer digitará este)</p>
-            <p className="text-2xl font-black tracking-[0.35em] text-white/80">{codes.companyCode}</p>
-          </div>
-          <p className="text-[10px] text-white/50">Expira em: {format(new Date(codes.expiresAt), "HH:mm 'do dia' dd/MM", { locale: ptBR })}</p>
         </div>
       )}
     </div>

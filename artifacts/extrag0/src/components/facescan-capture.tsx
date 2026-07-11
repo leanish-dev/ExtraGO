@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, RefreshCw, Check, Loader2, UploadCloud, AlertCircle, Video } from "lucide-react";
+import { Camera, RefreshCw, Check, Loader2, UploadCloud, AlertCircle, Video, FlipHorizontal } from "lucide-react";
 import { fileToDataUrl, buildCaptureMetadata } from "@/lib/verification-api";
 
 interface FaceScanCaptureProps {
@@ -32,6 +32,8 @@ export function FaceScanCapture({
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [starting, setStarting] = useState(false);
+  const [facingMode, setFacingMode] = useState<"user" | "environment">("user");
+  const [hasDualCamera, setHasDualCamera] = useState(false);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach(t => t.stop());
@@ -41,18 +43,26 @@ export function FaceScanCapture({
 
   useEffect(() => () => stopCamera(), [stopCamera]);
 
-  const startCamera = async () => {
+  const startCamera = async (overrideFacingMode?: "user" | "environment") => {
     setCameraError(null);
     setStarting(true);
+    const mode = overrideFacingMode ?? facingMode;
     try {
       // Check API availability
       if (!navigator.mediaDevices?.getUserMedia) {
         throw new Error("Camera API not supported in this browser.");
       }
 
+      // Detect if device has multiple cameras (for toggle button visibility)
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoInputs = devices.filter(d => d.kind === "videoinput");
+        setHasDualCamera(videoInputs.length > 1);
+      } catch {}
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: "user",
+          facingMode: mode,
           width: { ideal: 720, max: 1280 },
           height: { ideal: 720, max: 1280 },
         },
@@ -167,7 +177,7 @@ export function FaceScanCapture({
         <div className="space-y-2">
           <Button
             type="button"
-            onClick={startCamera}
+            onClick={() => startCamera()}
             disabled={starting}
             className="w-full h-10 rounded-xl bg-primary/15 text-primary border border-primary/30 hover:bg-primary/25 gap-2 text-sm font-semibold"
           >
@@ -210,7 +220,7 @@ export function FaceScanCapture({
               autoPlay
               playsInline
               muted
-              style={{ transform: "scaleX(-1)" }}
+              style={{ transform: facingMode === "user" ? "scaleX(-1)" : "none" }}
             />
             {/* face oval guide */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -220,6 +230,22 @@ export function FaceScanCapture({
             <p className="absolute bottom-3 left-0 right-0 text-center text-[11px] text-white/80 font-medium">
               Centralize seu rosto no oval
             </p>
+            {/* Camera flip button (only on multi-camera devices) */}
+            {hasDualCamera && (
+              <button
+                type="button"
+                title="Alternar câmera"
+                onClick={() => {
+                  const next: "user" | "environment" = facingMode === "user" ? "environment" : "user";
+                  setFacingMode(next);
+                  stopCamera();
+                  setTimeout(() => startCamera(next), 200);
+                }}
+                className="absolute top-3 right-3 w-9 h-9 rounded-xl bg-black/55 border border-white/20 flex items-center justify-center text-white/80 hover:bg-black/75 hover:text-white transition-all backdrop-blur-sm"
+              >
+                <FlipHorizontal size={17} />
+              </button>
+            )}
           </div>
           <Button type="button" onClick={takeSnapshot} className="w-full h-10 rounded-xl bg-primary text-black font-bold gap-2">
             <Camera size={15} /> Capturar foto

@@ -19,6 +19,7 @@ import categoriesRouter from "./categories";
 import verificationRouter from "./verification";
 import kycAdminRouter from "./kyc-admin";
 import jobExecutionRouter from "./job-execution";
+import { router as pushRouter } from "./push";
 
 const router: IRouter = Router();
 
@@ -46,5 +47,6 @@ router.use(categoriesRouter);
 router.use(verificationRouter);
 router.use(kycAdminRouter);
 router.use(jobExecutionRouter);
+router.use(pushRouter);
 
 export default router;

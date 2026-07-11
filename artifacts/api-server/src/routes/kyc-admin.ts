@@ -230,6 +230,12 @@ router.post("/admin/kyc/users/:id/reject", requireAdmin, async (req, res) => {
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId)).limit(1);
   if (!user) { res.status(404).json({ error: "User not found" }); return; }
 
+  // Protect governance/CEO accounts from status changes
+  if ((user as any).adminRole === "super_admin" || (user as any).corporateRole === "ceo") {
+    res.status(403).json({ error: "This account is protected and cannot be rejected." });
+    return;
+  }
+
   await db.update(usersTable).set({ accountStatus: "rejected" }).where(eq(usersTable.id, userId));
 
   await kycAudit(userId, "account_rejected", reviewer.id, {
@@ -381,6 +387,12 @@ router.post("/admin/kyc/users/:id/suspend", requireAdmin, async (req, res) => {
 
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId)).limit(1);
   if (!user) { res.status(404).json({ error: "User not found" }); return; }
+
+  // Protect governance/CEO accounts from suspension
+  if ((user as any).adminRole === "super_admin" || (user as any).corporateRole === "ceo") {
+    res.status(403).json({ error: "This account is protected and cannot be suspended." });
+    return;
+  }
 
   await db.update(usersTable).set({ accountStatus: "blocked" }).where(eq(usersTable.id, userId));
   await kycAudit(userId, "verification_suspended", reviewer.id, { reason, notes }, req);

@@ -21,3 +21,4 @@
 - [Auth/KYC/Legal Phase 1 foundation](auth-verification-phase1.md) — account-status machine, shared email_verifications table, delivery stub, drizzle-push TTY workaround.
 - [Institutional pages overlay rules](institutional-overlay-rules.md) — VISUAL_GUIDELINES: overlay max 0.55, textShadow max rgba(0,0,0,0.42), depth vignette max rgba(0,0,0,0.38). Content Surface: landing sections use light radial `rgba(255,255,255,0.022-0.028)` (slightly lighter); investor sections use `rgba(4,10,22,0.08-0.10)` background (slightly darker). No cards, no added wrappers.
 - [Phase 3 execution engine](phase3-execution.md) — job_events + job_codes DB tables, 9-status machine, 6-digit checkin/checkout codes, wallet reservation on job create, daily shift type (7h20).
+- [Stabilization phases 1-11](stabilization-phases.md) — wallet CENTS vs BRL convention, verification gate, CEO guard, OTP code UX, notifications wiring, push notification architecture, onboarding redirect fix.

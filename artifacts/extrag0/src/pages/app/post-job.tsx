@@ -30,7 +30,7 @@ const formSchema = z.object({
   endTime: z.string().min(1, "Informe o horário de fim"),
   workersNeeded: z.coerce.number().min(1, "Mínimo 1 profissional"),
   hourlyRate: z.coerce.number().min(20, "Valor mínimo R$ 20/hora"),
-  dailyRate: z.coerce.number().optional(),
+  dailyRate: z.coerce.number().min(180, "Valor mínimo de diária: R$ 180,00").optional(),
   shiftType: z.enum(["hourly", "daily"]).default("hourly"),
 });
 
@@ -69,8 +69,8 @@ export default function PostJobPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "", description: "", category: "", location: "",
-      date: "", startTime: "08:00", endTime: "16:20", workersNeeded: 1,
-      hourlyRate: 50, dailyRate: undefined, shiftType: "hourly",
+      date: "", startTime: "08:00", endTime: "15:20", workersNeeded: 1,
+      hourlyRate: 50, dailyRate: 180, shiftType: "daily",
     },
   });
 
@@ -102,9 +102,14 @@ export default function PostJobPage() {
     return { hours, totalPerWorker, commission, total, isDailyFixed: false };
   })();
 
-  const reservationAmount = watchedCalc ? Math.round(watchedCalc.total * 1.15 * 100) / 100 : 0;
-  const availableBalance = wallet ? Math.max(0, (wallet.balance ?? 0) - (wallet.reservedBalance ?? 0)) : null;
-  const hasInsufficientBalance = availableBalance !== null && reservationAmount > 0 && availableBalance < reservationAmount;
+  // Wallet stores amounts in INTEGER CENTS; job rates are in BRL (float).
+  const reservationBRL = watchedCalc ? Math.round(watchedCalc.total * 1.15 * 100) / 100 : 0;
+  const reservationCents = Math.round(reservationBRL * 100);
+  const availableBalanceCents = wallet ? Math.max(0, (wallet.balance ?? 0) - (wallet.reservedBalance ?? 0)) : null;
+  const hasInsufficientBalance = availableBalanceCents !== null && reservationCents > 0 && availableBalanceCents < reservationCents;
+  // Legacy alias for template expressions below
+  const reservationAmount = reservationBRL;
+  const availableBalance = availableBalanceCents;
 
   // Auto-fill endTime for daily shift
   const handleShiftTypeChange = (type: "hourly" | "daily") => {
@@ -159,7 +164,7 @@ export default function PostJobPage() {
           <div className="flex-1 min-w-0">
             <p className="text-xs text-white/70">Saldo disponível na carteira</p>
             <p className={`text-sm font-bold ${hasInsufficientBalance ? "text-red-400" : "text-primary"}`}>
-              R$ {(availableBalance ?? 0).toFixed(2)}
+              R$ {((availableBalance ?? 0) / 100).toFixed(2)}
             </p>
           </div>
           {hasInsufficientBalance && (
@@ -270,8 +275,8 @@ export default function PostJobPage() {
               <label className="text-xs font-semibold uppercase tracking-wide text-white/75 mb-2 block">Tipo de Turno</label>
               <div className="flex gap-2">
                 {[
-                  { value: "hourly" as const, label: "Por Hora", desc: "Cálculo por hora trabalhada" },
                   { value: "daily" as const, label: "Diária", desc: "7h20min (padrão CLT)" },
+                  { value: "hourly" as const, label: "Por Hora", desc: "Cálculo por hora trabalhada" },
                 ].map(opt => (
                   <button
                     key={opt.value}
@@ -390,7 +395,7 @@ export default function PostJobPage() {
                     <FormControl>
                       <Input
                         type="number"
-                        min={80}
+                        min={180}
                         step={10}
                         placeholder={`Ex: ${Math.round(form.watch("hourlyRate") * DAILY_HOURS)}`}
                         {...field}
@@ -453,7 +458,7 @@ export default function PostJobPage() {
                   <div className="flex items-center gap-2 pt-1 border-t border-red-500/15">
                     <AlertCircle size={12} className="text-red-400 flex-shrink-0" />
                     <p className="text-[11px] text-red-400">
-                      Saldo insuficiente. Deposite pelo menos R$ {(reservationAmount - (availableBalance ?? 0)).toFixed(2)} na carteira.
+                      Saldo insuficiente. Deposite pelo menos R$ {(reservationAmount - (availableBalance ?? 0) / 100).toFixed(2)} na carteira.
                     </p>
                   </div>
                 )}

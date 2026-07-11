@@ -81,17 +81,22 @@ const ALL_USER_ROLES = ["company", "freelancer", "admin"];
 const APP_ROLES = ["company", "freelancer"];
 const ADMIN_ROLES = ["admin"];
 
+// Routes accessible to unverified (non-admin) users
+const UNVERIFIED_ALLOWED = ["/verification-center", "/app/profile", "/app/settings", "/app/notifications", "/onboarding"];
+
 function ProtectedRoute({
   component: Component,
   allowedRoles,
   layout = "app",
+  requireVerified = true,
 }: {
   component: React.ComponentType;
   allowedRoles?: string[];
   layout?: "app" | "admin" | "none";
+  requireVerified?: boolean;
 }) {
   const { user, isLoading } = useAuth();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -104,12 +109,30 @@ function ProtectedRoute({
       } else {
         setLocation("/app/dashboard");
       }
+    } else if (
+      !isLoading && user &&
+      user.role !== "admin" &&
+      requireVerified &&
+      !(user as any).isVerified &&
+      !UNVERIFIED_ALLOWED.some(p => location.startsWith(p))
+    ) {
+      setLocation("/verification-center");
     }
-  }, [user, isLoading, allowedRoles, setLocation]);
+  }, [user, isLoading, allowedRoles, setLocation, location, requireVerified]);
 
   if (isLoading) return <Spinner />;
   if (!user) return null;
   if (allowedRoles && !allowedRoles.includes(user.role)) return null;
+
+  // Block unverified non-admin users from restricted routes
+  if (
+    user.role !== "admin" &&
+    requireVerified &&
+    !(user as any).isVerified &&
+    !UNVERIFIED_ALLOWED.some(p => location.startsWith(p))
+  ) {
+    return null;
+  }
 
   if (layout === "app" || layout === "admin") {
     return (
@@ -152,14 +175,14 @@ function Router() {
       <Route path="/app/applications" component={() => <ProtectedRoute component={ApplicationsPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/wallet" component={() => <ProtectedRoute component={WalletPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/referrals" component={() => <ProtectedRoute component={ReferralsPage} allowedRoles={["freelancer", "admin"]} />} />
-      <Route path="/app/profile" component={() => <ProtectedRoute component={ProfilePage} allowedRoles={ALL_USER_ROLES} />} />
-      <Route path="/app/notifications" component={() => <ProtectedRoute component={NotificationsPage} allowedRoles={ALL_USER_ROLES} />} />
+      <Route path="/app/profile" component={() => <ProtectedRoute component={ProfilePage} allowedRoles={ALL_USER_ROLES} requireVerified={false} />} />
+      <Route path="/app/notifications" component={() => <ProtectedRoute component={NotificationsPage} allowedRoles={ALL_USER_ROLES} requireVerified={false} />} />
       <Route path="/app/feed" component={() => <ProtectedRoute component={FeedPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/freelancers/:id" component={() => <ProtectedRoute component={FreelancerProfilePage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/companies/:id" component={() => <ProtectedRoute component={CompanyProfilePage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/network" component={() => <ProtectedRoute component={NetworkPage} allowedRoles={ALL_USER_ROLES} />} />
       <Route path="/app/chat" component={() => <ProtectedRoute component={ChatPage} allowedRoles={ALL_USER_ROLES} />} />
-      <Route path="/app/settings" component={() => <ProtectedRoute component={SettingsPage} allowedRoles={ALL_USER_ROLES} />} />
+      <Route path="/app/settings" component={() => <ProtectedRoute component={SettingsPage} allowedRoles={ALL_USER_ROLES} requireVerified={false} />} />
       <Route path="/app/career" component={() => <ProtectedRoute component={CareerPage} allowedRoles={["freelancer", "admin"]} />} />
 
       {/* Admin routes */}
