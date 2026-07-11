@@ -91,6 +91,9 @@ export const emailVerificationsTable = pgTable("email_verifications", {
   resendCount: integer("resend_count").notNull().default(0),
   lastSentAt: timestamp("last_sent_at").notNull().defaultNow(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  deliveredAt: timestamp("delivered_at"),
+  deliveryProvider: text("delivery_provider"),
+  deliveryError: text("delivery_error"),
 });
 
 // ── Phone verification ──────────────────────────────────────

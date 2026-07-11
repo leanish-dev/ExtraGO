@@ -200,16 +200,19 @@ export async function resetFailedLogin(userId: number): Promise<void> {
 
 // ── Delivery abstraction (email / SMS / WhatsApp) ────────────
 /**
- * No email/SMS provider is configured in this environment yet. These
- * functions are the single integration point for Phase 2: swap the body
- * for a real provider (e.g. SendGrid, Twilio) without touching callers.
- * Until then, delivery is logged so tokens/OTPs are visible in server logs
- * for manual QA — this is NOT mock verification logic, only mock transport.
+ * Real email delivery lives in ./email-service.ts (EmailService), which
+ * automatically switches between Resend (when RESEND_API_KEY is set) and
+ * a development console/log provider. Re-exported here so existing
+ * callers keep working unchanged.
  */
-export async function sendEmail(to: string, subject: string, body: string): Promise<void> {
-  console.log(`[email:pending-provider] to=${to} subject="${subject}" body="${body}"`);
-}
+export { sendEmail, sendVerificationEmail, emailProviderStatus, getDevEmailLog } from "./email-service";
 
+/**
+ * No SMS/WhatsApp provider is configured in this environment yet. Logged
+ * so codes are visible in server logs for manual QA — this is NOT mock
+ * verification logic, only mock transport, matching the email pattern
+ * before Resend was wired in.
+ */
 export async function sendSms(to: string, channel: "sms" | "whatsapp", body: string): Promise<void> {
   console.log(`[${channel}:pending-provider] to=${to} body="${body}"`);
 }
@@ -253,6 +256,22 @@ export async function createEmailVerification(params: {
   }).returning();
 
   return { throttled: false as const, record };
+}
+
+/**
+ * Persists the outcome of an email-send attempt (success or failure) onto
+ * its email_verifications row, so delivery status/timestamps are queryable
+ * and failures are never silently swallowed.
+ */
+export async function recordEmailDeliveryResult(
+  recordId: number,
+  result: { ok: boolean; provider: string; error?: string; sentAt: string },
+) {
+  await db.update(emailVerificationsTable).set({
+    deliveredAt: result.ok ? new Date(result.sentAt) : null,
+    deliveryProvider: result.provider,
+    deliveryError: result.ok ? null : (result.error ?? "unknown_error"),
+  }).where(eq(emailVerificationsTable.id, recordId));
 }
 
 export async function consumeEmailVerification(params: {

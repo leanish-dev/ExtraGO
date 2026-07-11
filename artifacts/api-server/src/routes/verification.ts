@@ -21,10 +21,19 @@ import {
   submitKycDocument,
   reviewKycDocument,
   sendEmail,
+  sendVerificationEmail,
+  recordEmailDeliveryResult,
   sendSms,
   recordAuditLog,
   computeAccountStatus,
+  emailProviderStatus,
+  getDevEmailLog,
 } from "../lib/verification";
+import { logger } from "../lib/logger";
+
+const APP_BASE_URL =
+  process.env.APP_BASE_URL ||
+  (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : "http://localhost:5000");
 
 const router = Router();
 
@@ -51,11 +60,24 @@ router.post("/auth/verify-email/request", requireAuth, otpLimiter, async (req, r
     res.status(400).json({ error: "Email already verified" });
     return;
   }
-  const result = await createEmailVerification({ userId: user.id, email: user.email, purpose: "verify_email" });
-  if (!result.throttled) {
-    await sendEmail(user.email, "Confirme seu e-mail", `Seu código de verificação é ${result.record.otpCode}`);
+  const verification = await createEmailVerification({ userId: user.id, email: user.email, purpose: "verify_email" });
+  if (!verification.throttled) {
+    const result = await sendVerificationEmail({
+      to: user.email,
+      name: user.name,
+      otpCode: verification.record.otpCode!,
+      token: verification.record.token,
+      expiresInMinutes: 60,
+      appBaseUrl: APP_BASE_URL,
+    });
+    await recordEmailDeliveryResult(verification.record.id, result);
+    if (!result.ok) {
+      logger.error({ userId: user.id, email: user.email, error: result.error }, "Verification email delivery failed on resend");
+      res.status(502).json({ error: "Failed to send verification email. Please try again shortly." });
+      return;
+    }
   }
-  res.json({ message: result.throttled ? "Verification already sent recently" : "Verification email sent" });
+  res.json({ message: verification.throttled ? "Verification already sent recently" : "Verification email sent" });
 });
 
 router.post("/auth/verify-email/confirm", requireAuth, authLimiter, async (req, res) => {
@@ -125,9 +147,17 @@ router.post("/auth/forgot-password", authLimiter, async (req, res) => {
   // Always respond 200 regardless of whether the account exists, to avoid
   // leaking which emails are registered.
   if (user) {
-    const result = await createEmailVerification({ userId: user.id, email: user.email, purpose: "password_reset" });
-    if (!result.throttled) {
-      await sendEmail(user.email, "Redefinição de senha", `Use este token para redefinir sua senha: ${result.record.token}`);
+    const verification = await createEmailVerification({ userId: user.id, email: user.email, purpose: "password_reset" });
+    if (!verification.throttled) {
+      const result = await sendEmail(
+        user.email,
+        "Redefinição de senha — extraGO",
+        `Use este token para redefinir sua senha: ${verification.record.token}`,
+      );
+      await recordEmailDeliveryResult(verification.record.id, result);
+      if (!result.ok) {
+        logger.error({ userId: user.id, email: user.email, error: result.error }, "Password reset email delivery failed");
+      }
     }
     await recordAuditLog({ userId: user.id, action: "password_reset_requested", req });
   }
@@ -266,6 +296,26 @@ router.post("/admin/kyc/documents/:id/review", requireAdmin, async (req, res) =>
     req,
   });
   res.json(result);
+});
+
+// ── Dev-only email inspection ───────────────────────────────────
+// Never available in production. Lets QA read the last verification
+// email's OTP/content without a real inbox when no provider is
+// configured — the OTP itself already lives in the DB, this just
+// mirrors what would have been emailed. Requires authentication so it
+// can only be used for the caller's own account.
+router.get("/dev/last-email", requireAuth, async (req, res) => {
+  if (process.env.NODE_ENV === "production") {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  const user = (req as any).user;
+  const entry = getDevEmailLog(user.email);
+  if (!entry) {
+    res.status(404).json({ error: "No email recorded for this address yet" });
+    return;
+  }
+  res.json({ provider: emailProviderStatus().provider, ...entry });
 });
 
 export default router;

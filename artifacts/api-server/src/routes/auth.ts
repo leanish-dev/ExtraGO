@@ -25,8 +25,14 @@ import {
   registerFailedLogin,
   resetFailedLogin,
   createEmailVerification,
-  sendEmail,
+  sendVerificationEmail,
+  recordEmailDeliveryResult,
 } from "../lib/verification";
+import { logger } from "../lib/logger";
+
+const APP_BASE_URL =
+  process.env.APP_BASE_URL ||
+  (process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : "http://localhost:5000");
 
 const router = Router();
 
@@ -112,10 +118,23 @@ router.post("/auth/register", authLimiter, async (req, res) => {
   // Create wallet
   await db.insert(walletsTable).values({ userId: user.id }).catch(() => {});
 
-  // Kick off the email-verification flow automatically.
+  // Kick off the email-verification flow automatically. Provider (Resend in
+  // production, dev-console in development) is selected transparently by
+  // EmailService — this route never assumes success.
   const verification = await createEmailVerification({ userId: user.id, email: user.email, purpose: "verify_email" });
   if (!verification.throttled) {
-    await sendEmail(user.email, "Confirme seu e-mail", `Seu código de verificação é ${verification.record.otpCode}`);
+    const result = await sendVerificationEmail({
+      to: user.email,
+      name: user.name,
+      otpCode: verification.record.otpCode!,
+      token: verification.record.token,
+      expiresInMinutes: 60,
+      appBaseUrl: APP_BASE_URL,
+    });
+    await recordEmailDeliveryResult(verification.record.id, result);
+    if (!result.ok) {
+      logger.error({ userId: user.id, email: user.email, error: result.error }, "Verification email delivery failed at registration");
+    }
   }
   await recordAuditLog({ userId: user.id, action: "user_registered", req });
 
