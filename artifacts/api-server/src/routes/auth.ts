@@ -29,6 +29,11 @@ import {
   recordEmailDeliveryResult,
 } from "../lib/verification";
 import { logger } from "../lib/logger";
+import {
+  isDevWhitelistActive,
+  isAnyWhitelisted,
+  purgeWhitelistConflicts,
+} from "../lib/dev-whitelist";
 
 const APP_BASE_URL =
   process.env.APP_BASE_URL ||
@@ -55,10 +60,23 @@ router.post("/auth/register", authLimiter, async (req, res) => {
   const cnpj = typeof req.body.cnpj === "string" ? req.body.cnpj.trim() : undefined;
   const phone = typeof req.body.phone === "string" ? req.body.phone.trim() : undefined;
 
-  const [existing] = await db.select().from(usersTable).where(eq(usersTable.email, email));
-  if (existing) {
-    res.status(400).json({ error: "Email already in use" });
-    return;
+  // ── Dev whitelist: purge any existing records for whitelisted identifiers
+  //    so the tester can re-register unlimited times without duplicate errors.
+  //    This block is NEVER reached in production (NODE_ENV=production guard
+  //    is inside isDevWhitelistActive / purgeWhitelistConflicts).
+  const devWhitelisted = isDevWhitelistActive() && isAnyWhitelisted({ email, cpf, phone });
+  if (devWhitelisted) {
+    logger.warn({ email, cpf, phone }, "[dev-whitelist] Whitelisted registration — purging conflicts");
+    await purgeWhitelistConflicts({ email, cpf, phone });
+  }
+
+  // ── Duplicate guards (skipped for whitelisted values in development) ──
+  if (!devWhitelisted) {
+    const [existing] = await db.select().from(usersTable).where(eq(usersTable.email, email));
+    if (existing) {
+      res.status(400).json({ error: "Email already in use" });
+      return;
+    }
   }
 
   if (isDisposableEmail(email)) {
@@ -66,7 +84,7 @@ router.post("/auth/register", authLimiter, async (req, res) => {
     res.status(400).json({ error: "Disposable email addresses are not allowed" });
     return;
   }
-  if (cpf) {
+  if (!devWhitelisted && cpf) {
     const dup = await findDuplicateCpf(cpf);
     if (dup) {
       await recordFraudLog({ userId: dup.id, type: "duplicate_cpf", details: { cpf }, req });
@@ -82,7 +100,7 @@ router.post("/auth/register", authLimiter, async (req, res) => {
       return;
     }
   }
-  if (phone) {
+  if (!devWhitelisted && phone) {
     const dup = await findDuplicatePhone(phone);
     if (dup) {
       await recordFraudLog({ userId: dup.id, type: "duplicate_phone", details: { phone }, req });
