@@ -20,6 +20,7 @@ import {
   requestPhoneVerification, confirmPhoneVerification,
   getLegalDocument, acceptLegalDocument,
   submitKycDocument, fileToDataUrl,
+  getDevLastEmail,
   LEGAL_DOCUMENT_TYPES, LEGAL_DOCUMENT_LABELS,
   type LegalDocument, type LegalDocumentType,
 } from "@/lib/verification-api";
@@ -342,6 +343,32 @@ function EmailVerifyStep({ onNext }: { onNext: () => void }) {
   const [sending, setSending] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  // Dev-mode: OTP fetched from server when no real email provider is configured
+  const [devOtp, setDevOtp] = useState<string | null>(null);
+  const [devMode, setDevMode] = useState(false);
+
+  /** After email is requested, try to retrieve it from the dev endpoint.
+   *  This only works when RESEND_API_KEY is not configured (dev-console
+   *  provider). In production the endpoint returns 404, so we silently bail. */
+  const tryFetchDevOtp = async () => {
+    try {
+      // Small delay so the server has time to record it
+      await new Promise(r => setTimeout(r, 800));
+      const entry = await getDevLastEmail();
+      if (!entry || entry.provider !== "dev-console") return;
+      // Extract the 6-digit OTP from the plain-text body
+      const match = entry.text.match(/é:\s*(\d{6})/);
+      if (match) {
+        const code = match[1];
+        setDevOtp(code);
+        setDevMode(true);
+        // Auto-fill the input so the user only has to click confirm
+        setOtp(code);
+      }
+    } catch {
+      // Not available — real provider or network error; no action needed
+    }
+  };
 
   const send = async () => {
     setSending(true);
@@ -349,6 +376,8 @@ function EmailVerifyStep({ onNext }: { onNext: () => void }) {
       await requestEmailVerification();
       toast.success("Código enviado para seu e-mail.");
       setCooldown(60);
+      // Attempt to surface the OTP in dev mode (no-op in production)
+      tryFetchDevOtp();
     } catch (e: any) {
       toast.error(String(e?.message ?? "Não foi possível enviar o código."));
     } finally {
@@ -380,6 +409,28 @@ function EmailVerifyStep({ onNext }: { onNext: () => void }) {
   return (
     <StepShell step={3} title="Verifique seu e-mail" subtitle="Enviamos um código de 6 dígitos. Confirme para continuar." icon={<Mail size={24} />}>
       <div className="space-y-4">
+        {/* Dev-mode banner: shown only when no real email provider is configured */}
+        {devMode && devOtp && (
+          <div className="rounded-xl border border-amber-400/30 bg-amber-400/8 px-4 py-3 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-400/70 mb-1.5">
+              ⚠ Modo de Desenvolvimento — sem provedor de e-mail real
+            </p>
+            <p className="text-xs text-amber-200/60 mb-2 leading-relaxed">
+              Nenhum e-mail real foi enviado. O código abaixo foi gerado pelo servidor e preenchido automaticamente.
+            </p>
+            <div className="inline-flex items-center gap-2 rounded-lg border border-amber-400/25 bg-amber-400/10 px-4 py-2">
+              <span className="font-mono text-2xl font-bold tracking-[0.3em] text-amber-300">{devOtp}</span>
+              <button
+                type="button"
+                onClick={() => setOtp(devOtp)}
+                className="text-[10px] font-semibold text-amber-400/60 hover:text-amber-300 ml-1"
+              >
+                Usar
+              </button>
+            </div>
+          </div>
+        )}
+
         <Input
           value={otp}
           onChange={e => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}

@@ -58,6 +58,18 @@ export const requestEmailVerification = () =>
 export const confirmEmailVerification = (input: { token?: string; otpCode?: string }) =>
   apiFetch("/api/auth/verify-email/confirm", { method: "POST", body: JSON.stringify(input) });
 
+/** Dev-only: retrieves the last email sent to the current user's address
+ *  when no real email provider (RESEND_API_KEY) is configured.
+ *  Returns null in production or when no email has been sent yet. */
+export const getDevLastEmail = (): Promise<{
+  provider: "resend" | "dev-console";
+  subject: string;
+  html: string;
+  text: string;
+  sentAt: string;
+} | null> =>
+  apiFetch("/api/dev/last-email").catch(() => null);
+
 // ── Phone verification ──────────────────────────────────────
 export const requestPhoneVerification = (input: { phone: string; channel?: "sms" | "whatsapp" }) =>
   apiFetch("/api/auth/verify-phone/request", { method: "POST", body: JSON.stringify(input) });
