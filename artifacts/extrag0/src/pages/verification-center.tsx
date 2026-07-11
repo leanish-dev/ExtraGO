@@ -173,7 +173,7 @@ function statusMessage(status: AccountStatus): {
 // ─── Main Component ───────────────────────────────────────────
 
 export default function VerificationCenterPage() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [, setLocation] = useLocation();
   const [docs, setDocs] = useState<KycDocument[] | null>(null);
   const [acceptances, setAcceptances] = useState<any[] | null>(null);
@@ -182,6 +182,7 @@ export default function VerificationCenterPage() {
   const status = ((user as any)?.accountStatus ?? "draft") as AccountStatus;
   const currentIndex = ORDER.indexOf(status);
 
+  // Load documents and acceptances on mount
   useEffect(() => {
     Promise.all([
       getMyKycDocuments().catch(() => []),
@@ -191,6 +192,16 @@ export default function VerificationCenterPage() {
       setAcceptances(a);
     }).finally(() => setLoadingDocs(false));
   }, []);
+
+  // Poll for status changes while account is in pending_review so the user
+  // sees admin approvals without needing a page refresh.
+  useEffect(() => {
+    if (status !== "pending_review") return;
+    const interval = setInterval(() => {
+      refreshUser().catch(() => {});
+    }, 15_000); // every 15 seconds
+    return () => clearInterval(interval);
+  }, [status, refreshUser]);
 
   // Progress percentage
   const progressPct = ["blocked", "rejected"].includes(status)

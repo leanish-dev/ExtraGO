@@ -210,6 +210,9 @@ export default function WalletPage() {
   const balance = wallet?.balance ?? 0;
   const pending = wallet?.pendingBalance ?? 0;
   const reserved = wallet?.reservedBalance ?? 0;
+  // For companies the "available" balance is total minus what's locked in reservations.
+  // Freelancers don't hold reservations, so balance == available for them.
+  const availableBalance = isCompany ? Math.max(0, balance - reserved) : balance;
   const totalEarned = wallet?.totalEarned ?? 0;
   const pendingDeposits = (wallet as any)?.pendingDeposits ?? 0;
 
@@ -327,12 +330,12 @@ export default function WalletPage() {
                   <div className="flex items-end gap-2">
                     <span className="text-2xl font-semibold text-foreground/60 mb-1">R$</span>
                     <p className="text-5xl sm:text-6xl font-bold leading-none tabular-nums">
-                      <AnimatedCounter value={balance / 100} decimals={2} />
+                      <AnimatedCounter value={availableBalance / 100} decimals={2} />
                     </p>
                   </div>
                 )}
                 <p className="text-sm text-foreground/50 mt-2">
-                  {isCompany ? "Disponível para contratações na plataforma" : "Disponível para saque imediato via PIX"}
+                  {isCompany ? "Saldo disponível (total − reservado)" : "Disponível para saque imediato via PIX"}
                 </p>
               </div>
 
@@ -416,13 +419,16 @@ export default function WalletPage() {
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }} className="balance-card-mini p-3 sm:p-4">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-white/75 mb-2 leading-tight">
-                  Entradas
+                  {isCompany ? "Total em Conta" : "Entradas"}
                 </p>
                 <p className="text-base sm:text-xl font-bold leading-none tabular-nums text-primary">
-                  {hideBalance ? "••••" : <>R$ <AnimatedCounter value={creditTotal} decimals={2} /></>}
+                  {hideBalance ? "••••" : <>R$ <AnimatedCounter value={isCompany ? balance / 100 : creditTotal} decimals={2} /></>}
                 </p>
                 <p className="text-[10px] text-white/70 mt-1.5 flex items-center gap-1">
-                  <ArrowDownLeft size={8} className="text-primary" /> Créditos totais
+                  {isCompany
+                    ? <><ArrowDownLeft size={8} className="text-primary" /> Disponível + Reservado</>
+                    : <><ArrowDownLeft size={8} className="text-primary" /> Créditos totais</>
+                  }
                 </p>
               </motion.div>
             </div>
@@ -463,7 +469,7 @@ export default function WalletPage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-bold text-sm">Solicitar Saque PIX</h3>
-                    <p className="text-xs text-white/70">Saldo disponível: R$ {(balance / 100).toFixed(2)}</p>
+                    <p className="text-xs text-white/70">Saldo disponível: R$ {(availableBalance / 100).toFixed(2)}</p>
                   </div>
                 </div>
 
@@ -473,7 +479,7 @@ export default function WalletPage() {
                     <div className="relative">
                       <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-white/70 font-bold">R$</span>
                       <Input
-                        type="number" min={20} step={0.01} max={balance / 100}
+                        type="number" min={20} step={0.01} max={availableBalance / 100}
                         value={amount} onChange={e => setAmount(e.target.value)}
                         placeholder="0,00"
                         className="pl-10 bg-white/5 border-white/10 focus:border-primary/60 rounded-xl h-11 font-semibold tabular-nums"
@@ -482,7 +488,7 @@ export default function WalletPage() {
                     <div className="flex gap-1.5 mt-2">
                       {[20, 50, 100, 200].map(v => (
                         <motion.button key={v} whileTap={{ scale: 0.93 }} type="button"
-                          onClick={() => setAmount(String(Math.min(v, balance / 100)))}
+                          onClick={() => setAmount(String(Math.min(v, availableBalance / 100)))}
                           className="flex-1 py-1.5 rounded-lg border border-white/8 text-[11px] font-bold hover:border-primary/35 hover:text-primary hover:bg-primary/6 transition-all">
                           R${v}
                         </motion.button>

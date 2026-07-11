@@ -274,6 +274,15 @@ router.delete("/jobs/:id", requireAuth, async (req, res) => {
         await db.update(walletsTable)
           .set({ reservedBalance: Math.max(0, wallet.reservedBalance - actualRelease) })
           .where(eq(walletsTable.id, wallet.id));
+        // Record the release in the transaction ledger so it appears in history
+        await db.insert(transactionsTable).values({
+          walletId: wallet.id,
+          type: "release",
+          amount: actualRelease,
+          description: `Estorno de reserva — Extra excluído #${id}`,
+          status: "completed",
+          referenceId: `delete:${id}`,
+        }).catch(() => {});
       }
     } catch {}
   }

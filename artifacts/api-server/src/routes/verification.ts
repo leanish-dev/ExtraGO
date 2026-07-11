@@ -262,9 +262,13 @@ router.post("/kyc/documents", requireAuth, async (req, res) => {
   });
   await recordAuditLog({ userId: user.id, action: "kyc_document_submitted", details: { documentType: parsed.data.documentType, hasCaptureMetadata: !!parsed.data.captureMetadata }, req });
 
-  // Once documents are pending review, move the account state forward.
+  // Once documents are (re-)submitted, move the account state forward to
+  // review. This also covers a user who was sent back to
+  // "correction_requested" by an admin and has now re-uploaded — without
+  // this branch they'd be stuck showing "correction requested" forever
+  // even after fixing the document, since nothing else advances the status.
   const [dbUser] = await db.select().from(usersTable).where(eq(usersTable.id, user.id)).limit(1);
-  if (dbUser && dbUser.accountStatus === "pending_documents") {
+  if (dbUser && (dbUser.accountStatus === "pending_documents" || dbUser.accountStatus === "correction_requested")) {
     await db.update(usersTable).set({ accountStatus: "pending_review" }).where(eq(usersTable.id, user.id));
   }
   res.status(201).json(record);

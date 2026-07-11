@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Camera, RefreshCw, Check, Loader2, UploadCloud, AlertCircle, Video, FlipHorizontal } from "lucide-react";
 import { fileToDataUrl, buildCaptureMetadata } from "@/lib/verification-api";
+import { toast } from "sonner";
 
 interface FaceScanCaptureProps {
   onCaptured: (dataUrl: string, captureMetadata: string) => Promise<void> | void;
@@ -138,6 +139,9 @@ export function FaceScanCapture({
       );
       await onCaptured(captured, metadata);
       setDone(true);
+    } catch (e: any) {
+      // Surface upload failures so the user knows to retry instead of assuming success
+      toast.error(e?.message ?? "Falha ao enviar a imagem. Verifique sua conexão e tente novamente.");
     } finally {
       setSubmitting(false);
     }

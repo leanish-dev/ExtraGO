@@ -13,6 +13,7 @@ interface AuthContextType {
   logout: () => void;
   token: string | null;
   setToken: (token: string | null) => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -105,6 +106,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout: handleLogout,
         token,
         setToken,
+        // The `me` query has `refetchOnMount: false` (see above) so a
+        // successful action that changes the server-side user record
+        // (email/phone verification, KYC status advance, etc.) would
+        // otherwise leave `user` stale until an unrelated remount or window
+        // focus happens to trigger a refetch. Any flow that changes the
+        // logged-in user's own state on the server must call this
+        // immediately after success so the UI advances without a manual
+        // page refresh.
+        refreshUser: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["me", token] });
+        },
       }}
     >
       {children}

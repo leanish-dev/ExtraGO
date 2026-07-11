@@ -20,7 +20,7 @@ import {
   requestEmailVerification, confirmEmailVerification,
   requestPhoneVerification, confirmPhoneVerification,
   getLegalDocument, acceptLegalDocument,
-  submitKycDocument, fileToDataUrl,
+  submitKycDocument, fileToDataUrl, getMyKycDocuments,
   getDevLastEmail, getDevLastSms,
   LEGAL_DOCUMENT_TYPES, LEGAL_DOCUMENT_LABELS,
   type LegalDocument, type LegalDocumentType,
@@ -112,10 +112,22 @@ export default function OnboardingPage() {
     if (authLoading || !user) return;
     if (step >= 7) return; // Don't interfere while uploading documents or showing completion
     const status = (user as any).accountStatus as string | undefined;
-    if (status === "pending_phone") setStep(4);
-    else if (status === "pending_documents" || status === "rejected" || status === "correction_requested") setStep(7);
-    else if (status === "pending_review" || status === "verified") setLocation("/verification-center");
-    else if (status === "pending_email" || !status) setStep(3);
+    if (status === "pending_phone") {
+      // Only go back to step 4 if we're not yet past it
+      if (step < 4) setStep(4);
+    } else if (status === "pending_documents") {
+      // Jump to doc upload only if the user hasn't already progressed into the
+      // legal-docs / signature steps (5-6). Those steps don't change accountStatus
+      // so the status is already "pending_documents" while the user works through them.
+      if (step < 5) setStep(7);
+    } else if (status === "rejected" || status === "correction_requested") {
+      // Legal docs already accepted — jump straight to doc upload for re-submission.
+      setStep(7);
+    } else if (status === "pending_review" || status === "verified") {
+      setLocation("/verification-center");
+    } else if (status === "pending_email" || !status) {
+      if (step < 3) setStep(3);
+    }
   }, [authLoading, user, step]);
 
   const goNext = () => setStep(s => Math.min(TOTAL_STEPS, s + 1));
@@ -396,11 +408,17 @@ function EmailVerifyStep({ onNext }: { onNext: () => void }) {
     return () => clearTimeout(t);
   }, [cooldown]);
 
+  const { refreshUser } = useAuth();
   const confirm = async () => {
-    if (otp.length < 4) return;
+    if (otp.length < 6) return;
     setConfirming(true);
     try {
       await confirmEmailVerification({ otpCode: otp });
+      // Update the cached user immediately — without this, a later remount
+      // of OnboardingPage would read the stale accountStatus ("pending_email")
+      // and bounce the step back to the OTP screen even though it already
+      // succeeded on the server.
+      await refreshUser();
       toast.success("E-mail verificado!");
       onNext();
     } catch (e: any) {
@@ -441,7 +459,7 @@ function EmailVerifyStep({ onNext }: { onNext: () => void }) {
           placeholder="000000"
           className="text-center tracking-[0.5em] text-lg font-mono h-14 bg-white/5 border-white/10 rounded-xl"
         />
-        <Button onClick={confirm} disabled={confirming || otp.length < 4} className="w-full h-12 font-bold rounded-xl bg-primary text-black hover:bg-primary/90 neon-glow gap-2">
+        <Button onClick={confirm} disabled={confirming || otp.length < 6} className="w-full h-12 font-bold rounded-xl bg-primary text-black hover:bg-primary/90 neon-glow gap-2">
           {confirming ? <><Loader2 size={16} className="animate-spin" />Confirmando...</> : <>Confirmar e-mail <ArrowRight size={16} /></>}
         </Button>
         <button
@@ -516,10 +534,15 @@ function PhoneVerifyStep({ defaultPhone, onNext }: { defaultPhone: string; onNex
     }
   };
 
+  const { refreshUser } = useAuth();
   const confirm = async () => {
     setConfirming(true);
     try {
       await confirmPhoneVerification({ code });
+      // Same reasoning as email verification: refresh the cached user so a
+      // remount never reads a stale "pending_phone" status and re-shows this
+      // screen after it has already succeeded.
+      await refreshUser();
       toast.success("Telefone verificado!");
       onNext();
     } catch (e: any) {
@@ -784,6 +807,32 @@ function DocumentUploadStep({ accountType, onNext, onBack }: { accountType: Acco
   const [pixKey, setPixKey] = useState("");
   const [bankData, setBankData] = useState("");
   const [saving, setSaving] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  // `uploaded` was previously local-only state, so refreshing mid-onboarding
+  // (or a remount caused by the accountStatus effect above) reset every
+  // "Enviado" checkmark to blank even though the documents were already
+  // saved in the DB — forcing the user to guess what was left. Hydrate from
+  // the server on mount so already-submitted slots show as done immediately.
+  useEffect(() => {
+    let cancelled = false;
+    getMyKycDocuments()
+      .then(docs => {
+        if (cancelled) return;
+        const byType = new Map<string, string>();
+        for (const d of docs) byType.set(d.documentType, d.fileUrl);
+        const next: Record<string, string> = {};
+        for (const slot of slots) {
+          const url = byType.get(slot.documentType);
+          if (url) next[slot.key] = url;
+        }
+        setUploaded(u => ({ ...next, ...u }));
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setHydrated(true); });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const submitFaceScan = async (dataUrl: string, captureMetadata: string) => {
     await submitKycDocument({ documentType: "selfie", fileUrl: dataUrl, captureMetadata });
