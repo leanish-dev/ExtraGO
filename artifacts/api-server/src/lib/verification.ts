@@ -208,14 +208,12 @@ export async function resetFailedLogin(userId: number): Promise<void> {
 export { sendEmail, sendVerificationEmail, emailProviderStatus, getDevEmailLog } from "./email-service";
 
 /**
- * No SMS/WhatsApp provider is configured in this environment yet. Logged
- * so codes are visible in server logs for manual QA — this is NOT mock
- * verification logic, only mock transport, matching the email pattern
- * before Resend was wired in.
+ * Sends an SMS/WhatsApp OTP via the provider-agnostic SMSService.
+ * Automatically switches between Twilio (when TWILIO_* env vars are set)
+ * and a development console/log provider. Re-exported here so existing
+ * callers keep working unchanged.
  */
-export async function sendSms(to: string, channel: "sms" | "whatsapp", body: string): Promise<void> {
-  console.log(`[${channel}:pending-provider] to=${to} body="${body}"`);
-}
+export { sendSmsMessage as sendSms, smsProviderStatus, getDevSmsLog } from "./sms-service";
 
 // ── Email verification / password reset ──────────────────────
 const EMAIL_TOKEN_TTL_MS = 60 * 60 * 1000; // 1 hour

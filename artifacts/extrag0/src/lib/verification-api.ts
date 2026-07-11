@@ -70,6 +70,19 @@ export const getDevLastEmail = (): Promise<{
 } | null> =>
   apiFetch("/api/dev/last-email").catch(() => null);
 
+/** Dev-only: retrieves the last SMS sent to the given phone number
+ *  when no real SMS provider (TWILIO_*) is configured.
+ *  Returns null in production or when no SMS has been sent yet. */
+export const getDevLastSms = (phone?: string): Promise<{
+  provider: "twilio" | "dev-console";
+  body: string;
+  channel: string;
+  sentAt: string;
+} | null> => {
+  const qs = phone ? `?phone=${encodeURIComponent(phone)}` : "";
+  return apiFetch(`/api/dev/last-sms${qs}`).catch(() => null);
+};
+
 // ── Phone verification ──────────────────────────────────────
 export const requestPhoneVerification = (input: { phone: string; channel?: "sms" | "whatsapp" }) =>
   apiFetch("/api/auth/verify-phone/request", { method: "POST", body: JSON.stringify(input) });

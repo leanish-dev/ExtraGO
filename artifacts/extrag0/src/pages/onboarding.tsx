@@ -20,7 +20,7 @@ import {
   requestPhoneVerification, confirmPhoneVerification,
   getLegalDocument, acceptLegalDocument,
   submitKycDocument, fileToDataUrl,
-  getDevLastEmail,
+  getDevLastEmail, getDevLastSms,
   LEGAL_DOCUMENT_TYPES, LEGAL_DOCUMENT_LABELS,
   type LegalDocument, type LegalDocumentType,
 } from "@/lib/verification-api";
@@ -461,12 +461,36 @@ function PhoneVerifyStep({ defaultPhone, onNext }: { defaultPhone: string; onNex
   const [sending, setSending] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  // Dev-mode: OTP fetched from server when no real SMS provider is configured
+  const [devCode, setDevCode] = useState<string | null>(null);
+  const [devMode, setDevMode] = useState(false);
 
   useEffect(() => {
     if (cooldown <= 0) return;
     const t = setTimeout(() => setCooldown(c => c - 1), 1000);
     return () => clearTimeout(t);
   }, [cooldown]);
+
+  /** After SMS is requested, try to retrieve it from the dev endpoint.
+   *  Only works when TWILIO_* vars are not configured (dev-console provider).
+   *  In production the endpoint returns 404, so we silently bail. */
+  const tryFetchDevCode = async (phoneNumber: string) => {
+    try {
+      await new Promise(r => setTimeout(r, 800));
+      const entry = await getDevLastSms(phoneNumber);
+      if (!entry || entry.provider !== "dev-console") return;
+      // Extract 6-digit OTP from the SMS body
+      const match = entry.body.match(/\b(\d{6})\b/);
+      if (match) {
+        const otp = match[1];
+        setDevCode(otp);
+        setDevMode(true);
+        setCode(otp); // auto-fill
+      }
+    } catch {
+      // Real provider or network error — no action needed
+    }
+  };
 
   const send = async () => {
     if (phone.replace(/\D/g, "").length < 10) {
@@ -479,6 +503,8 @@ function PhoneVerifyStep({ defaultPhone, onNext }: { defaultPhone: string; onNex
       toast.success("Código enviado por SMS.");
       setSent(true);
       setCooldown(60);
+      // Attempt to surface the OTP in dev mode (no-op in production)
+      tryFetchDevCode(phone);
     } catch (e: any) {
       toast.error("Não foi possível enviar o código.");
     } finally {
@@ -511,13 +537,35 @@ function PhoneVerifyStep({ defaultPhone, onNext }: { defaultPhone: string; onNex
           </Button>
         ) : (
           <>
+            {/* Dev-mode banner: shown only when no real SMS provider is configured */}
+            {devMode && devCode && (
+              <div className="rounded-xl border border-amber-400/30 bg-amber-400/8 px-4 py-3 text-center">
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-amber-400/70 mb-1.5">
+                  ⚠ Modo de Desenvolvimento — sem provedor SMS real
+                </p>
+                <p className="text-xs text-amber-200/60 mb-2 leading-relaxed">
+                  Nenhum SMS real foi enviado. O código abaixo foi gerado pelo servidor e preenchido automaticamente.
+                </p>
+                <div className="inline-flex items-center gap-2 rounded-lg border border-amber-400/25 bg-amber-400/10 px-4 py-2">
+                  <span className="font-mono text-2xl font-bold tracking-[0.3em] text-amber-300">{devCode}</span>
+                  <button
+                    type="button"
+                    onClick={() => setCode(devCode)}
+                    className="text-[10px] font-semibold text-amber-400/60 hover:text-amber-300 ml-1"
+                  >
+                    Usar
+                  </button>
+                </div>
+              </div>
+            )}
+
             <Input
               value={code}
               onChange={e => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-              placeholder="Código recebido"
+              placeholder="000000"
               className="text-center tracking-[0.4em] text-lg font-mono h-14 bg-white/5 border-white/10 rounded-xl"
             />
-            <Button onClick={confirm} disabled={confirming || code.length < 4} className="w-full h-12 font-bold rounded-xl bg-primary text-black hover:bg-primary/90 neon-glow gap-2">
+            <Button onClick={confirm} disabled={confirming || code.length < 6} className="w-full h-12 font-bold rounded-xl bg-primary text-black hover:bg-primary/90 neon-glow gap-2">
               {confirming ? <><Loader2 size={16} className="animate-spin" />Confirmando...</> : <>Confirmar telefone <ArrowRight size={16} /></>}
             </Button>
             <button type="button" disabled={sending || cooldown > 0} onClick={send} className="w-full text-center text-xs font-semibold text-primary/80 hover:text-primary disabled:opacity-40">

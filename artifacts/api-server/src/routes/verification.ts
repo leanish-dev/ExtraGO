@@ -28,6 +28,8 @@ import {
   computeAccountStatus,
   emailProviderStatus,
   getDevEmailLog,
+  smsProviderStatus,
+  getDevSmsLog,
 } from "../lib/verification";
 import { logger } from "../lib/logger";
 
@@ -113,13 +115,24 @@ router.post("/auth/verify-phone/request", requireAuth, otpLimiter, async (req, r
   const { phone, channel } = parsed.data;
   const result = await createPhoneVerification({ userId: user.id, phone, channel });
   if (!result.throttled) {
-    await sendSms(phone, channel, `Seu código extraGO é ${result.record.code}`);
+    const smsResult = await sendSms(phone, channel, `Seu código extraGO é ${result.record.code}. Válido por 10 minutos.`);
+    if (!smsResult.ok) {
+      logger.error({ userId: user.id, phone, error: smsResult.error }, "SMS delivery failed on request");
+      // Don't fail the request — dev-console always returns ok:true; only real
+      // provider failures reach here. Let the client know so they can retry.
+      res.status(502).json({ error: "Failed to send verification code. Please try again shortly." });
+      return;
+    }
   }
-  res.json({ message: result.throttled ? "Code already sent recently" : "Verification code sent" });
+  res.json({
+    message: result.throttled ? "Code already sent recently" : "Verification code sent",
+    provider: smsProviderStatus().provider,
+  });
 });
 
 router.post("/auth/verify-phone/confirm", requireAuth, authLimiter, async (req, res) => {
-  const parsed = z.object({ code: z.string().min(4) }).safeParse(req.body);
+  // OTP is always 6 digits; min(4) was a bug — tightened to 6.
+  const parsed = z.object({ code: z.string().min(6).max(6) }).safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid input" });
     return;
@@ -298,12 +311,11 @@ router.post("/admin/kyc/documents/:id/review", requireAdmin, async (req, res) =>
   res.json(result);
 });
 
-// ── Dev-only email inspection ───────────────────────────────────
-// Never available in production. Lets QA read the last verification
-// email's OTP/content without a real inbox when no provider is
-// configured — the OTP itself already lives in the DB, this just
-// mirrors what would have been emailed. Requires authentication so it
-// can only be used for the caller's own account.
+// ── Dev-only inspection endpoints ──────────────────────────────
+// Never available in production. Lets QA read OTPs without a real
+// inbox/phone when no provider is configured. Authentication required
+// so each user can only read their own codes.
+
 router.get("/dev/last-email", requireAuth, async (req, res) => {
   if (process.env.NODE_ENV === "production") {
     res.status(404).json({ error: "Not found" });
@@ -316,6 +328,27 @@ router.get("/dev/last-email", requireAuth, async (req, res) => {
     return;
   }
   res.json({ provider: emailProviderStatus().provider, ...entry });
+});
+
+router.get("/dev/last-sms", requireAuth, async (req, res) => {
+  if (process.env.NODE_ENV === "production") {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
+  const user = (req as any).user;
+  // phone may not be set on the user row yet (they're mid-onboarding);
+  // also accept ?phone= query param so the step can pass it explicitly.
+  const phone: string | undefined = (req.query.phone as string) || user.phone || undefined;
+  if (!phone) {
+    res.status(400).json({ error: "No phone known for this account yet" });
+    return;
+  }
+  const entry = getDevSmsLog(phone);
+  if (!entry) {
+    res.status(404).json({ error: "No SMS recorded for this phone yet" });
+    return;
+  }
+  res.json({ provider: smsProviderStatus().provider, ...entry });
 });
 
 export default router;
