@@ -149,11 +149,19 @@ export async function purgeWhitelistConflicts(opts: {
 
   // Collect all matching user IDs (there may be more than one if a phone
   // is reused on a different email row, etc.)
+  //
+  // SAFETY: admin accounts are NEVER purged by this mechanism, even if they
+  // happen to share a CPF/phone with a whitelisted test identifier (e.g. a
+  // real admin testing onboarding with their own real CPF/phone under a
+  // second email). A prior incident wiped the production CEO account this
+  // way — matching by CPF/phone is too broad to ever apply to admins.
   const rows = await db.execute(sql`
     SELECT id FROM users
-    WHERE  (${email}::text IS NOT NULL AND email = ${email})
+    WHERE  role <> 'admin'
+    AND (   (${email}::text IS NOT NULL AND email = ${email})
         OR (${normCpf}::text IS NOT NULL AND cpf = ${normCpf})
         OR (${normPhone}::text IS NOT NULL AND phone = ${normPhone})
+    )
   `);
 
   const ids: number[] = (rows as any).rows?.map((r: any) => Number(r.id)) ?? [];

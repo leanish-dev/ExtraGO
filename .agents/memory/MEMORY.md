@@ -24,3 +24,4 @@
 - [Stabilization phases 1-11](stabilization-phases.md) — wallet CENTS vs BRL convention, verification gate, CEO guard, OTP code UX, notifications wiring, push notification architecture, onboarding redirect fix.
 - [Wallet reservation model](wallet-reservation-model.md) — ONE reservation per job (not per-application), cents vs BRL convention, and a deferred checkout→payout wiring gap.
 - [Check-in/checkout single-code model](checkin-checkout-single-code.md) — company only generates/shares a code, never types one; freelancer-only validation; panel must stay visible through waiting_* status.
+- [Dev-whitelist admin purge incident](dev-whitelist-admin-purge-incident.md) — a CPF/phone-based test-purge deleted the real CEO account; purge now excludes role=admin, and master-admin bootstrap always forces accountStatus=verified.

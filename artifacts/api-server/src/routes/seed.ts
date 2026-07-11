@@ -88,6 +88,8 @@ router.post("/setup/seed", async (_req, res) => {
       referralCode: "CEO2024LS",
       avatarUrl: "/team-leonardo.jpg",
       isDemo: false,
+      accountStatus: "verified",
+      emailVerifiedAt: new Date(),
     });
     await ensureWallet(leonardoId, "platform");
     results.push(`CEO Leonardo: id=${leonardoId}`);
@@ -108,6 +110,8 @@ router.post("/setup/seed", async (_req, res) => {
       referralCode: "CMO2024JD",
       avatarUrl: "/team-jean.jpg",
       isDemo: false,
+      accountStatus: "verified",
+      emailVerifiedAt: new Date(),
     });
     await ensureWallet(jeanDickId, "platform");
     results.push(`CMO Jean Dick: id=${jeanDickId}`);
@@ -128,6 +132,8 @@ router.post("/setup/seed", async (_req, res) => {
       referralCode: "CCO2024QP",
       avatarUrl: "/team-qaialla.jpg",
       isDemo: false,
+      accountStatus: "verified",
+      emailVerifiedAt: new Date(),
     });
     await ensureWallet(qaiallaid, "platform");
     results.push(`CCO Qaialla: id=${qaiallaid}`);
@@ -146,6 +152,8 @@ router.post("/setup/seed", async (_req, res) => {
       level: "elite",
       referralCode: "CEO2024EG",
       isDemo: false,
+      accountStatus: "verified",
+      emailVerifiedAt: new Date(),
     });
     await ensureWallet(ceoYahooId, "platform");
     results.push(`CEO Yahoo: id=${ceoYahooId}`);

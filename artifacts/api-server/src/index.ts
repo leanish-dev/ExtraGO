@@ -50,6 +50,11 @@ async function seedMasterAdmin() {
       if (existing.role !== "admin") updates.role = "admin";
       if (!existing.adminRole || existing.adminRole !== "super_admin") updates.adminRole = "super_admin";
       if (!existing.isVerified) updates.isVerified = true;
+      // The master admin must never be gated behind onboarding/verification —
+      // a prior incident left this account stuck in "draft"/unverified after
+      // being auto-recreated by this exact bootstrap, locking the CEO out.
+      if (existing.accountStatus !== "verified") updates.accountStatus = "verified";
+      if (!existing.emailVerifiedAt) updates.emailVerifiedAt = new Date();
       if (Object.keys(updates).length > 0) {
         await db.update(usersTable).set(updates).where(eq(usersTable.id, existing.id));
         logger.info({ id: existing.id }, "Master admin updated");
@@ -67,6 +72,8 @@ async function seedMasterAdmin() {
       adminRole: "super_admin",
       isVerified: true,
       isBanned: false,
+      accountStatus: "verified",
+      emailVerifiedAt: new Date(),
       referralCode: generateReferralCode(),
       level: "elite",
       profileCompletion: 100,
