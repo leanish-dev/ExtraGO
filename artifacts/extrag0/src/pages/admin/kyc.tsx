@@ -530,7 +530,7 @@ function UserDetailPanel({
 
   return (
     <div className="flex-1 overflow-y-auto p-6">
-      {viewingImage && <ImageViewer url={viewingImage} onClose={() => setViewingImage(null)} />}
+      {viewingImage && <ImageViewer url={viewingImage.url} compareUrl={viewingImage.compareUrl} compareLabel={viewingImage.compareLabel} captureMetadata={viewingImage.captureMetadata} onClose={() => setViewingImage(null)} />}
       {action && (
         <ActionDialog
           userId={userId}
@@ -663,7 +663,7 @@ function UserDetailPanel({
                 </div>
                 <div className="flex items-center gap-2">
                   {isImage(doc.fileUrl) && (
-                    <button onClick={() => setViewingImage(doc.fileUrl)}
+                    <button onClick={() => setViewingImage({ url: doc.fileUrl, captureMetadata: doc.captureMetadata })}
                       className="p-1.5 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors">
                       <Eye size={15} />
                     </button>

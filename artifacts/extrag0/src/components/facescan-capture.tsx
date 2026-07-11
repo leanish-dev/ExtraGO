@@ -1,19 +1,24 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, RefreshCw, Check, Loader2, UploadCloud, AlertCircle } from "lucide-react";
+import { Camera, RefreshCw, Check, Loader2, UploadCloud, AlertCircle, Video } from "lucide-react";
 import { fileToDataUrl, buildCaptureMetadata } from "@/lib/verification-api";
 
 interface FaceScanCaptureProps {
   onCaptured: (dataUrl: string, captureMetadata: string) => Promise<void> | void;
   label?: string;
+  autoStart?: boolean;
 }
 
 /**
  * Live camera capture for the mandatory identity selfie ("FaceScan").
- * Falls back to a plain file picker when camera access is denied or unavailable —
- * still records capture metadata (timestamp, device, source) either way.
+ * Works on desktop, Android and iPhone.
+ * Falls back to a plain file picker when camera access is denied.
  */
-export function FaceScanCapture({ onCaptured, label = "Selfie segurando o documento" }: FaceScanCaptureProps) {
+export function FaceScanCapture({
+  onCaptured,
+  label = "Selfie segurando o documento",
+  autoStart = false,
+}: FaceScanCaptureProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -26,6 +31,7 @@ export function FaceScanCapture({ onCaptured, label = "Selfie segurando o docume
   const [captureSource, setCaptureSource] = useState<"camera" | "file_upload">("camera");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [starting, setStarting] = useState(false);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach(t => t.stop());
@@ -37,29 +43,64 @@ export function FaceScanCapture({ onCaptured, label = "Selfie segurando o docume
 
   const startCamera = async () => {
     setCameraError(null);
+    setStarting(true);
     try {
+      // Check API availability
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error("Camera API not supported in this browser.");
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user", width: { ideal: 720 }, height: { ideal: 720 } },
+        video: {
+          facingMode: "user",
+          width: { ideal: 720, max: 1280 },
+          height: { ideal: 720, max: 1280 },
+        },
+        audio: false,
       });
+
       streamRef.current = stream;
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
+        // Some mobile browsers need explicit play() after setting srcObject
+        try {
+          await videoRef.current.play();
+        } catch {
+          // autoplay may be blocked; the video element handles it via autoPlay attr
+        }
       }
       setCameraActive(true);
     } catch (e: any) {
-      setCameraError("Não foi possível acessar a câmera. Você pode enviar uma foto do dispositivo.");
+      const msg = e?.name === "NotAllowedError"
+        ? "Permissão de câmera negada. Habilite nas configurações do navegador ou envie uma foto."
+        : e?.name === "NotFoundError"
+        ? "Nenhuma câmera encontrada neste dispositivo."
+        : e?.name === "NotReadableError"
+        ? "Câmera em uso por outro aplicativo. Feche e tente novamente."
+        : "Não foi possível acessar a câmera. Você pode enviar uma foto do dispositivo.";
+      setCameraError(msg);
+    } finally {
+      setStarting(false);
     }
   };
+
+  useEffect(() => {
+    if (autoStart) startCamera();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoStart]);
 
   const takeSnapshot = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth || 480;
+    canvas.height = video.videoHeight || 480;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    // Mirror for front camera (user-facing)
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
     const track = streamRef.current?.getVideoTracks()[0];
@@ -127,12 +168,19 @@ export function FaceScanCapture({ onCaptured, label = "Selfie segurando o docume
           <Button
             type="button"
             onClick={startCamera}
+            disabled={starting}
             className="w-full h-10 rounded-xl bg-primary/15 text-primary border border-primary/30 hover:bg-primary/25 gap-2 text-sm font-semibold"
           >
-            <Camera size={15} /> Ativar câmera e capturar
+            {starting ? (
+              <><Loader2 size={14} className="animate-spin" /> Iniciando câmera...</>
+            ) : (
+              <><Camera size={15} /> Ativar câmera e capturar</>
+            )}
           </Button>
           {cameraError && (
-            <p className="text-[11px] text-amber-400 flex items-center gap-1.5"><AlertCircle size={11} /> {cameraError}</p>
+            <p className="text-[11px] text-amber-400 flex items-start gap-1.5 leading-relaxed">
+              <AlertCircle size={11} className="mt-0.5 flex-shrink-0" /> {cameraError}
+            </p>
           )}
           <button
             type="button"
@@ -155,19 +203,41 @@ export function FaceScanCapture({ onCaptured, label = "Selfie segurando o docume
       {cameraActive && !captured && (
         <div className="space-y-2">
           <div className="relative rounded-xl overflow-hidden border border-white/10 aspect-square bg-black">
-            <video ref={videoRef} className="w-full h-full object-cover -scale-x-100" playsInline muted />
-            <div className="absolute inset-6 border-2 border-primary/50 rounded-full pointer-events-none" />
+            {/* autoPlay + playsInline + muted required for all mobile browsers */}
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              autoPlay
+              playsInline
+              muted
+              style={{ transform: "scaleX(-1)" }}
+            />
+            {/* face oval guide */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="border-2 border-primary/60 rounded-full"
+                style={{ width: "60%", height: "78%", boxShadow: "0 0 0 9999px rgba(0,0,0,0.38)" }} />
+            </div>
+            <p className="absolute bottom-3 left-0 right-0 text-center text-[11px] text-white/80 font-medium">
+              Centralize seu rosto no oval
+            </p>
           </div>
           <Button type="button" onClick={takeSnapshot} className="w-full h-10 rounded-xl bg-primary text-black font-bold gap-2">
             <Camera size={15} /> Capturar foto
           </Button>
+          <button
+            type="button"
+            onClick={() => { stopCamera(); }}
+            className="w-full h-8 text-xs text-white/40 hover:text-white/60"
+          >
+            Cancelar
+          </button>
         </div>
       )}
 
       {captured && (
         <div className="space-y-2">
           <div className="relative rounded-xl overflow-hidden border border-primary/30 aspect-square">
-            <img src={captured} className="w-full h-full object-cover" />
+            <img src={captured} className="w-full h-full object-cover" alt="Captura" />
           </div>
           <div className="flex gap-2">
             <Button type="button" variant="outline" onClick={retake} disabled={submitting} className="flex-1 h-10 rounded-xl border-white/15 gap-2 text-sm">

@@ -8,11 +8,17 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
-import { Briefcase, MapPin, Clock, DollarSign, Users, ChevronLeft, Loader2, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { Briefcase, MapPin, Clock, DollarSign, Users, ChevronLeft, Loader2, Sparkles, AlertCircle, Info } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/hooks/use-auth";
+import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "@/lib/api-fetch";
 
 import { CATEGORIES as ALL_CATEGORIES } from "@/lib/categories";
 const CATEGORIES = ALL_CATEGORIES.map(c => c.name);
+
+// Daily shift = 7h20min
+const DAILY_HOURS = 440 / 60; // 7.333...
 
 const formSchema = z.object({
   title: z.string().min(5, "Mínimo 5 caracteres"),
@@ -24,6 +30,8 @@ const formSchema = z.object({
   endTime: z.string().min(1, "Informe o horário de fim"),
   workersNeeded: z.coerce.number().min(1, "Mínimo 1 profissional"),
   hourlyRate: z.coerce.number().min(20, "Valor mínimo R$ 20/hora"),
+  dailyRate: z.coerce.number().optional(),
+  shiftType: z.enum(["hourly", "daily"]).default("hourly"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -46,22 +54,42 @@ function SectionHeader({ icon, title, color = "primary" }: { icon: React.ReactNo
 
 export default function PostJobPage() {
   const [, setLocation] = useLocation();
+  const { user } = useAuth();
   const createJob = useCreateJob();
   const [selectedCategory, setSelectedCategory] = useState("");
+
+  // Load wallet to show available balance
+  const { data: wallet } = useQuery<any>({
+    queryKey: ["wallet-me"],
+    queryFn: () => apiFetch("/api/wallet/me"),
+    enabled: !!user,
+  });
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "", description: "", category: "", location: "",
-      date: "", startTime: "", endTime: "", workersNeeded: 1, hourlyRate: 50,
+      date: "", startTime: "08:00", endTime: "16:20", workersNeeded: 1,
+      hourlyRate: 50, dailyRate: undefined, shiftType: "hourly",
     },
   });
 
-  const watchedHours = (() => {
+  const shiftType = form.watch("shiftType");
+  const watchedCalc = (() => {
     const start = form.watch("startTime");
     const end = form.watch("endTime");
     const workers = form.watch("workersNeeded") || 1;
     const rate = form.watch("hourlyRate") || 0;
+    const dRate = form.watch("dailyRate");
+
+    if (shiftType === "daily") {
+      const dailyPay = dRate ?? (rate * DAILY_HOURS);
+      const totalPerWorker = dailyPay;
+      const commission = totalPerWorker * 0.15;
+      const total = totalPerWorker * workers;
+      return { hours: DAILY_HOURS, totalPerWorker, commission, total, isDailyFixed: !!dRate };
+    }
+
     if (!start || !end) return null;
     const [sh, sm] = start.split(":").map(Number);
     const [eh, em] = end.split(":").map(Number);
@@ -71,26 +99,46 @@ export default function PostJobPage() {
     const totalPerWorker = hours * rate;
     const commission = totalPerWorker * 0.15;
     const total = totalPerWorker * workers;
-    return { hours, totalPerWorker, commission, total };
+    return { hours, totalPerWorker, commission, total, isDailyFixed: false };
   })();
+
+  const reservationAmount = watchedCalc ? Math.round(watchedCalc.total * 1.15 * 100) / 100 : 0;
+  const availableBalance = wallet ? Math.max(0, (wallet.balance ?? 0) - (wallet.reservedBalance ?? 0)) : null;
+  const hasInsufficientBalance = availableBalance !== null && reservationAmount > 0 && availableBalance < reservationAmount;
+
+  // Auto-fill endTime for daily shift
+  const handleShiftTypeChange = (type: "hourly" | "daily") => {
+    form.setValue("shiftType", type);
+    if (type === "daily") {
+      const start = form.getValues("startTime") || "08:00";
+      const [sh, sm] = start.split(":").map(Number);
+      const totalMin = sh * 60 + sm + 440; // +7h20
+      const eh = Math.floor(totalMin / 60) % 24;
+      const em = totalMin % 60;
+      form.setValue("endTime", `${String(eh).padStart(2, "0")}:${String(em).padStart(2, "0")}`);
+    }
+  };
 
   const onSubmit = async (values: FormValues) => {
     try {
       await createJob.mutateAsync({
         data: {
           ...values,
-          totalValue: watchedHours ? Math.round(watchedHours.total * 100) : 0,
+          shiftType: values.shiftType,
+          dailyRate: values.shiftType === "daily" ? (values.dailyRate ?? null) : null,
+          totalValue: watchedCalc ? Math.round(watchedCalc.total * 100) : 0,
         } as any
       });
       toast.success("Extra publicado com sucesso!");
       setLocation("/app/jobs");
     } catch (e: any) {
-      toast.error(e?.data?.error ?? "Erro ao publicar extra");
+      const msg = e?.data?.error ?? e?.message ?? "Erro ao publicar extra";
+      toast.error(msg);
     }
   };
 
   return (
-    <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-3xl mx-auto space-y-6 pb-24">
       <div className="flex items-center gap-3">
         <button
           onClick={() => setLocation("/app/jobs")}
@@ -103,6 +151,28 @@ export default function PostJobPage() {
           <p className="text-sm text-white/70 mt-0.5">Conecte-se aos melhores profissionais do Brasil</p>
         </div>
       </div>
+
+      {/* Wallet balance indicator */}
+      {wallet && (
+        <div className={`rounded-xl px-4 py-3 flex items-center gap-3 ${hasInsufficientBalance ? "bg-red-500/8 border border-red-500/20" : "bg-white/3 border border-white/8"}`}>
+          <DollarSign size={14} className={hasInsufficientBalance ? "text-red-400" : "text-primary"} />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-white/70">Saldo disponível na carteira</p>
+            <p className={`text-sm font-bold ${hasInsufficientBalance ? "text-red-400" : "text-primary"}`}>
+              R$ {(availableBalance ?? 0).toFixed(2)}
+            </p>
+          </div>
+          {hasInsufficientBalance && (
+            <button
+              type="button"
+              onClick={() => setLocation("/app/wallet")}
+              className="text-xs px-3 py-1.5 rounded-lg bg-red-500/15 text-red-400 border border-red-500/25 font-semibold hover:bg-red-500/25 transition-all"
+            >
+              Depositar
+            </button>
+          )}
+        </div>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -119,13 +189,6 @@ export default function PostJobPage() {
           >
             <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
               style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.5), rgba(59,130,246,0.25), transparent)" }} />
-            <div className="absolute right-3 top-3 pointer-events-none select-none opacity-[0.04]">
-              <svg width="44" height="40" viewBox="0 0 44 40" fill="none">
-                <rect x="2" y="12" width="40" height="26" rx="4" stroke="#8b5cf6" strokeWidth="1.8"/>
-                <path d="M14 12v-3a4 4 0 014-4h8a4 4 0 014 4v3" stroke="#8b5cf6" strokeWidth="1.8"/>
-                <line x1="2" y1="22" x2="42" y2="22" stroke="#8b5cf6" strokeWidth="1.4"/>
-              </svg>
-            </div>
             <SectionHeader icon={<Briefcase size={14} />} title="Informações do Extra" color="primary" />
 
             <FormField control={form.control} name="title" render={({ field }) => (
@@ -202,22 +265,85 @@ export default function PostJobPage() {
               </FormItem>
             )} />
 
+            {/* Shift type toggle */}
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-wide text-white/75 mb-2 block">Tipo de Turno</label>
+              <div className="flex gap-2">
+                {[
+                  { value: "hourly" as const, label: "Por Hora", desc: "Cálculo por hora trabalhada" },
+                  { value: "daily" as const, label: "Diária", desc: "7h20min (padrão CLT)" },
+                ].map(opt => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => handleShiftTypeChange(opt.value)}
+                    className={`flex-1 rounded-xl p-3 text-left transition-all border ${
+                      shiftType === opt.value
+                        ? "bg-secondary/10 border-secondary/35 text-secondary"
+                        : "bg-white/3 border-white/10 text-white/60 hover:border-white/20"
+                    }`}
+                  >
+                    <p className={`text-xs font-bold ${shiftType === opt.value ? "text-secondary" : "text-white/80"}`}>{opt.label}</p>
+                    <p className="text-[10px] text-white/50 mt-0.5">{opt.desc}</p>
+                  </button>
+                ))}
+              </div>
+              {shiftType === "daily" && (
+                <p className="text-[11px] text-secondary/70 mt-2 flex items-center gap-1.5">
+                  <Info size={11} /> Jornada diária: 07:20h · Horário de fim calculado automaticamente
+                </p>
+              )}
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                { name: "date" as const, label: "Data", type: "date" },
-                { name: "startTime" as const, label: "Início", type: "time" },
-                { name: "endTime" as const, label: "Fim", type: "time" },
-              ].map(({ name, label, type }) => (
-                <FormField key={name} control={form.control} name={name} render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">{label}</FormLabel>
-                    <FormControl>
-                      <Input type={type} {...field} className="bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11" />
-                    </FormControl>
-                    <FormMessage className="text-xs" />
-                  </FormItem>
-                )} />
-              ))}
+              <FormField control={form.control} name="date" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">Data</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} className="bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11" />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )} />
+              <FormField control={form.control} name="startTime" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">Início</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="time"
+                      {...field}
+                      onChange={e => {
+                        field.onChange(e);
+                        if (shiftType === "daily") {
+                          const [sh, sm] = e.target.value.split(":").map(Number);
+                          const totalMin = sh * 60 + sm + 440;
+                          const eh = Math.floor(totalMin / 60) % 24;
+                          const em = totalMin % 60;
+                          form.setValue("endTime", `${String(eh).padStart(2, "0")}:${String(em).padStart(2, "0")}`);
+                        }
+                      }}
+                      className="bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )} />
+              <FormField control={form.control} name="endTime" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">
+                    Fim {shiftType === "daily" && <span className="text-secondary/60 font-normal lowercase">(auto)</span>}
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="time"
+                      {...field}
+                      readOnly={shiftType === "daily"}
+                      className={`bg-white/5 border-white/10 focus:border-secondary/60 rounded-xl h-11 ${shiftType === "daily" ? "opacity-60 cursor-not-allowed" : ""}`}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )} />
             </div>
           </motion.div>
 
@@ -246,18 +372,50 @@ export default function PostJobPage() {
                   <FormMessage className="text-xs" />
                 </FormItem>
               )} />
-              <FormField control={form.control} name="hourlyRate" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">R$/Hora</FormLabel>
-                  <FormControl>
-                    <Input type="number" min={20} step={5} {...field} className="bg-white/5 border-white/10 focus:border-yellow-400/60 rounded-xl h-11" />
-                  </FormControl>
-                  <FormMessage className="text-xs" />
-                </FormItem>
-              )} />
+
+              {shiftType === "hourly" ? (
+                <FormField control={form.control} name="hourlyRate" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">R$/Hora</FormLabel>
+                    <FormControl>
+                      <Input type="number" min={20} step={5} {...field} className="bg-white/5 border-white/10 focus:border-yellow-400/60 rounded-xl h-11" />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )} />
+              ) : (
+                <FormField control={form.control} name="dailyRate" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wide text-white/75">Valor Diária (R$)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min={80}
+                        step={10}
+                        placeholder={`Ex: ${Math.round(form.watch("hourlyRate") * DAILY_HOURS)}`}
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={e => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                        className="bg-white/5 border-white/10 focus:border-yellow-400/60 rounded-xl h-11"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )} />
+              )}
             </div>
 
-            {watchedHours && (
+            {shiftType === "daily" && (
+              <div className="rounded-xl p-3 bg-secondary/5 border border-secondary/15 flex items-start gap-2">
+                <Info size={13} className="text-secondary mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-white/70 leading-relaxed">
+                  <span className="text-secondary font-semibold">Diária padrão</span> — 7h20min de trabalho efetivo (sem pausa).
+                  Se deixar o valor em branco, será calculado com base no R$/hora configurado.
+                </p>
+              </div>
+            )}
+
+            {watchedCalc && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -268,28 +426,50 @@ export default function PostJobPage() {
                 </p>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   {[
-                    { label: "Duração", value: `${watchedHours.hours.toFixed(1)}h` },
-                    { label: "Por profissional", value: `R$ ${watchedHours.totalPerWorker.toFixed(2)}` },
-                    { label: "Comissão (15%)", value: `R$ ${(watchedHours.commission * form.watch("workersNeeded")).toFixed(2)}`, color: "text-yellow-400" },
-                    { label: "Total estimado", value: `R$ ${(watchedHours.total * 1.15).toFixed(2)}`, color: "text-primary", bold: true },
+                    {
+                      label: shiftType === "daily" ? "Jornada" : "Duração",
+                      value: shiftType === "daily" ? "7h 20min" : `${watchedCalc.hours.toFixed(1)}h`
+                    },
+                    { label: "Por profissional", value: `R$ ${watchedCalc.totalPerWorker.toFixed(2)}` },
+                    {
+                      label: "Comissão plataforma (15%)",
+                      value: `R$ ${(watchedCalc.commission * form.watch("workersNeeded")).toFixed(2)}`,
+                      color: "text-yellow-400"
+                    },
+                    {
+                      label: "Total a reservar",
+                      value: `R$ ${reservationAmount.toFixed(2)}`,
+                      color: hasInsufficientBalance ? "text-red-400" : "text-primary",
+                      bold: true
+                    },
                   ].map((row, i) => (
                     <div key={i} className="flex justify-between items-center">
                       <span className="text-white/70">{row.label}:</span>
-                      <span className={`font-semibold ${row.color ?? ""} ${row.bold ? "text-sm font-bold" : ""}`}>{row.value}</span>
+                      <span className={`font-semibold ${(row as any).color ?? ""} ${row.bold ? "text-sm font-bold" : ""}`}>{row.value}</span>
                     </div>
                   ))}
                 </div>
+                {hasInsufficientBalance && (
+                  <div className="flex items-center gap-2 pt-1 border-t border-red-500/15">
+                    <AlertCircle size={12} className="text-red-400 flex-shrink-0" />
+                    <p className="text-[11px] text-red-400">
+                      Saldo insuficiente. Deposite pelo menos R$ {(reservationAmount - (availableBalance ?? 0)).toFixed(2)} na carteira.
+                    </p>
+                  </div>
+                )}
               </motion.div>
             )}
           </motion.div>
 
           <Button
             type="submit"
-            disabled={createJob.isPending}
-            className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl"
+            disabled={createJob.isPending || hasInsufficientBalance}
+            className="w-full bg-primary text-black hover:bg-primary/90 neon-glow border-none font-bold h-12 text-sm rounded-xl disabled:opacity-50"
           >
             {createJob.isPending ? (
               <><Loader2 size={15} className="mr-2 animate-spin" />Publicando...</>
+            ) : hasInsufficientBalance ? (
+              "Saldo insuficiente — deposite para continuar"
             ) : "Publicar Extra"}
           </Button>
         </form>

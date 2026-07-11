@@ -5,10 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin, Clock, DollarSign, Users, Briefcase, ChevronLeft,
   Calendar, CheckCircle, XCircle, Loader2, Building2, Zap,
-  AlertCircle, Send, CheckCircle2, Timer, Star, Shield, UserCheck
+  AlertCircle, Send, CheckCircle2, Timer, Star, Shield, UserCheck,
+  QrCode, KeyRound, LogIn, LogOut, RefreshCw, Play, Square,
+  Activity, ChevronDown, ChevronUp, History,
 } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { SkeletonCard } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
@@ -20,10 +23,16 @@ import type { Job, Application } from "@workspace/api-client-react";
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
-  open:        { label: "Aberta",       color: "text-green-400",  bg: "bg-green-400/10 border-green-400/25",  icon: <Zap size={11} /> },
-  in_progress: { label: "Em andamento", color: "text-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/25", icon: <Timer size={11} /> },
-  completed:   { label: "Concluída",    color: "text-secondary",  bg: "bg-secondary/10 border-secondary/25",  icon: <CheckCircle size={11} /> },
-  cancelled:   { label: "Cancelada",    color: "text-red-400",    bg: "bg-red-400/10 border-red-400/25",      icon: <XCircle size={11} /> },
+  open:             { label: "Aberta",               color: "text-green-400",   bg: "bg-green-400/10 border-green-400/25",    icon: <Zap size={11} /> },
+  scheduled:        { label: "Agendada",              color: "text-blue-400",    bg: "bg-blue-400/10 border-blue-400/25",      icon: <Calendar size={11} /> },
+  waiting_checkin:  { label: "Aguardando Check-in",  color: "text-yellow-400",  bg: "bg-yellow-400/10 border-yellow-400/25",  icon: <LogIn size={11} /> },
+  checked_in:       { label: "Check-in Realizado",   color: "text-cyan-400",    bg: "bg-cyan-400/10 border-cyan-400/25",      icon: <UserCheck size={11} /> },
+  in_progress:      { label: "Em andamento",          color: "text-primary",     bg: "bg-primary/10 border-primary/25",        icon: <Activity size={11} /> },
+  on_break:         { label: "Em Pausa",              color: "text-orange-400",  bg: "bg-orange-400/10 border-orange-400/25",  icon: <Timer size={11} /> },
+  waiting_checkout: { label: "Aguardando Checkout",  color: "text-purple-400",  bg: "bg-purple-400/10 border-purple-400/25",  icon: <LogOut size={11} /> },
+  completed:        { label: "Concluída",             color: "text-secondary",   bg: "bg-secondary/10 border-secondary/25",   icon: <CheckCircle size={11} /> },
+  cancelled:        { label: "Cancelada",             color: "text-red-400",     bg: "bg-red-400/10 border-red-400/25",        icon: <XCircle size={11} /> },
+  disputed:         { label: "Em Disputa",            color: "text-amber-400",   bg: "bg-amber-400/10 border-amber-400/25",    icon: <AlertCircle size={11} /> },
 };
 
 const APP_STATUS_MAP: Record<string, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
@@ -37,6 +46,25 @@ const APP_STATUS_MAP: Record<string, { label: string; color: string; bg: string;
   cancelled:        { label: "Cancelada",              color: "text-muted-foreground", bg: "bg-white/5 border-white/10",     icon: <XCircle size={13} /> },
 };
 
+const EVENT_LABELS: Record<string, string> = {
+  created: "Extra criado",
+  edited: "Extra editado",
+  accepted: "Candidatura aprovada",
+  checkin_code_generated: "Códigos de check-in gerados",
+  checkin_validated: "Check-in validado",
+  started: "Extra iniciado",
+  paused: "Extra pausado",
+  resumed: "Extra retomado",
+  checkout_code_generated: "Códigos de checkout gerados",
+  checkout_validated: "Checkout validado",
+  finished: "Extra finalizado",
+  cancelled: "Extra cancelado",
+  disputed: "Disputa aberta",
+  payment_released: "Pagamento liberado",
+  wallet_reserved: "Reserva de saldo realizada",
+  wallet_released: "Reserva de saldo liberada",
+};
+
 function formatDate(dateStr: string) {
   try { return format(parseISO(dateStr), "EEEE, dd 'de' MMMM 'de' yyyy", { locale: ptBR }); }
   catch { return dateStr; }
@@ -48,17 +76,182 @@ function formatTime(t: string) {
   return `${h}:${m}`;
 }
 
-// ── Apply Modal ──────────────────────────────────────────────────────────────
+// ── Code Validation Panel ────────────────────────────────────────────────────
 
-function ApplyModal({
-  job,
-  onClose,
+function CodeValidationPanel({
+  jobId,
+  mode,
   onSuccess,
 }: {
-  job: Job;
-  onClose: () => void;
+  jobId: number;
+  mode: "checkin" | "checkout";
   onSuccess: () => void;
 }) {
+  const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const qc = useQueryClient();
+
+  const handleValidate = async () => {
+    if (code.length !== 6) { toast.error("Insira o código de 6 dígitos"); return; }
+    setLoading(true);
+    try {
+      const endpoint = mode === "checkin" ? "validate-checkin" : "validate-checkout";
+      const result = await apiFetch(`/api/jobs/${jobId}/${endpoint}`, {
+        method: "POST",
+        body: JSON.stringify({ code }),
+      });
+      toast.success(result.message ?? (mode === "checkin" ? "Check-in realizado!" : "Checkout realizado!"));
+      qc.invalidateQueries({ queryKey: ["job-detail", jobId] });
+      qc.invalidateQueries({ queryKey: ["job-events", jobId] });
+      onSuccess();
+    } catch (e: any) {
+      toast.error(e?.data?.error ?? e?.message ?? "Código inválido");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="rounded-xl p-4 space-y-3"
+      style={{
+        background: mode === "checkin"
+          ? "linear-gradient(135deg, rgba(250,204,21,0.06) 0%, rgba(8,17,26,0.92) 70%)"
+          : "linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(8,17,26,0.92) 70%)",
+        border: mode === "checkin" ? "1px solid rgba(250,204,21,0.18)" : "1px solid rgba(139,92,246,0.18)",
+      }}
+    >
+      <div className="flex items-center gap-2">
+        <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${mode === "checkin" ? "bg-yellow-400/10 text-yellow-400" : "bg-primary/10 text-primary"}`}>
+          <KeyRound size={13} />
+        </div>
+        <p className="text-sm font-bold">
+          {mode === "checkin" ? "Validar Check-in" : "Validar Checkout"}
+        </p>
+      </div>
+      <p className="text-xs text-white/65 leading-relaxed">
+        {mode === "checkin"
+          ? "Insira o código de 6 dígitos recebido da outra parte para confirmar o início do Extra."
+          : "Insira o código de 6 dígitos recebido da outra parte para confirmar o encerramento do Extra."}
+      </p>
+      <div className="flex gap-2">
+        <Input
+          value={code}
+          onChange={e => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+          placeholder="000000"
+          maxLength={6}
+          className="bg-white/5 border-white/10 rounded-xl h-11 text-center text-lg font-bold tracking-widest focus:border-primary/50"
+          inputMode="numeric"
+          pattern="[0-9]*"
+        />
+        <Button
+          onClick={handleValidate}
+          disabled={loading || code.length !== 6}
+          className={`h-11 px-5 rounded-xl font-bold text-sm ${mode === "checkin" ? "bg-yellow-400 text-black hover:bg-yellow-300" : "bg-primary text-black hover:bg-primary/90 neon-glow"}`}
+        >
+          {loading ? <Loader2 size={14} className="animate-spin" /> : "Validar"}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// ── Generate Codes Panel (company only) ──────────────────────────────────────
+
+function GenerateCodesPanel({
+  jobId,
+  mode,
+  onSuccess,
+}: {
+  jobId: number;
+  mode: "checkin" | "checkout";
+  onSuccess: () => void;
+}) {
+  const [loading, setLoading] = useState(false);
+  const [codes, setCodes] = useState<{ companyCode: string; freelancerCode: string; expiresAt: string } | null>(null);
+  const qc = useQueryClient();
+
+  const handleGenerate = async () => {
+    setLoading(true);
+    try {
+      const endpoint = mode === "checkin" ? "generate-checkin-codes" : "generate-checkout-codes";
+      const result = await apiFetch(`/api/jobs/${jobId}/${endpoint}`, { method: "POST" });
+      setCodes(result);
+      qc.invalidateQueries({ queryKey: ["job-detail", jobId] });
+      qc.invalidateQueries({ queryKey: ["job-events", jobId] });
+      onSuccess();
+      toast.success("Códigos gerados com sucesso!");
+    } catch (e: any) {
+      toast.error(e?.data?.error ?? e?.message ?? "Erro ao gerar códigos");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const accentColor = mode === "checkin" ? "rgba(250,204,21" : "rgba(139,92,246";
+  const textClass = mode === "checkin" ? "text-yellow-400" : "text-primary";
+
+  return (
+    <div className="rounded-xl p-4 space-y-3"
+      style={{
+        background: `linear-gradient(135deg, ${accentColor},0.06) 0%, rgba(8,17,26,0.92) 70%)`,
+        border: `1px solid ${accentColor},0.18)`,
+      }}
+    >
+      <div className="flex items-center gap-2">
+        <div className={`w-7 h-7 rounded-lg flex items-center justify-center bg-white/5`}>
+          <QrCode size={13} className={textClass} />
+        </div>
+        <p className="text-sm font-bold">
+          {mode === "checkin" ? "Iniciar Check-in" : "Iniciar Checkout"}
+        </p>
+      </div>
+
+      {!codes ? (
+        <>
+          <p className="text-xs text-white/65 leading-relaxed">
+            {mode === "checkin"
+              ? "Gere os códigos de check-in. Envie o código do freelancer para ele via WhatsApp, SMS ou chat."
+              : "Gere os códigos de checkout para encerrar o Extra. Envie o código do freelancer para ele."}
+          </p>
+          <Button
+            onClick={handleGenerate}
+            disabled={loading}
+            className={`w-full h-10 rounded-xl font-bold text-sm ${mode === "checkin" ? "bg-yellow-400/15 text-yellow-400 border border-yellow-400/25 hover:bg-yellow-400/25" : "bg-primary/15 text-primary border border-primary/25 hover:bg-primary/25"}`}
+          >
+            {loading ? <Loader2 size={14} className="animate-spin mr-2" /> : <QrCode size={14} className="mr-2" />}
+            Gerar Códigos
+          </Button>
+        </>
+      ) : (
+        <div className="space-y-3">
+          {/* Freelancer code to share */}
+          <div className="rounded-xl p-3 bg-white/5 border border-white/10">
+            <p className="text-[10px] text-white/55 font-semibold uppercase tracking-wide mb-1">Código do Freelancer (enviar para ele)</p>
+            <div className="flex items-center gap-2">
+              <p className="text-2xl font-black tracking-[0.35em] text-primary">{codes.freelancerCode}</p>
+              <button
+                onClick={() => { navigator.clipboard.writeText(codes.freelancerCode); toast.success("Código copiado!"); }}
+                className="text-xs text-white/50 hover:text-white/80 px-2 py-1 rounded-lg border border-white/10 hover:border-white/20 transition-all"
+              >
+                Copiar
+              </button>
+            </div>
+          </div>
+          {/* Company code (they'll enter the freelancer's code into their device) */}
+          <div className="rounded-xl p-3 bg-white/5 border border-white/10">
+            <p className="text-[10px] text-white/55 font-semibold uppercase tracking-wide mb-1">Seu código (o freelancer digitará este)</p>
+            <p className="text-2xl font-black tracking-[0.35em] text-white/80">{codes.companyCode}</p>
+          </div>
+          <p className="text-[10px] text-white/50">Expira em: {format(new Date(codes.expiresAt), "HH:mm 'do dia' dd/MM", { locale: ptBR })}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Apply Modal ──────────────────────────────────────────────────────────────
+
+function ApplyModal({ job, onClose, onSuccess }: { job: Job; onClose: () => void; onSuccess: () => void }) {
   const [message, setMessage] = useState("");
   const qc = useQueryClient();
 
@@ -101,7 +294,6 @@ function ApplyModal({
             <p className="text-xs text-white/70 truncate max-w-[260px]">{job.title}</p>
           </div>
         </div>
-
         <div className="mb-5">
           <label className="text-xs font-semibold text-white/75 uppercase tracking-wider mb-2 block">
             Mensagem para a empresa <span className="text-white/55 normal-case font-normal">(opcional)</span>
@@ -113,18 +305,9 @@ function ApplyModal({
             placeholder="Conte por que você é o candidato ideal para este extra…"
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/40 resize-none transition-colors"
           />
-          <p className="text-[10px] text-white/60 mt-1.5">
-            Uma boa mensagem aumenta suas chances de ser selecionado.
-          </p>
         </div>
-
         <div className="grid grid-cols-2 gap-3">
-          <Button
-            variant="outline"
-            onClick={onClose}
-            disabled={applyMutation.isPending}
-            className="h-11 border-white/15 font-semibold"
-          >
+          <Button variant="outline" onClick={onClose} disabled={applyMutation.isPending} className="h-11 border-white/15 font-semibold">
             Cancelar
           </Button>
           <Button
@@ -132,11 +315,7 @@ function ApplyModal({
             disabled={applyMutation.isPending}
             className="h-11 bg-primary text-black hover:bg-primary/90 neon-glow font-bold"
           >
-            {applyMutation.isPending ? (
-              <><Loader2 size={14} className="animate-spin mr-2" /> Enviando…</>
-            ) : (
-              <><Send size={14} className="mr-2" /> Candidatar-se</>
-            )}
+            {applyMutation.isPending ? <><Loader2 size={14} className="animate-spin mr-2" />Enviando…</> : <><Send size={14} className="mr-2" />Candidatar-se</>}
           </Button>
         </div>
       </motion.div>
@@ -144,22 +323,15 @@ function ApplyModal({
   );
 }
 
-// ── Applicant Card (company view) ────────────────────────────────────────────
+// ── Applicant Card ────────────────────────────────────────────────────────────
 
 function ApplicantCard({ app, onApprove, onReject, isActing }: {
-  app: Application;
-  onApprove: () => void;
-  onReject: () => void;
-  isActing: boolean;
+  app: Application; onApprove: () => void; onReject: () => void; isActing: boolean;
 }) {
   const freelancer = app.freelancer;
   const appStatus = APP_STATUS_MAP[app.status] ?? APP_STATUS_MAP.pending;
-
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
+    <motion.div layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
       className="rounded-xl p-4 relative overflow-hidden"
       style={{
         background: "linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(8,17,26,0.90) 65%)",
@@ -170,11 +342,7 @@ function ApplicantCard({ app, onApprove, onReject, isActing }: {
         style={{ background: app.status === "approved" ? "linear-gradient(90deg,transparent,rgba(124,252,0,0.4),transparent)" : "linear-gradient(90deg,transparent,rgba(139,92,246,0.35),transparent)" }} />
       <div className="flex items-start gap-3 relative">
         {freelancer?.avatarUrl ? (
-          <img
-            src={freelancer.avatarUrl}
-            alt={freelancer.name}
-            className="w-10 h-10 rounded-xl object-cover flex-shrink-0"
-          />
+          <img src={freelancer.avatarUrl} alt={freelancer.name} className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
         ) : (
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm font-black text-black flex-shrink-0">
             {freelancer?.name?.charAt(0).toUpperCase() ?? "?"}
@@ -183,20 +351,13 @@ function ApplicantCard({ app, onApprove, onReject, isActing }: {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <Link href={`/app/freelancers/${freelancer?.id}`}>
-              <span className="text-sm font-bold hover:text-primary transition-colors cursor-pointer">
-                {freelancer?.name ?? "Freelancer"}
-              </span>
+              <span className="text-sm font-bold hover:text-primary transition-colors cursor-pointer">{freelancer?.name ?? "Freelancer"}</span>
             </Link>
-            {freelancer?.isVerified && (
-              <CheckCircle size={12} className="text-primary flex-shrink-0" />
-            )}
+            {freelancer?.isVerified && <CheckCircle size={12} className="text-primary flex-shrink-0" />}
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border inline-flex items-center gap-1 ${appStatus.bg} ${appStatus.color}`}>
               {appStatus.icon} {appStatus.label}
             </span>
           </div>
-          {freelancer?.categories && freelancer.categories.length > 0 && (
-            <p className="text-xs text-white/70 mt-0.5">{freelancer.categories[0]}</p>
-          )}
           {app.message && (
             <p className="text-xs text-foreground/70 mt-2 leading-relaxed bg-white/3 rounded-lg p-2 border border-white/5">
               "{app.message}"
@@ -207,31 +368,81 @@ function ApplicantCard({ app, onApprove, onReject, isActing }: {
           </p>
         </div>
       </div>
-
       {app.status === "pending" && (
         <div className="grid grid-cols-2 gap-2 mt-3">
-          <Button
-            size="sm"
-            onClick={onReject}
-            disabled={isActing}
-            variant="outline"
-            className="h-9 border-red-400/20 text-red-400 hover:bg-red-400/10 hover:border-red-400/30 font-semibold text-xs"
-          >
-            {isActing ? <Loader2 size={12} className="animate-spin" /> : <XCircle size={12} className="mr-1" />}
-            Recusar
+          <Button size="sm" onClick={onReject} disabled={isActing} variant="outline"
+            className="h-9 border-red-400/20 text-red-400 hover:bg-red-400/10 hover:border-red-400/30 font-semibold text-xs">
+            {isActing ? <Loader2 size={12} className="animate-spin" /> : <XCircle size={12} className="mr-1" />} Recusar
           </Button>
-          <Button
-            size="sm"
-            onClick={onApprove}
-            disabled={isActing}
-            className="h-9 bg-green-400/15 border border-green-400/25 text-green-400 hover:bg-green-400/25 font-semibold text-xs"
-          >
-            {isActing ? <Loader2 size={12} className="animate-spin" /> : <UserCheck size={12} className="mr-1" />}
-            Aprovar
+          <Button size="sm" onClick={onApprove} disabled={isActing}
+            className="h-9 bg-green-400/15 border border-green-400/25 text-green-400 hover:bg-green-400/25 font-semibold text-xs">
+            {isActing ? <Loader2 size={12} className="animate-spin" /> : <UserCheck size={12} className="mr-1" />} Aprovar
           </Button>
         </div>
       )}
     </motion.div>
+  );
+}
+
+// ── Audit Log ─────────────────────────────────────────────────────────────────
+
+function AuditLogPanel({ jobId }: { jobId: number }) {
+  const [open, setOpen] = useState(false);
+  const { data: events = [], isLoading } = useQuery<any[]>({
+    queryKey: ["job-events", jobId],
+    queryFn: () => apiFetch(`/api/jobs/${jobId}/events`),
+    enabled: open,
+  });
+
+  return (
+    <div className="rounded-xl overflow-hidden border border-white/8">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-white/3 hover:bg-white/5 transition-all"
+      >
+        <div className="flex items-center gap-2">
+          <History size={13} className="text-white/60" />
+          <span className="text-xs font-semibold text-white/80">Log de Auditoria</span>
+          {events.length > 0 && (
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/8 text-white/60">{events.length}</span>
+          )}
+        </div>
+        {open ? <ChevronUp size={14} className="text-white/40" /> : <ChevronDown size={14} className="text-white/40" />}
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 py-3 space-y-2 max-h-72 overflow-y-auto">
+              {isLoading ? (
+                <div className="flex items-center gap-2 py-2"><Loader2 size={13} className="animate-spin text-white/40" /><span className="text-xs text-white/50">Carregando...</span></div>
+              ) : events.length === 0 ? (
+                <p className="text-xs text-white/50 py-2">Nenhum evento registrado ainda.</p>
+              ) : (
+                events.map((ev: any) => (
+                  <div key={ev.id} className="flex items-start gap-2.5 py-1.5 border-b border-white/5 last:border-0">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary/60 mt-1.5 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold">{EVENT_LABELS[ev.eventType] ?? ev.eventType}</p>
+                      <p className="text-[10px] text-white/50 mt-0.5">
+                        {ev.actorRole && <span className="mr-1 capitalize">{ev.actorRole}</span>}
+                        {ev.createdAt && format(new Date(ev.createdAt), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}
+                        {ev.ipAddress && <span className="ml-1 text-white/35">· {ev.ipAddress}</span>}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -245,20 +456,19 @@ export default function JobDetailPage() {
   const [showApply, setShowApply] = useState(false);
   const [actingId, setActingId] = useState<number | null>(null);
 
-  const { data: job, isLoading: jobLoading } = useQuery<Job>({
+  const { data: job, isLoading: jobLoading, refetch: refetchJob } = useQuery<Job>({
     queryKey: ["job-detail", jobId],
     queryFn: () => apiFetch(`/api/jobs/${jobId}`),
     enabled: !!jobId,
+    refetchInterval: 10000, // Poll every 10s for status updates
   });
 
-  // Freelancer's own application for this job
   const { data: myApplications = [] } = useQuery<Application[]>({
     queryKey: ["job-my-application", jobId],
     queryFn: () => apiFetch(`/api/applications?jobId=${jobId}&freelancerId=${me?.id}`),
     enabled: !!jobId && me?.role === "freelancer",
   });
 
-  // Company: all applications for this job (only if they own it)
   const isOwner = me?.role === "company" && job?.companyId === me?.id;
   const { data: applications = [], isLoading: appsLoading } = useQuery<Application[]>({
     queryKey: ["job-applications", jobId],
@@ -267,8 +477,7 @@ export default function JobDetailPage() {
   });
 
   const approveMutation = useMutation({
-    mutationFn: (appId: number) =>
-      apiFetch(`/api/applications/${appId}/approve`, { method: "POST" }),
+    mutationFn: (appId: number) => apiFetch(`/api/applications/${appId}/approve`, { method: "POST" }),
     onSuccess: () => {
       toast.success("Candidatura aprovada!");
       qc.invalidateQueries({ queryKey: ["job-applications", jobId] });
@@ -279,8 +488,7 @@ export default function JobDetailPage() {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: (appId: number) =>
-      apiFetch(`/api/applications/${appId}/reject`, { method: "POST" }),
+    mutationFn: (appId: number) => apiFetch(`/api/applications/${appId}/reject`, { method: "POST" }),
     onSuccess: () => {
       toast.success("Candidatura recusada");
       qc.invalidateQueries({ queryKey: ["job-applications", jobId] });
@@ -322,17 +530,32 @@ export default function JobDetailPage() {
 
   const hourlyRate = Number(job.hourlyRate ?? 0);
   const totalValue = Number(job.totalValue ?? 0);
+  const shiftType = (job as any).shiftType ?? "hourly";
+  const dailyRate = (job as any).dailyRate ?? null;
 
-  // Duration in hours (approx from startTime/endTime)
-  let durationHours: number | null = null;
+  let durationLabel = "";
   try {
-    const [sh, sm] = job.startTime.split(":").map(Number);
-    const [eh, em] = job.endTime.split(":").map(Number);
-    durationHours = (eh * 60 + em - (sh * 60 + sm)) / 60;
+    if (shiftType === "daily") {
+      durationLabel = "7h 20min";
+    } else {
+      const [sh, sm] = job.startTime.split(":").map(Number);
+      const [eh, em] = job.endTime.split(":").map(Number);
+      const mins = (eh * 60 + em) - (sh * 60 + sm);
+      const h = Math.floor(Math.abs(mins) / 60);
+      const m = Math.abs(mins) % 60;
+      durationLabel = `${h}h${m > 0 ? ` ${m}min` : ""}`;
+    }
   } catch {}
 
   const pendingCount = applications.filter(a => a.status === "pending").length;
   const approvedCount = applications.filter(a => a.status === "approved").length;
+
+  // Execution flow states
+  const showGenerateCheckin = isOwner && ["open", "scheduled"].includes(job.status);
+  const showValidateCheckin = ["waiting_checkin"].includes(job.status);
+  const showGenerateCheckout = isOwner && ["in_progress", "on_break"].includes(job.status);
+  const showValidateCheckout = ["waiting_checkout", "in_progress"].includes(job.status) && !isOwner;
+  const showFreelancerValidateCheckin = me?.role === "freelancer" && myApp?.status === "approved" && ["waiting_checkin", "open"].includes(job.status);
 
   return (
     <>
@@ -365,16 +588,11 @@ export default function JobDetailPage() {
           >
             <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
               style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.45), rgba(0,229,255,0.2), transparent)" }} />
-            {/* Subtle category-colored glow */}
             <div className="absolute top-0 right-0 w-48 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
             <div className="flex items-start gap-4 relative">
-              {job.companyAvatarUrl ? (
-                <img
-                  src={job.companyAvatarUrl}
-                  alt={job.companyName ?? ""}
-                  className="w-12 h-12 rounded-xl object-cover border border-white/10 flex-shrink-0"
-                />
+              {(job as any).companyAvatarUrl ? (
+                <img src={(job as any).companyAvatarUrl} alt={(job as any).companyName ?? ""} className="w-12 h-12 rounded-xl object-cover border border-white/10 flex-shrink-0" />
               ) : (
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-secondary/40 to-primary/20 border border-white/10 flex items-center justify-center flex-shrink-0">
                   <Building2 size={18} className="text-secondary" />
@@ -384,13 +602,18 @@ export default function JobDetailPage() {
                 <h1 className="text-lg sm:text-xl font-black leading-tight mb-1">{job.title}</h1>
                 <Link href={`/app/companies/${job.companyId}`}>
                   <span className="text-sm text-secondary hover:text-secondary/80 transition-colors font-medium cursor-pointer">
-                    {job.companyName ?? "Empresa"}
+                    {(job as any).companyName ?? "Empresa"}
                   </span>
                 </Link>
                 <div className="flex flex-wrap gap-2 mt-2">
                   <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/70">
                     {job.category}
                   </span>
+                  {shiftType === "daily" && (
+                    <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-secondary/8 border border-secondary/20 text-secondary">
+                      Diária
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -407,8 +630,10 @@ export default function JobDetailPage() {
               {
                 icon: <DollarSign size={14} className="text-primary" />,
                 label: "Remuneração",
-                value: `R$ ${hourlyRate.toFixed(2)}/h`,
-                sub: durationHours ? `~R$ ${(hourlyRate * durationHours).toFixed(0)} total` : undefined,
+                value: shiftType === "daily" && dailyRate
+                  ? `R$ ${Number(dailyRate).toFixed(2)}/dia`
+                  : `R$ ${hourlyRate.toFixed(2)}/h`,
+                sub: shiftType === "daily" ? "Diária 7h20" : (durationLabel ? `~R$ ${(hourlyRate * (Number(durationLabel.replace("h", ".")) || 8)).toFixed(0)} total` : undefined),
                 accent: "text-primary",
               },
               {
@@ -422,7 +647,7 @@ export default function JobDetailPage() {
                 icon: <Clock size={14} className="text-yellow-400" />,
                 label: "Horário",
                 value: `${formatTime(job.startTime)} – ${formatTime(job.endTime)}`,
-                sub: durationHours ? `${durationHours}h de duração` : undefined,
+                sub: durationLabel || undefined,
                 accent: "text-yellow-400",
               },
               {
@@ -483,13 +708,63 @@ export default function JobDetailPage() {
             <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">{job.description}</p>
           </motion.div>
 
-          {/* Freelancer: application status or apply CTA */}
-          {me?.role === "freelancer" && (
+          {/* ── EXECUTION FLOW (company) ── */}
+          {(showGenerateCheckin || showGenerateCheckout) && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.13 }}
+              transition={{ delay: 0.12 }}
+              className="rounded-2xl p-5 space-y-4 relative overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, rgba(250,204,21,0.04) 0%, rgba(8,17,26,0.92) 70%)",
+                border: "1px solid rgba(250,204,21,0.12)",
+              }}
             >
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center text-yellow-400">
+                  <Activity size={13} />
+                </div>
+                <h2 className="font-bold text-sm">Gerenciamento do Extra</h2>
+              </div>
+              {showGenerateCheckin && (
+                <GenerateCodesPanel jobId={jobId} mode="checkin" onSuccess={() => refetchJob()} />
+              )}
+              {showGenerateCheckout && (
+                <GenerateCodesPanel jobId={jobId} mode="checkout" onSuccess={() => refetchJob()} />
+              )}
+            </motion.div>
+          )}
+
+          {/* ── EXECUTION FLOW (validation — both sides) ── */}
+          {(showValidateCheckin || showValidateCheckout || showFreelancerValidateCheckin) && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12 }}
+              className="rounded-2xl p-5 space-y-4 relative overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, rgba(124,252,0,0.04) 0%, rgba(8,17,26,0.92) 70%)",
+                border: "1px solid rgba(124,252,0,0.12)",
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+                  <KeyRound size={13} />
+                </div>
+                <h2 className="font-bold text-sm">Validação de Presença</h2>
+              </div>
+              {(showValidateCheckin || showFreelancerValidateCheckin) && (
+                <CodeValidationPanel jobId={jobId} mode="checkin" onSuccess={() => refetchJob()} />
+              )}
+              {showValidateCheckout && (
+                <CodeValidationPanel jobId={jobId} mode="checkout" onSuccess={() => refetchJob()} />
+              )}
+            </motion.div>
+          )}
+
+          {/* Freelancer: application status or apply CTA */}
+          {me?.role === "freelancer" && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.13 }}>
               {myApp && myAppStatus ? (
                 <div className={`rounded-2xl p-4 border flex items-center gap-3 ${myAppStatus.bg}`}>
                   <div className={`flex-shrink-0 ${myAppStatus.color}`}>{myAppStatus.icon}</div>
@@ -506,21 +781,17 @@ export default function JobDetailPage() {
               ) : canApply ? (
                 <Button
                   onClick={() => setShowApply(true)}
-                  className="w-full h-13 bg-primary text-black hover:bg-primary/90 neon-glow font-black text-sm rounded-xl border-none"
+                  className="w-full bg-primary text-black hover:bg-primary/90 neon-glow font-black text-sm rounded-xl border-none"
                   style={{ height: 52 }}
                 >
                   <Zap size={16} className="mr-2" /> Candidatar-se agora
                 </Button>
               ) : job.status !== "open" ? (
-                <div className="rounded-2xl p-4 text-center relative overflow-hidden"
-                  style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.04) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(239,68,68,0.12)" }}
-                >
+                <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(8,17,26,0.92)", border: "1px solid rgba(255,255,255,0.07)" }}>
                   <p className="text-sm text-white/70">Este extra não está mais disponível para candidaturas.</p>
                 </div>
               ) : spotsLeft === 0 ? (
-                <div className="rounded-2xl p-4 text-center relative overflow-hidden"
-                  style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.04) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(239,68,68,0.12)" }}
-                >
+                <div className="rounded-2xl p-4 text-center" style={{ background: "rgba(8,17,26,0.92)", border: "1px solid rgba(255,255,255,0.07)" }}>
                   <p className="text-sm text-white/70">Todas as posições já foram preenchidas.</p>
                 </div>
               ) : null}
@@ -529,12 +800,7 @@ export default function JobDetailPage() {
 
           {/* Company owner: applicant list */}
           {isOwner && (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.13 }}
-              className="space-y-4"
-            >
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.13 }} className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="font-bold text-sm flex items-center gap-2">
                   <UserCheck size={14} className="text-primary" /> Candidatos
@@ -545,35 +811,20 @@ export default function JobDetailPage() {
                   )}
                 </h2>
                 <div className="flex items-center gap-3 text-xs text-white/70">
-                  {pendingCount > 0 && (
-                    <span className="flex items-center gap-1">
-                      <Clock size={10} className="text-yellow-400" /> {pendingCount} pendente{pendingCount > 1 ? "s" : ""}
-                    </span>
-                  )}
-                  {approvedCount > 0 && (
-                    <span className="flex items-center gap-1">
-                      <CheckCircle size={10} className="text-green-400" /> {approvedCount} aprovado{approvedCount > 1 ? "s" : ""}
-                    </span>
-                  )}
+                  {pendingCount > 0 && <span className="flex items-center gap-1"><Clock size={10} className="text-yellow-400" /> {pendingCount} pendente{pendingCount > 1 ? "s" : ""}</span>}
+                  {approvedCount > 0 && <span className="flex items-center gap-1"><CheckCircle size={10} className="text-green-400" /> {approvedCount} aprovado{approvedCount > 1 ? "s" : ""}</span>}
                 </div>
               </div>
 
               {appsLoading ? (
-                <div className="space-y-3">
-                  {[1, 2].map(i => (
-                    <div key={i} className="glass-card rounded-xl p-4 border border-white/6 h-20 animate-pulse" />
-                  ))}
-                </div>
+                <div className="space-y-3">{[1, 2].map(i => <div key={i} className="glass-card rounded-xl p-4 border border-white/6 h-20 animate-pulse" />)}</div>
               ) : applications.length === 0 ? (
-                <div className="rounded-2xl p-8 text-center relative overflow-hidden"
-                  style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.03) 0%, rgba(8,17,26,0.92) 70%)", border: "1px solid rgba(255,255,255,0.07)" }}
-                >
+                <div className="rounded-2xl p-8 text-center" style={{ background: "rgba(8,17,26,0.92)", border: "1px solid rgba(255,255,255,0.07)" }}>
                   <Users size={28} className="text-white/60 mx-auto mb-2" />
                   <p className="text-sm text-white/70">Ainda não há candidatos para este extra.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {/* Pending first */}
                   {[
                     ...applications.filter(a => a.status === "pending"),
                     ...applications.filter(a => a.status !== "pending"),
@@ -582,14 +833,8 @@ export default function JobDetailPage() {
                       key={app.id}
                       app={app}
                       isActing={actingId === app.id}
-                      onApprove={() => {
-                        setActingId(app.id);
-                        approveMutation.mutate(app.id);
-                      }}
-                      onReject={() => {
-                        setActingId(app.id);
-                        rejectMutation.mutate(app.id);
-                      }}
+                      onApprove={() => { setActingId(app.id); approveMutation.mutate(app.id); }}
+                      onReject={() => { setActingId(app.id); rejectMutation.mutate(app.id); }}
                     />
                   ))}
                 </div>
@@ -597,50 +842,41 @@ export default function JobDetailPage() {
             </motion.div>
           )}
 
+          {/* Audit log (company + admin) */}
+          {(isOwner || me?.role === "admin") && (
+            <AuditLogPanel jobId={jobId} />
+          )}
+
           {/* Company card at the bottom */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.16 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
             <Link href={`/app/companies/${job.companyId}`}>
-              <div className="rounded-2xl p-4 hover:border-secondary/30 transition-colors cursor-pointer card-hover flex items-center gap-3 relative overflow-hidden"
+              <div className="rounded-2xl p-4 hover:border-secondary/30 transition-colors cursor-pointer flex items-center gap-3 relative overflow-hidden"
                 style={{ background: "linear-gradient(135deg, rgba(0,229,255,0.045) 0%, rgba(8,17,26,0.90) 65%)", border: "1px solid rgba(0,229,255,0.12)" }}
               >
                 <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
                   style={{ background: "linear-gradient(90deg, transparent, rgba(0,229,255,0.3), transparent)" }} />
-                {job.companyAvatarUrl ? (
-                  <img
-                    src={job.companyAvatarUrl}
-                    alt={job.companyName ?? ""}
-                    className="w-11 h-11 rounded-xl object-cover border border-white/10 flex-shrink-0"
-                  />
+                {(job as any).companyAvatarUrl ? (
+                  <img src={(job as any).companyAvatarUrl} alt={(job as any).companyName ?? ""} className="w-11 h-11 rounded-xl object-cover border border-white/10 flex-shrink-0" />
                 ) : (
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-secondary/40 to-primary/20 border border-white/10 flex items-center justify-center flex-shrink-0">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-secondary/30 to-primary/15 border border-white/8 flex items-center justify-center flex-shrink-0">
                     <Building2 size={16} className="text-secondary" />
                   </div>
                 )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-[10px] text-white/70 uppercase tracking-wider font-medium mb-0.5">Empresa</p>
-                  <p className="text-sm font-bold truncate">{job.companyName ?? "Empresa"}</p>
-                  <p className="text-xs text-secondary">Ver perfil da empresa →</p>
+                <div className="relative flex-1 min-w-0">
+                  <p className="text-[10px] text-white/60 font-medium uppercase tracking-wider">Empresa</p>
+                  <p className="text-sm font-bold truncate">{(job as any).companyName ?? "Empresa"}</p>
                 </div>
-                <Shield size={14} className="text-white/60 flex-shrink-0" />
+                <ChevronLeft size={14} className="text-secondary/60 rotate-180 flex-shrink-0" />
               </div>
             </Link>
           </motion.div>
-
         </div>
       </div>
 
       {/* Apply modal */}
       <AnimatePresence>
         {showApply && (
-          <ApplyModal
-            job={job}
-            onClose={() => setShowApply(false)}
-            onSuccess={() => {}}
-          />
+          <ApplyModal job={job} onClose={() => setShowApply(false)} onSuccess={() => {}} />
         )}
       </AnimatePresence>
     </>
