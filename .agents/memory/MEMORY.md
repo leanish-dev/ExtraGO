@@ -1,7 +1,8 @@
 - [Platform audit fixes](platform-audit-fixes.md) — comprehensive fix log for fake data, broken links, auth, onboarding, nav, N+1 queries, and shared utilities
 - [Express route prefix](express-route-prefix.md) — `app.use("/api", router)` strips `/api`; routes in the router must NOT include `/api/` prefix.
 - [SSE auth pattern](sse-auth.md) — EventSource can't set headers; accept auth token via `?token=` query param for SSE endpoints.
-- [Admin seed endpoint](admin-seed.md) — `POST /api/setup/seed` provisions 6 accounts: CEO(Leonardo), CMO(Jean), CCO(Qaialla `Qaialla27@`), CEO Master, 2 test. No ecosystem data.
+- [Admin seed endpoint](admin-seed.md) — `POST /api/setup/seed` provisions 6 accounts: CEO(Leonardo), CMO(Jean), CCO(Qaialla `Qaialla27@`), CEO Master, 2 test. No ecosystem data. Now requires `SETUP_SECRET` header (see setup-guard.md) — 403 if unset in any env.
+- [Setup guard & dev-whitelist env vars](setup-guard-and-dev-whitelist.md) — `/api/setup/*` requires `x-setup-secret` header matching `SETUP_SECRET` env var (403 if unset, any env); dev-whitelist PII now sourced from `DEV_WHITELIST_EMAILS/CPFS/PHONES` env vars, never hardcoded.
 - [Multi-Replit & governance docs](multi-replit-governance.md) — 4 master accounts: Leonardo(CEO), Jean Dick(CMO), Qaialla Pereira(CCO `qaialla.exclusive@gmail.com`), extrago.ceo. Profile assets: team-leonardo.jpg, team-jean.jpg, team-qaialla.jpg.
 - [Progression & referral tiers](progression-engine.md) — 5 level tiers (fees 20/18/15/12/10) + 3 referral tiers (2/3/5%); internal level keys ≠ labels (diamond=Elite). Switches on level MUST cover all 5 keys.
 - [Admin pages](admin-pages.md) — Admin now has 9 pages: dashboard, users, jobs, withdrawals, analytics, ops, map, representatives, governance. Chart library: CSS-only bars (no recharts).

@@ -19,6 +19,13 @@
  * 3. In production (NODE_ENV === "production") NONE of this
  *    runs. isDevWhitelistActive() returns false and every
  *    exported function is a no-op.
+ * 4. Whitelisted identifiers are NEVER hardcoded in source. They
+ *    are read exclusively from environment variables:
+ *      - DEV_WHITELIST_EMAILS  (comma-separated emails)
+ *      - DEV_WHITELIST_CPFS    (comma-separated CPFs, digits only or formatted)
+ *      - DEV_WHITELIST_PHONES  (comma-separated phones, digits only or formatted)
+ *    If a variable is unset or empty, that whitelist is empty —
+ *    the feature is a no-op until explicitly configured.
  *
  * NEVER expose this module's behaviour to the client, and
  * never import it from production-only code paths.
@@ -36,9 +43,24 @@ export function isDevWhitelistActive(): boolean {
 
 // ── Whitelisted test identifiers ─────────────────────────────
 // Normalised: digits-only for CPF/phone, lowercase for email.
-const WHITELIST_EMAILS = new Set(["leoscheffel.drosa@gmail.com"]);
-const WHITELIST_CPFS   = new Set(["03970275083"]); // 039.702.750-83
-const WHITELIST_PHONES = new Set(["54981433576"]);
+// Sourced exclusively from environment variables — never hardcoded.
+// Absence of a variable results in an empty whitelist (no-op).
+function parseEnvList(raw: string | undefined): string[] {
+  return (raw ?? "")
+    .split(",")
+    .map((v) => v.trim())
+    .filter((v) => v.length > 0);
+}
+
+const WHITELIST_EMAILS = new Set(
+  parseEnvList(process.env.DEV_WHITELIST_EMAILS).map((v) => v.toLowerCase()),
+);
+const WHITELIST_CPFS = new Set(
+  parseEnvList(process.env.DEV_WHITELIST_CPFS).map((v) => v.replace(/\D/g, "")),
+);
+const WHITELIST_PHONES = new Set(
+  parseEnvList(process.env.DEV_WHITELIST_PHONES).map((v) => v.replace(/\D/g, "")),
+);
 
 function normaliseCpf(raw: string)   { return raw.replace(/\D/g, ""); }
 function normalisePhone(raw: string) { return raw.replace(/\D/g, ""); }

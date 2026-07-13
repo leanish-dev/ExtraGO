@@ -272,7 +272,7 @@ router.post("/admin/kyc/users/:id/request-documents", requireAdmin, async (req, 
   const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId)).limit(1);
   if (!user) { res.status(404).json({ error: "User not found" }); return; }
 
-  await db.update(usersTable).set({ accountStatus: "correction_requested" }).where(eq(usersTable.id, userId));
+  await db.update(usersTable).set({ accountStatus: "pending_documents" }).where(eq(usersTable.id, userId));
 
   // Mark requested document types as correction_requested
   for (const docType of parsed.data.documentTypes) {
@@ -335,7 +335,7 @@ router.post("/admin/kyc/users/:id/request-selfie", requireAdmin, async (req, res
     }).where(eq(kycDocumentsTable.id, selfie.id));
   }
 
-  await db.update(usersTable).set({ accountStatus: "correction_requested" }).where(eq(usersTable.id, userId));
+  await db.update(usersTable).set({ accountStatus: "pending_documents" }).where(eq(usersTable.id, userId));
 
   await kycAudit(userId, "selfie_requested", reviewer.id, { message, notes }, req);
 

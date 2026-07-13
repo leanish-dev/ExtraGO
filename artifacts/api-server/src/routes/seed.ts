@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { hashPassword, generateReferralCode } from "../lib/auth";
 import { SERVER_BUILD_TIME, SERVER_BUILD_ISO } from "../lib/build-info";
 import { LEGAL_DOCUMENTS, hashDocumentContent } from "../lib/legal-documents-seed";
+import { requireSetupSecret } from "../lib/setup-guard";
 
 const router = Router();
 
@@ -24,7 +25,7 @@ const router = Router();
  *   5. teste.f@extrago.com             — authorized test freelancer
  *   6. teste.e@extrago.com             — authorized test company
  */
-router.post("/setup/seed", async (_req, res) => {
+router.post("/setup/seed", requireSetupSecret, async (_req, res) => {
   try {
     const results: string[] = [];
 

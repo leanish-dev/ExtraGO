@@ -2,6 +2,7 @@ import { Router } from "express";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { generateReferralCode } from "../lib/auth";
+import { requireSetupSecret } from "../lib/setup-guard";
 
 const router = Router();
 
@@ -9,7 +10,7 @@ const ADMIN_EMAIL = "leonardoscheffel2000@gmail.com";
 const ADMIN_HASH = "55815ec3857918a0c7accc86eb5f8a645f4e35262b5a0a4ca56057142d0e502f";
 
 /* ── POST /api/setup/admin ── idempotent admin bootstrap ── */
-router.post("/setup/admin", async (req, res) => {
+router.post("/setup/admin", requireSetupSecret, async (req, res) => {
   try {
     const [existing] = await db.select().from(usersTable).where(eq(usersTable.email, ADMIN_EMAIL)).limit(1);
 
